@@ -1,0 +1,149 @@
+{
+  "name": "learn-chess-traps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": "12.16.1"
+  },
+  "scripts": {
+    "test": "jest",
+    "clean": "rimraf dist",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "start": "node index.js",
+    "start:prod": "cross-env NODE_ENV=production node index.js",
+    "type-check-client": "tsc -p ./src/client/tsconfig.json",
+    "build-client": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -p",
+    "build-server": "tsc -b src/server",
+    "dev-client": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
+    "dev-server": "tsc-watch --noClear -b ./src/server/tsconfig.json --onSuccess \"node --enable-source-maps index.js\"",
+    "dev": "concurrently --prefix \"[{name}]\" --names \"SERVER,CLIENT\" -c \"bgBlue.bold,bgGreen.bold\" \"npm run dev-server\" \"npm run dev-client\"",
+    "build": "concurrently --prefix \"[{name}]\" --names \"SERVER,CLIENT\" -c \"bgBlue.bold,bgGreen.bold\" \"npm run build-server\" \"npm run build-client\""
+  },
+  "keywords": [
+    "chess",
+    "typescript",
+    "react",
+    "webpack",
+    "fullstack",
+    "express",
+    "express4",
+    "node"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tneisinger/learn-chess-traps"
+  },
+  "license": "MIT",
+  "author": "Tyler Neisinger",
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/client/setupEnzyme.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "<rootDir>/src/client/tsconfig-for-tests.json"
+      }
+    }
+  },
+  "dependencies": {
+    "@auth0/auth0-react": "^1.2.0",
+    "@material-ui/icons": "^4.9.1",
+    "@reduxjs/toolkit": "^1.5.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-redux": "^7.1.12",
+    "@types/styled-components": "^5.1.5",
+    "axios": "^0.20.0",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "find-up": "^4.1.0",
+    "pg": "^8.5.1",
+    "react-redux": "^7.2.2",
+    "redux-thunk": "^2.3.0",
+    "reflect-metadata": "^0.1.13",
+    "styled-components": "^5.2.0",
+    "tslib": "^2.0.1",
+    "typeorm": "^0.2.29"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@babel/plugin-proposal-numeric-separator": "^7.10.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
+    "@babel/plugin-transform-runtime": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@material-ui/core": "^4.11.0",
+    "@types/cssnano": "^4.0.0",
+    "@types/enzyme": "^3.10.6",
+    "@types/express": "^4.17.8",
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.2",
+    "@types/react": "^16.9.49",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/webpack": "^4.41.22",
+    "@types/webpack-bundle-analyzer": "^3.8.0",
+    "@types/webpack-dev-server": "^3.11.0",
+    "@types/webpack-manifest-plugin": "^2.1.0",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
+    "babel-loader": "^8.1.0",
+    "concurrently": "^5.3.0",
+    "core-js": "^3.6.5",
+    "cross-env": "^7.0.2",
+    "css-loader": "^4.3.0",
+    "cssnano": "^4.1.10",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.4",
+    "enzyme-to-json": "^3.5.0",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.6",
+    "file-loader": "^6.1.0",
+    "http-proxy-middleware": "^1.0.5",
+    "jest": "^26.4.2",
+    "postcss-loader": "^4.0.2",
+    "prettier": "^2.1.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "request": "^2.88.2",
+    "rimraf": "^3.0.2",
+    "style-loader": "^1.2.1",
+    "ts-jest": "^26.4.0",
+    "ts-node": "^9.0.0",
+    "tsc-watch": "^4.2.9",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.0.3",
+    "url-loader": "^4.1.0",
+    "webpack": "^4.44.2",
+    "webpack-bundle-analyzer": "^3.9.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-manifest-plugin": "^2.2.0"
+  }
+}

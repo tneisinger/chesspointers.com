@@ -1,0 +1,26 @@
+FROM node:15
+
+RUN chmod -R 777 /usr/local
+RUN chmod -R 777 /root
+
+RUN mkdir -p ${NODE_PROJECT_DIR}/node_modules
+RUN chmod -R 777 ${NODE_PROJECT_DIR}/node_modules
+
+# USER node
+
+WORKDIR $NODE_PROJECT_DIR
+
+RUN npm config set unsafe-perm true
+
+RUN npm install -g concurrently
+
+COPY --chown=node:node ./package.json .
+COPY --chown=node:node ./package-lock.json .
+
+RUN npm install
+
+COPY --chown=node:node . .
+
+EXPOSE 3000
+
+CMD npm start
