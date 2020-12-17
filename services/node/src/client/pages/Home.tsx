@@ -4,6 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
+import Chessboard from "chessboardjsx";
 
 const useStyles = makeStyles(() => ({
   LogoImg: {
@@ -17,13 +18,12 @@ const HomePage: React.FunctionComponent = () => {
   return (
     <Grid item xs={12}>
       <Card>
-        <CardHeader title='FullStack React with TypeScript' />
+        <CardHeader title='Something here' />
         <CardContent>
-          <img src='/assets/images/logo.png' className={classes.LogoImg} />
-          <Typography>
-            This is a starter kit to get you up and running with React & TypeScript on top
-            of material-ui.
-          </Typography>
+          <Chessboard
+            width={600}
+            position="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+          />
         </CardContent>
       </Card>
     </Grid>
