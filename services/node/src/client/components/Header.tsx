@@ -21,7 +21,7 @@ export const Header: React.FunctionComponent = () => {
     <AppBar position='fixed' className={classes.appBar}>
       <Toolbar>
         <Typography variant='h6' noWrap className={classes.title}>
-          Fullstack TypeScript
+          Learn Chess Traps
         </Typography>
         <LogInOutWidget />
       </Toolbar>
