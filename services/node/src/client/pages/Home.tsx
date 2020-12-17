@@ -7,9 +7,8 @@ import React from 'react';
 import Chessboard from "chessboardjsx";
 
 const useStyles = makeStyles(() => ({
-  LogoImg: {
-    width: 150,
-    paddingBottom: 25,
+  msg: {
+    marginTop: '20px',
   },
 }));
 
@@ -21,9 +20,12 @@ const HomePage: React.FunctionComponent = () => {
         <CardHeader title='Something here' />
         <CardContent>
           <Chessboard
-            width={600}
+            width={650}
             position="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
           />
+          <Typography className={classes.msg}>
+            Play!
+          </Typography>
         </CardContent>
       </Card>
     </Grid>
