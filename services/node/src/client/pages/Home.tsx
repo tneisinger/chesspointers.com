@@ -164,12 +164,6 @@ const HomePage: React.FunctionComponent = () => {
                   })
                 }
               />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={6}>
-          <Card>
-            <CardContent>
               <Typography className={classes.msg}>
                 {game.in_checkmate()
                   ? <>CHECKMATE! <Button onClick={reset}>Again?</Button></>
@@ -178,7 +172,6 @@ const HomePage: React.FunctionComponent = () => {
               </Typography>
             </CardContent>
           </Card>
-
         </Grid>
       </Grid>
     </Grid>
