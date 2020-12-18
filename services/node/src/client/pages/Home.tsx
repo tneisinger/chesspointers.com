@@ -33,14 +33,19 @@ const SHOW_NEXT_MOVE_DELAY = 1500;
 
 const useStyles = makeStyles(() => ({
   msg: {
-    marginTop: '20px',
+    textAlign: 'center',
+    paddingBottom: '12px',
   },
   cardContent: {
     margin: 'auto',
   },
   cardHeader: {
     textAlign: 'center',
-    paddingBottom: '4px',
+    paddingBottom: '0',
+    marginBottom: '0',
+  },
+  belowChessBoard: {
+    marginTop: '12px',
   }
 }));
 
@@ -151,6 +156,9 @@ const HomePage: React.FunctionComponent = () => {
           <Card>
             <CardHeader className={classes.cardHeader} title='The Legal Trap' />
             <CardContent>
+              <Typography className={classes.msg}>
+                {game.in_checkmate() ? 'CHECKMATE!' : 'Keep going...'}
+              </Typography>
               <Chessboard
                 width={650}
                 position={fen}
@@ -164,12 +172,21 @@ const HomePage: React.FunctionComponent = () => {
                   })
                 }
               />
-              <Typography className={classes.msg}>
-                {game.in_checkmate()
-                  ? <>CHECKMATE! <Button onClick={reset}>Again?</Button></>
-                  : 'Keep going...'
-                }
-              </Typography>
+              <Grid
+                className={classes.belowChessBoard}
+                container
+                direction='row'
+                justify='center'
+                spacing={2} >
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={reset}
+                  disabled={moveIdx === 0}
+                >
+                  Restart
+                </Button>
+              </Grid>
             </CardContent>
           </Card>
         </Grid>
