@@ -84,7 +84,6 @@ const HomePage: React.FunctionComponent = () => {
       const { from, to } = nextUserMove
       const highlight = {
         boxShadow: 'inset 0 0 2px 4px orange',
-        // border: '1px solid rgb(181, 136, 99)'
       };
       return {
         [from]: highlight,
