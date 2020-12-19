@@ -68,11 +68,11 @@ const legalTrap: Trap = {
     },
     {
       move: 'Nxe5',
-      comment: 'Next is white\'s key move! It looks looks like a blunder, but it\'s not.'
+      comment: 'Next is white\'s key move! It looks like a blunder, but it\'s not.'
     },
     {
       move: 'Bxd1',
-      comment: 'If black takes the queen here, then it is mate in two for white!'
+      comment: 'If black takes the queen, then it is mate in two for white!'
     },
     {
       move: 'Bxf7',
