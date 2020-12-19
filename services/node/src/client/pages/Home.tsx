@@ -124,28 +124,14 @@ const HomePage: React.FunctionComponent = () => {
   // The index of the next moved to be played
   const [moveIdx, setMoveIdx] = useState<number>(0);
 
-  // The index of the undo position. If the undoMoveIdx is undefined, that
-  // means that we are not in an undo state. If undoMoveIdx is defined, then
-  // we are in an undo state.
-  const [undoMoveIdx, setUndoMoveIdx] = useState<undefined | number>(undefined);
-
-  const isUndoActive = (): boolean => {
-    return undoMoveIdx != undefined;
-  }
-
-  // Use this function to get the move index variable (either `moveIdx` or `undoMoveIdx`)
-  // that should be used at the current time. If undoMoveIdx is defined, then use it
-  // instead of `moveIdx`.
-  const getActiveMoveIdx = () => {
-      return isUndoActive() ? undoMoveIdx : moveIdx;
-  }
+  const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
 
   const isUsersTurn = (): boolean => {
     return game.turn() === userColor;
   }
 
   const haveAllMovesBeenPlayed = (): boolean => {
-    return getActiveMoveIdx() >= legalTrap.moves.length;
+    return moveIdx >= legalTrap.moves.length;
   }
 
   // The state of the game as it is on the board
@@ -168,7 +154,7 @@ const HomePage: React.FunctionComponent = () => {
 
   const getNextUserMove = (): (ShortMove | null) => {
     if (isUsersTurn()) {
-      return gameNextMove.history({ verbose: true})[getActiveMoveIdx()];
+      return gameNextMove.history({ verbose: true})[moveIdx];
     }
     return null;
   }
@@ -197,31 +183,31 @@ const HomePage: React.FunctionComponent = () => {
   const handleMove = (move: ShortMove) => {
     const nextUserMove = getNextUserMove();
     if (nextUserMove && sameMoves(move, nextUserMove)) {
+      // If the user presses either of the arrow buttons, then `doesComputerAutoplay`
+      // will be turned off. When the user plays by moving a piece on the board, make sure
+      // that `doesComputerAutoplay` is turned back on.
+      setDoesComputerAutoplay(true);
       doNextMove();
     }
   };
 
-  const incrementActiveMoveIdx = () => {
-    if (isUndoActive()) {
-      setUndoMoveIdx(undoMoveIdx + 1);
-    } else{
-      setMoveIdx(moveIdx + 1);
-    }
-  }
+  const incrementMoveIdx = () => setMoveIdx(moveIdx + 1);
+
+  const decrementMoveIdx = () => setMoveIdx(moveIdx - 1);
 
   const doNextMove = () => {
-    const nextMove = legalTrap.moves[getActiveMoveIdx()];
+    const nextMove = legalTrap.moves[moveIdx];
     if (nextMove != undefined) {
       if (game.move(nextMove.move)) {
         advanceGameNextMove();
-        incrementActiveMoveIdx();
+        incrementMoveIdx();
         updateBoard();
       }
     }
   };
 
   const advanceGameNextMove = () => {
-    const nextMove = legalTrap.moves[getActiveMoveIdx() + 1];
+    const nextMove = legalTrap.moves[moveIdx + 1];
     if (nextMove != undefined) {
       gameNextMove.move(nextMove.move);
     }
@@ -236,7 +222,6 @@ const HomePage: React.FunctionComponent = () => {
     gameNextMove.move(legalTrap.moves[0].move);
     setIsShowingMove(false);
     setComment(INITIAL_MESSAGE);
-    setUndoMoveIdx(undefined);
   };
 
   const scheduleCommentUpdate = (msg: string) => {
@@ -246,17 +231,17 @@ const HomePage: React.FunctionComponent = () => {
   }
 
   const moveBack = () => {
+    // When the user clicks the back button, turn off doesComputerAutoplay
+    setDoesComputerAutoplay(false);
     game.undo();
     gameNextMove.undo();
     updateBoard();
-    if (undoMoveIdx == undefined) {
-      setUndoMoveIdx(moveIdx - 1);
-    } else {
-      setUndoMoveIdx(undoMoveIdx - 1);
-    }
+    decrementMoveIdx();
   }
 
   const moveForward = () => {
+    // When the user clicks the forward button, turn off doesComputerAutoplay
+    setDoesComputerAutoplay(false);
     doNextMove();
     updateComment();
   }
@@ -272,7 +257,7 @@ const HomePage: React.FunctionComponent = () => {
       return;
     }
 
-    const nextMove = legalTrap.moves[getActiveMoveIdx()];
+    const nextMove = legalTrap.moves[moveIdx];
     if (nextMove == undefined) {
       throw new Error("Cannot update comment for undefined move");
     }
@@ -294,8 +279,8 @@ const HomePage: React.FunctionComponent = () => {
       // Do not highlight moves while it is the computer's turn
       setIsShowingMove(false);
 
-      // If we are in an undo, do not allow the computer to move
-      if (undoMoveIdx !== undefined) {
+      // If the computer shouldn't play automatically, quit this function early.
+      if (!doesComputerAutoplay) {
         return;
       }
 
@@ -305,7 +290,7 @@ const HomePage: React.FunctionComponent = () => {
         updateComment();
       }, COMPUTER_THINK_TIME);
     }
-  }, [moveIdx, undoMoveIdx]);
+  }, [moveIdx]);
 
   const debug = () => {
     console.log('You pressed the debug button!');
@@ -346,7 +331,7 @@ const HomePage: React.FunctionComponent = () => {
                     className={classes.arrowButton}
                     aria-label="back"
                     onClick={moveBack}
-                    disabled={getActiveMoveIdx() === 0}
+                    disabled={moveIdx === 0}
                   >
                     <ArrowLeftIcon fontSize='large'/>
                   </IconButton>
