@@ -118,8 +118,20 @@ const HomePage: React.FunctionComponent = () => {
   // The index of the next moved to be played
   const [moveIdx, setMoveIdx] = useState<number>(0);
 
+  // The index of the undo position. If the undoMoveIdx is undefined, that
+  // means that we are not in an undo state. If undoMoveIdx is defined, then
+  // we are in an undo state.
+  const [undoMoveIdx, setUndoMoveIdx] = useState<undefined | number>(undefined);
+
+  // Use this function to get the move index variable (either `moveIdx` or `undoMoveIdx`)
+  // that should be used at the current time. If undoMoveIdx is defined, then use it
+  // instead of `moveIdx`.
+  const getActiveMoveIdx = () => {
+      return (undoMoveIdx == undefined) ? moveIdx : undoMoveIdx;
+  }
+
   const isUsersTurn = (): boolean => {
-    return (moveIdx % 2 === 0) === (userColor === 'w');
+    return game.turn() === userColor;
   }
 
   // The state of the game as it is on the board
@@ -142,7 +154,7 @@ const HomePage: React.FunctionComponent = () => {
 
   const getNextUserMove = (): (ShortMove | null) => {
     if (isUsersTurn()) {
-      return gameNextMove.history({ verbose: true})[moveIdx]
+      return gameNextMove.history({ verbose: true})[getActiveMoveIdx()];
     }
     return null;
   }
@@ -178,7 +190,7 @@ const HomePage: React.FunctionComponent = () => {
   const incrementMoveIdx = () => { setMoveIdx(moveIdx + 1); }
 
   const doNextMove = () => {
-    const nextMove = legalTrap.moves[moveIdx];
+    const nextMove = legalTrap.moves[getActiveMoveIdx()];
     if (nextMove != undefined) {
       if (game.move(nextMove.move)) {
         advanceGameNextMove();
@@ -189,7 +201,7 @@ const HomePage: React.FunctionComponent = () => {
   };
 
   const advanceGameNextMove = () => {
-    const nextMove = legalTrap.moves[moveIdx + 1];
+    const nextMove = legalTrap.moves[getActiveMoveIdx() + 1];
     if (nextMove != undefined) {
       gameNextMove.move(nextMove.move);
     }
@@ -204,6 +216,7 @@ const HomePage: React.FunctionComponent = () => {
     gameNextMove.move(legalTrap.moves[0].move);
     setIsShowingMove(false);
     setComment(INITIAL_MESSAGE);
+    setUndoMoveIdx(undefined);
   };
 
   const scheduleCommentUpdate = (msg: string) => {
@@ -212,13 +225,24 @@ const HomePage: React.FunctionComponent = () => {
     }, SHOW_NEW_COMMENT_DELAY);
   }
 
+  const undoMove = () => {
+    game.undo();
+    gameNextMove.undo();
+    updateBoard();
+    if (undoMoveIdx == undefined) {
+      setUndoMoveIdx(moveIdx - 1);
+    } else {
+      setUndoMoveIdx(undoMoveIdx - 1);
+    }
+  }
+
   const updateComment = (msg?: string) => {
     if (msg != undefined) {
       scheduleCommentUpdate(msg)
       return;
     }
 
-    const nextMove = legalTrap.moves[moveIdx];
+    const nextMove = legalTrap.moves[getActiveMoveIdx()];
     if (nextMove == undefined) {
       return;
     }
@@ -228,7 +252,7 @@ const HomePage: React.FunctionComponent = () => {
     }
   }
 
-  // Whenever the moveIdx changes
+  // Whenever `moveIdx` or `undoMoveIdx` changes
   useEffect(() => {
     if (isUsersTurn()) {
       setTimeout(() => {
@@ -240,6 +264,11 @@ const HomePage: React.FunctionComponent = () => {
       // Do not highlight moves while it is the computer's turn
       setIsShowingMove(false);
 
+      // If we are in an undo, do not allow the computer to move
+      if (undoMoveIdx !== undefined) {
+        return;
+      }
+
       // The computer makes its move move after waiting a moment
       setTimeout(() => {
         doNextMove();
@@ -250,7 +279,11 @@ const HomePage: React.FunctionComponent = () => {
     if (moveIdx >= legalTrap.moves.length) {
       updateComment(legalTrap.finalComment);
     }
-  }, [moveIdx]);
+  }, [moveIdx, undoMoveIdx]);
+
+  const debug = () => {
+    console.log('You pressed the debug button!');
+  }
 
   return (
     <Grid item xs={12}>
@@ -265,6 +298,7 @@ const HomePage: React.FunctionComponent = () => {
               <Chessboard
                 width={650}
                 position={fen}
+                undo
                 boardStyle={{margin: 'auto', marginBottom: '12px'}}
                 squareStyles={showMove()}
                 onDrop={(move) =>
@@ -281,14 +315,34 @@ const HomePage: React.FunctionComponent = () => {
                 direction='row'
                 justify='center'
                 spacing={2} >
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={reset}
-                  disabled={moveIdx === 0}
-                >
-                  Restart
-                </Button>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={undoMove}
+                    disabled={moveIdx === 0}
+                  >
+                    Back
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={reset}
+                    disabled={moveIdx === 0}
+                  >
+                    Restart
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={debug}
+                  >
+                    Debug
+                  </Button>
+                </Grid>
               </Grid>
             </CardContent>
           </Card>
