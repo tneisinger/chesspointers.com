@@ -132,9 +132,9 @@ const HomePage: React.FunctionComponent = () => {
   // correct move, and/or to validate that the user's next move is the correct one.
   const [gameNextMove, setGameNextMove] = useState<ChessInstance>(new Chess());
 
-  // Advance the gameNextMove state by one move
+  // Advance the gameNextMove state by one move, using the first move
   useEffect(() => {
-    gameNextMove.move(legalTrap.moves[moveIdx].move);
+    gameNextMove.move(legalTrap.moves[0].move);
   }, []);
 
   const getNextUserMove = (): (ShortMove | null) => {
