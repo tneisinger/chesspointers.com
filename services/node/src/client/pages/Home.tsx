@@ -128,6 +128,9 @@ const HomePage: React.FunctionComponent = () => {
   // Determines the layout of the pieces on the board
   const [fen, setFen] = useState(game.fen());
 
+  // Use this function to set the fen variable, which will update the board position.
+  const updateBoard = () => setFen(game.fen());
+
   // The state of the game one move ahead. This is used to highlight the user's next
   // correct move, and/or to validate that the user's next move is the correct one.
   const [gameNextMove, setGameNextMove] = useState<ChessInstance>(new Chess());
@@ -180,7 +183,7 @@ const HomePage: React.FunctionComponent = () => {
       if (game.move(nextMove.move)) {
         advanceGameNextMove();
         incrementMoveIdx();
-        setFen(game.fen());
+        updateBoard();
       }
     }
   };
@@ -194,13 +197,11 @@ const HomePage: React.FunctionComponent = () => {
 
   const reset = () => {
     setMoveIdx(0);
-    const newGame = new Chess();
-    setGame(newGame);
-    setFen(newGame.fen());
-    const newGameNextMove = new Chess();
+    game.reset();
+    updateBoard();
+    gameNextMove.reset();
 
-    newGameNextMove.move(legalTrap.moves[0].move);
-    setGameNextMove(newGameNextMove);
+    gameNextMove.move(legalTrap.moves[0].move);
     setIsShowingMove(false);
     setComment(INITIAL_MESSAGE);
   };
