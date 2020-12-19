@@ -4,6 +4,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import React, { useState, useEffect } from 'react';
 import Chessboard from "chessboardjsx";
 import { ChessInstance, ShortMove } from "chess.js";
@@ -105,7 +108,10 @@ const useStyles = makeStyles(() => ({
   },
   belowChessBoard: {
     marginTop: '12px',
-  }
+  },
+  arrowButton: {
+    marginTop: '-10px',
+  },
 }));
 
 const HomePage: React.FunctionComponent = () => {
@@ -123,15 +129,23 @@ const HomePage: React.FunctionComponent = () => {
   // we are in an undo state.
   const [undoMoveIdx, setUndoMoveIdx] = useState<undefined | number>(undefined);
 
+  const isUndoActive = (): boolean => {
+    return undoMoveIdx != undefined;
+  }
+
   // Use this function to get the move index variable (either `moveIdx` or `undoMoveIdx`)
   // that should be used at the current time. If undoMoveIdx is defined, then use it
   // instead of `moveIdx`.
   const getActiveMoveIdx = () => {
-      return (undoMoveIdx == undefined) ? moveIdx : undoMoveIdx;
+      return isUndoActive() ? undoMoveIdx : moveIdx;
   }
 
   const isUsersTurn = (): boolean => {
     return game.turn() === userColor;
+  }
+
+  const haveAllMovesBeenPlayed = (): boolean => {
+    return getActiveMoveIdx() >= legalTrap.moves.length;
   }
 
   // The state of the game as it is on the board
@@ -187,14 +201,20 @@ const HomePage: React.FunctionComponent = () => {
     }
   };
 
-  const incrementMoveIdx = () => { setMoveIdx(moveIdx + 1); }
+  const incrementActiveMoveIdx = () => {
+    if (isUndoActive()) {
+      setUndoMoveIdx(undoMoveIdx + 1);
+    } else{
+      setMoveIdx(moveIdx + 1);
+    }
+  }
 
   const doNextMove = () => {
     const nextMove = legalTrap.moves[getActiveMoveIdx()];
     if (nextMove != undefined) {
       if (game.move(nextMove.move)) {
         advanceGameNextMove();
-        incrementMoveIdx();
+        incrementActiveMoveIdx();
         updateBoard();
       }
     }
@@ -225,7 +245,7 @@ const HomePage: React.FunctionComponent = () => {
     }, SHOW_NEW_COMMENT_DELAY);
   }
 
-  const undoMove = () => {
+  const moveBack = () => {
     game.undo();
     gameNextMove.undo();
     updateBoard();
@@ -236,15 +256,25 @@ const HomePage: React.FunctionComponent = () => {
     }
   }
 
+  const moveForward = () => {
+    doNextMove();
+    updateComment();
+  }
+
   const updateComment = (msg?: string) => {
     if (msg != undefined) {
       scheduleCommentUpdate(msg)
       return;
     }
 
+    if (haveAllMovesBeenPlayed()) {
+      scheduleCommentUpdate(legalTrap.finalComment);
+      return;
+    }
+
     const nextMove = legalTrap.moves[getActiveMoveIdx()];
     if (nextMove == undefined) {
-      return;
+      throw new Error("Cannot update comment for undefined move");
     }
 
     if (nextMove.comment) {
@@ -274,10 +304,6 @@ const HomePage: React.FunctionComponent = () => {
         doNextMove();
         updateComment();
       }, COMPUTER_THINK_TIME);
-    }
-
-    if (moveIdx >= legalTrap.moves.length) {
-      updateComment(legalTrap.finalComment);
     }
   }, [moveIdx, undoMoveIdx]);
 
@@ -316,13 +342,22 @@ const HomePage: React.FunctionComponent = () => {
                 justify='center'
                 spacing={2} >
                 <Grid item>
-                  <Button
-                    variant="contained"
-                    onClick={undoMove}
-                    disabled={moveIdx === 0}
+                  <IconButton
+                    className={classes.arrowButton}
+                    aria-label="back"
+                    onClick={moveBack}
+                    disabled={getActiveMoveIdx() === 0}
                   >
-                    Back
-                  </Button>
+                    <ArrowLeftIcon fontSize='large'/>
+                  </IconButton>
+                  <IconButton
+                    className={classes.arrowButton}
+                    aria-label="forward"
+                    onClick={moveForward}
+                    disabled={haveAllMovesBeenPlayed()}
+                  >
+                    <ArrowRightIcon fontSize='large' />
+                  </IconButton>
                 </Grid>
                 <Grid item>
                   <Button
