@@ -9,29 +9,88 @@ import Chessboard from "chessboardjsx";
 import { ChessInstance, ShortMove } from "chess.js";
 const Chess = require('chess.js');
 
-const legalTrap = [
-  'e4',
-  'e5',
-  'Nf3',
-  'Nc6',
-  'Bc4',
-  'd6',
-  'Nc3',
-  'Bg4',
-  'h3',
-  'Bh5',
-  'Nxe5',
-  'Bxd1',
-  'Bxf7',
-  'Ke7',
-  'Nd5',
-];
+type Move = {
+  move: string,
+  comment?: string
+}
+
+type Trap = {
+  endsInCheckmate: boolean,
+  isPlayedByWhite: boolean,
+  moves: Move[],
+  finalComment: string
+}
+
+const legalTrap: Trap = {
+  endsInCheckmate: true,
+  isPlayedByWhite: true,
+  finalComment: 'That\'s checkmate!',
+  moves: [
+    {
+      move: 'e4',
+      comment: 'The legal trap begins with white moving the King\'s pawn to e4.',
+    },
+    {
+      move: 'e5',
+    },
+    {
+      move: 'Nf3',
+      comment: 'White continues to develop an Italian Game.',
+    },
+    {
+      move: 'Nc6',
+    },
+    {
+      move: 'Bc4',
+    },
+    {
+      move: 'd6',
+    },
+    {
+      move: 'Nc3',
+    },
+    {
+      move: 'Bg4',
+    },
+    {
+      move: 'h3',
+    },
+    {
+      move: 'Bh5',
+    },
+    {
+      move: 'Nxe5',
+      comment: 'Next is white\'s key move! It looks looks like a blunder, but it\'s not.'
+    },
+    {
+      move: 'Bxd1',
+      comment: 'If black takes the queen here, then it is mate in two for white!'
+    },
+    {
+      move: 'Bxf7',
+    },
+    {
+      move: 'Ke7',
+    },
+    {
+      move: 'Nd5',
+      comment: 'Deliver checkmate!',
+    },
+  ]
+};
 
 const COMPUTER_THINK_TIME = 500;
 
 const SHOW_NEXT_MOVE_DELAY = 1500;
 
+const SHOW_NEW_MESSAGE_DELAY = 500;
+
+const INITIAL_MESSAGE = "Welcome!";
+
 const useStyles = makeStyles(() => ({
+  mainCard: {
+    padding: '0 40px',
+  },
   msg: {
     textAlign: 'center',
     paddingBottom: '12px',
@@ -51,6 +110,8 @@ const useStyles = makeStyles(() => ({
 
 const HomePage: React.FunctionComponent = () => {
   const classes = useStyles({});
+
+  const [message, setMessage] = useState<string>(INITIAL_MESSAGE);
 
   const [userColor] = useState<'w' | 'b'>('w');
 
@@ -72,7 +133,9 @@ const HomePage: React.FunctionComponent = () => {
   const [gameNextMove, setGameNextMove] = useState<ChessInstance>(new Chess());
 
   // Advance the gameNextMove state by one move
-  gameNextMove.move(legalTrap[moveIdx]);
+  useEffect(() => {
+    gameNextMove.move(legalTrap.moves[moveIdx].move);
+  }, []);
 
   const getNextUserMove = (): (ShortMove | null) => {
     if (isUsersTurn()) {
@@ -112,10 +175,20 @@ const HomePage: React.FunctionComponent = () => {
   const incrementMoveIdx = () => { setMoveIdx(moveIdx + 1); }
 
   const doNextMove = () => {
-    if (game.move(legalTrap[moveIdx])) {
-      gameNextMove.move(legalTrap[moveIdx + 1]);
-      incrementMoveIdx();
-      setFen(game.fen());
+    const nextMove = legalTrap.moves[moveIdx];
+    if (nextMove != undefined) {
+      if (game.move(nextMove.move)) {
+        advanceGameNextMove();
+        incrementMoveIdx();
+        setFen(game.fen());
+      }
+    }
+  };
+
+  const advanceGameNextMove = () => {
+    const nextMove = legalTrap.moves[moveIdx + 1];
+    if (nextMove != undefined) {
+      gameNextMove.move(nextMove.move);
     }
   };
 
@@ -126,17 +199,41 @@ const HomePage: React.FunctionComponent = () => {
     setFen(newGame.fen());
     const newGameNextMove = new Chess();
 
-    newGameNextMove.move(legalTrap[0]);
+    newGameNextMove.move(legalTrap.moves[0].move);
     setGameNextMove(newGameNextMove);
     setIsShowingMove(false);
+    setMessage(INITIAL_MESSAGE);
   };
 
-  // When it becomes the computer's turn...
+  const scheduleMessageUpdate = (msg: string) => {
+    setTimeout(() => {
+      setMessage(msg);
+    }, SHOW_NEW_MESSAGE_DELAY);
+  }
+
+  const updateMessage = (msg?: string) => {
+    if (msg != undefined) {
+      scheduleMessageUpdate(msg)
+      return;
+    }
+
+    const nextMove = legalTrap.moves[moveIdx];
+    if (nextMove == undefined) {
+      return;
+    }
+
+    if (nextMove.comment) {
+      scheduleMessageUpdate(nextMove.comment);
+    }
+  }
+
+  // Whenever the moveIdx changes
   useEffect(() => {
     if (isUsersTurn()) {
       setTimeout(() => {
         setIsShowingMove(true);
-      }, (SHOW_NEXT_MOVE_DELAY));
+        updateMessage();
+      }, SHOW_NEXT_MOVE_DELAY);
 
     } else {
       // Do not highlight moves while it is the computer's turn
@@ -145,19 +242,24 @@ const HomePage: React.FunctionComponent = () => {
       // The computer makes its move move after waiting a moment
       setTimeout(() => {
         doNextMove();
+        updateMessage();
       }, COMPUTER_THINK_TIME);
     }
-  }, [moveIdx, isUsersTurn]);
+
+    if (moveIdx >= legalTrap.moves.length) {
+      updateMessage(legalTrap.finalComment);
+    }
+  }, [moveIdx]);
 
   return (
     <Grid item xs={12}>
       <Grid container direction='row' justify='center' spacing={2}>
-        <Grid item xs={6}>
-          <Card>
+        <Grid item>
+          <Card className={classes.mainCard}>
             <CardHeader className={classes.cardHeader} title='The Legal Trap' />
             <CardContent>
               <Typography className={classes.msg}>
-                {game.in_checkmate() ? 'CHECKMATE!' : 'Keep going...'}
+                {message}
               </Typography>
               <Chessboard
                 width={650}
