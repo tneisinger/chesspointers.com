@@ -9,6 +9,14 @@ import Chessboard from "chessboardjsx";
 import { ChessInstance, ShortMove } from "chess.js";
 const Chess = require('chess.js');
 
+const COMPUTER_THINK_TIME = 500;
+
+const SHOW_NEXT_MOVE_DELAY = 1500;
+
+const SHOW_NEW_COMMENT_DELAY = 500;
+
+const INITIAL_MESSAGE = "Welcome!";
+
 type Move = {
   move: string,
   comment?: string
@@ -79,14 +87,6 @@ const legalTrap: Trap = {
   ]
 };
 
-const COMPUTER_THINK_TIME = 500;
-
-const SHOW_NEXT_MOVE_DELAY = 1500;
-
-const SHOW_NEW_MESSAGE_DELAY = 500;
-
-const INITIAL_MESSAGE = "Welcome!";
-
 const useStyles = makeStyles(() => ({
   mainCard: {
     padding: '0 40px',
@@ -111,7 +111,7 @@ const useStyles = makeStyles(() => ({
 const HomePage: React.FunctionComponent = () => {
   const classes = useStyles({});
 
-  const [message, setMessage] = useState<string>(INITIAL_MESSAGE);
+  const [comment, setComment] = useState<string>(INITIAL_MESSAGE);
 
   const [userColor] = useState<'w' | 'b'>('w');
 
@@ -202,18 +202,18 @@ const HomePage: React.FunctionComponent = () => {
     newGameNextMove.move(legalTrap.moves[0].move);
     setGameNextMove(newGameNextMove);
     setIsShowingMove(false);
-    setMessage(INITIAL_MESSAGE);
+    setComment(INITIAL_MESSAGE);
   };
 
-  const scheduleMessageUpdate = (msg: string) => {
+  const scheduleCommentUpdate = (msg: string) => {
     setTimeout(() => {
-      setMessage(msg);
-    }, SHOW_NEW_MESSAGE_DELAY);
+      setComment(msg);
+    }, SHOW_NEW_COMMENT_DELAY);
   }
 
-  const updateMessage = (msg?: string) => {
+  const updateComment = (msg?: string) => {
     if (msg != undefined) {
-      scheduleMessageUpdate(msg)
+      scheduleCommentUpdate(msg)
       return;
     }
 
@@ -223,7 +223,7 @@ const HomePage: React.FunctionComponent = () => {
     }
 
     if (nextMove.comment) {
-      scheduleMessageUpdate(nextMove.comment);
+      scheduleCommentUpdate(nextMove.comment);
     }
   }
 
@@ -232,7 +232,7 @@ const HomePage: React.FunctionComponent = () => {
     if (isUsersTurn()) {
       setTimeout(() => {
         setIsShowingMove(true);
-        updateMessage();
+        updateComment();
       }, SHOW_NEXT_MOVE_DELAY);
 
     } else {
@@ -242,12 +242,12 @@ const HomePage: React.FunctionComponent = () => {
       // The computer makes its move move after waiting a moment
       setTimeout(() => {
         doNextMove();
-        updateMessage();
+        updateComment();
       }, COMPUTER_THINK_TIME);
     }
 
     if (moveIdx >= legalTrap.moves.length) {
-      updateMessage(legalTrap.finalComment);
+      updateComment(legalTrap.finalComment);
     }
   }, [moveIdx]);
 
@@ -259,7 +259,7 @@ const HomePage: React.FunctionComponent = () => {
             <CardHeader className={classes.cardHeader} title='The Legal Trap' />
             <CardContent>
               <Typography className={classes.msg}>
-                {message}
+                {comment}
               </Typography>
               <Chessboard
                 width={650}
