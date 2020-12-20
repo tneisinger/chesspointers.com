@@ -41,14 +41,14 @@ const legalTrap: Trap = {
   moves: [
     {
       move: 'e4',
-      comment: 'The legal trap begins with white moving the King\'s pawn to e4.',
+      comment: 'The legal trap begins with pawn to e4.',
     },
     {
       move: 'e5',
     },
     {
       move: 'Nf3',
-      comment: 'White continues to develop an Italian Game.',
+      comment: 'White continues to develop into the Italian Game.',
     },
     {
       move: 'Nc6',
@@ -61,19 +61,21 @@ const legalTrap: Trap = {
     },
     {
       move: 'Nc3',
+      comment: 'This move is important. If the trap works, this knight will deliver checkmate.'
     },
     {
       move: 'Bg4',
     },
     {
       move: 'h3',
+      comment: 'This move will hopefully push black\'s bishop off of its original diagonal.'
     },
     {
       move: 'Bh5',
     },
     {
       move: 'Nxe5',
-      comment: 'Next is white\'s key move! It looks like a blunder, but it\'s not.'
+      comment: 'This is the key move for white. It looks like a blunder, but...'
     },
     {
       move: 'Bxd1',
