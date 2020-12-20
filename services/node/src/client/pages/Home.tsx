@@ -14,7 +14,7 @@ const Chess = require('chess.js');
 
 const COMPUTER_THINK_TIME = 500;
 
-const SHOW_NEXT_MOVE_DELAY = 1500;
+const SHOW_NEXT_MOVE_DELAY = 1000;
 
 const SHOW_NEW_COMMENT_DELAY = 500;
 
