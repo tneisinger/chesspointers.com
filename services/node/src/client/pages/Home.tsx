@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
 import React, { useState, useEffect } from 'react';
 import Chessboard from "chessboardjsx";
 import { ChessInstance, ShortMove } from "chess.js";
@@ -215,7 +217,7 @@ const HomePage: React.FunctionComponent = () => {
   };
 
   const advanceGameNextMove = () => {
-    const nextMove = legalTrap.moves[nextMoveIdx + 1];
+    const nextMove = legalTrap.moves[gameNextMove.history().length];
     if (nextMove != undefined) {
       gameNextMove.move(nextMove.move);
     }
@@ -280,6 +282,16 @@ const HomePage: React.FunctionComponent = () => {
     doNextMove();
   }
 
+  const jumpToEnd = () => {
+    const remainingMoves = legalTrap.moves.slice(nextMoveIdx);
+    remainingMoves.forEach(({ move }) => {
+      game.move(move);
+      advanceGameNextMove();
+    });
+    setNextMoveIdx(legalTrap.moves.length);
+    setFen(game.fen());
+  }
+
   // Whenever `nextMoveIdx` changes
   useEffect(() => {
     updateComment();
@@ -341,6 +353,14 @@ const HomePage: React.FunctionComponent = () => {
                 <Grid item>
                   <IconButton
                     className={classes.arrowButton}
+                    aria-label="jump to start"
+                    onClick={reset}
+                    disabled={nextMoveIdx === 0}
+                  >
+                    <SkipPreviousIcon />
+                  </IconButton>
+                  <IconButton
+                    className={classes.arrowButton}
                     aria-label="back"
                     onClick={moveBack}
                     disabled={nextMoveIdx === 0}
@@ -355,16 +375,14 @@ const HomePage: React.FunctionComponent = () => {
                   >
                     <ArrowRightIcon fontSize='large' />
                   </IconButton>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={reset}
-                    disabled={nextMoveIdx === 0}
+                  <IconButton
+                    className={classes.arrowButton}
+                    aria-label="jump to end"
+                    onClick={jumpToEnd}
+                    disabled={haveAllMovesBeenPlayed()}
                   >
-                    Restart
-                  </Button>
+                    <SkipNextIcon />
+                  </IconButton>
                 </Grid>
                 <Grid item>
                   <Button
