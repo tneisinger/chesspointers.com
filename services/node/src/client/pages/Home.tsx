@@ -267,7 +267,7 @@ const HomePage: React.FunctionComponent = () => {
     }
   }
 
-  // Whenever `moveIdx` or `undoMoveIdx` changes
+  // Whenever `moveIdx` changes
   useEffect(() => {
     if (isUsersTurn()) {
       setTimeout(() => {
