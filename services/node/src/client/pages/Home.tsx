@@ -16,7 +16,7 @@ const COMPUTER_THINK_TIME = 500;
 
 const SHOW_NEXT_MOVE_DELAY = 1000;
 
-const SHOW_NEW_COMMENT_DELAY = 500;
+const SHOW_NEW_COMMENT_DELAY = 1500;
 
 const INITIAL_MESSAGE = "Welcome!";
 
@@ -122,7 +122,7 @@ const HomePage: React.FunctionComponent = () => {
   const [userColor] = useState<'w' | 'b'>('w');
 
   // The index of the next moved to be played
-  const [moveIdx, setMoveIdx] = useState<number>(0);
+  const [nextMoveIdx, setNextMoveIdx] = useState<number>(0);
 
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
 
@@ -131,7 +131,7 @@ const HomePage: React.FunctionComponent = () => {
   }
 
   const haveAllMovesBeenPlayed = (): boolean => {
-    return moveIdx >= legalTrap.moves.length;
+    return nextMoveIdx >= legalTrap.moves.length;
   }
 
   // The state of the game as it is on the board
@@ -149,12 +149,13 @@ const HomePage: React.FunctionComponent = () => {
 
   // Advance the gameNextMove state by one move, using the first move
   useEffect(() => {
-    gameNextMove.move(legalTrap.moves[0].move);
+    // gameNextMove.move(legalTrap.moves[0].move);
+    reset();
   }, []);
 
   const getNextUserMove = (): (ShortMove | null) => {
     if (isUsersTurn()) {
-      return gameNextMove.history({ verbose: true})[moveIdx];
+      return gameNextMove.history({ verbose: true})[nextMoveIdx];
     }
     return null;
   }
@@ -191,30 +192,30 @@ const HomePage: React.FunctionComponent = () => {
     }
   };
 
-  const incrementMoveIdx = () => setMoveIdx(moveIdx + 1);
+  const incrementNextMoveIdx = () => setNextMoveIdx(nextMoveIdx + 1);
 
-  const decrementMoveIdx = () => setMoveIdx(moveIdx - 1);
+  const decrementNextMoveIdx = () => setNextMoveIdx(nextMoveIdx - 1);
 
   const doNextMove = () => {
-    const nextMove = legalTrap.moves[moveIdx];
+    const nextMove = legalTrap.moves[nextMoveIdx];
     if (nextMove != undefined) {
       if (game.move(nextMove.move)) {
         advanceGameNextMove();
-        incrementMoveIdx();
+        incrementNextMoveIdx();
         updateBoard();
       }
     }
   };
 
   const advanceGameNextMove = () => {
-    const nextMove = legalTrap.moves[moveIdx + 1];
+    const nextMove = legalTrap.moves[nextMoveIdx + 1];
     if (nextMove != undefined) {
       gameNextMove.move(nextMove.move);
     }
   };
 
   const reset = () => {
-    setMoveIdx(0);
+    setNextMoveIdx(0);
     game.reset();
     updateBoard();
     gameNextMove.reset();
@@ -224,10 +225,34 @@ const HomePage: React.FunctionComponent = () => {
     setComment(INITIAL_MESSAGE);
   };
 
-  const scheduleCommentUpdate = (msg: string) => {
+  const updateComment = (msg?: string) => {
+    if (haveAllMovesBeenPlayed()) {
+      scheduleCommentUpdate(legalTrap.finalComment);
+      return;
+    }
+    scheduleCommentUpdate(msg);
+  }
+
+  const scheduleCommentUpdate = (msg?: string) => {
     setTimeout(() => {
-      setComment(msg);
+      if (msg != undefined) {
+        setComment(msg);
+        return;
+      }
+
+      const nextComment = getNextMoveComment();
+      if (nextComment != undefined) {
+        setComment(nextComment);
+      }
     }, SHOW_NEW_COMMENT_DELAY);
+  }
+
+  const getNextMoveComment = () => {
+    const nextMove = legalTrap.moves[nextMoveIdx];
+    if (nextMove == undefined) {
+      return undefined;
+    }
+    return nextMove.comment;
   }
 
   const moveBack = () => {
@@ -245,43 +270,21 @@ const HomePage: React.FunctionComponent = () => {
 
     game.undo();
     updateBoard();
-    decrementMoveIdx();
+    decrementNextMoveIdx();
   }
 
   const moveForward = () => {
     // When the user clicks the forward button, turn off doesComputerAutoplay
     setDoesComputerAutoplay(false);
     doNextMove();
-    updateComment();
   }
 
-  const updateComment = (msg?: string) => {
-    if (msg != undefined) {
-      scheduleCommentUpdate(msg)
-      return;
-    }
-
-    if (haveAllMovesBeenPlayed()) {
-      scheduleCommentUpdate(legalTrap.finalComment);
-      return;
-    }
-
-    const nextMove = legalTrap.moves[moveIdx];
-    if (nextMove == undefined) {
-      throw new Error("Cannot update comment for undefined move");
-    }
-
-    if (nextMove.comment) {
-      scheduleCommentUpdate(nextMove.comment);
-    }
-  }
-
-  // Whenever `moveIdx` changes
+  // Whenever `nextMoveIdx` changes
   useEffect(() => {
+    updateComment();
     if (isUsersTurn()) {
       setTimeout(() => {
         setIsShowingMove(true);
-        updateComment();
       }, SHOW_NEXT_MOVE_DELAY);
 
     } else {
@@ -296,10 +299,9 @@ const HomePage: React.FunctionComponent = () => {
       // The computer makes its move move after waiting a moment
       setTimeout(() => {
         doNextMove();
-        updateComment();
       }, COMPUTER_THINK_TIME);
     }
-  }, [moveIdx]);
+  }, [nextMoveIdx]);
 
   const debug = () => {
     console.log('You pressed the debug button!');
@@ -340,7 +342,7 @@ const HomePage: React.FunctionComponent = () => {
                     className={classes.arrowButton}
                     aria-label="back"
                     onClick={moveBack}
-                    disabled={moveIdx === 0}
+                    disabled={nextMoveIdx === 0}
                   >
                     <ArrowLeftIcon fontSize='large'/>
                   </IconButton>
@@ -358,7 +360,7 @@ const HomePage: React.FunctionComponent = () => {
                     variant="contained"
                     color="secondary"
                     onClick={reset}
-                    disabled={moveIdx === 0}
+                    disabled={nextMoveIdx === 0}
                   >
                     Restart
                   </Button>
