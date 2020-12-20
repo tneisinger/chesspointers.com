@@ -233,8 +233,17 @@ const HomePage: React.FunctionComponent = () => {
   const moveBack = () => {
     // When the user clicks the back button, turn off doesComputerAutoplay
     setDoesComputerAutoplay(false);
+
+    // Normally, `gameNextMove` should stay one move ahead of `game`, but
+    // if all the moves have been played, then `gameNextMove` will be in the
+    // same state as `game`. Because of that, when the user presses the
+    // back arrow button, we only want to undo a move from `gameNextMove` if
+    // it is currently ahead of `game`.
+    if (gameNextMove.history().length > game.history().length) {
+      gameNextMove.undo();
+    }
+
     game.undo();
-    gameNextMove.undo();
     updateBoard();
     decrementMoveIdx();
   }
