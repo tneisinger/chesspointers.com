@@ -20,6 +20,8 @@ const SHOW_NEW_COMMENT_DELAY = 1500;
 
 const INITIAL_MESSAGE = "Welcome!";
 
+// TODO: Split 'comment' into 'positionComment' and 'moveComment'. Show 'moveComment'
+// first, and 'positionComment' after the move.
 type Move = {
   move: string,
   comment?: string
