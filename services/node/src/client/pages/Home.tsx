@@ -240,20 +240,14 @@ const HomePage: React.FunctionComponent = () => {
         return;
       }
 
-      const nextComment = getNextMoveComment();
-      if (nextComment != undefined) {
-        setComment(nextComment);
+      const nextMove = getNextMove();
+      if (nextMove.comment != undefined) {
+        setComment(nextMove.comment);
       }
     }, SHOW_NEW_COMMENT_DELAY);
   }
 
-  const getNextMoveComment = () => {
-    const nextMove = legalTrap.moves[nextMoveIdx];
-    if (nextMove == undefined) {
-      return undefined;
-    }
-    return nextMove.comment;
-  }
+  const getNextMove = () => legalTrap.moves[nextMoveIdx];
 
   const moveBack = () => {
     // When the user clicks the back button, turn off doesComputerAutoplay
