@@ -83,6 +83,7 @@ const legalTrap: Trap = {
     },
     {
       move: 'Bxf7',
+      comment: 'Check the king with your bishop.'
     },
     {
       move: 'Ke7',
@@ -98,9 +99,11 @@ const useStyles = makeStyles(() => ({
   mainCard: {
     padding: '0 40px',
   },
-  msg: {
+  comment: {
     textAlign: 'center',
-    paddingBottom: '12px',
+    marginTop: '16px',
+    marginBottom: 0,
+    paddingBottom: 0,
   },
   cardContent: {
     margin: 'auto',
@@ -111,7 +114,7 @@ const useStyles = makeStyles(() => ({
     marginBottom: '0',
   },
   belowChessBoard: {
-    marginTop: '12px',
+    marginTop: '8px',
   },
   arrowButton: {
     marginTop: '-10px',
@@ -312,9 +315,6 @@ const HomePage: React.FunctionComponent = () => {
           <Card className={classes.mainCard}>
             <CardHeader className={classes.cardHeader} title='The Legal Trap' />
             <CardContent>
-              <Typography className={classes.msg}>
-                {comment}
-              </Typography>
               <Chessboard
                 width={650}
                 position={fen}
@@ -329,6 +329,9 @@ const HomePage: React.FunctionComponent = () => {
                   })
                 }
               />
+              <Typography className={classes.comment}>
+                {comment}
+              </Typography>
               <Grid
                 className={classes.belowChessBoard}
                 container
