@@ -144,7 +144,7 @@ const HomePage: React.FunctionComponent = () => {
   }
 
   // The state of the game as it is on the board
-  const [game, setGame] = useState<ChessInstance>(new Chess());
+  const [game] = useState<ChessInstance>(new Chess());
 
   // Determines the layout of the pieces on the board
   const [fen, setFen] = useState(game.fen());
@@ -154,7 +154,7 @@ const HomePage: React.FunctionComponent = () => {
 
   // The state of the game one move ahead. This is used to highlight the user's next
   // correct move, and/or to validate that the user's next move is the correct one.
-  const [gameNextMove, setGameNextMove] = useState<ChessInstance>(new Chess());
+  const [gameNextMove] = useState<ChessInstance>(new Chess());
 
   // Advance the gameNextMove state by one move, using the first move
   useEffect(() => {
