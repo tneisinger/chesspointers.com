@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { User } from '../../shared/entity/user';
 import { fetchUsers } from '../utils/api';
-import { RequestStatus } from '../utils/types';
+import { RequestStatus } from '../types/general';
 import AppThunk from './appThunk';
 
 export interface UsersState {
