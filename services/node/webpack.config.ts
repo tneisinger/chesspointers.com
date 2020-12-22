@@ -101,6 +101,13 @@ const config: Configuration = {
         test: /.jpe?g$|.gif$|.png$|.svg$|.woff$|.woff2$|.ttf$|.eot$/,
         use: 'url-loader?limit=10000',
       },
+      // Below added to fix import of chess.js (Needed for jest to work with chess.js)
+      {
+        test: /chess.js/,
+        parser: {
+          amd: false,
+        },
+      }
     ],
   },
   devServer: {
