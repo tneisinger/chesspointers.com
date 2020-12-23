@@ -9,9 +9,8 @@ import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import React, { useState, useEffect } from 'react';
 import Chessboard from "chessboardjsx";
-import { ChessInstance, ShortMove } from "chess.js";
+import { Chess, ChessInstance, ShortMove } from "chess.js";
 import { ChessSequence } from '../types/chess';
-const { Chess } = require('chess.js');
 
 const COMPUTER_THINK_TIME = 500;
 
