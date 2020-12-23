@@ -44,7 +44,7 @@ const ChessNavBtns: React.FunctionComponent<Props> = ({
       </IconButton>
       <IconButton
         className={classes.arrowButton}
-        aria-label="back"
+        aria-label="step back"
         onClick={stepBack}
         disabled={atStart}
       >
@@ -52,7 +52,7 @@ const ChessNavBtns: React.FunctionComponent<Props> = ({
       </IconButton>
       <IconButton
         className={classes.arrowButton}
-        aria-label="forward"
+        aria-label="step forward"
         onClick={stepForward}
         disabled={atEnd}
       >
