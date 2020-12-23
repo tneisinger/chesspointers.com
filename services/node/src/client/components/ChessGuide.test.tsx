@@ -35,7 +35,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     expect(screen.getByText("Welcome!")).toBeInTheDocument();
   });
 
-  it('should show the first comment after waiting two seconds', async () => {
+  it('should show the first move comment after waiting two seconds', async () => {
     render(<ChessGuide chessSequence={simpleChessSequence} />);
     await waitFor(() => screen.getByText(firstMoveComment), { timeout: 2000 });
   });
