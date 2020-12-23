@@ -98,6 +98,8 @@
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
     "@material-ui/core": "^4.11.0",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
     "@types/chess.js": "^0.10.1",
     "@types/cssnano": "^4.0.0",
     "@types/enzyme": "^3.10.6",
