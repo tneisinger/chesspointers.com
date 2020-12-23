@@ -123,16 +123,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   };
 
-  const incrementNextMoveIdx = () => setNextMoveIdx(nextMoveIdx + 1);
-
-  const decrementNextMoveIdx = () => setNextMoveIdx(nextMoveIdx - 1);
-
   const doNextMove = () => {
     const nextMove = chessSequence.moves[nextMoveIdx];
     if (nextMove != undefined) {
       if (game.move(nextMove.move)) {
         advanceGameNextMove();
-        incrementNextMoveIdx();
+        setNextMoveIdx(nextMoveIdx + 1)
         updateBoard();
       }
     }
@@ -195,7 +191,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
     game.undo();
     updateBoard();
-    decrementNextMoveIdx();
+    setNextMoveIdx(nextMoveIdx - 1);
   }
 
   const moveForward = () => {
