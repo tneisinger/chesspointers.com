@@ -2,15 +2,11 @@ import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
 import React, { useState, useEffect } from 'react';
 import Chessboard from "chessboardjsx";
 import { Chess, ChessInstance, ShortMove } from "chess.js";
 import { ChessSequence } from '../types/chess';
+import ChessNavBtns from './ChessNavBtns';
 
 const COMPUTER_THINK_TIME = 500;
 
@@ -40,9 +36,6 @@ const useStyles = makeStyles(() => ({
   },
   belowChessBoard: {
     marginTop: '8px',
-  },
-  arrowButton: {
-    marginTop: '-10px',
   },
 }));
 
@@ -275,40 +268,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         direction='row'
         justify='center'
         spacing={2} >
-        <Grid item>
-          <IconButton
-            className={classes.arrowButton}
-            aria-label="jump to start"
-            onClick={reset}
-            disabled={nextMoveIdx === 0}
-          >
-            <SkipPreviousIcon />
-          </IconButton>
-          <IconButton
-            className={classes.arrowButton}
-            aria-label="back"
-            onClick={moveBack}
-            disabled={nextMoveIdx === 0}
-          >
-            <ArrowLeftIcon fontSize='large'/>
-          </IconButton>
-          <IconButton
-            className={classes.arrowButton}
-            aria-label="forward"
-            onClick={moveForward}
-            disabled={haveAllMovesBeenPlayed()}
-          >
-            <ArrowRightIcon fontSize='large' />
-          </IconButton>
-          <IconButton
-            className={classes.arrowButton}
-            aria-label="jump to end"
-            onClick={jumpToEnd}
-            disabled={haveAllMovesBeenPlayed()}
-          >
-            <SkipNextIcon />
-          </IconButton>
-        </Grid>
+        <ChessNavBtns
+          atStart={nextMoveIdx === 0}
+          atEnd={haveAllMovesBeenPlayed()}
+          jumpToStart={reset}
+          jumpToEnd={jumpToEnd}
+          stepForward={moveForward}
+          stepBack={moveBack}
+        />
         <Grid item>
           <Button
             variant="contained"
