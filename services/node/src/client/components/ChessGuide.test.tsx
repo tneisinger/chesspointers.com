@@ -1,11 +1,8 @@
 import React from 'react';
-import { render, waitFor, screen } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect'
-import { shallow } from 'enzyme';
-import Chessboard from "chessboardjsx";
 import ChessGuide, { HIGHLIGHTED_SQUARE_BOX_SHADOW } from './ChessGuide';
 import { ChessSequence } from '../types/chess';
-
 
 const highlightSquareStyle = `box-shadow: ${HIGHLIGHTED_SQUARE_BOX_SHADOW}`;
 
@@ -34,13 +31,13 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   });
 
   it('should show the welcome comment', () => {
-    render(<ChessGuide chessSequence={simpleChessSequence} />);
-    expect(screen.getByText("Welcome!")).toBeInTheDocument();
+    const { getByText } = render(<ChessGuide chessSequence={simpleChessSequence} />);
+    expect(getByText("Welcome!")).toBeInTheDocument();
   });
 
-  it('should show the first move comment after waiting two seconds', async () => {
-    render(<ChessGuide chessSequence={simpleChessSequence} />);
-    await waitFor(() => screen.getByText(firstMoveComment), { timeout: 2000 });
+  it('should show the first move comment after short wait', async () => {
+    const { getByText } = render(<ChessGuide chessSequence={simpleChessSequence} />);
+    await waitFor(() => getByText(firstMoveComment));
   });
 
   it('should not highlight first move start square initially', () => {
