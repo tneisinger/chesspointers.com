@@ -119,6 +119,17 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     await waitFor(() => getByText(thirdMoveComment));
   });
 
+  it('highlights third move after stepForwardBtn clicked twice', async () => {
+    const { container } =
+      render(<ChessGuide chessSequence={simpleChessSequence} />);
+    const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
+    fireEvent.click(stepForwardBtn);
+    fireEvent.click(stepForwardBtn);
+    await waitFor(() =>
+      expectSquaresToBeHighlighted(container, ['g1', 'f3'])
+    );
+  });
+
   // Note: I haven't been able to get tests to perform drag-and-drop events,
   // so I'm giving up on that for now.
   // Below is my last failed attempt to drag-and-drop in a test.
