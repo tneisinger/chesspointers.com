@@ -110,7 +110,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     }, { timeout: 1000 });
   });
 
-  it('shows comment for third move when stepForwardBtn clicked twice', async () => {
+  it('shows third move comment when stepForwardBtn clicked three times', async () => {
     const { container, getByText } =
       render(<ChessGuide chessSequence={simpleChessSequence} />);
     const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
