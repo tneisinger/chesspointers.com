@@ -43,10 +43,15 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   chessSequence: ChessSequence
+
+  // if set to true, always autoplay the computer's moves, even when the step forward
+  // button is clicked.
+  alwaysAutoplay?: boolean
 }
 
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessSequence,
+  alwaysAutoplay,
 }) => {
   const classes = useStyles({});
 
@@ -197,8 +202,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   const moveForward = () => {
-    // When the user clicks the forward button, turn off doesComputerAutoplay
-    setDoesComputerAutoplay(false);
+    // Unless the `alwaysAutoplay` prop is set to true, whenever the user clicks
+    // the forward button, turn off doesComputerAutoplay
+    if (alwaysAutoplay != undefined) {
+      setDoesComputerAutoplay(alwaysAutoplay);
+    } else {
+      setDoesComputerAutoplay(false);
+    }
     doNextMove();
   }
 

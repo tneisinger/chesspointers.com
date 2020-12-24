@@ -94,6 +94,21 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     getByTestId('bP-e5');
   });
 
+  it('should autoplay when prop true and stepForwardBtn clicked', async () => {
+    const { container, getByTestId } = render(
+        <ChessGuide
+          chessSequence={simpleChessSequence}
+          alwaysAutoplay={true}
+        />
+    );
+    const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
+    fireEvent.click(stepForwardBtn);
+    await waitFor(() => {
+      getByTestId('wP-e4');
+      getByTestId('bP-e5');
+    }, { timeout: 1000 });
+  });
+
   // Note: I haven't been able to get tests to perform drag-and-drop events,
   // so I'm giving up on that for now.
   // Below is my last failed attempt to drag-and-drop in a test.
