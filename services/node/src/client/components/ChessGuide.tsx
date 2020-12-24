@@ -16,6 +16,8 @@ const SHOW_NEW_COMMENT_DELAY = 1500;
 
 const INITIAL_MESSAGE = "Welcome!";
 
+export const HIGHLIGHTED_SQUARE_BOX_SHADOW = 'inset 0 0 2px 4px orange';
+
 const useStyles = makeStyles(() => ({
   mainCard: {
     padding: '0 40px',
@@ -98,7 +100,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     if (isShowingMove && nextUserMove) {
       const { from, to } = nextUserMove
       const highlight = {
-        boxShadow: 'inset 0 0 2px 4px orange',
+        boxShadow: HIGHLIGHTED_SQUARE_BOX_SHADOW,
       };
       return {
         [from]: highlight,
