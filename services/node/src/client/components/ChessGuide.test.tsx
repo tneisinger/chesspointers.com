@@ -29,8 +29,8 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   }
 
   it('should have a Chessboard component', () => {
-    const chessGuide = shallow(<ChessGuide chessSequence={simpleChessSequence} />);
-    expect(chessGuide.find(Chessboard).length).toEqual(1);
+    const { container } = render(<ChessGuide chessSequence={simpleChessSequence} />);
+    expect(container.querySelector('[data-boardid="0"]')).not.toBeNull();
   });
 
   it('should show the welcome comment', () => {
