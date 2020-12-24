@@ -25,6 +25,7 @@ const expectSquaresNotToBeHighlighted = (container: Element, squares: string[]) 
 
 describe('<ChessGuide /> with simple chessSequence', () => {
   const firstMoveComment = 'This is the first move';
+  const thirdMoveComment = 'This is the third move';
   const simpleChessSequence: ChessSequence = {
     endsInCheckmate: false,
     isPlayedByWhite: true,
@@ -33,7 +34,9 @@ describe('<ChessGuide /> with simple chessSequence', () => {
         comment: firstMoveComment,
       },
       { move: 'e5' },
-      { move: 'Nf3' },
+      { move: 'Nf3',
+        comment: thirdMoveComment,
+      },
       { move: 'Nc6' },
     ],
     finalComment: ''
@@ -105,6 +108,16 @@ describe('<ChessGuide /> with simple chessSequence', () => {
       getByTestId('wP-e4');
       getByTestId('bP-e5');
     }, { timeout: 1000 });
+  });
+
+  it('shows third move comment when stepForwardBtn clicked three times', async () => {
+    const { container, getByText } =
+      render(<ChessGuide chessSequence={simpleChessSequence} />);
+    const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
+    fireEvent.click(stepForwardBtn);
+    fireEvent.click(stepForwardBtn);
+    fireEvent.click(stepForwardBtn);
+    await waitFor(() => getByText(thirdMoveComment));
   });
 
   // Note: I haven't been able to get tests to perform drag-and-drop events,
