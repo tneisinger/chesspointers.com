@@ -9,6 +9,20 @@ const highlightSquareStyle = `box-shadow: ${HIGHLIGHTED_SQUARE_BOX_SHADOW}`;
 
 jest.useFakeTimers();
 
+const expectSquaresToBeHighlighted = (container: Element, squares: string[]) => {
+  squares.forEach((square) => {
+    const squareElem = container.querySelector(`[data-squareid="${square}"]`);
+    expect(squareElem.firstChild).toHaveStyle(highlightSquareStyle);
+  });
+};
+
+const expectSquaresNotToBeHighlighted = (container: Element, squares: string[]) => {
+  squares.forEach((square) => {
+    const squareElem = container.querySelector(`[data-squareid="${square}"]`);
+    expect(squareElem.firstChild).not.toHaveStyle(highlightSquareStyle);
+  });
+};
+
 describe('<ChessGuide /> with simple chessSequence', () => {
   const firstMoveComment = 'This is the first move';
   const simpleChessSequence: ChessSequence = {
@@ -40,31 +54,15 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     await waitFor(() => getByText(firstMoveComment));
   });
 
-  it('should not highlight first move start square initially', () => {
+  it('should not highlight first move initially', () => {
     const { container } = render(<ChessGuide chessSequence={simpleChessSequence} />);
-    const e2Square = container.querySelector('[data-squareid="e2"]');
-    expect(e2Square.firstChild).not.toHaveStyle(highlightSquareStyle);
+    expectSquaresNotToBeHighlighted(container, ['e2', 'e4']);
   });
 
-  it('should not highlight first move target square initially', () => {
-    const { container } = render(<ChessGuide chessSequence={simpleChessSequence} />);
-    const e4Square = container.querySelector('[data-squareid="e4"]');
-    expect(e4Square.firstChild).not.toHaveStyle(highlightSquareStyle);
-  });
-
-  it('should highlight first move start square after short wait', async () => {
+  it('should highlight first move after short wait', async () => {
     const { container } = render(<ChessGuide chessSequence={simpleChessSequence} />);
     await waitFor(() => {
-      const e2Square = container.querySelector('[data-squareid="e2"]');
-      expect(e2Square.firstChild).toHaveStyle(highlightSquareStyle);
-    }, { timeout: 2000 });
-  });
-
-  it('should highlight first move target square after short wait', async () => {
-    const { container } = render(<ChessGuide chessSequence={simpleChessSequence} />);
-    await waitFor(() => {
-      const e4Square = container.querySelector('[data-squareid="e4"]');
-      expect(e4Square.firstChild).toHaveStyle(highlightSquareStyle);
+      expectSquaresToBeHighlighted(container, ['e2', 'e4']);
     }, { timeout: 2000 });
   });
 
