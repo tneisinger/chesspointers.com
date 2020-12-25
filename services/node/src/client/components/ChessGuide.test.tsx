@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor, fireEvent } from '@testing-library/react';
+import { render, waitFor, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/extend-expect';
 import ChessGuide, { HIGHLIGHTED_SQUARE_BOX_SHADOW } from './ChessGuide';
@@ -22,6 +22,22 @@ const expectSquaresNotToBeHighlighted = (container: Element, squares: string[]) 
     expect(squareElem.firstChild).not.toHaveStyle(highlightSquareStyle);
   });
 };
+
+// Don't print annoying warnings and errors to the console when running tests
+beforeAll(() => {
+  jest.spyOn(console, 'warn').mockImplementation((msg: string, ...rest) => {
+    if (msg.startsWith("Warning: componentWillReceiveProps has been renamed")) {
+      return;
+    } else {
+      console.warn(msg, ...rest)
+    }
+  });
+});
+
+// Clearing timers before each test prevents an error message
+beforeEach(() => {
+  jest.clearAllTimers();
+});
 
 describe('<ChessGuide /> with simple chessSequence', () => {
   const firstMoveComment = 'This is the first move';
@@ -135,10 +151,22 @@ describe('<ChessGuide /> with simple chessSequence', () => {
       render(<ChessGuide chessSequence={simpleChessSequence} />);
     const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
     const stepBackBtn = container.querySelector('[aria-label="step back"]');
-    fireEvent.click(stepForwardBtn);
-    fireEvent.click(stepForwardBtn);
-    fireEvent.click(stepBackBtn);
-    jest.advanceTimersByTime(3000);
+    act(() => {
+      fireEvent.click(stepForwardBtn);
+      return undefined;
+    });
+    act(() => {
+      fireEvent.click(stepForwardBtn);
+      return undefined;
+    });
+    act(() => {
+      fireEvent.click(stepBackBtn);
+      return undefined;
+    });
+    act(() => {
+      jest.advanceTimersByTime(3000);
+      return undefined;
+    });
     expect(queryByText(thirdMoveComment)).toBeNull();
   });
 
