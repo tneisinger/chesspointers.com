@@ -64,6 +64,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
 
+  const [shouldHideOutdatedComments, setShouldHideOutdatedComments] =
+    useState<boolean>(false);
+
+  const [commentUpdateTimeout, setCommentUpdateTimeout] =
+    useState<number | undefined>(undefined);
+
   const isUsersTurn = (): boolean => {
     return game.turn() === userColor;
   }
@@ -131,6 +137,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const doNextMove = () => {
+    setShouldHideOutdatedComments(false);
     const nextMove = chessSequence.moves[nextMoveIdx];
     if (nextMove != undefined) {
       if (game.move(nextMove.move)) {
@@ -168,7 +175,15 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   const scheduleCommentUpdate = (msg?: string) => {
-    setTimeout(() => {
+    if ( msg == undefined
+         && getNextMove().comment == undefined
+         && shouldHideOutdatedComments) {
+      setComment("");
+      window.clearTimeout(commentUpdateTimeout);
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
       if (msg != undefined) {
         setComment(msg);
         return;
@@ -179,6 +194,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         setComment(nextMove.comment);
       }
     }, SHOW_NEW_COMMENT_DELAY);
+
+    setCommentUpdateTimeout(timeout);
   }
 
   const getNextMove = () => chessSequence.moves[nextMoveIdx];
@@ -186,6 +203,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const moveBack = () => {
     // When the user clicks the back button, turn off doesComputerAutoplay
     setDoesComputerAutoplay(false);
+
+    setShouldHideOutdatedComments(true);
 
     // Normally, `gameNextMove` should stay one move ahead of `game`, but
     // if all the moves have been played, then `gameNextMove` will be in the

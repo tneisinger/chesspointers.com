@@ -130,6 +130,18 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     );
   });
 
+  it('removes old comment if no new comment after stepBack', async () => {
+    const { container, queryByText } =
+      render(<ChessGuide chessSequence={simpleChessSequence} />);
+    const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
+    const stepBackBtn = container.querySelector('[aria-label="step back"]');
+    fireEvent.click(stepForwardBtn);
+    fireEvent.click(stepForwardBtn);
+    fireEvent.click(stepBackBtn);
+    jest.advanceTimersByTime(3000);
+    expect(queryByText(thirdMoveComment)).toBeNull();
+  });
+
   // Note: I haven't been able to get tests to perform drag-and-drop events,
   // so I'm giving up on that for now.
   // Below is my last failed attempt to drag-and-drop in a test.
