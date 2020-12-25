@@ -146,7 +146,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     );
   });
 
-  it('removes old comment if no new comment after stepBack', async () => {
+  it('removes old comment if no new comment after stepBack', () => {
     const { container, queryByText } =
       render(<ChessGuide chessSequence={simpleChessSequence} />);
     const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
