@@ -27,6 +27,7 @@ const useStyles = makeStyles(() => ({
     marginTop: '16px',
     marginBottom: 0,
     paddingBottom: 0,
+    height: '20px',
   },
   cardContent: {
     margin: 'auto',
