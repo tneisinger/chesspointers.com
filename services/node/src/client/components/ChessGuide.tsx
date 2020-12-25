@@ -40,6 +40,10 @@ const useStyles = makeStyles(() => ({
   belowChessBoard: {
     marginTop: '8px',
   },
+  chessBoardDiv: {
+    background: 'radial-gradient(rgb(131, 86, 49) 70%, rgb(81, 36, 0))',
+    padding: '18px',
+  }
 }));
 
 interface Props {
@@ -273,20 +277,24 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   return (
     <>
-      <Chessboard
-        width={650}
-        position={fen}
-        undo
-        boardStyle={{margin: 'auto', marginBottom: '12px'}}
-        squareStyles={showMove()}
-        onDrop={(move) =>
-          handleMove({
-            from: move.sourceSquare,
-            to: move.targetSquare,
-            promotion: 'q',
-          })
-        }
-      />
+      <div className={classes.chessBoardDiv}>
+        <Chessboard
+          width={650}
+          position={fen}
+          undo
+          boardStyle={{
+              margin: 'auto',
+          }}
+          squareStyles={showMove()}
+          onDrop={(move) =>
+            handleMove({
+              from: move.sourceSquare,
+              to: move.targetSquare,
+              promotion: 'q',
+            })
+          }
+        />
+      </div>
       <Typography className={classes.comment}>
         {comment}
       </Typography>
