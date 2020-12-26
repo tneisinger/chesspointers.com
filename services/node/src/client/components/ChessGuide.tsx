@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import React, { useState, useEffect } from 'react';
 import Chessboard from "chessboardjsx";
@@ -12,22 +11,11 @@ const COMPUTER_THINK_TIME = 500;
 
 const SHOW_NEXT_MOVE_DELAY = 1000;
 
-const SHOW_NEW_COMMENT_DELAY = 1500;
-
-const INITIAL_MESSAGE = "Welcome!";
-
 export const HIGHLIGHTED_SQUARE_BOX_SHADOW = 'inset 0 0 2px 4px orange';
 
 const useStyles = makeStyles(() => ({
   mainCard: {
     padding: '0 40px',
-  },
-  comment: {
-    textAlign: 'center',
-    marginTop: '16px',
-    marginBottom: 0,
-    paddingBottom: 0,
-    height: '20px',
   },
   cardContent: {
     margin: 'auto',
@@ -60,20 +48,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 }) => {
   const classes = useStyles({});
 
-  const [comment, setComment] = useState<string>(INITIAL_MESSAGE);
-
   const [userColor] = useState<'w' | 'b'>('w');
 
   // The index of the next moved to be played
   const [nextMoveIdx, setNextMoveIdx] = useState<number>(0);
 
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
-
-  const [shouldHideOutdatedComments, setShouldHideOutdatedComments] =
-    useState<boolean>(false);
-
-  const [commentUpdateTimeout, setCommentUpdateTimeout] =
-    useState<number | undefined>(undefined);
 
   const isUsersTurn = (): boolean => {
     return game.turn() === userColor;
@@ -142,7 +122,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const doNextMove = () => {
-    setShouldHideOutdatedComments(false);
     const nextMove = chessSequence.moves[nextMoveIdx];
     if (nextMove != undefined) {
       if (game.move(nextMove.move)) {
@@ -168,48 +147,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
     gameNextMove.move(chessSequence.moves[0].move);
     setIsShowingMove(false);
-    setComment(INITIAL_MESSAGE);
   };
-
-  const updateComment = (msg?: string) => {
-    if (haveAllMovesBeenPlayed()) {
-      scheduleCommentUpdate(chessSequence.finalComment);
-      return;
-    }
-    scheduleCommentUpdate(msg);
-  }
-
-  const scheduleCommentUpdate = (msg?: string) => {
-    if ( msg == undefined
-         && getNextMove().comment == undefined
-         && shouldHideOutdatedComments) {
-      setComment("");
-      window.clearTimeout(commentUpdateTimeout);
-      return;
-    }
-
-    const timeout = window.setTimeout(() => {
-      if (msg != undefined) {
-        setComment(msg);
-        return;
-      }
-
-      const nextMove = getNextMove();
-      if (nextMove.comment != undefined) {
-        setComment(nextMove.comment);
-      }
-    }, SHOW_NEW_COMMENT_DELAY);
-
-    setCommentUpdateTimeout(timeout);
-  }
-
-  const getNextMove = () => chessSequence.moves[nextMoveIdx];
 
   const moveBack = () => {
     // When the user clicks the back button, turn off doesComputerAutoplay
     setDoesComputerAutoplay(false);
-
-    setShouldHideOutdatedComments(true);
 
     // Normally, `gameNextMove` should stay one move ahead of `game`, but
     // if all the moves have been played, then `gameNextMove` will be in the
@@ -248,7 +190,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   // Whenever `nextMoveIdx` changes
   useEffect(() => {
-    updateComment();
     if (isUsersTurn()) {
       setTimeout(() => {
         setIsShowingMove(true);
@@ -295,9 +236,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           }
         />
       </div>
-      <Typography className={classes.comment}>
-        {comment}
-      </Typography>
       <Grid
         className={classes.belowChessBoard}
         container
