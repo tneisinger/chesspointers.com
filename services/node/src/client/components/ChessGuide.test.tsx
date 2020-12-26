@@ -156,4 +156,42 @@ describe('<ChessGuide /> with simple chessSequence', () => {
       expectSquaresToBeHighlighted(container, ['g1', 'f3'])
     );
   });
+
+  it('sets board orientation to black if given that property', () => {
+    const { getByTestId } =
+      render(
+        <ChessGuide
+          chessSequence={simpleChessSequence}
+          orientation={'black'}
+        />
+      );
+    const whiteKing = getByTestId('wK-e1');
+    const row: HTMLElement = whiteKing.parentElement.parentElement.parentElement;
+    expect(row.previousSibling).toBeNull();
+  });
+
+  it('sets board orientation to white if given that property', () => {
+    const { getByTestId } =
+      render(
+        <ChessGuide
+          chessSequence={simpleChessSequence}
+          orientation={'white'}
+        />
+      );
+    const whiteKing = getByTestId('wK-e1');
+    const row: HTMLElement = whiteKing.parentElement.parentElement.parentElement;
+    expect(row.nextSibling).toBeNull();
+  });
+
+  it('sets board orientation to white if not given orientation prop', () => {
+    const { getByTestId } =
+      render(
+        <ChessGuide
+          chessSequence={simpleChessSequence}
+        />
+      );
+    const whiteKing = getByTestId('wK-e1');
+    const row: HTMLElement = whiteKing.parentElement.parentElement.parentElement;
+    expect(row.nextSibling).toBeNull();
+  });
 });

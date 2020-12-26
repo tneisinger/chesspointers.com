@@ -35,16 +35,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  chessSequence: ChessSequence
+  chessSequence: ChessSequence;
 
   // if set to true, always autoplay the computer's moves, even when the step forward
   // button is clicked.
-  alwaysAutoplay?: boolean
+  alwaysAutoplay?: boolean;
+  orientation?: ('white' | 'black');
 }
 
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessSequence,
   alwaysAutoplay,
+  orientation,
 }) => {
   const classes = useStyles({});
 
@@ -227,6 +229,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
               margin: 'auto',
           }}
           squareStyles={showMove()}
+          orientation={orientation == undefined ? 'white' : orientation}
           onDrop={(move) =>
             handleMove({
               from: move.sourceSquare,
