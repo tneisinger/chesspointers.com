@@ -2,9 +2,9 @@ import React from 'react';
 import { render, waitFor, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/extend-expect';
-import ChessGuide, {
+import ChessGuideWithComments, {
   HIGHLIGHTED_SQUARE_BOX_SHADOW
-} from './ChessGuide';
+} from './ChessGuideWithComments';
 import { ChessSequence } from '../types/chess';
 
 const highlightSquareStyle = `box-shadow: ${HIGHLIGHTED_SQUARE_BOX_SHADOW}`;
@@ -41,7 +41,7 @@ beforeEach(() => {
   jest.clearAllTimers();
 });
 
-describe('<ChessGuide /> with simple chessSequence', () => {
+describe('<ChessGuideWithComments /> with simple chessSequence', () => {
   const firstMoveComment = 'This is the first move';
   const thirdMoveComment = 'This is the third move';
   const simpleChessSequence: ChessSequence = {
@@ -62,7 +62,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
 
   it('should have a Chessboard component', () => {
     const { container } = render(
-      <ChessGuide
+      <ChessGuideWithComments
         chessSequence={simpleChessSequence}
       />
     );
@@ -71,7 +71,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
 
   it('should show the welcome comment', () => {
     const { getByText } = render(
-      <ChessGuide
+      <ChessGuideWithComments
         chessSequence={simpleChessSequence}
       />
     );
@@ -80,7 +80,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
 
   it('should show the first move comment after short wait', async () => {
     const { getByText } = render(
-      <ChessGuide
+      <ChessGuideWithComments
         chessSequence={simpleChessSequence}
       />
     );
@@ -89,7 +89,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
 
   it('should not highlight first move initially', () => {
     const { container } = render(
-      <ChessGuide
+      <ChessGuideWithComments
         chessSequence={simpleChessSequence}
       />
     );
@@ -98,7 +98,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
 
   it('should highlight first move after short wait', async () => {
     const { container } = render(
-      <ChessGuide
+      <ChessGuideWithComments
         chessSequence={simpleChessSequence}
       />
     );
@@ -110,7 +110,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   it('should play first move when stepForwardBtn clicked', () => {
     const { container, getByTestId } =
       render(
-        <ChessGuide
+        <ChessGuideWithComments
           chessSequence={simpleChessSequence}
         />
       );
@@ -122,7 +122,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   it('should not play computer move when stepForwardBtn clicked', () => {
     const { container, getByTestId } =
       render(
-        <ChessGuide
+        <ChessGuideWithComments
           chessSequence={simpleChessSequence}
         />
       );
@@ -135,7 +135,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   it('should play computer move when stepForwardBtn clicked second time', () => {
     const { container, getByTestId } =
       render(
-        <ChessGuide
+        <ChessGuideWithComments
           chessSequence={simpleChessSequence}
         />
       );
@@ -147,7 +147,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
 
   it('should autoplay when prop true and stepForwardBtn clicked', async () => {
     const { container, getByTestId } = render(
-        <ChessGuide
+        <ChessGuideWithComments
           chessSequence={simpleChessSequence}
           alwaysAutoplay={true}
         />
@@ -163,7 +163,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   it('shows third move comment when stepForwardBtn clicked three times', async () => {
     const { container, getByText } =
       render(
-        <ChessGuide
+        <ChessGuideWithComments
           chessSequence={simpleChessSequence}
         />
       );
@@ -176,7 +176,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   it('highlights third move after stepForwardBtn clicked twice', async () => {
     const { container } =
       render(
-        <ChessGuide
+        <ChessGuideWithComments
           chessSequence={simpleChessSequence}
         />
       );
@@ -191,7 +191,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   it('removes old comment if no new comment after stepBack', () => {
     const { container, queryByText } =
       render(
-        <ChessGuide
+        <ChessGuideWithComments
           chessSequence={simpleChessSequence}
         />
       );
