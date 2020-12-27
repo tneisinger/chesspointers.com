@@ -18,6 +18,7 @@ import LazyLoadingPage from './pages/LazyLoading';
 import StyledComponentsPage from './pages/StyledComponents';
 import RouterPage from './pages/Router';
 import PrivatePage from './pages/Private';
+import LearnTrapPage from './pages/LearnTrap';
 import PrivateRoute from './components/PrivateRoute';
 
 type RouteType = {
@@ -93,6 +94,12 @@ export const routes: RouteType[] = [
     isPathExact: false,
     isPrivate: true,
     sideMenuIcon: LockIcon,
+  },
+  {
+    component: LearnTrapPage,
+    isPathExact: false,
+    isPrivate: false,
+    path: '/learn/:trap',
   },
   {
     component: NotFoundPage,
