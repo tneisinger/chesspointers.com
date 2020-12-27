@@ -117,7 +117,7 @@ export function makeRoutes() {
 
     return (
       <RouteComponent
-        key={route.path + idx}
+        key={"pathlessRoute" + idx}
         component={route.component}
       />
     );
