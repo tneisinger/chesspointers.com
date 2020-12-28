@@ -1,96 +1,49 @@
-import { ChessNode, ChessTrap } from '../chessTypes';
+import { ChessNode, ChessTrap, makeChessTree } from '../chessTypes';
 
-const branch_Rf1: ChessNode = {
-  move: 'Rf1',
-  children: [{
-    move: 'Qxe4+',
-    children: [{
-      move: 'Be2',
-      children: [{
-        move: 'Nf3#',
-        children: [],
-      }],
-    }],
-  }],
-}
+const branch_Rf1: ChessNode = makeChessTree(
+  [ 'Rf1', 'Qxe4+',
+    'Be2', 'Nf3#',
+  ], []
+);
 
-const branch_Nxh8: ChessNode = {
-  move: 'Nxh8',
-  children: [{
-    move: 'Qxh1+',
-    children: [{
-      move: 'Bf1',
-      children: [{
-        move: 'Qe4+',
-        children: [{
-          move: 'Be2',
-          children: [{
-            move: 'Bc5',
-            children: [],
-          }],
-        }],
-      }],
-    }],
-  }],
-}
+const branch_Nxh8: ChessNode = makeChessTree(
+  [ 'Nxh8', 'Qxh1+',
+    'Bf1', 'Qe4+',
+    'Be2', 'Bc5',
+  ], []
+);
 
+const branch_g3: ChessNode = makeChessTree(
+  [ 'g3', 'Qxe5'],
+  []
+);
 
-const branch_g3: ChessNode = {
-  move: 'g3',
-  children: [{
-    move: 'Qxe5',
-    children: []
-  }],
-}
+const branch_Bxf7: ChessNode = makeChessTree(
+  [ 'Bxf7+', 'Kd8'],
+  []
+);
 
-const branch_Bxf7: ChessNode = {
-  move: 'Bxf7+',
-  children: [{
-    move: 'Kd8',
-    children: []
-  }],
-}
+const branch_Nxf7: ChessNode = makeChessTree(
+  [ 'Nxf7', 'Qxg2'],
+  [
+    branch_Rf1,
+    branch_Nxh8,
+  ]
+);
 
-const branch_Nxf7: ChessNode = {
-  move: 'Nxf7',
-  children: [{
-    move: 'Qxg2',
-    children: [
-      branch_Rf1,
-      branch_Nxh8,
-    ],
-  }],
-}
-
-export const trap: ChessTrap = {
+const trap: ChessTrap = {
   playedBy: 'black',
-  moves: {
-    move: 'e4',
-    children: [{
-      move: 'e5',
-      children: [{
-        move: 'Nf3',
-        children: [{
-          move: 'Nc6',
-          children: [{
-            move: 'Bc4',
-            children: [{
-              move: 'Nd4',
-              children: [{
-                move: 'Nxe5',
-                children: [{
-                  move: 'Qg5',
-                  children: [
-                    branch_g3,
-                    branch_Nxf7,
-                    branch_Bxf7,
-                  ],
-                }],
-              }],
-            }],
-          }],
-        }],
-      }],
-    }],
-  }
+  moves: makeChessTree(
+    [ 'e4', 'e5',
+      'Nf3', 'Nc6',
+      'Bc4', 'Nd4',
+      'Nxe5', 'Qg5',
+    ],
+    [ branch_g3,
+      branch_Nxf7,
+      branch_Bxf7
+    ]
+  )
 }
+
+export default trap;

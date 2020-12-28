@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import ChessGuide from '../components/ChessGuide';
+import bsgTrap from '../../shared/chessTraps/blackburneShillingGambit';
 import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
@@ -18,6 +19,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 const LearnTrapPage: React.FunctionComponent = () => {
+
+  console.log(bsgTrap);
+
   const classes = useStyles({});
 
   const { trap } = useParams<{ trap: string }>();
