@@ -1,15 +1,15 @@
-export type ChessNode = {
+export type ChessTree = {
   move: string,
-  children: ChessNode[],
+  children: ChessTree[],
 };
 
 export type ChessTrap = {
   playedBy: ('white' | 'black'),
-  moves: ChessNode,
+  moves: ChessTree,
 }
 
-export const makeChessTree = (moves: string[], nodes: ChessNode[]): ChessNode => {
-  let result: (null | ChessNode) = null;
+export const makeChessTree = (moves: string[], nodes: ChessTree[]): ChessTree => {
+  let result: (null | ChessTree) = null;
 
   moves.reverse().forEach((move, idx) => {
     if (idx === 0) {
