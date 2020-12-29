@@ -9,8 +9,12 @@ const branch_Rf1: ChessTree = makeChessTree(
 
 const branch_Nxh8: ChessTree = makeChessTree(
   [ 'Nxh8', 'Qxh1+',
-    'Bf1', 'Qe4+',
+    'Bf1', 'Qxe4+',
     'Be2', 'Bc5',
+    'Nc3', 'Nf3+',
+    'Kf1', 'Qh4',
+    'Kg2', 'Qxf2+',
+    'Kh1', 'Qxh2#',
   ], []
 );
 
