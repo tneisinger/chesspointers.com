@@ -147,12 +147,47 @@ describe('makeChessTree()', () => {
 });
 
 describe('getUniquePaths()', () => {
-  it('returns [] for a tree with no branches', () => {
-    const tree = makeChessTree(['e4', 'e5', 'Nf3', 'Nc6'], []);
-    expect(getUniquePaths(tree)).toEqual([]);
+  it('works for a tree with no branches', () => {
+    const moves = ['e4', 'e5', 'Nf3', 'Nc6'];
+    const tree = makeChessTree(moves, []);
+    expect(getUniquePaths(tree)).toEqual([moves]);
   });
 
   it('works for a complex tree', () => {
-    expect(getUniquePaths(complexTree)).toEqual([[0], [1,0], [1,1], [2]]);
+    expect(getUniquePaths(complexTree)).toEqual([
+      [
+        'e4', 'e5',
+        'Nf3', 'Nc6',
+        'Bc4', 'Nd4',
+        'Nxe5', 'Qg5',
+        'g3', 'Qxe5'
+      ],
+      [
+        'e4', 'e5',
+        'Nf3', 'Nc6',
+        'Bc4', 'Nd4',
+        'Nxe5', 'Qg5',
+        'Nxf7', 'Qxg2',
+        'Rf1', 'Qxe4+',
+        'Be2', 'Nf3#'
+      ],
+      [
+        'e4', 'e5',
+        'Nf3', 'Nc6',
+        'Bc4', 'Nd4',
+        'Nxe5', 'Qg5',
+        'Nxf7', 'Qxg2',
+        'Nxh8', 'Qxh1+',
+        'Bf1', 'Qe4+',
+        'Be2', 'Bc5',
+      ],
+      [
+        'e4', 'e5',
+        'Nf3', 'Nc6',
+        'Bc4', 'Nd4',
+        'Nxe5', 'Qg5',
+        'Bxf7+', 'Kd8',
+      ]
+    ]);
   });
 });
