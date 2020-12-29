@@ -34,7 +34,7 @@ const LearnTrapPage: React.FunctionComponent = () => {
             <CardHeader className={classes.cardHeader} title='Trap Name Here' />
             <CardContent>
               <p>Add the ChessGuide component for <b>{trap}</b> here</p>
-              <ChessGuide chessTree={bsgTrap.moves} />
+              <ChessGuide chessTree={bsgTrap.moves} userPlaysAs='black' />
             </CardContent>
           </Card>
         </Grid>

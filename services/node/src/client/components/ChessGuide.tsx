@@ -41,19 +41,21 @@ interface Props {
   // if set to true, always autoplay the computer's moves, even when the step forward
   // button is clicked.
   alwaysAutoplay?: boolean;
-  orientation?: ('white' | 'black');
+  userPlaysAs?: ('white' | 'black');
 }
 
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
   alwaysAutoplay,
-  orientation,
+  userPlaysAs,
 }) => {
   const classes = useStyles({});
 
   const moves = getUniquePaths(chessTree)[0];
 
-  const [userColor] = useState<'w' | 'b'>('w');
+  const [userColor] = useState<'white' | 'black'>(
+    (userPlaysAs == undefined) ? 'white' : userPlaysAs
+  );
 
   // The index of the next moved to be played
   const [nextMoveIdx, setNextMoveIdx] = useState<number>(0);
@@ -61,7 +63,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
 
   const isUsersTurn = (): boolean => {
-    return game.turn() === userColor;
+    return game.turn() === userColor.charAt(0);
   }
 
   const isAtPathEnd = (): boolean => {
@@ -145,6 +147,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const reset = () => {
     setNextMoveIdx(0);
+    setDoesComputerAutoplay(true);
     game.reset();
     updateBoard();
     gameNextMove.reset();
@@ -231,7 +234,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
               margin: 'auto',
           }}
           squareStyles={showMove()}
-          orientation={orientation == undefined ? 'white' : orientation}
+          orientation={userColor}
           onDrop={(move) =>
             handleMove({
               from: move.sourceSquare,
