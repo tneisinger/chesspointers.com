@@ -4,7 +4,8 @@ import Button from '@material-ui/core/Button';
 import React, { useState, useEffect } from 'react';
 import Chessboard from "chessboardjsx";
 import { Chess, ChessInstance, ShortMove } from "chess.js";
-import { ChessSequence } from '../types/chess';
+import { ChessTree } from '../../shared/chessTypes';
+import { getUniquePaths } from '../../shared/chessTree';
 import ChessNavBtns from './ChessNavBtns';
 
 const COMPUTER_THINK_TIME = 500;
@@ -35,7 +36,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  chessSequence: ChessSequence;
+  chessTree: ChessTree;
 
   // if set to true, always autoplay the computer's moves, even when the step forward
   // button is clicked.
@@ -44,11 +45,13 @@ interface Props {
 }
 
 const ChessGuide: React.FunctionComponent<Props> = ({
-  chessSequence,
+  chessTree,
   alwaysAutoplay,
   orientation,
 }) => {
   const classes = useStyles({});
+
+  const moves = getUniquePaths(chessTree)[0];
 
   const [userColor] = useState<'w' | 'b'>('w');
 
@@ -61,8 +64,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return game.turn() === userColor;
   }
 
-  const haveAllMovesBeenPlayed = (): boolean => {
-    return nextMoveIdx >= chessSequence.moves.length;
+  const isAtPathEnd = (): boolean => {
+    return nextMoveIdx >= moves.length;
   }
 
   // The state of the game as it is on the board
@@ -78,9 +81,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // correct move, and/or to validate that the user's next move is the correct one.
   const [gameNextMove] = useState<ChessInstance>(new Chess());
 
-  // Advance the gameNextMove state by one move, using the first move
   useEffect(() => {
-    // gameNextMove.move(chessSequence.moves[0].move);
+    // Setup the board
     reset();
   }, []);
 
@@ -124,9 +126,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const doNextMove = () => {
-    const nextMove = chessSequence.moves[nextMoveIdx];
+    const nextMove = moves[nextMoveIdx];
     if (nextMove != undefined) {
-      if (game.move(nextMove.move)) {
+      if (game.move(nextMove)) {
         advanceGameNextMove();
         setNextMoveIdx(nextMoveIdx + 1)
         updateBoard();
@@ -135,9 +137,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const advanceGameNextMove = () => {
-    const nextMove = chessSequence.moves[gameNextMove.history().length];
+    const nextMove = moves[gameNextMove.history().length];
     if (nextMove != undefined) {
-      gameNextMove.move(nextMove.move);
+      gameNextMove.move(nextMove);
     }
   };
 
@@ -147,7 +149,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     updateBoard();
     gameNextMove.reset();
 
-    gameNextMove.move(chessSequence.moves[0].move);
+    gameNextMove.move(moves[0]);
     setIsShowingMove(false);
   };
 
@@ -181,12 +183,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   const jumpToEnd = () => {
-    const remainingMoves = chessSequence.moves.slice(nextMoveIdx);
-    remainingMoves.forEach(({ move }) => {
+    const remainingMoves = moves.slice(nextMoveIdx);
+    remainingMoves.forEach((move) => {
       game.move(move);
       advanceGameNextMove();
     });
-    setNextMoveIdx(chessSequence.moves.length);
+    setNextMoveIdx(moves.length);
     setFen(game.fen());
   }
 
@@ -247,7 +249,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         spacing={2} >
         <ChessNavBtns
           atStart={nextMoveIdx === 0}
-          atEnd={haveAllMovesBeenPlayed()}
+          atEnd={isAtPathEnd()}
           jumpToStart={reset}
           jumpToEnd={jumpToEnd}
           stepForward={moveForward}

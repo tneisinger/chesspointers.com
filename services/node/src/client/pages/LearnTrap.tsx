@@ -31,17 +31,10 @@ const LearnTrapPage: React.FunctionComponent = () => {
       <Grid container direction='row' justify='center' spacing={2}>
         <Grid item>
           <Card className={classes.mainCard}>
-            <CardHeader className={classes.cardHeader} title='The Legal Trap' />
+            <CardHeader className={classes.cardHeader} title='Trap Name Here' />
             <CardContent>
               <p>Add the ChessGuide component for <b>{trap}</b> here</p>
-              <ChessGuide
-                chessSequence={{
-                  endsInCheckmate: false,
-                  isPlayedByWhite: true,
-                  finalComment: 'done!',
-                  moves: [{ move: 'e4' }]
-                }}
-              />
+              <ChessGuide chessTree={bsgTrap.moves} />
             </CardContent>
           </Card>
         </Grid>

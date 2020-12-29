@@ -3,72 +3,86 @@ import { makeStyles, CardHeader } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
-import { ChessSequence } from '../types/chess';
+import { makeChessTree } from '../../shared/chessTree';
 import ChessGuide from '../components/ChessGuide';
 
 // TODO: Split 'comment' into 'positionComment' and 'moveComment'. Show 'moveComment'
 // first, and 'positionComment' after the move.
 
-const legalTrap: ChessSequence = {
-  endsInCheckmate: true,
-  isPlayedByWhite: true,
-  finalComment: 'That\'s checkmate!',
-  moves: [
-    {
-      move: 'e4',
-      comment: 'The legal trap begins with pawn to e4.',
-    },
-    {
-      move: 'e5',
-    },
-    {
-      move: 'Nf3',
-      comment: 'White continues to develop into the Italian Game.',
-    },
-    {
-      move: 'Nc6',
-    },
-    {
-      move: 'Bc4',
-    },
-    {
-      move: 'd6',
-    },
-    {
-      move: 'Nc3',
-      comment: 'This move is important. If the trap works, this knight will deliver checkmate.'
-    },
-    {
-      move: 'Bg4',
-    },
-    {
-      move: 'h3',
-      comment: 'This move will hopefully push black\'s bishop off of its original diagonal.'
-    },
-    {
-      move: 'Bh5',
-    },
-    {
-      move: 'Nxe5',
-      comment: 'This is the key move for white. It looks like a blunder, but...'
-    },
-    {
-      move: 'Bxd1',
-      comment: 'If black takes the queen, then it is mate in two for white!'
-    },
-    {
-      move: 'Bxf7',
-      comment: 'Check the king with your bishop.'
-    },
-    {
-      move: 'Ke7',
-    },
-    {
-      move: 'Nd5',
-      comment: 'Deliver checkmate!',
-    },
-  ]
-};
+// const legalTrap: ChessSequence = {
+  // endsInCheckmate: true,
+  // isPlayedByWhite: true,
+  // finalComment: 'That\'s checkmate!',
+  // moves: [
+    // {
+      // move: 'e4',
+      // comment: 'The legal trap begins with pawn to e4.',
+    // },
+    // {
+      // move: 'e5',
+    // },
+    // {
+      // move: 'Nf3',
+      // comment: 'White continues to develop into the Italian Game.',
+    // },
+    // {
+      // move: 'Nc6',
+    // },
+    // {
+      // move: 'Bc4',
+    // },
+    // {
+      // move: 'd6',
+    // },
+    // {
+      // move: 'Nc3',
+      // comment: 'This move is important. If the trap works, this knight will deliver checkmate.'
+    // },
+    // {
+      // move: 'Bg4',
+    // },
+    // {
+      // move: 'h3',
+      // comment: 'This move will hopefully push black\'s bishop off of its original diagonal.'
+    // },
+    // {
+      // move: 'Bh5',
+    // },
+    // {
+      // move: 'Nxe5',
+      // comment: 'This is the key move for white. It looks like a blunder, but...'
+    // },
+    // {
+      // move: 'Bxd1',
+      // comment: 'If black takes the queen, then it is mate in two for white!'
+    // },
+    // {
+      // move: 'Bxf7',
+      // comment: 'Check the king with your bishop.'
+    // },
+    // {
+      // move: 'Ke7',
+    // },
+    // {
+      // move: 'Nd5',
+      // comment: 'Deliver checkmate!',
+    // },
+  // ]
+// };
+
+const legalTrapTree = makeChessTree(
+  [
+    'e4', 'e5',
+    'Nf3', 'Nc6',
+    'Bc4', 'd6',
+    'Nc3', 'Bg4',
+    'h3', 'Bh5',
+    'Nxe5', 'Bxd1',
+    'Bxf7', 'Ke7',
+    'Nd5'
+  ],
+  []
+);
 
 const useStyles = makeStyles(() => ({
   mainCard: {
@@ -91,7 +105,7 @@ const HomePage: React.FunctionComponent = () => {
           <Card className={classes.mainCard}>
             <CardHeader className={classes.cardHeader} title='The Legal Trap' />
             <CardContent>
-              <ChessGuide chessSequence={legalTrap} />
+              <ChessGuide chessTree={legalTrapTree} />
             </CardContent>
           </Card>
         </Grid>
