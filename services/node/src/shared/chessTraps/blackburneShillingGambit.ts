@@ -1,4 +1,5 @@
-import { ChessTree, ChessTrap, makeChessTree } from '../chessTypes';
+import { ChessTree, ChessTrap } from '../chessTypes';
+import { makeChessTree } from '../chessTree';
 
 const branch_Rf1: ChessTree = makeChessTree(
   [ 'Rf1', 'Qxe4+',
