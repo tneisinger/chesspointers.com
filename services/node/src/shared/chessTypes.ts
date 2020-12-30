@@ -4,6 +4,7 @@ export type ChessTree = {
 };
 
 export type ChessTrap = {
+  name: string,
   playedBy: ('white' | 'black'),
   moves: ChessTree,
 }

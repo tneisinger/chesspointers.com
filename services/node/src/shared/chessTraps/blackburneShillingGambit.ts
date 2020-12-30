@@ -37,6 +37,7 @@ const branch_Nxf7: ChessTree = makeChessTree(
 );
 
 const trap: ChessTrap = {
+  name: 'Blackburne-Shilling',
   playedBy: 'black',
   moves: makeChessTree(
     [ 'e4', 'e5',
