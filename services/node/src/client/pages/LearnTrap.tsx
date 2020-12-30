@@ -19,9 +19,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const LearnTrapPage: React.FunctionComponent = () => {
-
-  console.log(bsgTrap);
-
   const classes = useStyles({});
 
   const { trap } = useParams<{ trap: string }>();
