@@ -3,25 +3,26 @@ import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/extend-expect';
 import ChessGuide, {
-  HIGHLIGHTED_SQUARE_BOX_SHADOW
+  USER_HIGHLIGHT_SQUARE_STYLE,
 } from './ChessGuide';
-import { ChessSequence } from '../types/chess';
+import { ChessTree } from '../../shared/chessTypes';
+import { makeChessTree } from '../../shared/chessTree';
 
-const highlightSquareStyle = `box-shadow: ${HIGHLIGHTED_SQUARE_BOX_SHADOW}`;
+const userHighlightSquareStyle = `box-shadow: ${USER_HIGHLIGHT_SQUARE_STYLE}`;
 
 jest.useFakeTimers();
 
 const expectSquaresToBeHighlighted = (container: Element, squares: string[]) => {
   squares.forEach((square) => {
     const squareElem = container.querySelector(`[data-squareid="${square}"]`);
-    expect(squareElem.firstChild).toHaveStyle(highlightSquareStyle);
+    expect(squareElem.firstChild).toHaveStyle(userHighlightSquareStyle);
   });
 };
 
 const expectSquaresNotToBeHighlighted = (container: Element, squares: string[]) => {
   squares.forEach((square) => {
     const squareElem = container.querySelector(`[data-squareid="${square}"]`);
-    expect(squareElem.firstChild).not.toHaveStyle(highlightSquareStyle);
+    expect(squareElem.firstChild).not.toHaveStyle(userHighlightSquareStyle);
   });
 };
 
@@ -41,29 +42,18 @@ beforeEach(() => {
   jest.clearAllTimers();
 });
 
-describe('<ChessGuide /> with simple chessSequence', () => {
-  const firstMoveComment = 'This is the first move';
-  const thirdMoveComment = 'This is the third move';
-  const simpleChessSequence: ChessSequence = {
-    endsInCheckmate: false,
-    isPlayedByWhite: true,
-    moves: [
-      { move: 'e4',
-        comment: firstMoveComment,
-      },
-      { move: 'e5' },
-      { move: 'Nf3',
-        comment: thirdMoveComment,
-      },
-      { move: 'Nc6' },
+describe('<ChessGuide /> with simple ChessTree', () => {
+  const simpleChessTree: ChessTree = makeChessTree(
+    [ 'e4', 'e5',
+      'Nf3', 'Nc6',
     ],
-    finalComment: ''
-  }
+    []
+  );
 
   it('should have a Chessboard component', () => {
     const { container } = render(
       <ChessGuide
-        chessSequence={simpleChessSequence}
+        chessTree={simpleChessTree}
       />
     );
     expect(container.querySelector('[data-boardid="0"]')).not.toBeNull();
@@ -72,7 +62,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   it('should not highlight first move initially', () => {
     const { container } = render(
       <ChessGuide
-        chessSequence={simpleChessSequence}
+        chessTree={simpleChessTree}
       />
     );
     expectSquaresNotToBeHighlighted(container, ['e2', 'e4']);
@@ -81,7 +71,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   it('should highlight first move after short wait', async () => {
     const { container } = render(
       <ChessGuide
-        chessSequence={simpleChessSequence}
+        chessTree={simpleChessTree}
       />
     );
     await waitFor(() => {
@@ -93,7 +83,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     const { container, getByTestId } =
       render(
         <ChessGuide
-          chessSequence={simpleChessSequence}
+          chessTree={simpleChessTree}
         />
       );
     const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
@@ -105,7 +95,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     const { container, getByTestId } =
       render(
         <ChessGuide
-          chessSequence={simpleChessSequence}
+          chessTree={simpleChessTree}
         />
       );
     const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
@@ -118,7 +108,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     const { container, getByTestId } =
       render(
         <ChessGuide
-          chessSequence={simpleChessSequence}
+          chessTree={simpleChessTree}
         />
       );
     const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
@@ -130,7 +120,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
   it('should autoplay when prop true and stepForwardBtn clicked', async () => {
     const { container, getByTestId } = render(
         <ChessGuide
-          chessSequence={simpleChessSequence}
+          chessTree={simpleChessTree}
           alwaysAutoplay={true}
         />
     );
@@ -146,7 +136,7 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     const { container } =
       render(
         <ChessGuide
-          chessSequence={simpleChessSequence}
+          chessTree={simpleChessTree}
         />
       );
     const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
@@ -157,12 +147,12 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     );
   });
 
-  it('sets board orientation to black if given that property', () => {
+  it('sets board orientation to black if `userPlaysAs` prop set to black', () => {
     const { getByTestId } =
       render(
         <ChessGuide
-          chessSequence={simpleChessSequence}
-          orientation={'black'}
+          chessTree={simpleChessTree}
+          userPlaysAs={'black'}
         />
       );
     const whiteKing = getByTestId('wK-e1');
@@ -170,12 +160,11 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     expect(row.previousSibling).toBeNull();
   });
 
-  it('sets board orientation to white if given that property', () => {
+  it('sets board orientation to white if `userPlaysAs` prop not set', () => {
     const { getByTestId } =
       render(
         <ChessGuide
-          chessSequence={simpleChessSequence}
-          orientation={'white'}
+          chessTree={simpleChessTree}
         />
       );
     const whiteKing = getByTestId('wK-e1');
@@ -183,11 +172,12 @@ describe('<ChessGuide /> with simple chessSequence', () => {
     expect(row.nextSibling).toBeNull();
   });
 
-  it('sets board orientation to white if not given orientation prop', () => {
+  it('sets board orientation to white if `userPlaysAs` set to white', () => {
     const { getByTestId } =
       render(
         <ChessGuide
-          chessSequence={simpleChessSequence}
+          chessTree={simpleChessTree}
+          userPlaysAs={'white'}
         />
       );
     const whiteKing = getByTestId('wK-e1');
