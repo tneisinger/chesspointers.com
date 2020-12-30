@@ -11,8 +11,8 @@ const trap: ChessTrap = {
       'Nc3', 'Bg4',
       'h3', 'Bh5',
       'Nxe5', 'Bxd1',
-      'Bxf7', 'Ke7',
-      'Nd5'
+      'Bxf7+', 'Ke7',
+      'Nd5#'
     ],
     []
   )
