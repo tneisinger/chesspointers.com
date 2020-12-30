@@ -73,10 +73,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return game.turn() === userColor.charAt(0);
   }
 
-  const isAtPathEnd = (): boolean => {
-    return relevantPaths().every((path) => playedMoves.length >= path.length);
-  }
-
   // The state of the game as it is on the board
   const [game] = useState<ChessInstance>(new Chess());
 
