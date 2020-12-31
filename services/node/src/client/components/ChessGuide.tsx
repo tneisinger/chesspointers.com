@@ -43,6 +43,8 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+type GuideMode = 'teach' | 'practice';
+
 interface Props {
   chessTree: ChessTree;
 
@@ -50,12 +52,14 @@ interface Props {
   // button is clicked.
   alwaysAutoplay?: boolean;
   userPlaysAs?: ('white' | 'black');
+  guideMode?: GuideMode;
 }
 
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
   alwaysAutoplay,
   userPlaysAs,
+  guideMode
 }) => {
   const classes = useStyles({});
 
@@ -64,6 +68,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [userColor] = useState<'white' | 'black'>(
     (userPlaysAs == undefined) ? 'white' : userPlaysAs
   );
+
+  const [mode] = useState<GuideMode>(guideMode == undefined ? 'teach' : guideMode);
 
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
 
@@ -234,10 +240,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   }
 
-  const scheduleShowMoves = () => {
-    setTimeout(() => {
-      setIsShowingMoves(true);
-    }, SHOW_NEXT_MOVE_DELAY);
+  const scheduleShowMoves = (shouldForceShow?: boolean) => {
+    if (mode === 'teach' || shouldForceShow) {
+      setTimeout(() => {
+        setIsShowingMoves(true);
+      }, SHOW_NEXT_MOVE_DELAY);
+    }
   }
 
   const doComputerTurn = () => {
