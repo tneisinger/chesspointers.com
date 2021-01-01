@@ -248,6 +248,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   }
 
+  // TODO: Keep a record of the moves that the computer has (randomly) played so that on
+  // sequential practice runs, the computer can play different moves each time.
   const doComputerTurn = () => {
     const moves = getNextMoves();
     if (moves.length === 1 && doesComputerAutoplay) {
@@ -257,8 +259,17 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       setTimeout(() => {
         doNextMove(moves[0]);
       }, COMPUTER_THINK_TIME);
-    } else {
-      scheduleShowMoves();
+    } else if (moves.length > 1) {
+      // If in practice mode and there is more than one move that the computer can play,
+      // the computer randomly selects a move to play.
+      if (mode === 'practice') {
+        const move = moves[Math.floor(Math.random() * moves.length)];
+        setTimeout(() => {
+          doNextMove(move);
+        }, COMPUTER_THINK_TIME);
+      } else {
+        scheduleShowMoves();
+      }
     }
   }
 
