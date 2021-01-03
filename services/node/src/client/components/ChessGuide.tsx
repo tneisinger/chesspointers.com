@@ -6,7 +6,7 @@ import Chessboard from "chessboardjsx";
 import { Chess, ChessInstance, ShortMove } from "chess.js";
 import { ChessTree } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
-import { arraysEqual } from '../../shared/utils';
+import { arraysEqual, partition, randomElem } from '../../shared/utils';
 import ChessNavBtns from './ChessNavBtns';
 
 const COMPUTER_THINK_TIME = 500;
@@ -55,6 +55,12 @@ interface Props {
   guideMode?: GuideMode;
 }
 
+type PathStats = {
+  mode: GuideMode,
+  path: string[],
+  timesCompleted: number,
+}
+
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
   alwaysAutoplay,
@@ -78,6 +84,23 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const isUsersTurn = (): boolean => {
     return game.turn() === userColor.charAt(0);
   }
+
+  // Initialize all possible 'pathsCompletedThisSession' values with their
+  // 'timesCompleted' values set to zero.
+  const [pathsCompletedThisSession, setPathsCompletedThisSession] =
+    useState<PathStats[]>(paths.reduce((acc: PathStats[], path) => {
+      const practicePath: PathStats = {
+        mode: 'practice',
+        path,
+        timesCompleted: 0,
+      };
+      const teachPath: PathStats = {
+        mode: 'teach',
+        path,
+        timesCompleted: 0,
+      };
+      return [...acc, practicePath, teachPath];
+    }, []));
 
   // The state of the game as it is on the board
   const [game] = useState<ChessInstance>(new Chess());
@@ -261,9 +284,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       }, COMPUTER_THINK_TIME);
     } else if (moves.length > 1) {
       // If in practice mode and there is more than one move that the computer can play,
-      // the computer randomly selects a move to play.
+      // the computer randomly selects a move from the moves that are on paths that have
+      // been completed the fewest number of the times.
       if (mode === 'practice') {
-        const move = moves[Math.floor(Math.random() * moves.length)];
+        const movesWithFewestCompletions = getMovesThatLeadToLeastCompletedPaths();
+        const move = randomElem(movesWithFewestCompletions);
+        if (move == undefined) {
+          throw new Error("movesWithFewestCompletions was an empty array");
+        }
         setTimeout(() => {
           doNextMove(move);
         }, COMPUTER_THINK_TIME);
@@ -273,8 +301,44 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   }
 
-  // Whenever `nextMoveIdx` changes
+  const isAtPathEnd = (): boolean =>
+    paths.some(path => arraysEqual(playedMoves, path))
+
+  const getMovesThatLeadToLeastCompletedPaths = (): string[] => {
+    // Get the paths that are reachable from the current position forward.
+    const relevantPaths = pathsCompletedThisSession.filter(p => {
+      return ( p.mode == mode
+               && arraysEqual(playedMoves, p.path.slice(0, playedMoves.length))
+      );
+    });
+    const lowestTimesCompleted = Math.min(...relevantPaths.map(p => p.timesCompleted));
+    const leastCompletedPaths =
+      relevantPaths.filter(p => p.timesCompleted === lowestTimesCompleted);
+    return leastCompletedPaths.map(p => p.path[playedMoves.length]);
+  }
+
+  const recordPathCompletion = () => {
+    const [matchingPaths, nonMatchingPaths] = partition(
+      pathsCompletedThisSession,
+      (p) => arraysEqual(p.path, playedMoves) && p.mode === mode
+    );
+    if (matchingPaths.length !== 1) {
+      throw new Error(`Unexpected number of matchingPaths: ${matchingPaths.length}`);
+    } else {
+      const updatedPathStats: PathStats = {
+        ...matchingPaths[0],
+        timesCompleted: matchingPaths[0].timesCompleted + 1,
+      }
+      setPathsCompletedThisSession([...nonMatchingPaths, updatedPathStats]);
+    }
+  }
+
+  // Whenever `playedMoves` changes
   useEffect(() => {
+    if (isAtPathEnd()) {
+      recordPathCompletion();
+    }
+
     setIsShowingMoves(false);
 
     if (isUsersTurn()) {
