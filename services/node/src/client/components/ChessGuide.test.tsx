@@ -8,10 +8,13 @@ import ChessGuide, {
 import { ChessTree } from '../../shared/chessTypes';
 import { makeChessTree } from '../../shared/chessTree';
 
+// CSS style for a highlighted square, indicating a possible user move
 const userHighlightSquareStyle = `box-shadow: ${USER_HIGHLIGHT_SQUARE_STYLE}`;
 
 jest.useFakeTimers();
 
+// Given a ChessGuide component element and a list of squares (e.g. ['e2', 'e4']), expect
+// all of those squares to be highlighted.
 const expectSquaresToBeHighlighted = (container: Element, squares: string[]) => {
   squares.forEach((square) => {
     const squareElem = container.querySelector(`[data-squareid="${square}"]`);
@@ -19,6 +22,7 @@ const expectSquaresToBeHighlighted = (container: Element, squares: string[]) => 
   });
 };
 
+// Same as above, but expect the squares not be highlighted.
 const expectSquaresNotToBeHighlighted = (container: Element, squares: string[]) => {
   squares.forEach((square) => {
     const squareElem = container.querySelector(`[data-squareid="${square}"]`);
