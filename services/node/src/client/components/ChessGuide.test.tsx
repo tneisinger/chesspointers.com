@@ -46,7 +46,7 @@ beforeEach(() => {
   jest.clearAllTimers();
 });
 
-describe('<ChessGuide /> with simple ChessTree', () => {
+describe('<ChessGuide /> in "learn" mode with simple ChessTree', () => {
   const simpleChessTree: ChessTree = makeChessTree(
     [ 'e4', 'e5',
       'Nf3', 'Nc6',
@@ -121,7 +121,7 @@ describe('<ChessGuide /> with simple ChessTree', () => {
     getByTestId('bP-e5');
   });
 
-  it('should autoplay when prop true and stepForwardBtn clicked', async () => {
+  it('should autoplay when alwaysAutoplay=true and stepForwardBtn clicked', async () => {
     const { container, getByTestId } = render(
         <ChessGuide
           chessTree={simpleChessTree}
@@ -188,4 +188,17 @@ describe('<ChessGuide /> with simple ChessTree', () => {
     const row: HTMLElement = whiteKing.parentElement.parentElement.parentElement;
     expect(row.nextSibling).toBeNull();
   });
+
+  it('autoplays first move if userPlaysAs="black"', async () => {
+    const { getByTestId } = render(
+        <ChessGuide
+          chessTree={simpleChessTree}
+          userPlaysAs='black'
+        />
+    );
+    await waitFor(() => {
+      getByTestId('wP-e4');
+    }, { timeout: 1000 });
+  });
+
 });
