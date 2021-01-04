@@ -271,8 +271,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   }
 
-  // TODO: Keep a record of the moves that the computer has (randomly) played so that on
-  // sequential practice runs, the computer can play different moves each time.
   const doComputerTurn = () => {
     const moves = getNextMoves();
     if (moves.length === 1 && doesComputerAutoplay) {
@@ -283,21 +281,16 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         doNextMove(moves[0]);
       }, COMPUTER_THINK_TIME);
     } else if (moves.length > 1) {
-      // If in practice mode and there is more than one move that the computer can play,
-      // the computer randomly selects a move from the moves that are on paths that have
-      // been completed the fewest number of the times.
-      if (mode === 'practice') {
-        const movesWithFewestCompletions = getMovesThatLeadToLeastCompletedPaths();
-        const move = randomElem(movesWithFewestCompletions);
-        if (move == undefined) {
-          throw new Error("movesWithFewestCompletions was an empty array");
-        }
-        setTimeout(() => {
-          doNextMove(move);
-        }, COMPUTER_THINK_TIME);
-      } else {
-        scheduleShowMoves();
+      // If there is more than one move that the computer can play, the computer randomly
+      // selects a move from among the moves that are on paths that have been completed
+      // the fewest number of the times.
+      const move = randomElem(getMovesThatLeadToLeastCompletedPaths());
+      if (move == undefined) {
+        throw new Error("No moves returned by getMovesThatLeadToLeastCompletedPaths()");
       }
+      setTimeout(() => {
+        doNextMove(move);
+      }, COMPUTER_THINK_TIME);
     }
   }
 
