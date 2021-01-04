@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-type GuideMode = 'teach' | 'practice';
+type GuideMode = 'learn' | 'practice';
 
 interface Props {
   chessTree: ChessTree;
@@ -75,7 +75,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     (userPlaysAs == undefined) ? 'white' : userPlaysAs
   );
 
-  const [mode] = useState<GuideMode>(guideMode == undefined ? 'teach' : guideMode);
+  const [mode] = useState<GuideMode>(guideMode == undefined ? 'learn' : guideMode);
 
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
 
@@ -94,12 +94,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         path,
         timesCompleted: 0,
       };
-      const teachPath: PathStats = {
-        mode: 'teach',
+      const learnPath: PathStats = {
+        mode: 'learn',
         path,
         timesCompleted: 0,
       };
-      return [...acc, practicePath, teachPath];
+      return [...acc, practicePath, learnPath];
     }, []));
 
   // The state of the game as it is on the board
@@ -264,7 +264,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   const scheduleShowMoves = (shouldForceShow?: boolean) => {
-    if (mode === 'teach' || shouldForceShow) {
+    if (mode === 'learn' || shouldForceShow) {
       setTimeout(() => {
         setIsShowingMoves(true);
       }, SHOW_NEXT_MOVE_DELAY);
