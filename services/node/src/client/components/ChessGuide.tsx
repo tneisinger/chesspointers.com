@@ -4,10 +4,11 @@ import Button from '@material-ui/core/Button';
 import React, { useState, useEffect } from 'react';
 import Chessboard from "chessboardjsx";
 import { Chess, ChessInstance, ShortMove } from "chess.js";
-import { ChessTree } from '../../shared/chessTypes';
+import { ChessTree, ChessBoardMove } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import { arraysEqual, partition, randomElem } from '../../shared/utils';
 import ChessNavBtns from './ChessNavBtns';
+import ChessMoveSelector from './ChessMoveSelector';
 
 const COMPUTER_THINK_TIME = 500;
 
@@ -47,12 +48,12 @@ type GuideMode = 'learn' | 'practice';
 
 interface Props {
   chessTree: ChessTree;
-
-  // if set to true, always autoplay the computer's moves, even when the step forward
-  // button is clicked.
+  // if 'alwaysAutoplay' set to true, always autoplay the computer's moves, even when the
+  // step forward button is clicked.
   alwaysAutoplay?: boolean;
   userPlaysAs?: ('white' | 'black');
   guideMode?: GuideMode;
+  renderExtraControlsForTesting?: boolean
 }
 
 type PathStats = {
@@ -65,7 +66,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
   alwaysAutoplay,
   userPlaysAs,
-  guideMode
+  guideMode,
+  renderExtraControlsForTesting,
 }) => {
   const classes = useStyles({});
 
@@ -180,10 +182,16 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     move1.from === move2.from && move1.to === move2.to
   );
 
-  const handleMove = (move: ShortMove) => {
+  const handleMove = (move: ChessBoardMove | null) => {
+    if (move === null) return;
+    const shortMove: ShortMove = {
+      from: move.sourceSquare,
+      to: move.targetSquare,
+      promotion: 'q',
+    };
     const nextMoveGames = getNextMoveGames().filter((game) => {
       const history = game.history({verbose: true});
-      return sameMoves(history[history.length - 1], move);
+      return sameMoves(history[history.length - 1], shortMove);
     });
     if (nextMoveGames.length > 0) {
       // If the user presses either of the arrow buttons, then `doesComputerAutoplay`
@@ -357,13 +365,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           }}
           squareStyles={showMoves()}
           orientation={userColor}
-          onDrop={(move) =>
-            handleMove({
-              from: move.sourceSquare,
-              to: move.targetSquare,
-              promotion: 'q',
-            })
-          }
+          onDrop={handleMove}
         />
       </div>
       <Grid
@@ -371,7 +373,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         container
         direction='row'
         justify='center'
-        spacing={2} >
+        spacing={2}
+      >
         <ChessNavBtns
           atStart={playedMoves.length === 0}
           atEnd={getNextMoves().length !== 1}
@@ -390,6 +393,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           </Button>
         </Grid>
       </Grid>
+      {renderExtraControlsForTesting &&
+        <ChessMoveSelector
+          moves={getNextMoves()}
+          shortMoves={getNextShortMoves()}
+          handleSubmit={handleMove}
+        />
+      }
     </>
   );
 }
