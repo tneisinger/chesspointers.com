@@ -8,6 +8,12 @@ import Button from '@material-ui/core/Button';
 import { ShortMove } from 'chess.js';
 import { ChessBoardMove } from '../../shared/chessTypes'
 
+// This is necessary to get around a typescript error caused by adding a data-testid
+// attribute to a Radio mui component.
+interface MyInputProps extends React.HTMLAttributes<HTMLInputElement> {
+  "data-testid"?: string;
+}
+
 type Move = {
   label: string,
   shortMove: ShortMove,
@@ -57,7 +63,7 @@ const ChessMoveSelector: React.FunctionComponent<Props> = ({
             moves.map(move =>
               <FormControlLabel
                 value={move}
-                control={<Radio />}
+                control={<Radio inputProps={{ 'data-testid': move } as MyInputProps} />}
                 label={move}
                 key={move}
                 checked={selectedMove !== null && move === selectedMove.label}
