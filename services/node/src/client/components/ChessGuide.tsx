@@ -395,8 +395,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       </Grid>
       {renderExtraControlsForTesting &&
         <ChessMoveSelector
-          moves={getNextMoves()}
-          shortMoves={getNextShortMoves()}
+          nextMoveGames={getNextMoveGames()}
           handleSubmit={handleMove}
         />
       }

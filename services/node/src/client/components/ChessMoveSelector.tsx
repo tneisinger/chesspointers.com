@@ -4,7 +4,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import { ShortMove } from 'chess.js';
+import { ChessInstance, ShortMove } from 'chess.js';
 import { ChessBoardMove } from '../../shared/chessTypes'
 
 // The data-testid prop value for the button that submits the selected next move
@@ -31,25 +31,34 @@ function toChessBoardMove(shortMove: ShortMove): ChessBoardMove {
 }
 
 interface Props {
-  moves: string[];
-  shortMoves: ShortMove[];
+  nextMoveGames: ChessInstance[];
   handleSubmit: (move: ChessBoardMove) => void;
 }
 
 const ChessMoveSelector: React.FunctionComponent<Props> = ({
-  moves,
-  shortMoves,
+  nextMoveGames,
   handleSubmit,
 }) => {
   const [selectedMove, setSelectedMove] = useState<Move | null>(null);
 
+  // On each render, make the list of Moves based on the current value of
+  // the nextMoveGames prop.
+  const moves: Move[] = nextMoveGames.reduce((acc: Move[], game) => {
+    const labelHistory = game.history();
+    const shortMoveHistory = game.history({ verbose: true });
+    if (labelHistory.length <= 0 && shortMoveHistory.length <= 0) {
+      throw new Error("No moves in history");
+    }
+    const move = {
+      label: labelHistory[labelHistory.length - 1],
+      shortMove: shortMoveHistory[shortMoveHistory.length - 1],
+    };
+    return [...acc, move]
+  }, []);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handling change');
-    const idx = moves.findIndex(move => move === event.target.value);
-    setSelectedMove({
-      label: moves[idx],
-      shortMove: shortMoves[idx],
-    });
+    const idx = moves.findIndex(move => move.label === event.target.value);
+    setSelectedMove(moves[idx]);
   }
 
   if (moves.length > 1) {
@@ -65,11 +74,15 @@ const ChessMoveSelector: React.FunctionComponent<Props> = ({
           {
             moves.map(move =>
               <FormControlLabel
-                value={move}
-                control={<Radio inputProps={{ 'data-testid': move } as MyInputProps} />}
-                label={move}
-                key={move}
-                checked={selectedMove !== null && move === selectedMove.label}
+                value={move.label}
+                control={
+                  <Radio
+                    inputProps={{ 'data-testid': move.label } as MyInputProps}
+                  />
+                }
+                label={move.label}
+                key={move.label}
+                checked={selectedMove !== null && move.label === selectedMove.label}
               />
             )
           }
@@ -88,7 +101,7 @@ const ChessMoveSelector: React.FunctionComponent<Props> = ({
   } else if (moves.length === 1) {
     return (
       <button
-        onClick={() => handleSubmit(toChessBoardMove(shortMoves[0]))}
+        onClick={() => handleSubmit(toChessBoardMove(moves[0].shortMove))}
         data-testid={SELECT_BTN_TEST_ID}
       >
         Play Next Move
