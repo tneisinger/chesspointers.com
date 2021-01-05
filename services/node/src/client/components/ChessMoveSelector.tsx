@@ -4,9 +4,12 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import Button from '@material-ui/core/Button';
 import { ShortMove } from 'chess.js';
 import { ChessBoardMove } from '../../shared/chessTypes'
+
+// The data-testid prop value for the button that submits the selected next move
+// Use this in tests to select the button.
+export const SELECT_BTN_TEST_ID = 'moveSelectBtn';
 
 // This is necessary to get around a typescript error caused by adding a data-testid
 // attribute to a Radio mui component.
@@ -72,23 +75,24 @@ const ChessMoveSelector: React.FunctionComponent<Props> = ({
           }
         </RadioGroup>
         {selectedMove != null &&
-          <Button
-            variant="outlined"
+          <button
+            data-testid={SELECT_BTN_TEST_ID}
             disabled={selectedMove == undefined}
             onClick={() => handleSubmit(toChessBoardMove(selectedMove.shortMove))}
           >
             Submit Move Choice
-          </Button>
+          </button>
         }
       </FormControl>
     );
   } else if (moves.length === 1) {
     return (
-      <Button
-        variant="outlined"
-        onClick={() => handleSubmit(toChessBoardMove(shortMoves[0]))}>
+      <button
+        onClick={() => handleSubmit(toChessBoardMove(shortMoves[0]))}
+        data-testid={SELECT_BTN_TEST_ID}
+      >
         Play Next Move
-      </Button>
+      </button>
     );
   } else {
     return <p>No moves to play</p>
