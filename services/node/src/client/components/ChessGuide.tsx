@@ -370,6 +370,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           squareStyles={showMoves()}
           orientation={userColor}
           onDrop={handleMove}
+          draggable={getNextMoves().length > 0}
         />
       </div>
       <Grid
