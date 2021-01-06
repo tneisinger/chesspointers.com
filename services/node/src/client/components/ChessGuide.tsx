@@ -381,8 +381,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         spacing={2}
       >
         <ChessNavBtns
-          atStart={playedMoves.length === 0}
-          atEnd={getNextMoves().length !== 1}
+          areBackBtnsEnabled={playedMoves.length === 0}
+          areForwardBtnsEnabled={getNextMoves().length !== 1}
           jumpToStart={reset}
           jumpToEnd={jumpToEndOrNextBranch}
           stepForward={moveForward}

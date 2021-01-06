@@ -11,11 +11,11 @@ const btnLabelStepBack = 'step back';
 // Creates the string used to select a button using its aria-label
 const withLabel = (ariaLabel: string): string => `[aria-label="${ariaLabel}"]`
 
-describe('<ChessNavBtns atStart={true} atEnd={false} ... />', () => {
+describe('ChessNavBtns with backBtns enabled and forwardBtns disabled', () => {
   const wrapper = shallow(
     <ChessNavBtns
-      atStart={true}
-      atEnd={false}
+      areBackBtnsEnabled={true}
+      areForwardBtnsEnabled={false}
       jumpToStart={() => {}}
       jumpToEnd={() => {}}
       stepForward={() => {}}
@@ -41,11 +41,11 @@ describe('<ChessNavBtns atStart={true} atEnd={false} ... />', () => {
 
 });
 
-describe('<ChessNavBtns atStart={false} atEnd={true} ... />', () => {
+describe('ChessNavBtns with backBtns disabled and forwardBtns enabled', () => {
   const wrapper = shallow(
     <ChessNavBtns
-      atStart={false}
-      atEnd={true}
+      areBackBtnsEnabled={false}
+      areForwardBtnsEnabled={true}
       jumpToStart={() => {}}
       jumpToEnd={() => {}}
       stepForward={() => {}}
@@ -70,7 +70,7 @@ describe('<ChessNavBtns atStart={false} atEnd={true} ... />', () => {
   });
 });
 
-describe('<ChessNavBtns atStart={false} atEnd={false} ... />', () => {
+describe('ChessNavBtns with backBtns and forwardBtns disabled', () => {
   // mock all the callback functions
   const mockJumpToStartFn = jest.fn(() => {});
   const mockJumpToEndFn = jest.fn(() => {});
@@ -79,8 +79,8 @@ describe('<ChessNavBtns atStart={false} atEnd={false} ... />', () => {
 
   const wrapper = shallow(
     <ChessNavBtns
-      atStart={false}
-      atEnd={false}
+      areBackBtnsEnabled={false}
+      areForwardBtnsEnabled={false}
       jumpToStart={mockJumpToStartFn}
       stepBack={mockStepBackFn}
       stepForward={mockStepForwardFn}
