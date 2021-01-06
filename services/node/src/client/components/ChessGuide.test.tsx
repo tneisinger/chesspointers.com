@@ -248,3 +248,23 @@ describe('<ChessGuide /> in "learn" mode with simple ChessTree', () => {
     }, { timeout: 1000 });
   });
 });
+
+describe('<ChessGuide /> with ChessTree that branches immediately', () => {
+  const chessTree = makeChessTree(
+    [''],
+    [ makeChessTree(['e4', 'e5'],[]),
+      makeChessTree(['d4', 'd5'],[]),
+    ]
+  );
+
+  it('highlights both of the first move options', async () => {
+    const { container } = render(
+      <ChessGuide
+        chessTree={chessTree}
+      />
+    );
+    await waitFor(() => {
+      expectSquaresToBeHighlighted(container, ['e2', 'e4', 'd2', 'd4']);
+    }, { timeout: 1000 });
+  });
+});
