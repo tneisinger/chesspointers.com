@@ -9,6 +9,7 @@ import { getUniquePaths } from '../../shared/chessTree';
 import { arraysEqual, partition, randomElem } from '../../shared/utils';
 import ChessNavBtns from './ChessNavBtns';
 import ChessMoveSelector from './ChessMoveSelector';
+const beep = require('browser-beep')({ frequency: 95, interval: 240 });
 
 const COMPUTER_THINK_TIME = 500;
 
@@ -201,6 +202,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       const history = nextMoveGames[0].history();
       const nextMove = history[history.length - 1];
       doNextMove(nextMove);
+    } else {
+      // If the user plays a move that is not in the ChessTree, beep at them
+      beep(2);
     }
   };
 
