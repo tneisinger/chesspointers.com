@@ -2,11 +2,10 @@ import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/extend-expect';
-import ChessGuide, {
-  USER_HIGHLIGHT_SQUARE_STYLE,
-} from './ChessGuide';
+import ChessGuide, { USER_HIGHLIGHT_SQUARE_STYLE } from './ChessGuide';
 import { ChessTree } from '../../shared/chessTypes';
 import { makeChessTree } from '../../shared/chessTree';
+import { SELECT_BTN_TEST_ID } from './ChessMoveSelector';
 
 // CSS style for a highlighted square, indicating a possible user move
 const userHighlightSquareStyle = `box-shadow: ${USER_HIGHLIGHT_SQUARE_STYLE}`;
@@ -83,6 +82,21 @@ describe('<ChessGuide /> in "learn" mode with simple ChessTree', () => {
     }, { timeout: 2000 });
   });
 
+  it('should be able to play first move', () => {
+    const { getByTestId } =
+      render(
+        <ChessGuide
+          chessTree={simpleChessTree}
+          userPlaysAs='white'
+          renderExtraControlsForTesting
+        />
+      );
+    const playNextMoveBtn = getByTestId(SELECT_BTN_TEST_ID);
+    fireEvent.click(playNextMoveBtn);
+    getByTestId('wP-e4');
+  });
+
+
   it('should play first move when stepForwardBtn clicked', () => {
     const { container, getByTestId } =
       render(
@@ -93,6 +107,23 @@ describe('<ChessGuide /> in "learn" mode with simple ChessTree', () => {
     const stepForwardBtn = container.querySelector('[aria-label="step forward"]');
     fireEvent.click(stepForwardBtn);
     getByTestId('wP-e4');
+  });
+
+  it('should play computer move after user plays first move', async () => {
+    const { getByTestId } =
+      render(
+        <ChessGuide
+          chessTree={simpleChessTree}
+          userPlaysAs='white'
+          renderExtraControlsForTesting
+        />
+      );
+    const playNextMoveBtn = getByTestId(SELECT_BTN_TEST_ID);
+    fireEvent.click(playNextMoveBtn);
+    getByTestId('wP-e4');
+    await waitFor(() => {
+      getByTestId('bP-e5');
+    });
   });
 
   it('should not play computer move when stepForwardBtn clicked', () => {
@@ -136,7 +167,23 @@ describe('<ChessGuide /> in "learn" mode with simple ChessTree', () => {
     }, { timeout: 1000 });
   });
 
-  it('highlights third move after stepForwardBtn clicked twice', async () => {
+  it('highlights second user move after user plays first move', async () => {
+    const { container, getByTestId } =
+      render(
+        <ChessGuide
+          chessTree={simpleChessTree}
+          userPlaysAs='white'
+          renderExtraControlsForTesting
+        />
+      );
+    const playNextMoveBtn = getByTestId(SELECT_BTN_TEST_ID);
+    fireEvent.click(playNextMoveBtn);
+    await waitFor(() =>
+      expectSquaresToBeHighlighted(container, ['g1', 'f3'])
+    );
+  });
+
+  it('highlights second user move after stepForwardBtn clicked twice', async () => {
     const { container } =
       render(
         <ChessGuide
@@ -200,5 +247,4 @@ describe('<ChessGuide /> in "learn" mode with simple ChessTree', () => {
       getByTestId('wP-e4');
     }, { timeout: 1000 });
   });
-
 });
