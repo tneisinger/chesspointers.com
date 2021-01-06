@@ -12,6 +12,9 @@ const userHighlightSquareStyle = `box-shadow: ${USER_HIGHLIGHT_SQUARE_STYLE}`;
 
 jest.useFakeTimers();
 
+// Prevent an error that only occurs in test runs
+jest.mock('browser-beep');
+
 // Given a ChessGuide component element and a list of squares (e.g. ['e2', 'e4']), expect
 // all of those squares to be highlighted.
 const expectSquaresToBeHighlighted = (container: Element, squares: string[]) => {
