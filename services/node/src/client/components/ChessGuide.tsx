@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import React, { useState, useEffect } from 'react';
 import Chessboard from "chessboardjsx";
 import { Chess, ChessInstance, ShortMove } from "chess.js";
@@ -353,12 +354,33 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   }, [playedMoves]);
 
+  const getNumPathsCompleted = (): number => {
+    return pathsCompletedThisSession.reduce((acc: number, p) => {
+      if (p.mode === mode && p.timesCompleted > 0) {
+        return acc + 1;
+      } else {
+        return acc;
+      }
+    }, 0);
+  }
+
   const debug = () => {
     console.log('You pressed the debug button');
   }
 
   return (
     <>
+      <Grid
+        container
+        direction='row'
+        justify='center'
+      >
+        <Grid item>
+          <Typography variant='caption'>
+            Paths completed: {getNumPathsCompleted()}/{paths.length}
+          </Typography>
+        </Grid>
+      </Grid>
       <div className={classes.chessBoardDiv}>
         <Chessboard
           width={650}
