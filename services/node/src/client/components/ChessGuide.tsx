@@ -185,8 +185,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     move1.from === move2.from && move1.to === move2.to
   );
 
-  const handleMove = (move: ChessBoardMove | null) => {
-    if (move === null) return;
+  const handleMove = (move: ChessBoardMove) => {
     const shortMove: ShortMove = {
       from: move.sourceSquare,
       to: move.targetSquare,
