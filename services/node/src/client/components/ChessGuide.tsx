@@ -186,6 +186,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   );
 
   const handleMove = (move: ChessBoardMove) => {
+    // If the user picks up and drops a piece back at its sourceSquare, do nothing.
+    if (move.sourceSquare === move.targetSquare) return;
     const shortMove: ShortMove = {
       from: move.sourceSquare,
       to: move.targetSquare,
