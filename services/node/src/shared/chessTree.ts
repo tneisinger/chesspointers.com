@@ -1,3 +1,4 @@
+import { Chess } from "chess.js";
 import { ChessTree } from './chessTypes';
 
 export const makeChessTree = (moves: string[], nodes: ChessTree[]): ChessTree => {
@@ -47,4 +48,19 @@ export const getUniquePaths = (tree: ChessTree, prePath: string[] = []): string[
   }
 
   return paths;
+}
+
+export const validateChessTree = (
+  tree: ChessTree,
+): void => {
+  const paths = getUniquePaths(tree);
+  paths.forEach(path => {
+    const game = new Chess();
+    path.forEach(move => {
+      if (move === '') {
+        throw new Error('Empty move strings are only allowed at the root of ChessTrees');
+      }
+      if (!game.move(move)) throw new Error(`Invalid move: ${move}`);
+    });
+  });
 }
