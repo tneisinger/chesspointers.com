@@ -79,7 +79,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     (userPlaysAs == undefined) ? 'white' : userPlaysAs
   );
 
-  const [mode] = useState<GuideMode>(guideMode == undefined ? 'learn' : guideMode);
+  const [mode, setMode] =
+    useState<GuideMode>(guideMode == undefined ? 'learn' : guideMode);
 
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
 
@@ -364,6 +365,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }, 0);
   }
 
+  const toggleGuideMode = () => {
+    mode === 'learn' ? setMode('practice') : setMode('learn');
+    reset();
+  }
+
   const debug = () => {
     console.log('You pressed the debug button');
   }
@@ -373,11 +379,16 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       <Grid
         container
         direction='row'
-        justify='center'
+        justify='space-between'
       >
         <Grid item>
           <Typography variant='caption'>
             Paths completed: {getNumPathsCompleted()}/{paths.length}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant='caption'>
+            Current mode: {mode}
           </Typography>
         </Grid>
       </Grid>
@@ -417,6 +428,15 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             onClick={debug}
           >
             Debug
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={toggleGuideMode}
+          >
+            Switch to {mode === 'learn' ? 'practice' : 'learn'} mode
           </Button>
         </Grid>
       </Grid>
