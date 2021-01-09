@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { User } from '../../shared/entity/user';
+import { ChessTrap } from '../../shared/entity/chessTrap';
 
-export async function fetchUsers() {
-  const result = await axios.get(`/api/users`);
-  return result.data as User[];
+export async function fetchChessTraps() {
+  const result = await axios.get(`/api/traps`);
+  return result.data as ChessTrap[];
 }
 
-export async function fetchUser(userId: string) {
-  const result = await axios.get(`/api/users/${userId}`);
-  return result.data as User;
+export async function fetchChessTrap(trapId: string) {
+  const result = await axios.get(`/api/traps/${trapId}`);
+  return result.data as ChessTrap;
 }

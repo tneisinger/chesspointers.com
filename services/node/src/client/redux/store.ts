@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { usersSlice } from './usersSlice';
+import { chessTrapsSlice } from './chessTrapsSlice';
 
 const store = configureStore({
   reducer: {
-    usersSlice: usersSlice.reducer
+    chessTrapsSlice: chessTrapsSlice.reducer
   }
 });
 

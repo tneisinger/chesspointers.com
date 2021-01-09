@@ -4,21 +4,20 @@ import { SvgIconTypeMap } from '@material-ui/core/SvgIcon/SvgIcon';
 import UsageIcon from '@material-ui/icons/Code';
 import HomeIcon from '@material-ui/icons/Home';
 import RouterIcon from '@material-ui/icons/Storage';
-import FetchIcon from '@material-ui/icons/CloudDownload';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import StyledIcon from '@material-ui/icons/Style';
 import LazyIcon from '@material-ui/icons/SystemUpdateAlt';
 import LockIcon from '@material-ui/icons/Lock';
 import { Route } from 'react-router-dom';
 import HomePage from './pages/Home';
 import UsagePage from './pages/Usage';
-import UsersPage from './pages/Users';
-import UserPage from './pages/User';
+import ChessTrapsPage from './pages/ChessTraps';
+import ChessTrapPage from './pages/ChessTrap';
 import NotFoundPage from './pages/NotFound';
 import LazyLoadingPage from './pages/LazyLoading';
 import StyledComponentsPage from './pages/StyledComponents';
 import RouterPage from './pages/Router';
 import PrivatePage from './pages/Private';
-import LearnTrapPage from './pages/LearnTrap';
 import PrivateRoute from './components/PrivateRoute';
 
 type RouteType = {
@@ -49,16 +48,16 @@ export const routes: RouteType[] = [
     sideMenuIcon: UsageIcon,
   },
   {
-    pageName: 'Users',
-    component: UsersPage,
-    path: '/users',
+    pageName: 'Chess Traps',
+    component: ChessTrapsPage,
+    path: '/traps',
     isPathExact: true,
     isPrivate: false,
-    sideMenuIcon: FetchIcon,
+    sideMenuIcon: ThumbUpIcon,
   },
   {
-    component: UserPage,
-    path: '/users/:userId',
+    component: ChessTrapPage,
+    path: '/traps/:trapId',
     isPathExact: false,
     isPrivate: false,
   },
@@ -94,12 +93,6 @@ export const routes: RouteType[] = [
     isPathExact: false,
     isPrivate: true,
     sideMenuIcon: LockIcon,
-  },
-  {
-    component: LearnTrapPage,
-    isPathExact: false,
-    isPrivate: false,
-    path: '/learn/:trap',
   },
   {
     component: NotFoundPage,
