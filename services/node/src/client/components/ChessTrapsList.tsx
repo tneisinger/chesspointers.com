@@ -5,6 +5,7 @@ import ListItem from '@material-ui/core/List';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
+import { toDashedLowercase } from '../../shared/utils';
 
 const ChessTrapsList = () => {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const ChessTrapsList = () => {
       { chessTrapsSlice.traps.map(trap => {
         return (
           <ListItem key={trap.name}>
-            <NavLink to={`/traps/${trap.id}`} >
+            <NavLink to={`/traps/${toDashedLowercase(trap.name)}`} >
               The {trap.name} Trap
             </NavLink>
           </ListItem>

@@ -57,7 +57,7 @@ export const routes: RouteType[] = [
   },
   {
     component: ChessTrapPage,
-    path: '/traps/:trapId',
+    path: '/traps/:trapName',
     isPathExact: false,
     isPrivate: false,
   },

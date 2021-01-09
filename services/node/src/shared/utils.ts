@@ -22,3 +22,7 @@ export function partition<T>(array: T[], isValid: (t: T) => boolean): T[][] {
 export function randomElem<T>(array: T[]): (T | undefined) {
   return array[Math.floor(Math.random() * array.length)];
 }
+
+export function toDashedLowercase(str: string): string {
+  return str.toLowerCase().replace(/ /g, '-');
+}

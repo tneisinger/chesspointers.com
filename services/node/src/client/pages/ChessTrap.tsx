@@ -8,7 +8,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import ChessGuide from '../components/ChessGuide';
-import NotFoundPage from "../pages/NotFound";
+import NotFoundPage from '../pages/NotFound';
+import { toDashedLowercase } from '../../shared/utils';
 
 const useStyles = makeStyles(() => ({
   mainCard: {
@@ -26,7 +27,7 @@ const ChessTrapPage: React.FunctionComponent = () => {
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
   const classes = useStyles({});
 
-  const { trapId } = useParams<{ trapId: string }>();
+  const { trapName } = useParams<{ trapName: string }>();
 
   useEffect(() => {
     if (chessTrapsSlice.requestStatus === 'NO_REQUEST_YET') {
@@ -46,10 +47,12 @@ const ChessTrapPage: React.FunctionComponent = () => {
     );
   }
 
-  // Find the trap that matches the trapId param
-  const trap = chessTrapsSlice.traps.find(t => String(t.id) === trapId);
+  // Find the trap with a name that matches the trapName param
+  const trap = chessTrapsSlice.traps.find(
+    t => toDashedLowercase(t.name) === trapName
+  );
 
-  // If `trap` is undefined, that means that the trapId param didn't match an id of
+  // If `trap` is undefined, that means that the trapName param didn't match the name of
   // any of the traps in the db. In that case, treat it as not found.
   if (trap === undefined) {
     return <NotFoundPage />
