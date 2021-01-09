@@ -1,4 +1,5 @@
-import { ChessTree, ChessTrap } from '../chessTypes';
+import { ChessTree } from '../chessTypes';
+import { ChessTrap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const branch_Rf1: ChessTree = makeChessTree(
@@ -36,20 +37,21 @@ const branch_Nxf7: ChessTree = makeChessTree(
   ]
 );
 
-const trap: ChessTrap = {
-  name: 'Blackburne-Shilling',
-  playedBy: 'black',
-  moves: makeChessTree(
-    [ 'e4', 'e5',
-      'Nf3', 'Nc6',
-      'Bc4', 'Nd4',
-      'Nxe5', 'Qg5',
-    ],
-    [ branch_g3,
-      branch_Nxf7,
-      branch_Bxf7
-    ]
-  )
-}
+const chessTree = makeChessTree(
+  [ 'e4', 'e5',
+    'Nf3', 'Nc6',
+    'Bc4', 'Nd4',
+    'Nxe5', 'Qg5',
+  ],
+  [ branch_g3,
+    branch_Nxf7,
+    branch_Bxf7
+  ]
+)
+
+const trap = new ChessTrap();
+trap.name = 'Blackburne-Shilling Gambit'
+trap.playedByWhite = false;
+trap.chessTree = chessTree;
 
 export default trap;

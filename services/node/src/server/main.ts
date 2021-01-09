@@ -3,9 +3,9 @@ import path from 'path';
 import { createConnection, Repository } from 'typeorm';
 import { pagesRouter } from './routes/pages-router';
 import { staticsRouter } from './routes/statics-router';
-import { userApiRouter } from './routes/user-api-router';
-import { User } from '../shared/entity/user';
-import { defaultUsers } from './defaultUsers';
+import { chessTrapApiRouter } from './routes/chess-traps-api-router';
+import { ChessTrap } from '../shared/entity/chessTrap';
+import allTraps from '../shared/chessTraps/index';
 import * as config from './config';
 
 console.log(`*******************************************`);
@@ -17,15 +17,16 @@ console.log(`*******************************************`);
 // Establish a connection to the database
 createConnection()
   .then(async (connection) => {
-    // Get all the users from the db
-    const userRepository: Repository<User> = connection.getRepository(User);
-    const users: User[] = await userRepository.find();
+    // Get all the chessTraps that are saved in the db
+    const chessTrapsRepository: Repository<ChessTrap> =
+      connection.getRepository(ChessTrap);
+    const chessTraps: ChessTrap[] = await chessTrapsRepository.find();
 
-    // Insert the defaultUsers if they aren't already in the db
-    const emails = users.map((user) => user.email);
-    defaultUsers.forEach((user) => {
-      if (!emails.includes(user.email)) {
-        userRepository.save(user);
+    // Insert any chessTraps that are not yet saved in the db
+    const namesOfTrapsInDB = chessTraps.map(trap => trap.name);
+    allTraps.forEach(trap => {
+      if (!namesOfTrapsInDB.includes(trap.name)) {
+        chessTrapsRepository.save(trap);
       }
     });
 
@@ -34,7 +35,7 @@ createConnection()
     app.set('view engine', 'ejs');
 
     app.use('/assets', express.static(path.join(process.cwd(), 'assets')));
-    app.use(userApiRouter(userRepository));
+    app.use(chessTrapApiRouter(chessTrapsRepository));
     app.use(staticsRouter());
     app.use(pagesRouter());
 
