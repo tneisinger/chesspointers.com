@@ -378,6 +378,15 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     reset();
   }
 
+  const getCheckStatus = () => {
+    if (game.in_checkmate()) {
+      return 'checkmate!'
+    } else if (game.in_check()) {
+      return 'check!'
+    }
+    return '';
+  }
+
   const debug = () => {
     console.log('You pressed the debug button');
   }
@@ -392,6 +401,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         <Grid item>
           <Typography variant='caption'>
             Paths completed: {getNumPathsCompleted()}/{paths.length}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant='caption'>
+            {getCheckStatus()}
           </Typography>
         </Grid>
         <Grid item>
