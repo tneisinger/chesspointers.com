@@ -8,11 +8,13 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import StyledIcon from '@material-ui/icons/Style';
 import LazyIcon from '@material-ui/icons/SystemUpdateAlt';
 import LockIcon from '@material-ui/icons/Lock';
+import MergeTypeIcon from '@material-ui/icons/MergeType';
 import { Route } from 'react-router-dom';
 import HomePage from './pages/Home';
 import UsagePage from './pages/Usage';
 import ChessTrapsPage from './pages/ChessTraps';
 import ChessTrapPage from './pages/ChessTrap';
+import MergeTrapsPage from './pages/MergeTraps';
 import NotFoundPage from './pages/NotFound';
 import LazyLoadingPage from './pages/LazyLoading';
 import StyledComponentsPage from './pages/StyledComponents';
@@ -60,6 +62,14 @@ export const routes: RouteType[] = [
     path: '/traps/:trapName',
     isPathExact: true,
     isPrivate: false,
+  },
+  {
+    pageName: 'Merge Traps',
+    component: MergeTrapsPage,
+    path: '/merge-traps',
+    isPathExact: true,
+    isPrivate: false,
+    sideMenuIcon: MergeTypeIcon,
   },
   {
     pageName: 'Lazy Loading',

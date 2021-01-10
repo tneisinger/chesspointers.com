@@ -1,8 +1,16 @@
 import { Chess } from "chess.js";
 import { ChessTree } from './chessTypes';
+import { areChessMovesEquivalent } from './utils';
 
-export const makeChessTree = (moves: string[], nodes: ChessTree[]): ChessTree => {
-  let result: (null | ChessTree) = null;
+export const makeChessTree = (moves: string[], childTrees: ChessTree[]): ChessTree => {
+  let result: ChessTree = { move: '', children: []};
+
+  if (moves.length < 1) {
+    return {
+      move: '',
+      children: childTrees
+    };
+  }
 
   const movesCopy = [...moves];
 
@@ -10,7 +18,7 @@ export const makeChessTree = (moves: string[], nodes: ChessTree[]): ChessTree =>
     if (idx === 0) {
       result = {
         move: move,
-        children: nodes,
+        children: childTrees,
       }
     } else {
       result = {
@@ -63,4 +71,41 @@ export const validateChessTree = (
       if (!game.move(move)) throw new Error(`Invalid move: ${move}`);
     });
   });
+}
+
+export function mergeTrees(...trees: ChessTree[]): ChessTree {
+  return trees.reduce((acc, tree) => {
+    return mergeTwoTrees(acc, tree);
+  }, { move: '', children: []})
+}
+
+export function mergeTwoTrees(tree1: ChessTree, tree2: ChessTree): ChessTree {
+  if (tree1.move === '' && tree2.move === '') {
+    return {
+      move: '',
+      children: [ ...tree1.children, ...tree2.children ]
+    };
+  } else if (tree1.move === '') {
+    return tree1.children.reduce((acc, childTree) => {
+      return mergeTwoTrees(acc, childTree);
+    }, tree2);
+  } else if (tree2.move === '') {
+    return tree2.children.reduce((acc, childTree) => {
+      return mergeTwoTrees(acc, childTree);
+    }, tree1);
+  }
+
+  if (areChessMovesEquivalent(tree1.move, tree2.move)) {
+    const childTree = mergeTrees(...tree1.children, ...tree2.children);
+    const children = childTree.move === '' ? childTree.children : [childTree];
+    return {
+      move: tree1.move,
+      children
+    }
+  } else {
+    return {
+      move: '',
+      children: [ tree1, tree2 ]
+    }
+  }
 }

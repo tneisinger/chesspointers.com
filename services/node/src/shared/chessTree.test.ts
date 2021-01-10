@@ -1,4 +1,4 @@
-import { makeChessTree, getUniquePaths } from './chessTree';
+import { makeChessTree, getUniquePaths, mergeTrees } from './chessTree';
 
 const branch_Rf1 = makeChessTree(['Rf1','Qxe4+','Be2','Nf3#'], []);
 const branch_Nxh8 = makeChessTree(['Nxh8','Qxh1+','Bf1','Qe4+','Be2','Bc5'], []);
@@ -144,6 +144,17 @@ describe('makeChessTree()', () => {
       }]
     });
   });
+
+  it('can make a tree that branches immediately', () => {
+    const simpleTree1 = makeChessTree(['e4', 'e5', 'Nf3', 'Nc6'], []);
+    const simpleTree2 = makeChessTree(['d4', 'd5', 'c4', 'e5'], []);
+    const tree = makeChessTree([], [ simpleTree1, simpleTree2 ]);
+
+    expect(tree).toEqual({
+      move: '',
+      children: [ simpleTree1, simpleTree2 ],
+    });
+  });
 });
 
 describe('getUniquePaths()', () => {
@@ -189,5 +200,140 @@ describe('getUniquePaths()', () => {
         'Bxf7+', 'Kd8',
       ]
     ]);
+  });
+});
+
+describe('mergeTrees()', () => {
+  it('merges two empty trees into an empty tree', () => {
+    const merged = mergeTrees(makeChessTree([],[]), makeChessTree([],[]));
+    expect(merged.move).toEqual('');
+    expect(merged.children.length).toEqual(0);
+  });
+
+  it('merges multiple empty trees into an empty tree', () => {
+    const merged = mergeTrees(
+      makeChessTree([],[]),
+      makeChessTree([],[]),
+      makeChessTree([], [])
+    );
+    expect(merged.move).toEqual('');
+    expect(merged.children.length).toEqual(0);
+  });
+
+  it('merges an empty tree with a simple tree, returning the simple tree', () => {
+    const simpleTree = makeChessTree(['e4', 'e5', 'Nf3', 'Nc6'], []);
+    const merged = mergeTrees(
+      makeChessTree([],[]),
+      simpleTree,
+    );
+    expect(merged).toEqual(simpleTree);
+  });
+
+  it('merges a simple tree with an empty tree, returning the simple tree', () => {
+    const simpleTree = makeChessTree(['e4', 'e5', 'Nf3', 'Nc6'], []);
+    const merged = mergeTrees(
+      simpleTree,
+      makeChessTree([],[]),
+    );
+    expect(merged).toEqual(simpleTree);
+  });
+
+  it('merges two simple trees with different first moves', () => {
+    const simpleTree1 = makeChessTree(['e4', 'e5', 'Nf3', 'Nc6'], []);
+    const simpleTree2 = makeChessTree(['d4', 'd5', 'c4', 'e5'], []);
+    const merged = mergeTrees(
+      simpleTree1,
+      simpleTree2,
+    );
+    expect(merged).toEqual(
+      makeChessTree([], [ simpleTree1, simpleTree2 ])
+    );
+  });
+
+  it('merges two simple trees with same first moves', () => {
+    const simpleTree1 = makeChessTree(['d4', 'd5', 'c4', 'e5'], []);
+    const simpleTree2 = makeChessTree(['d4', 'e5', 'dxe5', 'Nc6'], []);
+    const merged = mergeTrees(
+      simpleTree1,
+      simpleTree2,
+    );
+    expect(merged).toEqual(
+      makeChessTree(['d4'], [
+        makeChessTree(['d5', 'c4', 'e5'], []),
+        makeChessTree(['e5', 'dxe5', 'Nc6'], [])
+      ])
+    );
+  });
+
+  it('merges two simple trees when first three moves are the same', () => {
+    const simpleTree1 = makeChessTree(['d4', 'd5', 'c4', 'e5'], []);
+    const simpleTree2 = makeChessTree(['d4', 'd5', 'c4', 'dxc4'], []);
+    const merged = mergeTrees(simpleTree1, simpleTree2);
+    expect(merged).toEqual(
+      makeChessTree(['d4', 'd5', 'c4'], [
+        makeChessTree(['e5'], []),
+        makeChessTree(['dxc4'], [])
+      ])
+    );
+  });
+
+  it('merges two trees that branch immediately', () => {
+    const tree1 = makeChessTree([], [
+      makeChessTree(['e4', 'e5'], []),
+      makeChessTree(['d4', 'd5'], []),
+    ]);
+    const tree2 = makeChessTree([], [
+      makeChessTree(['Nc3', 'Nc6'], []),
+      makeChessTree(['Nf3', 'Nf6'], []),
+    ]);
+    const merged = mergeTrees(tree1, tree2);
+    expect(merged).toEqual(
+      makeChessTree([], [
+        makeChessTree(['e4', 'e5'], []),
+        makeChessTree(['d4', 'd5'], []),
+        makeChessTree(['Nc3', 'Nc6'], []),
+        makeChessTree(['Nf3', 'Nf6'], []),
+      ])
+    );
+  });
+
+  it('merges an immediately-branching tree with a tree with shared first move, ', () => {
+    const tree1 = makeChessTree([], [
+      makeChessTree(['e4', 'e5'], []),
+      makeChessTree(['d4', 'd5'], []),
+    ]);
+    const tree2 = makeChessTree(['d4', 'e5'], []);
+    const merged = mergeTrees(tree1, tree2);
+    expect(getUniquePaths(merged).sort()).toEqual(
+      getUniquePaths(
+        makeChessTree([], [
+          makeChessTree(['e4', 'e5'], []),
+          makeChessTree(['d4'], [
+            makeChessTree(['d5'], []),
+            makeChessTree(['e5'], []),
+          ])
+        ])
+      ).sort()
+    );
+  });
+
+  it('merges tree with an immediately-branching tree with a shared first move, ', () => {
+    const tree1 = makeChessTree(['d4', 'e5'], []);
+    const tree2 = makeChessTree([], [
+      makeChessTree(['e4', 'e5'], []),
+      makeChessTree(['d4', 'd5'], []),
+    ]);
+    const merged = mergeTrees(tree1, tree2);
+    expect(getUniquePaths(merged).sort()).toEqual(
+      getUniquePaths(
+        makeChessTree([], [
+          makeChessTree(['e4', 'e5'], []),
+          makeChessTree(['d4'], [
+            makeChessTree(['d5'], []),
+            makeChessTree(['e5'], []),
+          ])
+        ])
+      ).sort()
+    );
   });
 });
