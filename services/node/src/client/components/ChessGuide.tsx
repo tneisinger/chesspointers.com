@@ -7,7 +7,12 @@ import Chessboard from "chessboardjsx";
 import { Chess, ChessInstance, ShortMove } from "chess.js";
 import { ChessTree, ChessBoardMove } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
-import { arraysEqual, partition, randomElem } from '../../shared/utils';
+import {
+  areChessPathsEquivalent,
+  areChessMovesEquivalent,
+  partition,
+  randomElem
+} from '../../shared/utils';
 import ChessNavBtns from './ChessNavBtns';
 import ChessMoveSelector from './ChessMoveSelector';
 const beep = require('browser-beep')({ frequency: 95, interval: 240 });
@@ -147,7 +152,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const relevantPaths = (): string[][] => {
     return paths.filter((path) => {
-      return arraysEqual(path.slice(0, playedMoves.length), playedMoves);
+      return playedMoves.every((move, idx) => areChessMovesEquivalent(move, path[idx]));
     });
   }
 
@@ -310,13 +315,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   const isAtPathEnd = (): boolean =>
-    paths.some(path => arraysEqual(playedMoves, path))
+    paths.some(path => areChessPathsEquivalent(path, playedMoves));
 
   const getMovesThatLeadToLeastCompletedPaths = (): string[] => {
     // Get the paths that are reachable from the current position forward.
     const relevantPaths = pathsCompletedThisSession.filter(p => {
-      return ( p.mode == mode
-               && arraysEqual(playedMoves, p.path.slice(0, playedMoves.length))
+      return (
+        p.mode == mode
+        && playedMoves.every((move, idx) => areChessMovesEquivalent(move, p.path[idx]))
       );
     });
     const lowestTimesCompleted = Math.min(...relevantPaths.map(p => p.timesCompleted));
@@ -328,7 +334,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const recordPathCompletion = () => {
     const [matchingPaths, nonMatchingPaths] = partition(
       pathsCompletedThisSession,
-      (p) => arraysEqual(p.path, playedMoves) && p.mode === mode
+      (p) => areChessPathsEquivalent(p.path, playedMoves) && p.mode === mode
     );
     if (matchingPaths.length !== 1) {
       throw new Error(`Unexpected number of matchingPaths: ${matchingPaths.length}`);
