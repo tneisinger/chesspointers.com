@@ -11,7 +11,8 @@ import {
   areChessPathsEquivalent,
   areChessMovesEquivalent,
   partition,
-  randomElem
+  randomElem,
+  getScoreFromFen
 } from '../../shared/utils';
 import ChessNavBtns from './ChessNavBtns';
 import ChessMoveSelector from './ChessMoveSelector';
@@ -413,6 +414,17 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           draggable={getNextMoves().length > 0}
         />
       </div>
+      <Grid
+        container
+        direction='row'
+        justify='space-between'
+      >
+        <Grid item>
+          <Typography variant='caption'>
+            Score: {getScoreFromFen(game.fen())}
+          </Typography>
+        </Grid>
+      </Grid>
       <Grid
         className={classes.belowChessBoard}
         container

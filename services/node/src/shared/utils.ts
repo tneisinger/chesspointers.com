@@ -51,3 +51,34 @@ function stripCheckSymbol(move: string): string {
   }
   return move;
 }
+
+// Calculate the score of a chess game from a fen string.  If white is ahead by n points,
+// return n.  If black is ahead by n points, return -n.  If the score is tied, return 0.
+export function getScoreFromFen(fen: string): number {
+  const pieces = fen.substr(0, fen.indexOf(' '));
+  const numWhiteQueens = (pieces.match(/Q/g) || []).length;
+  const numWhiteRooks = (pieces.match(/R/g) || []).length;
+  const numWhiteBishops = (pieces.match(/B/g) || []).length;
+  const numWhiteKnights = (pieces.match(/N/g) || []).length;
+  const numWhitePawns = (pieces.match(/P/g) || []).length;
+
+  const numBlackQueens = (pieces.match(/q/g) || []).length;
+  const numBlackRooks = (pieces.match(/r/g) || []).length;
+  const numBlackBishops = (pieces.match(/b/g) || []).length;
+  const numBlackKnights = (pieces.match(/n/g) || []).length;
+  const numBlackPawns = (pieces.match(/p/g) || []).length;
+
+  const valueOfWhitePieces =
+    numWhitePawns +
+    (numWhiteKnights + numWhiteBishops) * 3 +
+    numWhiteRooks * 5 +
+    numWhiteQueens * 9;
+
+  const valueOfBlackPieces =
+    numBlackPawns +
+    (numBlackKnights + numBlackBishops) * 3 +
+    numBlackRooks * 5 +
+    numBlackQueens * 9;
+
+  return valueOfWhitePieces - valueOfBlackPieces;
+}
