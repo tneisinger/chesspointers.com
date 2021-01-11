@@ -18,6 +18,9 @@ export { laskerTrap as laskerTrap};
 import englundGambitTrap from './englundGambit';
 export { englundGambitTrap as englundGambitTrap };
 
+import bobbyFischerTrap from './bobbyFischer';
+export { bobbyFischerTrap as bobbyFischerTrap };
+
 const allTraps: ChessTrap[] = [
   bsgTrap,
   elephantTrap,
@@ -25,6 +28,7 @@ const allTraps: ChessTrap[] = [
   legalTrap,
   laskerTrap,
   englundGambitTrap,
+  bobbyFischerTrap,
 ];
 
 export default allTraps;
