@@ -21,6 +21,9 @@ export { englundGambitTrap as englundGambitTrap };
 import bobbyFischerTrap from './bobbyFischer';
 export { bobbyFischerTrap as bobbyFischerTrap };
 
+import halosarTrap from './halosar';
+export { halosarTrap };
+
 const allTraps: ChessTrap[] = [
   bsgTrap,
   elephantTrap,
@@ -29,6 +32,7 @@ const allTraps: ChessTrap[] = [
   laskerTrap,
   englundGambitTrap,
   bobbyFischerTrap,
+  halosarTrap,
 ];
 
 export default allTraps;
