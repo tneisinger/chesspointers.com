@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import React, { useState, useEffect } from 'react';
 import Chessboard from "chessboardjsx";
 import { Chess, ChessInstance, ShortMove } from "chess.js";
-import { ChessTree, ChessBoardMove } from '../../shared/chessTypes';
+import { ChessTree, ChessBoardMove, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import {
   areChessPathsEquivalent,
@@ -59,7 +59,7 @@ interface Props {
   // if 'alwaysAutoplay' set to true, always autoplay the computer's moves, even when the
   // step forward button is clicked.
   alwaysAutoplay?: boolean;
-  userPlaysAs?: ('white' | 'black');
+  userPlaysAs?: PieceColor;
   guideMode?: GuideMode;
   renderExtraControlsForTesting?: boolean
 }
@@ -81,7 +81,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const paths = getUniquePaths(chessTree);
 
-  const [userColor] = useState<'white' | 'black'>(
+  const [userColor] = useState<PieceColor>(
     (userPlaysAs == undefined) ? 'white' : userPlaysAs
   );
 

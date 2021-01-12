@@ -1,5 +1,7 @@
 import { Square } from "chess.js";
 
+export type PieceColor = 'white' | 'black';
+
 export type ChessTree = {
   move: string,
   children: ChessTree[],
@@ -7,7 +9,7 @@ export type ChessTree = {
 
 export type ChessTrap = {
   name: string,
-  playedBy: ('white' | 'black'),
+  playedBy: PieceColor,
   moves: ChessTree,
 }
 
