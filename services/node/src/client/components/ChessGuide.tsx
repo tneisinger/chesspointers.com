@@ -73,7 +73,7 @@ type PathStats = {
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
   alwaysAutoplay,
-  userPlaysAs,
+  userPlaysAs = 'white',
   guideMode,
   renderExtraControlsForTesting,
 }) => {
@@ -81,9 +81,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const paths = getUniquePaths(chessTree);
 
-  const [userColor] = useState<PieceColor>(
-    (userPlaysAs == undefined) ? 'white' : userPlaysAs
-  );
+  if (userPlaysAs == undefined) {
+    userPlaysAs = 'white';
+  }
 
   const [mode, setMode] =
     useState<GuideMode>(guideMode == undefined ? 'learn' : guideMode);
@@ -93,13 +93,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
 
   const isUsersTurn = (): boolean => {
-    return game.turn() === userColor.charAt(0);
+    return game.turn() === userPlaysAs.charAt(0);
   }
 
   // Initialize all possible 'pathsCompletedThisSession' values with their
   // 'timesCompleted' values set to zero.
-  const [pathsCompletedThisSession, setPathsCompletedThisSession] =
-    useState<PathStats[]>(paths.reduce((acc: PathStats[], path) => {
+  const makeInitialPathsCompletedThisSession = (): PathStats[] => {
+    return paths.reduce((acc: PathStats[], path) => {
       const practicePath: PathStats = {
         mode: 'practice',
         path,
@@ -111,7 +111,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         timesCompleted: 0,
       };
       return [...acc, practicePath, learnPath];
-    }, []));
+    }, [])
+  }
+
+  const [pathsCompletedThisSession, setPathsCompletedThisSession] =
+    useState<PathStats[]>(makeInitialPathsCompletedThisSession);
 
   // The state of the game as it is on the board
   const [game] = useState<ChessInstance>(new Chess());
@@ -139,6 +143,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   useEffect(() => {
     reset();
   }, []);
+
+  useEffect(() => {
+    reset();
+    setPathsCompletedThisSession(makeInitialPathsCompletedThisSession());
+  }, [chessTree, userPlaysAs]);
 
   const getNextMoves = (): string[] => {
     const result: string[] = [];
@@ -423,7 +432,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
               margin: 'auto',
           }}
           squareStyles={showMoves()}
-          orientation={userColor}
+          orientation={userPlaysAs}
           onDrop={handleMove}
           draggable={getNextMoves().length > 0}
         />
