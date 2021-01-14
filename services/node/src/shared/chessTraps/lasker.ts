@@ -4,7 +4,6 @@ import { makeChessTree } from '../chessTree';
 const branch_Ke1 = makeChessTree(
   [ 'Ke1', 'Qh4+',
     'Kd2', 'Qd4+',
-    'Kc1', 'Qxc4+',
   ],
   []
 );
