@@ -27,8 +27,6 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
     trap: ChessTrap,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log(`isTrapSelected? ${isTrapSelected(trap)}`);
-    console.log(`event.target.checked: ${event.target.checked}`);
     const [selectedTraps, setSelectedTraps] = trap.playedByWhite ?
         [ selectedWhiteTraps, setSelectedWhiteTraps] :
         [ selectedBlackTraps, setSelectedBlackTraps];
