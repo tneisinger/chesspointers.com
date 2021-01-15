@@ -10,6 +10,7 @@ import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import ChessGuide from '../components/ChessGuide';
 import NotFoundPage from '../pages/NotFound';
 import { toDashedLowercase } from '../../shared/utils';
+import { formatTrapName } from '../../shared/chessTraps/index';
 
 const useStyles = makeStyles(() => ({
   mainCard: {
@@ -63,7 +64,7 @@ const ChessTrapPage: React.FunctionComponent = () => {
       <Grid container direction='row' justify='center' spacing={2}>
         <Grid item>
           <Card className={classes.mainCard}>
-            <CardHeader className={classes.cardHeader} title={`The ${trap.name} Trap`} />
+            <CardHeader className={classes.cardHeader} title={formatTrapName(trap)} />
             <CardContent>
               <ChessGuide
                 chessTree={trap.chessTree}

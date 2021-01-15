@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import { toDashedLowercase } from '../../shared/utils';
+import { formatTrapName } from '../../shared/chessTraps/index';
 
 const ChessTrapsList = () => {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const ChessTrapsList = () => {
         return (
           <ListItem key={trap.name}>
             <NavLink to={`/traps/${toDashedLowercase(trap.name)}`} >
-              The {trap.name} Trap
+              {formatTrapName(trap)}
             </NavLink>
           </ListItem>
         );
