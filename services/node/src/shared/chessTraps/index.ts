@@ -30,6 +30,15 @@ export { magnusSmithTrap as magnusSmithTrap };
 import karpovSmotheringTrap from './karpovSmothering';
 export { karpovSmotheringTrap as karpovSmotheringTrap };
 
+import staffordTrap1 from './stafford1';
+export { staffordTrap1 as staffordTrap1 };
+
+import staffordTrap2 from './stafford2';
+export { staffordTrap2 as staffordTrap2 };
+
+import staffordTrap3 from './stafford3';
+export { staffordTrap3 as staffordTrap3 };
+
 const allTraps: ChessTrap[] = [
   bsgTrap,
   elephantTrap,
@@ -41,6 +50,9 @@ const allTraps: ChessTrap[] = [
   halosarTrap,
   magnusSmithTrap,
   karpovSmotheringTrap,
+  staffordTrap1,
+  staffordTrap2,
+  staffordTrap3,
 ];
 
 export default allTraps;
