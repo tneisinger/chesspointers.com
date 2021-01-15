@@ -25,7 +25,11 @@ const branch_g3: ChessTree = makeChessTree(
 );
 
 const branch_Bxf7: ChessTree = makeChessTree(
-  [ 'Bxf7+', 'Kd8'],
+  [
+    'Bxf7+', 'Kd8',
+    'Ng4',   'Nh6',
+    'h3',    'Nxf7',
+  ],
   []
 );
 
