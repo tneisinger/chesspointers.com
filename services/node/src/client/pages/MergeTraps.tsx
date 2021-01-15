@@ -59,18 +59,23 @@ const MergeTrapsPage: React.FunctionComponent = () => {
       <Grid container direction='row' justify='center' spacing={2}>
         <Grid item>
           <Card className={classes.mainCard}>
-            <CardHeader className={classes.cardHeader} title={'Merge Traps'} />
             <CardContent>
-              <ChessTrapsSelector
-                allChessTraps={allChessTraps}
-                setSelectedTraps={setSelectedTraps}
-                userColor={userColor}
-                setUserColor={setUserColor}
-              />
-              <ChessGuide
-                chessTree={mergeSelectedTraps()}
-                userPlaysAs={userColor}
-              />
+              <Grid container direction='row' spacing={4}>
+                <Grid item>
+                  <ChessGuide
+                    chessTree={mergeSelectedTraps()}
+                    userPlaysAs={userColor}
+                  />
+                </Grid>
+                <Grid item>
+                  <ChessTrapsSelector
+                    allChessTraps={allChessTraps}
+                    setSelectedTraps={setSelectedTraps}
+                    userColor={userColor}
+                    setUserColor={setUserColor}
+                  />
+                </Grid>
+              </Grid>
             </CardContent>
           </Card>
         </Grid>

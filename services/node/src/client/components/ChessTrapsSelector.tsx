@@ -70,36 +70,38 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
 
   return (
     <div>
-      <Typography component="div">
-        <Grid component="label" container alignItems="center" spacing={1}>
-          <Grid item>White</Grid>
-          <Grid item>
-            <Switch
-              checked={userColor === 'black'}
-              onChange={toggleUserColor}
-              name="selectColor"
-              color="default"
-              inputProps={{ 'aria-label': 'Select piece color' }}
-            />
-          </Grid>
-          <Grid item>Black</Grid>
-        </Grid>
-      </Typography>
-      { getChessTrapsOfUserColor().map(trap =>
-          <FormControlLabel
-            key={trap.name}
-            control={
-              <Checkbox
-                name={trap.name}
-                checked={isTrapSelected(trap)}
-                onChange={(e) => handleTrapSelectChange(trap, e)}
-                color="default"
-              />
-            }
-            label={trap.name}
+      <Grid container direction='row' component="label" alignItems="center" spacing={1}>
+        <Grid item>White</Grid>
+        <Grid item>
+          <Switch
+            checked={userColor === 'black'}
+            onChange={toggleUserColor}
+            name="selectColor"
+            color="default"
+            inputProps={{ 'aria-label': 'Select piece color' }}
           />
-        )
-      }
+        </Grid>
+        <Grid item>Black</Grid>
+      </Grid>
+      <Grid container direction='column'>
+        { getChessTrapsOfUserColor().map(trap =>
+            <Grid item key={trap.name}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name={trap.name}
+                    size='small'
+                    checked={isTrapSelected(trap)}
+                    onChange={(e) => handleTrapSelectChange(trap, e)}
+                    color="default"
+                  />
+                }
+                label={trap.name}
+              />
+            </Grid>
+          )
+        }
+      </Grid>
     </div>
   );
 }
