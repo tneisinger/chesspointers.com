@@ -16,7 +16,8 @@ import {
 } from '../../shared/utils';
 import ChessNavBtns from './ChessNavBtns';
 import ChessMoveSelector from './ChessMoveSelector';
-const beep = require('browser-beep')({ frequency: 95, interval: 240 });
+// const beep = require('browser-beep')({ frequency: 95, interval: 240 });
+import Beeper from '../beeper';
 
 const COMPUTER_THINK_TIME = 500;
 
@@ -84,6 +85,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   if (userPlaysAs == undefined) {
     userPlaysAs = 'white';
   }
+
+  const [beeper] = useState(new Beeper({ frequency: 115 }));
 
   const [mode, setMode] =
     useState<GuideMode>(guideMode == undefined ? 'learn' : guideMode);
@@ -222,7 +225,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       doNextMove(nextMove);
     } else {
       // If the user plays a move that is not in the ChessTree, beep at them
-      beep(2);
+      beeper.beep(2);
     }
   };
 
@@ -434,6 +437,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           squareStyles={showMoves()}
           orientation={userPlaysAs}
           onDrop={handleMove}
+          onDragOverSquare={() => beeper.resume()}
           draggable={getNextMoves().length > 0}
         />
       </div>
