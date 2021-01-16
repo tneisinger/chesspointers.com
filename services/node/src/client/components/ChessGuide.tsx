@@ -17,6 +17,7 @@ import {
 import ChessNavBtns from './ChessNavBtns';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
+import Modal from './Modal';
 
 const COMPUTER_THINK_TIME = 500;
 
@@ -86,6 +87,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   const [beeper] = useState(new Beeper({ frequency: 115 }));
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [mode, setMode] =
     useState<GuideMode>(guideMode == undefined ? 'learn' : guideMode);
@@ -363,6 +366,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   useEffect(() => {
     if (isAtPathEnd()) {
       recordPathCompletion();
+      setIsModalOpen(true);
     }
 
     setIsShowingMoves(false);
@@ -398,6 +402,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return '';
   }
 
+  const numPathsCompleted = getNumPathsCompleted();
+
   const debug = () => {
     console.log('You pressed the debug button');
   }
@@ -411,7 +417,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       >
         <Grid item>
           <Typography variant='caption'>
-            Paths completed: {getNumPathsCompleted()}/{paths.length}
+            Paths completed: {numPathsCompleted}/{paths.length}
           </Typography>
         </Grid>
         <Grid item>
@@ -491,6 +497,24 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           handleSubmit={handleMove}
         />
       }
+      <Modal
+        isModalOpenOrOpening={isModalOpen}
+        handleClose={() => setIsModalOpen(false)}
+        delayOpenFor={500}
+      >
+        <h3>Path Complete!</h3>
+        <p>{numPathsCompleted} of {paths.length} paths complete</p>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            reset();
+            setIsModalOpen(false);
+          }}
+        >
+          Reset Game to Complete Next Path
+        </Button>
+      </Modal>
     </>
   );
 }
