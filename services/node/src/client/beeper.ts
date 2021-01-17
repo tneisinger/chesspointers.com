@@ -2,6 +2,7 @@ const FREQUENCY = 440;
 const INTERVAL = 250;
 const RAMP_VALUE = 0.00001;
 const RAMP_DURATION = 1.5;
+const BEEP_VOLUME = 1.5;
 
 interface Options {
   frequency?: number;
@@ -31,7 +32,7 @@ class Beeper {
     gain.connect(this.audioContext.destination);
 
     const currentTime = this.audioContext.currentTime;
-    gain.gain.setValueAtTime(gain.gain.value, currentTime);
+    gain.gain.setValueAtTime(BEEP_VOLUME, currentTime);
     gain.gain.exponentialRampToValueAtTime(RAMP_VALUE, currentTime + RAMP_DURATION);
 
     osc.onended = () => {
