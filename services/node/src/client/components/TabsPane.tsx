@@ -43,8 +43,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    border: '1px solid #ddd',
+    border: '1px solid #555',
     borderTop: 'none',
+    borderRadius: '4px',
   },
   lonelyTab: {
     textAlign: 'center',
