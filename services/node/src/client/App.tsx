@@ -1,9 +1,20 @@
 import { CssBaseline, makeStyles } from '@material-ui/core';
-import { createStyles, Theme } from '@material-ui/core/styles';
+import {
+  createStyles,
+  Theme,
+  createMuiTheme,
+  ThemeProvider,
+} from '@material-ui/core/styles';
 import React from 'react';
 import { BrowserRouter, Switch } from 'react-router-dom'; // Pages
 import { SideMenu } from './components/SideMenu';
 import { makeRoutes } from './routes';
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  }
+});
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,13 +34,15 @@ export const App = () => {
   return (
     <BrowserRouter>
       <div className={classes.root}>
-        <CssBaseline />
-        <SideMenu />
-        <main className={classes.main}>
-          <Switch>
-            {makeRoutes()}
-          </Switch>
-        </main>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <SideMenu />
+          <main className={classes.main}>
+            <Switch>
+              {makeRoutes()}
+            </Switch>
+          </main>
+        </ThemeProvider>
       </div>
     </BrowserRouter>
   );
