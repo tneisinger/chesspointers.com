@@ -58,7 +58,6 @@ const allTraps: ChessTrap[] = [
 export function formatTrapName(trap: ChessTrap): string {
   const regex = RegExp(' \\d$');
   if (regex.test(trap.name)) {
-    console.log('yep!');
     const name = trap.name.slice(0,-2);
     const digit = trap.name.slice(-1, trap.name.length)
     return (name + ' Trap #' + digit);
