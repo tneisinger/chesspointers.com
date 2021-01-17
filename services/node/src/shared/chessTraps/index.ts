@@ -60,9 +60,9 @@ export function formatTrapName(trap: ChessTrap): string {
   if (regex.test(trap.name)) {
     const name = trap.name.slice(0,-2);
     const digit = trap.name.slice(-1, trap.name.length)
-    return (name + ' Trap #' + digit);
+    return `${name} Trap #${digit}`;
   }
-  return trap.name + ' Trap';
+  return `The ${trap.name} Trap`;
 }
 
 export default allTraps;
