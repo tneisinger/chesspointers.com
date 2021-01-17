@@ -15,3 +15,7 @@ export type ChessBoardMove = {
   piece: string,
 }
 
+export type MovePair = {
+  whiteMove: string,
+  blackMove?: string,
+}
