@@ -2,7 +2,7 @@ const FREQUENCY = 440;
 const INTERVAL = 250;
 const RAMP_VALUE = 0.00001;
 const RAMP_DURATION = 1.5;
-const BEEP_VOLUME = 1.5;
+const BEEP_VOLUME = 1;
 
 interface Options {
   frequency?: number;
