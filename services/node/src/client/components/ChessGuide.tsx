@@ -18,6 +18,7 @@ import ChessNavBtns from './ChessNavBtns';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
 import Modal from './Modal';
+import MovesTable from './MovesTable';
 
 const COMPUTER_THINK_TIME = 500;
 
@@ -410,93 +411,101 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   return (
     <>
-      <Grid
-        container
-        direction='row'
-        justify='space-between'
-      >
+      <Grid container direction='row' spacing={2}>
         <Grid item>
-          <Typography variant='caption'>
-            Paths completed: {numPathsCompleted}/{paths.length}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant='caption'>
-            {getCheckStatus()}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant='caption'>
-            Current mode: {mode}
-          </Typography>
-        </Grid>
-      </Grid>
-      <div className={classes.chessBoardDiv}>
-        <Chessboard
-          width={650}
-          position={fen}
-          undo
-          boardStyle={{
-              margin: 'auto',
-          }}
-          squareStyles={showMoves()}
-          orientation={userPlaysAs}
-          onDrop={handleMove}
-          onDragOverSquare={() => beeper.resume()}
-          draggable={getNextMoves().length > 0}
-        />
-      </div>
-      <Grid
-        container
-        direction='row'
-        justify='space-between'
-      >
-        <Grid item>
-          <Typography variant='caption'>
-            Score: {getScoreFromFen(game.fen())}
-          </Typography>
-        </Grid>
-      </Grid>
-      <Grid
-        className={classes.belowChessBoard}
-        container
-        direction='row'
-        justify='center'
-        spacing={2}
-      >
-        <ChessNavBtns
-          areBackBtnsEnabled={playedMoves.length === 0}
-          areForwardBtnsEnabled={getNextMoves().length !== 1}
-          jumpToStart={reset}
-          jumpToEnd={jumpToEndOrNextBranch}
-          stepForward={moveForward}
-          stepBack={moveBack}
-        />
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={debug}
+          <Grid
+            container
+            direction='row'
+            justify='space-between'
           >
-            Debug
-          </Button>
+            <Grid item>
+              <Typography variant='caption'>
+                Paths completed: {numPathsCompleted}/{paths.length}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant='caption'>
+                {getCheckStatus()}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant='caption'>
+                Current mode: {mode}
+              </Typography>
+            </Grid>
+          </Grid>
+          <div className={classes.chessBoardDiv}>
+            <Chessboard
+              width={650}
+              position={fen}
+              undo
+              boardStyle={{
+                  margin: 'auto',
+              }}
+              squareStyles={showMoves()}
+              orientation={userPlaysAs}
+              onDrop={handleMove}
+              onDragOverSquare={() => beeper.resume()}
+              draggable={getNextMoves().length > 0}
+            />
+          </div>
+          <Grid
+            container
+            direction='row'
+            justify='space-between'
+          >
+            <Grid item>
+              <Typography variant='caption'>
+                Score: {getScoreFromFen(game.fen())}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid
+            className={classes.belowChessBoard}
+            container
+            direction='row'
+            justify='center'
+            spacing={2}
+          >
+            <ChessNavBtns
+              areBackBtnsEnabled={playedMoves.length === 0}
+              areForwardBtnsEnabled={getNextMoves().length !== 1}
+              jumpToStart={reset}
+              jumpToEnd={jumpToEndOrNextBranch}
+              stepForward={moveForward}
+              stepBack={moveBack}
+            />
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={debug}
+              >
+                Debug
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={toggleGuideMode}
+              >
+                Switch to {mode === 'learn' ? 'practice' : 'learn'} mode
+              </Button>
+            </Grid>
+          </Grid>
+          {renderExtraControlsForTesting &&
+            <ChessMoveSelector
+              nextMoveGames={getNextMoveGames()}
+              handleSubmit={handleMove}
+            />
+          }
         </Grid>
         <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={toggleGuideMode}
-          >
-            Switch to {mode === 'learn' ? 'practice' : 'learn'} mode
-          </Button>
+          <MovesTable moves={playedMoves} />
         </Grid>
       </Grid>
-      {renderExtraControlsForTesting &&
-        <ChessMoveSelector
-          nextMoveGames={getNextMoveGames()}
-          handleSubmit={handleMove}
-        />
-      }
+
       <Modal
         isModalOpenOrOpening={isModalOpen}
         handleClose={() => setIsModalOpen(false)}
