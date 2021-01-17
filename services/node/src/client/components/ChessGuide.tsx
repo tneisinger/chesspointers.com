@@ -12,7 +12,6 @@ import {
   randomElem,
   getScoreFromFen
 } from '../../shared/utils';
-import ChessNavBtns from './ChessNavBtns';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
 import Modal from './Modal';
@@ -20,11 +19,14 @@ import MovesTable from './MovesTable';
 import TabsPane from './TabsPane';
 import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
+import ChessGuideControls from './ChessGuideControls';
 import { GuideMode } from '../utils/types';
 
 const COMPUTER_THINK_TIME = 500;
 
 const SHOW_NEXT_MOVE_DELAY = 1000;
+
+const SHOW_DEBUG_BTN = false;
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -380,46 +382,16 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             currentGuideMode={mode}
             score={getScoreFromFen(game.fen())}
           />
-          <Grid
-            className={classes.belowChessBoard}
-            container
-            direction='row'
-            justify='center'
-            spacing={2}
-          >
-            <ChessNavBtns
-              areBackBtnsEnabled={playedMoves.length === 0}
-              areForwardBtnsEnabled={getNextMoves().length !== 1}
-              jumpToStart={reset}
-              jumpToEnd={jumpToEndOrNextTreeFork}
-              stepForward={moveForward}
-              stepBack={moveBack}
-            />
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={debug}
-              >
-                Debug
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={toggleGuideMode}
-              >
-                Switch to {mode === 'learn' ? 'practice' : 'learn'} mode
-              </Button>
-            </Grid>
-          </Grid>
-          {renderExtraControlsForTesting &&
-            <ChessMoveSelector
-              nextMoveGames={getNextMoveGames()}
-              handleSubmit={handleMove}
-            />
-          }
+          <ChessGuideControls
+            areBackBtnsEnabled={playedMoves.length === 0}
+            areForwardBtnsEnabled={getNextMoves().length !== 1}
+            onJumpBackBtnClick={reset}
+            onJumpForwardBtnClick={jumpToEndOrNextTreeFork}
+            onStepBackBtnClick={moveBack}
+            onStepForwardBtnClick={moveForward}
+            onModeSwitchBtnClick={toggleGuideMode}
+            currentMode={mode}
+          />
         </Grid>
         <Grid item lg={3}>
           <TabsPane
@@ -435,6 +407,16 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           />
         </Grid>
       </Grid>
+
+      {SHOW_DEBUG_BTN &&
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={debug}
+        >
+          Debug
+        </Button>
+      }
 
       <Modal
         isModalOpenOrOpening={isModalOpen}
@@ -454,6 +436,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           Reset Game to Complete Next Path
         </Button>
       </Modal>
+
+      {renderExtraControlsForTesting &&
+        <ChessMoveSelector
+          nextMoveGames={getNextMoveGames()}
+          handleSubmit={handleMove}
+        />
+      }
     </div>
   );
 }
