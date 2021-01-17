@@ -2,31 +2,28 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { GuideMode } from '../utils/types';
-import { CheckMateStatus } from '../../shared/chessTypes';
 
 interface Props {
   numPaths: number;
   numPathsCompleted: number;
   currentGuideMode: GuideMode;
-  checkMateStatus: CheckMateStatus;
+  score: number;
 }
 
-// This component creates the content that goes above the ChessGuideBoard
-const ChessGuideBoardAbove: React.FunctionComponent<Props> = ({
+const ChessGuideInfo: React.FunctionComponent<Props> = ({
   numPaths,
   numPathsCompleted,
   currentGuideMode,
-  checkMateStatus,
+  score,
 }) => {
 
-  const makeCheckMateString = () => {
-    switch (checkMateStatus) {
-      case 'not in check':
-        return '';
-      case 'check':
-        return 'check!';
-      case 'checkmate':
-        return 'checkmate!';
+  const makeScoreString = (): string => {
+    if (score === 0) {
+      return "tied game";
+    } else if (score > 0) {
+      return `white +${score}`;
+    } else {
+      return `black +${Math.abs(score)}`;
     }
   }
 
@@ -43,7 +40,7 @@ const ChessGuideBoardAbove: React.FunctionComponent<Props> = ({
             </Grid>
             <Grid item>
               <Typography variant='caption'>
-                {makeCheckMateString()}
+                {makeScoreString()}
               </Typography>
             </Grid>
             <Grid item>
@@ -55,4 +52,4 @@ const ChessGuideBoardAbove: React.FunctionComponent<Props> = ({
         );
 }
 
-export default ChessGuideBoardAbove;
+export default ChessGuideInfo;

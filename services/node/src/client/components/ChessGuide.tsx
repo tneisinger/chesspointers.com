@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import React, { useState, useEffect } from 'react';
 import { Chess, ChessInstance, ShortMove } from "chess.js";
 import { ChessTree, ChessBoardMove, PieceColor } from '../../shared/chessTypes';
@@ -20,10 +19,8 @@ import Modal from './Modal';
 import MovesTable from './MovesTable';
 import TabsPane from './TabsPane';
 import ChessGuideBoard from './ChessGuideBoard';
-import ChessGuideBoardAbove from './ChessGuideBoardAbove';
-import ChessGuideBoardBelow from './ChessGuideBoardBelow';
+import ChessGuideInfo from './ChessGuideInfo';
 import { GuideMode } from '../utils/types';
-import { CheckMateStatus } from '../../shared/chessTypes';
 
 const COMPUTER_THINK_TIME = 500;
 
@@ -358,15 +355,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     reset();
   }
 
-  const getCheckStatus = (): CheckMateStatus => {
-    if (game.in_checkmate()) {
-      return 'checkmate'
-    } else if (game.in_check()) {
-      return 'check'
-    }
-    return 'not in check';
-  }
-
   const debug = () => {
     console.log('You pressed the debug button');
   }
@@ -375,12 +363,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     <div className={classes.root}>
       <Grid container direction='row' justify='space-between' spacing={2}>
         <Grid item lg={9}>
-          <ChessGuideBoardAbove
-            numPaths={paths.length}
-            numPathsCompleted={getNumPathsCompleted()}
-            currentGuideMode={mode}
-            checkMateStatus={getCheckStatus()}
-          />
           <ChessGuideBoard
             playedMoves={playedMoves}
             boardPosition={fen}
@@ -392,7 +374,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             nextMoves={getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
           />
-          <ChessGuideBoardBelow score={getScoreFromFen(game.fen())} />
+          <ChessGuideInfo
+            numPaths={paths.length}
+            numPathsCompleted={getNumPathsCompleted()}
+            currentGuideMode={mode}
+            score={getScoreFromFen(game.fen())}
+          />
           <Grid
             className={classes.belowChessBoard}
             container
