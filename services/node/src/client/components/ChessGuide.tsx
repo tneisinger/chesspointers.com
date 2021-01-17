@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import React, { useState, useEffect } from 'react';
-import Chessboard from "chessboardjsx";
 import { Chess, ChessInstance, ShortMove } from "chess.js";
 import { ChessTree, ChessBoardMove, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
@@ -20,6 +19,7 @@ import Beeper from '../beeper';
 import Modal from './Modal';
 import MovesTable from './MovesTable';
 import TabsPane from './TabsPane';
+import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideBoardAbove from './ChessGuideBoardAbove';
 import { GuideMode } from '../utils/types';
 import { CheckMateStatus } from '../../shared/chessTypes';
@@ -27,15 +27,6 @@ import { CheckMateStatus } from '../../shared/chessTypes';
 const COMPUTER_THINK_TIME = 500;
 
 const SHOW_NEXT_MOVE_DELAY = 1000;
-
-const MOVE_HIGHLIGHT_STYLE = 'inset 0 0 2px 4px';
-const USER_MOVE_HIGHLIGHT_COLOR = 'orange';
-const COMPUTER_MOVE_HIGHLIGHT_COLOR = 'purple';
-
-export const USER_HIGHLIGHT_SQUARE_STYLE =
-  `${MOVE_HIGHLIGHT_STYLE} ${USER_MOVE_HIGHLIGHT_COLOR}`;
-export const COMPUTER_HIGHLIGHT_SQUARE_STYLE =
-  `${MOVE_HIGHLIGHT_STYLE} ${COMPUTER_MOVE_HIGHLIGHT_COLOR}`;
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -172,35 +163,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     });
   }
 
-  const getNextShortMoves = (): ShortMove[] => {
-    return getNextMoveGames().map((game) => {
-      const history = game.history({verbose: true});
-      if (history.length < 1) {
-        throw new Error('nextMoveGames must have at least one move in their history');
-      }
-      return history[history.length - 1];
-    });
-  }
-
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
-
-  const showMoves = () => {
-    const result = {};
-    const moveHighlights: Object[] = [];
-    const nextMoves = getNextShortMoves();
-    if (isShowingMoves && nextMoves.length > 0) {
-      const style = isUsersTurn() ? USER_HIGHLIGHT_SQUARE_STYLE
-                                  : COMPUTER_HIGHLIGHT_SQUARE_STYLE;
-      const highlight = {
-        boxShadow: style,
-      };
-      nextMoves.forEach(({from , to}) => {
-        moveHighlights.push({[from]: highlight, [to]: highlight });
-      });
-    }
-    Object.assign(result, ...moveHighlights);
-    return result;
-  }
 
   const sameMoves = (move1: ShortMove, move2: ShortMove): boolean => (
     move1.from === move2.from && move1.to === move2.to
@@ -417,21 +380,17 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             currentGuideMode={mode}
             checkMateStatus={getCheckStatus()}
           />
-          <div className={classes.chessBoardDiv}>
-            <Chessboard
-              width={650}
-              position={fen}
-              undo
-              boardStyle={{
-                  margin: 'auto',
-              }}
-              squareStyles={showMoves()}
-              orientation={userPlaysAs}
-              onDrop={handleMove}
-              onDragOverSquare={() => beeper.resume()}
-              draggable={getNextMoves().length > 0}
-            />
-          </div>
+          <ChessGuideBoard
+            playedMoves={playedMoves}
+            boardPosition={fen}
+            orientation={userPlaysAs}
+            isUsersTurn={isUsersTurn()}
+            handleMove={handleMove}
+            onDragOverSquare={() => beeper.resume()}
+            arePiecesDraggable={getNextMoves().length > 0}
+            nextMoves={getNextMoves()}
+            shouldShowNextMoves={isShowingMoves}
+          />
           <Grid
             container
             direction='row'

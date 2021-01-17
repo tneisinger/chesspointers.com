@@ -2,7 +2,8 @@ import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/extend-expect';
-import ChessGuide, { USER_HIGHLIGHT_SQUARE_STYLE } from './ChessGuide';
+import ChessGuide from './ChessGuide';
+import { USER_HIGHLIGHT_SQUARE_STYLE } from './ChessGuideBoard';
 import { ChessTree } from '../../shared/chessTypes';
 import { makeChessTree } from '../../shared/chessTree';
 import { SELECT_BTN_TEST_ID } from './ChessMoveSelector';
@@ -12,8 +13,8 @@ const userHighlightSquareStyle = `box-shadow: ${USER_HIGHLIGHT_SQUARE_STYLE}`;
 
 jest.useFakeTimers();
 
-// Prevent an error that only occurs in test runs
-jest.mock('browser-beep');
+// Prevents irrelevant errors
+jest.mock('../beeper');
 
 // Given a ChessGuide component element and a list of squares (e.g. ['e2', 'e4']), expect
 // all of those squares to be highlighted.
