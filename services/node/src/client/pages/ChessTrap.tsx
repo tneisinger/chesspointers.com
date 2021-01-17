@@ -12,14 +12,13 @@ import NotFoundPage from '../pages/NotFound';
 import { toDashedLowercase } from '../../shared/utils';
 import { formatTrapName } from '../../shared/chessTraps/index';
 
-const useStyles = makeStyles(() => ({
-  mainCard: {
-    padding: '0 40px',
-  },
+const useStyles = makeStyles((theme) => ({
   cardHeader: {
     textAlign: 'center',
-    paddingBottom: '0',
     marginBottom: '0',
+    backgroundColor: theme.palette.primary.main,
+    boxShadow: theme.shadows[3],
+    color: 'white',
   },
 }));
 
@@ -63,8 +62,11 @@ const ChessTrapPage: React.FunctionComponent = () => {
     <Grid item xs={12}>
       <Grid container direction='row' justify='center' spacing={2}>
         <Grid item>
-          <Card className={classes.mainCard}>
-            <CardHeader className={classes.cardHeader} title={formatTrapName(trap)} />
+          <Card>
+            <CardHeader
+              className={classes.cardHeader}
+              title={formatTrapName(trap)}
+            />
             <CardContent>
               <ChessGuide
                 chessTree={trap.chessTree}
