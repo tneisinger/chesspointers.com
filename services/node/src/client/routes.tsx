@@ -22,17 +22,21 @@ import RouterPage from './pages/Router';
 import PrivatePage from './pages/Private';
 import PrivateRoute from './components/PrivateRoute';
 
-type RouteType = {
-  pageName?: string,
-  component: FunctionComponent,
-  path?: string,
-  isPathExact: boolean,
-  isPrivate: boolean,
-  sideMenuIcon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>,
-  sideMenuLink?: string,
+interface RouteInfo {
+  pageName?: string;
+  component: FunctionComponent;
+  path?: string;
+  isPathExact: boolean;
+  isPrivate: boolean;
+  sideMenuIcon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+  sideMenuLink?: string;
 };
 
-export const routes: RouteType[] = [
+interface RouteInfoWithPath extends RouteInfo {
+  path: string;
+}
+
+export const routes: RouteInfo[] = [
   {
     pageName: 'Home',
     component: HomePage,
@@ -110,6 +114,10 @@ export const routes: RouteType[] = [
     isPrivate: false,
   },
 ];
+
+export function routesWithPaths(): RouteInfoWithPath[] {
+  return routes.filter(route => route.path != undefined) as RouteInfoWithPath[];
+}
 
 export function makeRoutes() {
   return routes.map((route, idx) => {

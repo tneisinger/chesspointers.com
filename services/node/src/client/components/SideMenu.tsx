@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
 import { useAuth0, Auth0ContextInterface } from "@auth0/auth0-react";
-import { routes } from '../routes';
+import { routesWithPaths } from '../routes';
 
 const NavLinkMui = (to: string) =>
   React.forwardRef((props, ref) => <NavLink {...props} ref={ref as any} to={to} />);
@@ -47,7 +47,7 @@ export const SideMenu: React.FunctionComponent = () => {
     >
       <div className={classes.toolbar} />
       <List>
-        {routes.map((route, idx) => {
+        {routesWithPaths().map((route, idx) => {
           if (route.sideMenuIcon && (!route.isPrivate || isAuthenticated)) {
             const Icon = route.sideMenuIcon;
             const path = route.sideMenuLink ? route.sideMenuLink : route.path;
