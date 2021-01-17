@@ -232,7 +232,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   }
 
-  const jumpToEndOrNextBranch = () => {
+  const jumpToEndOrNextTreeFork = () => {
     const movesToPlay: string[] = [];
     const forwardPaths: string[][] = relevantPaths().map(
       (path) => (path.slice(playedMoves.length))
@@ -413,7 +413,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
               areBackBtnsEnabled={playedMoves.length === 0}
               areForwardBtnsEnabled={getNextMoves().length !== 1}
               jumpToStart={reset}
-              jumpToEnd={jumpToEndOrNextBranch}
+              jumpToEnd={jumpToEndOrNextTreeFork}
               stepForward={moveForward}
               stepBack={moveBack}
             />
