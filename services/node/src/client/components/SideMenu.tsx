@@ -1,5 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import AppBar from '@material-ui/core/AppBar';
+import Typography from '@material-ui/core/Typography';
 import {
   Drawer,
   List,
@@ -8,7 +10,7 @@ import {
   ListItemText,
   makeStyles
 } from '@material-ui/core';
-import { createStyles, Theme } from '@material-ui/core/styles';
+import { createStyles } from '@material-ui/core/styles';
 import { useAuth0, Auth0ContextInterface } from "@auth0/auth0-react";
 import { routesWithPaths } from '../routes';
 
@@ -17,7 +19,7 @@ const NavLinkMui = (to: string) =>
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     drawer: {
       width: drawerWidth,
@@ -26,7 +28,10 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: drawerWidth,
     },
-    toolbar: theme.mixins.toolbar,
+    siteTitle: {
+      padding: '1rem 0 1rem 0',
+      textAlign: 'center',
+    },
   }),
 );
 
@@ -45,7 +50,11 @@ export const SideMenu: React.FunctionComponent = () => {
         paper: classes.drawerPaper,
       }}
     >
-      <div className={classes.toolbar} />
+      <AppBar position="static">
+        <Typography className={classes.siteTitle} variant="h6" component="h1">
+          Learn Chess Traps
+        </Typography>
+      </AppBar>
       <List>
         {routesWithPaths().map((route, idx) => {
           if (route.sideMenuIcon && (!route.isPrivate || isAuthenticated)) {
