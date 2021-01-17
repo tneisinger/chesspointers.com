@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { CardHeader, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
@@ -12,13 +13,12 @@ import NotFoundPage from '../pages/NotFound';
 import { toDashedLowercase } from '../../shared/utils';
 import { formatTrapName } from '../../shared/chessTraps/index';
 
-const useStyles = makeStyles((theme) => ({
-  cardHeader: {
+const useStyles = makeStyles(() => ({
+  trapName: {
     textAlign: 'center',
+    paddingTop: '1rem',
+    paddingBottom: '0.5rem',
     marginBottom: '0',
-    backgroundColor: theme.palette.primary.main,
-    boxShadow: theme.shadows[3],
-    color: 'white',
   },
 }));
 
@@ -63,10 +63,9 @@ const ChessTrapPage: React.FunctionComponent = () => {
       <Grid container direction='row' justify='center' spacing={2}>
         <Grid item>
           <Card>
-            <CardHeader
-              className={classes.cardHeader}
-              title={formatTrapName(trap)}
-            />
+            <Typography className={classes.trapName} variant='h4' component='h2'>
+              {formatTrapName(trap)}
+            </Typography>
             <CardContent>
               <ChessGuide
                 chessTree={trap.chessTree}
