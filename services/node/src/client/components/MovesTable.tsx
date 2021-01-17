@@ -1,8 +1,15 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import { MovePair } from '../../shared/chessTypes';
 import MovesTableRow from './MovesTableRow';
+
+const useStyles = makeStyles(() => ({
+  table: {
+    tableLayout: 'fixed',
+  }
+}));
 
 interface Props {
   moves: string[];
@@ -11,6 +18,8 @@ interface Props {
 const MovesTable: React.FunctionComponent<Props> = ({
   moves,
 }) => {
+
+  const classes = useStyles();
 
   const makeMovePairs = (): MovePair[] => (
     moves.reduce((acc: MovePair[], move, idx) => {
@@ -25,7 +34,7 @@ const MovesTable: React.FunctionComponent<Props> = ({
 
   return (
     <>
-      <Table aria-label="table of chess moves">
+      <Table className={classes.table} aria-label="table of chess moves">
         <TableBody>
         {
           makeMovePairs().map((pair, idx) => (

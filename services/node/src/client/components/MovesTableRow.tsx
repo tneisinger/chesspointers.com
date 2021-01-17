@@ -10,9 +10,14 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.action.hover,
     }
   },
-  tableCell: {
-    padding: '4px 16px',
-  }
+  numberCell: {
+    padding: '1rem 0 1rem 1rem',
+    width: '20%',
+  },
+  moveCell: {
+    padding: '1rem 0 1rem 1rem',
+    width: '40%',
+  },
 }));
 
 interface Props {
@@ -30,9 +35,9 @@ const MovesTableRow: React.FC<Props> = ({
 
   return (
     <TableRow className={classes.tableRow}>
-      <TableCell className={classes.tableCell}>{moveNumber}.</TableCell>
-      <TableCell className={classes.tableCell}>{movePair.whiteMove}</TableCell>
-      <TableCell className={classes.tableCell}>
+      <TableCell className={classes.numberCell}>{moveNumber}.</TableCell>
+      <TableCell className={classes.moveCell}>{movePair.whiteMove}</TableCell>
+      <TableCell className={classes.moveCell}>
         { movePair.blackMove != undefined &&
           movePair.blackMove
         }

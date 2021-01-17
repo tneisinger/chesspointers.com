@@ -19,6 +19,7 @@ import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
 import Modal from './Modal';
 import MovesTable from './MovesTable';
+import TabsPane from './TabsPane';
 
 const COMPUTER_THINK_TIME = 500;
 
@@ -34,11 +35,8 @@ export const COMPUTER_HIGHLIGHT_SQUARE_STYLE =
   `${MOVE_HIGHLIGHT_STYLE} ${COMPUTER_MOVE_HIGHLIGHT_COLOR}`;
 
 const useStyles = makeStyles(() => ({
-  mainCard: {
-    padding: '0 40px',
-  },
-  cardContent: {
-    margin: 'auto',
+  root: {
+    maxWidth: '920px',
   },
   cardHeader: {
     textAlign: 'center',
@@ -51,6 +49,7 @@ const useStyles = makeStyles(() => ({
   chessBoardDiv: {
     background: 'radial-gradient(rgb(131, 86, 49) 70%, rgb(81, 36, 0))',
     padding: '18px',
+    width: 'fit-content',
   }
 }));
 
@@ -410,9 +409,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   return (
-    <>
-      <Grid container direction='row' spacing={2}>
-        <Grid item>
+    <div className={classes.root}>
+      <Grid container direction='row' justify='space-between' spacing={2}>
+        <Grid item lg={9}>
           <Grid
             container
             direction='row'
@@ -501,8 +500,18 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             />
           }
         </Grid>
-        <Grid item>
-          <MovesTable moves={playedMoves} />
+        <Grid item lg={3}>
+          <TabsPane
+            tabs={
+              [
+                {
+                  name: 'Moves',
+                  content: <MovesTable moves={playedMoves} />
+                },
+              ]
+            }
+
+          />
         </Grid>
       </Grid>
 
@@ -524,7 +533,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           Reset Game to Complete Next Path
         </Button>
       </Modal>
-    </>
+    </div>
   );
 }
 
