@@ -21,6 +21,7 @@ import MovesTable from './MovesTable';
 import TabsPane from './TabsPane';
 import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideBoardAbove from './ChessGuideBoardAbove';
+import ChessGuideBoardBelow from './ChessGuideBoardBelow';
 import { GuideMode } from '../utils/types';
 import { CheckMateStatus } from '../../shared/chessTypes';
 
@@ -391,17 +392,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             nextMoves={getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
           />
-          <Grid
-            container
-            direction='row'
-            justify='space-between'
-          >
-            <Grid item>
-              <Typography variant='caption'>
-                Score: {getScoreFromFen(game.fen())}
-              </Typography>
-            </Grid>
-          </Grid>
+          <ChessGuideBoardBelow score={getScoreFromFen(game.fen())} />
           <Grid
             className={classes.belowChessBoard}
             container
