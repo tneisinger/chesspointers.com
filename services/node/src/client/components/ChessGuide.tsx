@@ -20,6 +20,9 @@ import Beeper from '../beeper';
 import Modal from './Modal';
 import MovesTable from './MovesTable';
 import TabsPane from './TabsPane';
+import ChessGuideBoardAbove from './ChessGuideBoardAbove';
+import { GuideMode } from '../utils/types';
+import { CheckMateStatus } from '../../shared/chessTypes';
 
 const COMPUTER_THINK_TIME = 500;
 
@@ -52,8 +55,6 @@ const useStyles = makeStyles(() => ({
     width: 'fit-content',
   }
 }));
-
-type GuideMode = 'learn' | 'practice';
 
 interface Props {
   chessTree: ChessTree;
@@ -393,16 +394,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     reset();
   }
 
-  const getCheckStatus = () => {
+  const getCheckStatus = (): CheckMateStatus => {
     if (game.in_checkmate()) {
-      return 'checkmate!'
+      return 'checkmate'
     } else if (game.in_check()) {
-      return 'check!'
+      return 'check'
     }
-    return '';
+    return 'not in check';
   }
-
-  const numPathsCompleted = getNumPathsCompleted();
 
   const debug = () => {
     console.log('You pressed the debug button');
@@ -412,27 +411,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     <div className={classes.root}>
       <Grid container direction='row' justify='space-between' spacing={2}>
         <Grid item lg={9}>
-          <Grid
-            container
-            direction='row'
-            justify='space-between'
-          >
-            <Grid item>
-              <Typography variant='caption'>
-                Paths completed: {numPathsCompleted}/{paths.length}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant='caption'>
-                {getCheckStatus()}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant='caption'>
-                Current mode: {mode}
-              </Typography>
-            </Grid>
-          </Grid>
+          <ChessGuideBoardAbove
+            numPaths={paths.length}
+            numPathsCompleted={getNumPathsCompleted()}
+            currentGuideMode={mode}
+            checkMateStatus={getCheckStatus()}
+          />
           <div className={classes.chessBoardDiv}>
             <Chessboard
               width={650}
@@ -521,7 +505,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         delayOpenFor={500}
       >
         <h3>Path Complete!</h3>
-        <p>{numPathsCompleted} of {paths.length} paths complete</p>
+        <p>{getNumPathsCompleted()} of {paths.length} paths complete</p>
         <Button
           variant="contained"
           color="primary"
