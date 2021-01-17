@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid #555',
     borderTop: 'none',
     borderRadius: '4px',
+    height: '100%',
   },
   lonelyTab: {
     textAlign: 'center',
