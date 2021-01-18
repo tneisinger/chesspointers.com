@@ -389,6 +389,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             onJumpForwardBtnClick={jumpToEndOrNextTreeFork}
             onStepBackBtnClick={moveBack}
             onStepForwardBtnClick={moveForward}
+            onResetBtnClick={reset}
             onModeSwitchBtnClick={toggleGuideMode}
             currentMode={mode}
           />

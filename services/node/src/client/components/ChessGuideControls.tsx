@@ -19,6 +19,7 @@ interface Props {
   onJumpForwardBtnClick: () => void;
   onStepBackBtnClick: () => void;
   onStepForwardBtnClick: () => void;
+  onResetBtnClick: () => void;
   onModeSwitchBtnClick: () => void;
   currentMode: GuideMode,
 }
@@ -30,6 +31,7 @@ const ChessGuideControls: React.FC<Props> = ({
   onJumpForwardBtnClick,
   onStepBackBtnClick,
   onStepForwardBtnClick,
+  onResetBtnClick,
   onModeSwitchBtnClick,
   currentMode,
 }) => {
@@ -42,6 +44,15 @@ const ChessGuideControls: React.FC<Props> = ({
         direction='row'
         justify='space-evenly'
       >
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={onResetBtnClick}
+          >
+            Reset Board
+          </Button>
+        </Grid>
         <Grid item>
           <ChessNavBtns
             areBackBtnsEnabled={areBackBtnsEnabled}
