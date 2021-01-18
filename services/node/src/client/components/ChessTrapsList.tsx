@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core';
 import ListItem from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
@@ -52,15 +51,13 @@ const ChessTrapsList: React.FC<void> = () => {
     <List>
       { chessTrapsSlice.traps.map(trap => {
         return (
-          <Typography key={trap.name}>
-            <ListItem>
-              <NavLink
-                className={classes.navLink}
-                to={`/traps/${toDashedLowercase(trap.name)}`} >
-                {formatTrapName(trap)}
-              </NavLink>
-            </ListItem>
-          </Typography>
+          <ListItem  key={trap.name}>
+            <NavLink
+              className={classes.navLink}
+              to={`/traps/${toDashedLowercase(trap.name)}`} >
+              {formatTrapName(trap)}
+            </NavLink>
+          </ListItem>
         );
       })}
     </List>
