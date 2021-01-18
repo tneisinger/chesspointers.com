@@ -1,4 +1,5 @@
 import { User } from './entity/user';
+import { ShortMove } from 'chess.js';
 
 export function getUserFullName(user: User): string {
   return `${user.firstName} ${user.lastName}`;
@@ -82,3 +83,7 @@ export function getScoreFromFen(fen: string): number {
 
   return valueOfWhitePieces - valueOfBlackPieces;
 }
+
+export function sameMoves(move1: ShortMove, move2: ShortMove): boolean {
+  return move1.from === move2.from && move1.to === move2.to
+};

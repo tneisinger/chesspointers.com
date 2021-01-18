@@ -10,7 +10,8 @@ import {
   areChessMovesEquivalent,
   partition,
   randomElem,
-  getScoreFromFen
+  getScoreFromFen,
+  sameMoves,
 } from '../../shared/utils';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
@@ -164,10 +165,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
-
-  const sameMoves = (move1: ShortMove, move2: ShortMove): boolean => (
-    move1.from === move2.from && move1.to === move2.to
-  );
 
   const handleMove = (move: ChessBoardMove) => {
     // If the user picks up and drops a piece back at its sourceSquare, do nothing.
