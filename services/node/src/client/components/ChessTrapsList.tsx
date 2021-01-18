@@ -52,8 +52,8 @@ const ChessTrapsList: React.FC<void> = () => {
     <List>
       { chessTrapsSlice.traps.map(trap => {
         return (
-          <Typography>
-            <ListItem key={trap.name}>
+          <Typography key={trap.name}>
+            <ListItem>
               <NavLink
                 className={classes.navLink}
                 to={`/traps/${toDashedLowercase(trap.name)}`} >
