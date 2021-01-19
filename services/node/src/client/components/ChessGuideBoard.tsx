@@ -112,7 +112,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
       visible: true,
       eraseOnClick: false,
       defaultSnapToValidMove: true,
-      shapes: makeChessboardArrows(),
+      autoShapes: makeChessboardArrows(),
     }
   }
 
@@ -133,6 +133,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
         key={String(shouldShowNextMoves) /* rerender on 'shouldShowNextMoves' changes */ }
         width="22vw"
         height="22vw"
+        fen={boardPosition}
         drawable={makeDrawableProp()}
       />
     </div>

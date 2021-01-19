@@ -2,6 +2,7 @@ declare module "react-chessground" {
   import React from 'react';
 
   interface MyComponentProps {
+      fen?: string,
       width?: string,
       height?: string,
       onMove?: (from: string, to: string) => void
