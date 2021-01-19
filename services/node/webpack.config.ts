@@ -1,7 +1,6 @@
 import path from 'path';
 import { Configuration, DefinePlugin } from 'webpack';
 import ManifestPlugin from 'webpack-manifest-plugin';
-import cssnano from 'cssnano';
 
 import { SERVER_PORT, IS_DEV, WEBPACK_PORT } from './src/server/config';
 
@@ -14,9 +13,6 @@ const plugins = [
   })
 ];
 
-// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-// plugins.push(new BundleAnalyzerPlugin());
-
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const targets = IS_DEV ? { chrome: '79', firefox: '72' } : '> 0.25%, not dead';
 
@@ -25,7 +21,6 @@ const config: Configuration = {
   devtool: IS_DEV ? 'inline-source-map' : false,
   entry: [
     './src/client/client',
-    // 'webpack-dev-server/client?http://0.0.0.0:8085',
   ],
   output: {
     path: path.join(__dirname, 'dist', 'statics'),
@@ -76,30 +71,11 @@ const config: Configuration = {
       },
       {
         test: /\.css$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              localsConvention: 'camelCase',
-              sourceMap: IS_DEV,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: IS_DEV,
-              plugins: IS_DEV ? [cssnano()] : [],
-            },
-          },
-        ],
+        use: ["style-loader", "css-loader"]
       },
       {
-        test: /.jpe?g$|.gif$|.png$|.svg$|.woff$|.woff2$|.ttf$|.eot$/,
-        use: 'url-loader?limit=10000',
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ["file-loader"]
       },
       // Below added to fix import of chess.js (Needed for jest to work with chess.js)
       {
