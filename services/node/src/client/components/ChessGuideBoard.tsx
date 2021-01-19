@@ -1,8 +1,9 @@
 import React from 'react';
 import Chessboard from "chessboardjsx";
-import { Chess, ChessInstance, ShortMove } from "chess.js";
+import { Chess, ChessInstance, ShortMove, Square } from "chess.js";
 import { ChessBoardMove, PieceColor } from '../../shared/chessTypes';
 import ChessBoard from '../components/ChessBoard';
+import { Dests } from 'chessground/types';
 
 const MOVE_HIGHLIGHT_STYLE = 'inset 0 0 2px 4px';
 const USER_MOVE_HIGHLIGHT_COLOR = 'orange';
@@ -31,7 +32,8 @@ interface Props {
   boardPosition: string;
   orientation?: PieceColor;
   isUsersTurn: boolean;
-  handleMove: (move: ChessBoardMove) => any;
+  handleMove: (move: ChessBoardMove) => void;
+  onMove: (startSquare: Square, endSquare: Square) => void;
   onDragOverSquare: (square: string) => void;
   arePiecesDraggable: boolean;
   nextMoves: string[];
@@ -44,6 +46,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   orientation = 'white',
   isUsersTurn,
   handleMove,
+  onMove,
   onDragOverSquare,
   arePiecesDraggable,
   nextMoves,
@@ -116,6 +119,19 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
     }
   }
 
+  const makeDests = (): Dests => {
+    const dests = new Map();
+    const shortMoves = getNextShortMoves()
+    shortMoves.forEach(({ from, to }) => {
+      if (dests.has(from)) {
+        dests.set(from, [...dests.get(from), to]);
+      } else {
+        dests.set(from, [to]);
+      }
+    });
+    return dests;
+  }
+
   return (
     <div>
       <Chessboard
@@ -135,6 +151,8 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
         height="22vw"
         fen={boardPosition}
         drawable={makeDrawableProp()}
+        onMove={onMove}
+        movable={{ free: false, showDests: false, dests: makeDests() }}
       />
     </div>
   );

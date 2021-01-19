@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import React, { useState, useEffect } from 'react';
-import { Chess, ChessInstance, ShortMove } from "chess.js";
+import { Chess, ChessInstance, ShortMove, Square } from "chess.js";
 import { ChessTree, ChessBoardMove, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import {
@@ -166,6 +166,27 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
 
+  const onMove = (startSquare: Square, endSquare: Square): void => {
+    const shortMove: ShortMove = {
+      from: startSquare,
+      to: endSquare,
+    };
+    const nextMoveGames = getNextMoveGames().filter((game) => {
+      const history = game.history({verbose: true});
+      return sameMoves(history[history.length - 1], shortMove);
+    });
+    if (nextMoveGames.length > 0) {
+      // If the user presses either of the arrow buttons, then `doesComputerAutoplay`
+      // will be turned off. When the user plays by moving a piece on the board, make sure
+      // that `doesComputerAutoplay` is turned back on.
+      setDoesComputerAutoplay(true);
+      const history = nextMoveGames[0].history();
+      const nextMove = history[history.length - 1];
+      doNextMove(nextMove);
+    }
+  }
+
+  // TODO: remove this function when the old Chessboard component can be thrown out
   const handleMove = (move: ChessBoardMove) => {
     // If the user picks up and drops a piece back at its sourceSquare, do nothing.
     if (move.sourceSquare === move.targetSquare) return;
@@ -368,6 +389,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             orientation={userPlaysAs}
             isUsersTurn={isUsersTurn()}
             handleMove={handleMove}
+            onMove={onMove}
             onDragOverSquare={() => beeper.resume()}
             arePiecesDraggable={getNextMoves().length > 0}
             nextMoves={getNextMoves()}
