@@ -29,6 +29,13 @@ const HomePage: React.FunctionComponent = () => {
               <ChessBoard
                 width="38vw"
                 height="38vw"
+                drawable={{
+                  enabled: true,
+                  visible: true,
+                  eraseOnClick: false,
+                  defaultSnapToValidMove: true,
+                  shapes: [{ orig: 'e2', dest: 'e4', brush: 'green' }],
+                }}
               />
             </CardContent>
           </Card>

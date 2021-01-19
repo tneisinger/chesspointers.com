@@ -9,6 +9,7 @@ declare module "react-chessground" {
       promotion?: (e: string) => void;
       reset?: () => void;
       undo?: () => void;
+      drawable?: Object;
   }
 
   export const Chessground: React.ComponentType<MyComponentProps>
