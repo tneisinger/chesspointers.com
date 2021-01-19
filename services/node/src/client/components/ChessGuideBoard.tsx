@@ -2,6 +2,7 @@ import React from 'react';
 import Chessboard from "chessboardjsx";
 import { Chess, ChessInstance, ShortMove } from "chess.js";
 import { ChessBoardMove, PieceColor } from '../../shared/chessTypes';
+import ChessBoard from '../components/ChessBoard';
 
 const MOVE_HIGHLIGHT_STYLE = 'inset 0 0 2px 4px';
 const USER_MOVE_HIGHLIGHT_COLOR = 'orange';
@@ -11,6 +12,19 @@ export const USER_HIGHLIGHT_SQUARE_STYLE =
   `${MOVE_HIGHLIGHT_STYLE} ${USER_MOVE_HIGHLIGHT_COLOR}`;
 export const COMPUTER_HIGHLIGHT_SQUARE_STYLE =
   `${MOVE_HIGHLIGHT_STYLE} ${COMPUTER_MOVE_HIGHLIGHT_COLOR}`;
+
+enum BrushColor {
+  GREEN  = 'green',
+  RED    = 'red',
+  BLUE   = 'blue',
+  YELLOW = 'yellow',
+}
+
+interface ChessboardArrow {
+  orig:  string;
+  dest:  string;
+  brush: BrushColor;
+}
 
 interface Props {
   playedMoves: string[];
@@ -77,17 +91,51 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
     return result;
   }
 
+  const makeChessboardArrows = (): ChessboardArrow[] => {
+    const result: ChessboardArrow[] = [];
+    const nextMoves = getNextShortMoves();
+    if (shouldShowNextMoves && nextMoves.length > 0) {
+      nextMoves.forEach(({from , to}) => {
+        result.push({
+          orig: from,
+          dest: to,
+          brush: isUsersTurn ? BrushColor.GREEN : BrushColor.RED,
+        });
+      });
+    }
+    return result;
+  }
+
+  const makeDrawableProp = () => {
+    return {
+      enabled: true,
+      visible: true,
+      eraseOnClick: false,
+      defaultSnapToValidMove: true,
+      shapes: makeChessboardArrows(),
+    }
+  }
+
   return (
-    <Chessboard
-      width={690}
-      position={boardPosition}
-      undo
-      squareStyles={makeShowMovesSquareStyles()}
-      orientation={orientation}
-      onDrop={handleMove}
-      onDragOverSquare={onDragOverSquare}
-      draggable={arePiecesDraggable}
-    />
+    <div>
+      <Chessboard
+        width={450}
+        position={boardPosition}
+        undo
+        squareStyles={makeShowMovesSquareStyles()}
+        orientation={orientation}
+        onDrop={handleMove}
+        onDragOverSquare={onDragOverSquare}
+        draggable={arePiecesDraggable}
+      />
+
+      <ChessBoard
+        key={String(shouldShowNextMoves) /* rerender on 'shouldShowNextMoves' changes */ }
+        width="22vw"
+        height="22vw"
+        drawable={makeDrawableProp()}
+      />
+    </div>
   );
 }
 
