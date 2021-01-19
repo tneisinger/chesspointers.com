@@ -12,6 +12,7 @@ declare module "react-chessground" {
       undo?: () => void;
       drawable?: Object;
       movable?: Object;
+      animation: Object;
   }
 
   export const Chessground: React.ComponentType<MyComponentProps>

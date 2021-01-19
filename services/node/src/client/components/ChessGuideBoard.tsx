@@ -153,6 +153,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
         drawable={makeDrawableProp()}
         onMove={onMove}
         movable={{ free: false, showDests: false, dests: makeDests() }}
+        animation={{ duration: 250 }}
       />
     </div>
   );
