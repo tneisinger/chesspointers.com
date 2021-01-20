@@ -2,10 +2,13 @@ declare module "react-chessground" {
   import React from 'react';
 
   interface Props {
-      fen?: string,
       width?: string,
       height?: string,
+      turnColor?: string,
+      fen?: string,
+      orientation?: string;
       onMove?: (from: string, to: string) => void
+      lastMove?: string[];
       randomMove?: (moves: string[], move: string) => void;
       promotion?: (e: string) => void;
       reset?: () => void;
@@ -13,7 +16,6 @@ declare module "react-chessground" {
       drawable?: Object;
       movable?: Object;
       animation?: Object;
-      orientation?: string;
       resizable?: boolean;
   }
 
