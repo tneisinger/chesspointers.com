@@ -45,9 +45,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   boardPosition,
   orientation = 'white',
   isUsersTurn,
-  handleMove,
   onMove,
-  onDragOverSquare,
   arePiecesDraggable,
   nextMoves,
   shouldShowNextMoves,
@@ -74,24 +72,6 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
       }
       return history[history.length - 1];
     });
-  }
-
-  const makeShowMovesSquareStyles = () => {
-    const result = {};
-    const moveHighlights: Object[] = [];
-    const nextMoves = getNextShortMoves();
-    if (shouldShowNextMoves && nextMoves.length > 0) {
-      const style = isUsersTurn ? USER_HIGHLIGHT_SQUARE_STYLE
-                                : COMPUTER_HIGHLIGHT_SQUARE_STYLE;
-      const highlight = {
-        boxShadow: style,
-      };
-      nextMoves.forEach(({from , to}) => {
-        moveHighlights.push({[from]: highlight, [to]: highlight });
-      });
-    }
-    Object.assign(result, ...moveHighlights);
-    return result;
   }
 
   const makeChessboardArrows = (): ChessboardArrow[] => {
