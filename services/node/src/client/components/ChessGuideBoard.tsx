@@ -2,7 +2,6 @@ import React from 'react';
 import { Chess, ChessInstance, ShortMove, Square } from "chess.js";
 import { PieceColor } from '../../shared/chessTypes';
 import ChessBoard from '../components/ChessBoard';
-import { Dests } from 'chessground/types';
 
 enum BrushColor {
   GREEN  = 'green',
@@ -23,8 +22,9 @@ interface Props {
   boardPosition: string;
   orientation?: PieceColor;
   isUsersTurn: boolean;
+  turnColor: string;
   onMove: (startSquare: Square, endSquare: Square) => void;
-  onDragOverSquare: (square: string) => void;
+  movable: Object;
   arePiecesDraggable: boolean;
   nextMoves: string[];
   shouldShowNextMoves: boolean;
@@ -36,8 +36,9 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   playedMoves,
   boardPosition,
   orientation = 'white',
-  isUsersTurn,
+  turnColor,
   onMove,
+  movable,
   nextMoves,
   shouldShowNextMoves,
 }) => {
@@ -75,7 +76,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
         result.push({
           orig: from,
           dest: to,
-          brush: isUsersTurn ? BrushColor.GREEN : BrushColor.RED,
+          brush: BrushColor.GREEN,
         });
       });
     }
@@ -85,37 +86,23 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   const makeDrawableProp = () => {
     return {
       enabled: true,
-      visible: true,
+      visible: shouldShowNextMoves,
       eraseOnClick: false,
       defaultSnapToValidMove: true,
       autoShapes: makeChessboardArrows(),
     }
   }
 
-  const makeDests = (): Dests => {
-    const dests = new Map();
-    const shortMoves = getNextShortMoves()
-    shortMoves.forEach(({ from, to }) => {
-      if (dests.has(from)) {
-        dests.set(from, [...dests.get(from), to]);
-      } else {
-        dests.set(from, [to]);
-      }
-    });
-    return dests;
-  }
-
   return (
     <ChessBoard
-      key={String(shouldShowNextMoves) /* rerender on 'shouldShowNextMoves' changes */ }
       width={size}
       height={size}
-      orientation={orientation}
+      turnColor={turnColor}
       fen={boardPosition}
+      orientation={orientation}
       drawable={makeDrawableProp()}
       onMove={onMove}
-      movable={{ free: false, showDests: false, dests: makeDests() }}
-      animation={{ duration: 250 }}
+      movable={movable}
       resizable={true}
     />
   );

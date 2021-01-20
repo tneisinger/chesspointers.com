@@ -6,7 +6,10 @@ import 'react-chessground/dist/styles/chessground.css';
 const ChessBoard: React.FC<any> = (props) => {
   return (
     <StylesProvider injectFirst>
-      <Chessground {...props} />
+      <Chessground
+        key={props.drawable.visible /* rerender when `props.drawable.visible` changes */}
+        {...props}
+      />
     </StylesProvider>
   );
 }

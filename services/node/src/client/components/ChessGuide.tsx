@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import React, { useState, useEffect } from 'react';
-import { Chess, ChessInstance, ShortMove, Square } from "chess.js";
+import { Chess, ChessInstance, Square } from "chess.js";
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import {
@@ -11,7 +11,6 @@ import {
   partition,
   randomElem,
   getScoreFromFen,
-  sameMoves,
 } from '../../shared/utils';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
@@ -24,10 +23,10 @@ import ChessGuideControls from './ChessGuideControls';
 import { GuideMode } from '../utils/types';
 
 const COMPUTER_THINK_TIME = 500;
-
+const CHECK_MOVE_DELAY = 250;
 const SHOW_NEXT_MOVE_DELAY = 1000;
-
 const SHOW_DEBUG_BTN = false;
+const BEEPER_FREQUENCY = 93;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,37 +63,37 @@ type PathStats = {
 
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
-  alwaysAutoplay,
+  alwaysAutoplay = false,
   userPlaysAs = 'white',
-  guideMode,
+  guideMode = 'learn',
   renderExtraControlsForTesting,
 }) => {
   const classes = useStyles({});
 
   const paths = getUniquePaths(chessTree);
 
-  if (userPlaysAs == undefined) {
-    userPlaysAs = 'white';
-  }
-
-  const [beeper] = useState(new Beeper({ frequency: 115 }));
-
+  const [beeper] = useState(new Beeper({ frequency: BEEPER_FREQUENCY }));
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [mode, setMode] =
-    useState<GuideMode>(guideMode == undefined ? 'learn' : guideMode);
-
+  const [mode, setMode] = useState<GuideMode>(guideMode);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
-
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
+  const [pathsCompleted, setPathsCompleted] = useState<PathStats[]>([]);
+  const [game] = useState<ChessInstance>(new Chess());
+  const [fen, setFen] = useState(game.fen());
+  const [checkMoveTimeout, setCheckMoveTimeout] = useState<number | undefined>(undefined);
 
   const isUsersTurn = (): boolean => {
     return game.turn() === userPlaysAs.charAt(0);
   }
 
-  // Initialize all possible 'pathsCompletedThisSession' values with their
-  // 'timesCompleted' values set to zero.
-  const makeInitialPathsCompletedThisSession = (): PathStats[] => {
+  const clearTimeouts = () => {
+    window.clearTimeout(checkMoveTimeout);
+    setCheckMoveTimeout(undefined);
+  }
+
+  // Initialize all possible 'pathsCompleted' values with their 'timesCompleted' values
+  // set to zero.
+  const makeInitialPathsCompletedValue = (): PathStats[] => {
     return paths.reduce((acc: PathStats[], path) => {
       const practicePath: PathStats = {
         mode: 'practice',
@@ -109,15 +108,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       return [...acc, practicePath, learnPath];
     }, [])
   }
-
-  const [pathsCompletedThisSession, setPathsCompletedThisSession] =
-    useState<PathStats[]>(makeInitialPathsCompletedThisSession);
-
-  // The state of the game as it is on the board
-  const [game] = useState<ChessInstance>(new Chess());
-
-  // Determines the layout of the pieces on the board
-  const [fen, setFen] = useState(game.fen());
 
   // Use this function to set the fen variable, which will update the board position.
   const updateBoard = () => setFen(game.fen());
@@ -138,11 +128,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   useEffect(() => {
     reset();
+    setPathsCompleted(makeInitialPathsCompletedValue());
   }, []);
 
   useEffect(() => {
     reset();
-    setPathsCompletedThisSession(makeInitialPathsCompletedThisSession());
+    setPathsCompleted(makeInitialPathsCompletedValue());
   }, [chessTree, userPlaysAs]);
 
   const getNextMoves = (): string[] => {
@@ -164,24 +155,68 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
 
-  const handleMove = (startSquare: Square, endSquare: Square): void => {
-    const shortMove: ShortMove = {
-      from: startSquare,
-      to: endSquare,
-    };
-    const nextMoveGames = getNextMoveGames().filter((game) => {
-      const history = game.history({verbose: true});
-      return sameMoves(history[history.length - 1], shortMove);
-    });
-    if (nextMoveGames.length > 0) {
-      // If the user presses either of the arrow buttons, then `doesComputerAutoplay`
-      // will be turned off. When the user plays by moving a piece on the board, make sure
-      // that `doesComputerAutoplay` is turned back on.
-      setDoesComputerAutoplay(true);
-      const history = nextMoveGames[0].history();
-      const nextMove = history[history.length - 1];
-      doNextMove(nextMove);
+  const handleMove = (from: Square, to: Square) => {
+    const moves = game.moves({ verbose: true })
+    for (let i = 0, len = moves.length; i < len; i++) { /* eslint-disable-line */
+      if (moves[i].flags.indexOf("p") !== -1 && moves[i].from === from) {
+        // setPendingMove([from, to])
+        // setSelectVisible(true)
+        return
+      }
     }
+    if (game.move({ from, to })) {
+      updateBoard();
+      let nextAction: () => void;
+      if (wasLastMoveBad()) {
+        nextAction = rectifyBadMove;
+      } else {
+        setIsShowingMoves(false);
+        nextAction = handleGoodMove;
+      }
+      setCheckMoveTimeout(window.setTimeout(nextAction, CHECK_MOVE_DELAY));
+      // setLastMove([from, to])
+    }
+  }
+
+  const handleGoodMove = () => {
+    setPlayedMoves([...playedMoves, getLastMove()]);
+  }
+
+  const wasLastMoveBad = () => {
+    return !getNextMoves().includes(getLastMove());
+  }
+
+  const rectifyBadMove = () => {
+    beeper.beep(2);
+    undoMove();
+    scheduleShowMoves({ delay: 500 });
+  }
+
+  const undoMove = () => {
+    game.undo();
+    setFen(game.fen());
+  }
+
+  const getLastMove = () => {
+    const history = game.history();
+    return history[history.length - 1];
+  }
+
+  const calcMovable = () => {
+    const dests = new Map();
+    game.SQUARES.forEach(s => {
+      const ms = game.moves({ square: s, verbose: true })
+      if (ms.length) dests.set(s,ms.map(m => m.to));
+    })
+    return {
+      free: false,
+      dests,
+      color: userPlaysAs,
+    }
+  }
+
+  const turnColor = () => {
+    return game.turn() === 'w' ? 'white' : 'black';
   }
 
   const doNextMove = (move: string) => {
@@ -210,11 +245,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const moveForward = () => {
     // Unless the `alwaysAutoplay` prop is set to true, whenever the user clicks
     // the forward button, turn off doesComputerAutoplay
-    if (alwaysAutoplay != undefined) {
-      setDoesComputerAutoplay(alwaysAutoplay);
-    } else {
-      setDoesComputerAutoplay(false);
-    }
+    if (!alwaysAutoplay) setDoesComputerAutoplay(false);
     const nextMoves = getNextMoves();
     if (nextMoves.length === 1) {
       doNextMove(nextMoves[0]);
@@ -246,25 +277,23 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         game.move(move);
       });
       setPlayedMoves([...playedMoves, ...movesToPlay]);
-      setFen(game.fen());
+      updateBoard();
       scheduleShowMoves();
     }
   }
 
-  const scheduleShowMoves = (shouldForceShow?: boolean) => {
-    if (mode === 'learn' || shouldForceShow) {
+  const scheduleShowMoves = (options: { forceShow?: boolean, delay?: number } = {}) => {
+    const delay = options.delay == undefined ? SHOW_NEXT_MOVE_DELAY : options.delay;
+    if (mode === 'learn' || options.forceShow) {
       setTimeout(() => {
         setIsShowingMoves(true);
-      }, SHOW_NEXT_MOVE_DELAY);
+      }, delay);
     }
   }
 
-  const doComputerTurn = () => {
+  const doComputerMove = () => {
     const moves = getNextMoves();
     if (moves.length === 1 && doesComputerAutoplay) {
-      // Do not highlight moves while the computer is playing
-      setIsShowingMoves(false);
-
       setTimeout(() => {
         doNextMove(moves[0]);
       }, COMPUTER_THINK_TIME);
@@ -287,7 +316,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const getMovesThatLeadToLeastCompletedPaths = (): string[] => {
     // Get the paths that are reachable from the current position forward.
-    const relevantPaths = pathsCompletedThisSession.filter(p => {
+    const relevantPaths = pathsCompleted.filter(p => {
       return (
         p.mode == mode
         && playedMoves.every((move, idx) => areChessMovesEquivalent(move, p.path[idx]))
@@ -301,7 +330,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const recordPathCompletion = () => {
     const [matchingPaths, nonMatchingPaths] = partition(
-      pathsCompletedThisSession,
+      pathsCompleted,
       (p) => areChessPathsEquivalent(p.path, playedMoves) && p.mode === mode
     );
     if (matchingPaths.length !== 1) {
@@ -311,7 +340,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         ...matchingPaths[0],
         timesCompleted: matchingPaths[0].timesCompleted + 1,
       }
-      setPathsCompletedThisSession([...nonMatchingPaths, updatedPathStats]);
+      setPathsCompleted([...nonMatchingPaths, updatedPathStats]);
     }
   }
 
@@ -322,17 +351,20 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       setIsModalOpen(true);
     }
 
-    setIsShowingMoves(false);
-
     if (isUsersTurn()) {
       scheduleShowMoves();
     } else {
-      doComputerTurn();
+      doComputerMove();
+    }
+
+    // In cleanup, clear timeouts
+    return () => {
+      clearTimeouts();
     }
   }, [playedMoves]);
 
   const getNumPathsCompleted = (): number => {
-    return pathsCompletedThisSession.reduce((acc: number, p) => {
+    return pathsCompleted.reduce((acc: number, p) => {
       if (p.mode === mode && p.timesCompleted > 0) {
         return acc + 1;
       } else {
@@ -360,8 +392,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             boardPosition={fen}
             orientation={userPlaysAs}
             isUsersTurn={isUsersTurn()}
+            turnColor={turnColor()}
             onMove={handleMove}
-            onDragOverSquare={() => beeper.resume()}
+            movable={calcMovable()}
             arePiecesDraggable={getNextMoves().length > 0}
             nextMoves={getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
