@@ -115,8 +115,8 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   return (
     <ChessBoard
       key={String(shouldShowNextMoves) /* rerender on 'shouldShowNextMoves' changes */ }
-      width="36vw"
-      height="36vw"
+      width="34.5vw"
+      height="34.5vw"
       orientation={orientation}
       fen={boardPosition}
       drawable={makeDrawableProp()}

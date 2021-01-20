@@ -29,7 +29,7 @@ const SHOW_NEXT_MOVE_DELAY = 1000;
 
 const SHOW_DEBUG_BTN = false;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '920px',
   },
@@ -45,6 +45,15 @@ const useStyles = makeStyles(() => ({
     background: 'radial-gradient(rgb(131, 86, 49) 70%, rgb(81, 36, 0))',
     padding: '18px',
     width: 'fit-content',
+  },
+  chessGuideInfo: {
+    marginTop: '0rem',
+  },
+  chessGuideBoardDiv: {
+    padding: '14px',
+    paddingRight: 0,
+    backgroundColor: theme.palette.background.default,
+    borderRadius: '5px',
   }
 }));
 
@@ -383,24 +392,28 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     <div className={classes.root}>
       <Grid container direction='row' justify='space-between' spacing={2}>
         <Grid item lg={9}>
-          <ChessGuideBoard
-            playedMoves={playedMoves}
-            boardPosition={fen}
-            orientation={userPlaysAs}
-            isUsersTurn={isUsersTurn()}
-            handleMove={handleMove}
-            onMove={onMove}
-            onDragOverSquare={() => beeper.resume()}
-            arePiecesDraggable={getNextMoves().length > 0}
-            nextMoves={getNextMoves()}
-            shouldShowNextMoves={isShowingMoves}
-          />
-          <ChessGuideInfo
-            numPaths={paths.length}
-            numPathsCompleted={getNumPathsCompleted()}
-            currentGuideMode={mode}
-            score={getScoreFromFen(game.fen())}
-          />
+          <div className={classes.chessGuideBoardDiv}>
+            <ChessGuideBoard
+              playedMoves={playedMoves}
+              boardPosition={fen}
+              orientation={userPlaysAs}
+              isUsersTurn={isUsersTurn()}
+              handleMove={handleMove}
+              onMove={onMove}
+              onDragOverSquare={() => beeper.resume()}
+              arePiecesDraggable={getNextMoves().length > 0}
+              nextMoves={getNextMoves()}
+              shouldShowNextMoves={isShowingMoves}
+            />
+          </div>
+          <div className={classes.chessGuideInfo}>
+            <ChessGuideInfo
+              numPaths={paths.length}
+              numPathsCompleted={getNumPathsCompleted()}
+              currentGuideMode={mode}
+              score={getScoreFromFen(game.fen())}
+            />
+          </div>
           <ChessGuideControls
             areBackBtnsEnabled={playedMoves.length === 0}
             areForwardBtnsEnabled={getNextMoves().length !== 1}
