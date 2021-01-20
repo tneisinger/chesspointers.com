@@ -1,18 +1,8 @@
 import React from 'react';
-import Chessboard from "chessboardjsx";
 import { Chess, ChessInstance, ShortMove, Square } from "chess.js";
 import { ChessBoardMove, PieceColor } from '../../shared/chessTypes';
 import ChessBoard from '../components/ChessBoard';
 import { Dests } from 'chessground/types';
-
-const MOVE_HIGHLIGHT_STYLE = 'inset 0 0 2px 4px';
-const USER_MOVE_HIGHLIGHT_COLOR = 'orange';
-const COMPUTER_MOVE_HIGHLIGHT_COLOR = 'purple';
-
-export const USER_HIGHLIGHT_SQUARE_STYLE =
-  `${MOVE_HIGHLIGHT_STYLE} ${USER_MOVE_HIGHLIGHT_COLOR}`;
-export const COMPUTER_HIGHLIGHT_SQUARE_STYLE =
-  `${MOVE_HIGHLIGHT_STYLE} ${COMPUTER_MOVE_HIGHLIGHT_COLOR}`;
 
 enum BrushColor {
   GREEN  = 'green',
@@ -28,6 +18,7 @@ interface ChessboardArrow {
 }
 
 interface Props {
+  size: string;
   playedMoves: string[];
   boardPosition: string;
   orientation?: PieceColor;
@@ -40,7 +31,9 @@ interface Props {
   shouldShowNextMoves: boolean;
 }
 
+
 const ChessGuideBoard: React.FunctionComponent<Props> = ({
+  size,
   playedMoves,
   boardPosition,
   orientation = 'white',
@@ -50,6 +43,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   nextMoves,
   shouldShowNextMoves,
 }) => {
+
   const makeNextMoveGames = (): ChessInstance[] => {
     const games: ChessInstance[] = [];
     nextMoves.forEach((move) => {
@@ -115,14 +109,15 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   return (
     <ChessBoard
       key={String(shouldShowNextMoves) /* rerender on 'shouldShowNextMoves' changes */ }
-      width="34.5vw"
-      height="34.5vw"
+      width={size}
+      height={size}
       orientation={orientation}
       fen={boardPosition}
       drawable={makeDrawableProp()}
       onMove={onMove}
       movable={{ free: false, showDests: false, dests: makeDests() }}
       animation={{ duration: 250 }}
+      resizable={true}
     />
   );
 }

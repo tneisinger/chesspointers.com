@@ -14,6 +14,7 @@ declare module "react-chessground" {
       movable?: Object;
       animation?: Object;
       orientation?: string;
+      resizable?: boolean;
   }
 
   export const Chessground: React.ComponentType<Props>

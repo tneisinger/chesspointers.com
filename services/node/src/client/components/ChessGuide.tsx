@@ -31,27 +31,16 @@ const SHOW_DEBUG_BTN = false;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: '920px',
-  },
-  cardHeader: {
-    textAlign: 'center',
-    paddingBottom: '0',
-    marginBottom: '0',
   },
   belowChessBoard: {
     marginTop: '8px',
   },
-  chessBoardDiv: {
-    background: 'radial-gradient(rgb(131, 86, 49) 70%, rgb(81, 36, 0))',
-    padding: '18px',
-    width: 'fit-content',
-  },
   chessGuideInfo: {
     marginTop: '0rem',
   },
-  chessGuideBoardDiv: {
-    padding: '14px',
-    paddingRight: 0,
+  boardBorderDiv: {
+    display: 'inline-block',
+    padding: '13px',
     backgroundColor: theme.palette.background.default,
     borderRadius: '5px',
   }
@@ -389,56 +378,50 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   return (
-    <div className={classes.root}>
-      <Grid container direction='row' justify='space-between' spacing={2}>
-        <Grid item lg={9}>
-          <div className={classes.chessGuideBoardDiv}>
-            <ChessGuideBoard
-              playedMoves={playedMoves}
-              boardPosition={fen}
-              orientation={userPlaysAs}
-              isUsersTurn={isUsersTurn()}
-              handleMove={handleMove}
-              onMove={onMove}
-              onDragOverSquare={() => beeper.resume()}
-              arePiecesDraggable={getNextMoves().length > 0}
-              nextMoves={getNextMoves()}
-              shouldShowNextMoves={isShowingMoves}
-            />
-          </div>
-          <div className={classes.chessGuideInfo}>
-            <ChessGuideInfo
-              numPaths={paths.length}
-              numPathsCompleted={getNumPathsCompleted()}
-              currentGuideMode={mode}
-              score={getScoreFromFen(game.fen())}
-            />
-          </div>
-          <ChessGuideControls
-            areBackBtnsEnabled={playedMoves.length === 0}
-            areForwardBtnsEnabled={getNextMoves().length !== 1}
-            onJumpBackBtnClick={reset}
-            onJumpForwardBtnClick={jumpToEndOrNextTreeFork}
-            onStepBackBtnClick={moveBack}
-            onStepForwardBtnClick={moveForward}
-            onResetBtnClick={reset}
-            onModeSwitchBtnClick={toggleGuideMode}
-            currentMode={mode}
+    <Grid container direction='row' className={classes.root} spacing={2}>
+      <Grid item>
+        <div className={classes.boardBorderDiv}>
+          <ChessGuideBoard
+            size="70vmin"
+            playedMoves={playedMoves}
+            boardPosition={fen}
+            orientation={userPlaysAs}
+            isUsersTurn={isUsersTurn()}
+            handleMove={handleMove}
+            onMove={onMove}
+            onDragOverSquare={() => beeper.resume()}
+            arePiecesDraggable={getNextMoves().length > 0}
+            nextMoves={getNextMoves()}
+            shouldShowNextMoves={isShowingMoves}
           />
-        </Grid>
-        <Grid item lg={3}>
-          <TabsPane
-            tabs={
-              [
-                {
-                  name: 'Moves',
-                  content: <MovesTable moves={playedMoves} />
-                },
-              ]
-            }
-
-          />
-        </Grid>
+        </div>
+        <ChessGuideInfo
+          numPaths={paths.length}
+          numPathsCompleted={getNumPathsCompleted()}
+          currentGuideMode={mode}
+          score={getScoreFromFen(game.fen())}
+        />
+        <ChessGuideControls
+          areBackBtnsEnabled={playedMoves.length === 0}
+          areForwardBtnsEnabled={getNextMoves().length !== 1}
+          onJumpBackBtnClick={reset}
+          onJumpForwardBtnClick={jumpToEndOrNextTreeFork}
+          onStepBackBtnClick={moveBack}
+          onStepForwardBtnClick={moveForward}
+          onResetBtnClick={reset}
+          onModeSwitchBtnClick={toggleGuideMode}
+          currentMode={mode}
+        />
+      </Grid>
+      <Grid item>
+        <TabsPane
+          tabs={[
+            {
+              name: 'Moves',
+              content: <MovesTable moves={playedMoves} />
+            },
+          ]}
+        />
       </Grid>
 
       {SHOW_DEBUG_BTN &&
@@ -476,7 +459,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           handleSubmit={handleMove}
         />
       }
-    </div>
+
+    </Grid>
   );
 }
 

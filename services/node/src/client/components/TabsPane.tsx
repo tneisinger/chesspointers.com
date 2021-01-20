@@ -41,12 +41,12 @@ function a11yProps(tabIndex: number) {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     border: '1px solid #555',
     borderTop: 'none',
     borderRadius: '4px',
     height: '100%',
+    maxWidth: '16rem',
   },
   lonelyTab: {
     textAlign: 'center',
@@ -55,7 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   tabContent: {
     display: 'table',
     tableLayout: 'fixed',
-    width: '100%',
   }
 }));
 
