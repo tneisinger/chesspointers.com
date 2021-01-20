@@ -211,6 +211,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return {
       free: false,
       dests,
+      showDests: mode === 'practice',
       color: userPlaysAs,
     }
   }
