@@ -1,7 +1,7 @@
 declare module "react-chessground" {
   import React from 'react';
 
-  interface MyComponentProps {
+  interface Props {
       fen?: string,
       width?: string,
       height?: string,
@@ -12,10 +12,11 @@ declare module "react-chessground" {
       undo?: () => void;
       drawable?: Object;
       movable?: Object;
-      animation: Object;
+      animation?: Object;
+      orientation?: string;
   }
 
-  export const Chessground: React.ComponentType<MyComponentProps>
+  export const Chessground: React.ComponentType<Props>
 
   export default Chessground
 }
