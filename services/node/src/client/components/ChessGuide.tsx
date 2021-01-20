@@ -21,12 +21,14 @@ import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
 import ChessGuideControls from './ChessGuideControls';
 import { GuideMode } from '../utils/types';
+import { viewportHeight } from '../utils';
 
 const COMPUTER_THINK_TIME = 500;
 const CHECK_MOVE_DELAY = 250;
 const SHOW_NEXT_MOVE_DELAY = 1000;
 const SHOW_DEBUG_BTN = false;
 const BEEPER_FREQUENCY = 93;
+const BOARD_SIZE_VH = 70;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -379,6 +381,15 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     reset();
   }
 
+  const calcBoardSize = (): string => {
+    const pixels = (viewportHeight() * BOARD_SIZE_VH) / 100;
+    // The final board size needs to be some multiple of eight pixels
+    // See here: https://github.com/ornicar/chessground/issues/51
+    const roundValue = 8;
+    const roundedPixels = Math.floor(pixels / roundValue) * roundValue;
+    return roundedPixels + 'px';
+  }
+
   const debug = () => {
     console.log('You pressed the debug button');
   }
@@ -388,7 +399,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       <Grid item>
         <div className={classes.boardBorderDiv}>
           <ChessGuideBoard
-            size="70vmin"
+            size={calcBoardSize()}
             playedMoves={playedMoves}
             boardPosition={fen}
             orientation={userPlaysAs}
