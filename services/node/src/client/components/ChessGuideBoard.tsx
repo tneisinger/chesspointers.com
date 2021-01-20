@@ -1,6 +1,6 @@
 import React from 'react';
 import { Chess, ChessInstance, ShortMove, Square } from "chess.js";
-import { ChessBoardMove, PieceColor } from '../../shared/chessTypes';
+import { PieceColor } from '../../shared/chessTypes';
 import ChessBoard from '../components/ChessBoard';
 import { Dests } from 'chessground/types';
 
@@ -23,7 +23,6 @@ interface Props {
   boardPosition: string;
   orientation?: PieceColor;
   isUsersTurn: boolean;
-  handleMove: (move: ChessBoardMove) => void;
   onMove: (startSquare: Square, endSquare: Square) => void;
   onDragOverSquare: (square: string) => void;
   arePiecesDraggable: boolean;
@@ -39,7 +38,6 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   orientation = 'white',
   isUsersTurn,
   onMove,
-  arePiecesDraggable,
   nextMoves,
   shouldShowNextMoves,
 }) => {

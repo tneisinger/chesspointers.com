@@ -4,8 +4,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import { ChessInstance, ShortMove } from 'chess.js';
-import { ChessBoardMove } from '../../shared/chessTypes'
+import { ChessInstance, ShortMove, Square } from 'chess.js';
 
 // The data-testid prop value for the button that submits the selected next move
 // Use this in tests to select the button.
@@ -22,17 +21,9 @@ type Move = {
   shortMove: ShortMove,
 }
 
-function toChessBoardMove(shortMove: ShortMove): ChessBoardMove {
-  return {
-    sourceSquare: shortMove.from,
-    targetSquare: shortMove.to,
-    piece: 'q',
-  };
-}
-
 interface Props {
   nextMoveGames: ChessInstance[];
-  handleSubmit: (move: ChessBoardMove) => void;
+  handleSubmit: (startSquare: Square, endSquare: Square) => void;
 }
 
 const ChessMoveSelector: React.FunctionComponent<Props> = ({
@@ -91,7 +82,12 @@ const ChessMoveSelector: React.FunctionComponent<Props> = ({
           <button
             data-testid={SELECT_BTN_TEST_ID}
             disabled={selectedMove == undefined}
-            onClick={() => handleSubmit(toChessBoardMove(selectedMove.shortMove))}
+            onClick={() =>
+              handleSubmit(
+                selectedMove.shortMove.from,
+                selectedMove.shortMove.to
+              )
+            }
           >
             Submit Move Choice
           </button>
@@ -101,7 +97,12 @@ const ChessMoveSelector: React.FunctionComponent<Props> = ({
   } else if (moves.length === 1) {
     return (
       <button
-        onClick={() => handleSubmit(toChessBoardMove(moves[0].shortMove))}
+        onClick={() =>
+          handleSubmit(
+            moves[0].shortMove.from,
+            moves[0].shortMove.to,
+          )
+        }
         data-testid={SELECT_BTN_TEST_ID}
       >
         Play Next Move

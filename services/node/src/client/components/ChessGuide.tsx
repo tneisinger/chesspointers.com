@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import React, { useState, useEffect } from 'react';
 import { Chess, ChessInstance, ShortMove, Square } from "chess.js";
-import { ChessTree, ChessBoardMove, PieceColor } from '../../shared/chessTypes';
+import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import {
   areChessPathsEquivalent,
@@ -164,7 +164,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
 
-  const onMove = (startSquare: Square, endSquare: Square): void => {
+  const handleMove = (startSquare: Square, endSquare: Square): void => {
     const shortMove: ShortMove = {
       from: startSquare,
       to: endSquare,
@@ -183,33 +183,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       doNextMove(nextMove);
     }
   }
-
-  // TODO: remove this function when the old Chessboard component can be thrown out
-  const handleMove = (move: ChessBoardMove) => {
-    // If the user picks up and drops a piece back at its sourceSquare, do nothing.
-    if (move.sourceSquare === move.targetSquare) return;
-    const shortMove: ShortMove = {
-      from: move.sourceSquare,
-      to: move.targetSquare,
-      promotion: 'q',
-    };
-    const nextMoveGames = getNextMoveGames().filter((game) => {
-      const history = game.history({verbose: true});
-      return sameMoves(history[history.length - 1], shortMove);
-    });
-    if (nextMoveGames.length > 0) {
-      // If the user presses either of the arrow buttons, then `doesComputerAutoplay`
-      // will be turned off. When the user plays by moving a piece on the board, make sure
-      // that `doesComputerAutoplay` is turned back on.
-      setDoesComputerAutoplay(true);
-      const history = nextMoveGames[0].history();
-      const nextMove = history[history.length - 1];
-      doNextMove(nextMove);
-    } else {
-      // If the user plays a move that is not in the ChessTree, beep at them
-      beeper.beep(2);
-    }
-  };
 
   const doNextMove = (move: string) => {
     if (game.move(move)) {
@@ -387,8 +360,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             boardPosition={fen}
             orientation={userPlaysAs}
             isUsersTurn={isUsersTurn()}
-            handleMove={handleMove}
-            onMove={onMove}
+            onMove={handleMove}
             onDragOverSquare={() => beeper.resume()}
             arePiecesDraggable={getNextMoves().length > 0}
             nextMoves={getNextMoves()}
