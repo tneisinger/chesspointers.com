@@ -69,9 +69,10 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   }
 
   const makeChessboardArrows = (): ChessboardArrow[] => {
+    if (!shouldShowNextMoves) return [];
     const result: ChessboardArrow[] = [];
     const nextMoves = getNextShortMoves();
-    if (shouldShowNextMoves && nextMoves.length > 0) {
+    if (nextMoves.length > 0) {
       nextMoves.forEach(({from , to}) => {
         result.push({
           orig: from,
