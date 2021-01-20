@@ -133,29 +133,16 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   }
 
   return (
-    <div>
-      <Chessboard
-        width={450}
-        position={boardPosition}
-        undo
-        squareStyles={makeShowMovesSquareStyles()}
-        orientation={orientation}
-        onDrop={handleMove}
-        onDragOverSquare={onDragOverSquare}
-        draggable={arePiecesDraggable}
-      />
-
-      <ChessBoard
-        key={String(shouldShowNextMoves) /* rerender on 'shouldShowNextMoves' changes */ }
-        width="22vw"
-        height="22vw"
-        fen={boardPosition}
-        drawable={makeDrawableProp()}
-        onMove={onMove}
-        movable={{ free: false, showDests: false, dests: makeDests() }}
-        animation={{ duration: 250 }}
-      />
-    </div>
+    <ChessBoard
+      key={String(shouldShowNextMoves) /* rerender on 'shouldShowNextMoves' changes */ }
+      width="36vw"
+      height="36vw"
+      fen={boardPosition}
+      drawable={makeDrawableProp()}
+      onMove={onMove}
+      movable={{ free: false, showDests: false, dests: makeDests() }}
+      animation={{ duration: 250 }}
+    />
   );
 }
 
