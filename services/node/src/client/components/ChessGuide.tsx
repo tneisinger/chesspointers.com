@@ -27,7 +27,7 @@ const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = 250;
 const SHOW_NEXT_MOVE_DELAY = 500;
 const SHOW_DEBUG_BTN = false;
-const BEEPER_FREQUENCY = 93;
+const BEEPER_FREQUENCY = 73;
 const BOARD_SIZE_VH = 70;
 
 const useStyles = makeStyles((theme) => ({
@@ -215,6 +215,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       dests,
       showDests: mode === 'practice',
       color: userPlaysAs,
+      events: {
+        after: () => beeper.resume() // Prep the beeper after a move is made
+      }
     }
   }
 
