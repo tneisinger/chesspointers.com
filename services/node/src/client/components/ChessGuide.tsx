@@ -23,9 +23,9 @@ import ChessGuideControls from './ChessGuideControls';
 import { GuideMode } from '../utils/types';
 import { viewportHeight } from '../utils';
 
-const COMPUTER_THINK_TIME = 500;
+const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = 250;
-const SHOW_NEXT_MOVE_DELAY = 1000;
+const SHOW_NEXT_MOVE_DELAY = 500;
 const SHOW_DEBUG_BTN = false;
 const BEEPER_FREQUENCY = 93;
 const BOARD_SIZE_VH = 70;
