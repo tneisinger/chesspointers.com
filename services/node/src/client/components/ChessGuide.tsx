@@ -407,6 +407,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             boardPosition={fen}
             orientation={userPlaysAs}
             isUsersTurn={isUsersTurn()}
+            check={game.in_check()}
             turnColor={turnColor()}
             onMove={handleMove}
             movable={calcMovable()}

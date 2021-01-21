@@ -28,6 +28,7 @@ interface Props {
   arePiecesDraggable: boolean;
   nextMoves: string[];
   shouldShowNextMoves: boolean;
+  check: boolean;
 }
 
 
@@ -41,6 +42,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   movable,
   nextMoves,
   shouldShowNextMoves,
+  check,
 }) => {
 
   const makeNextMoveGames = (): ChessInstance[] => {
@@ -104,6 +106,8 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
       onMove={onMove}
       movable={movable}
       resizable={true}
+      highlight={{ check: true }}
+      check={check}
     />
   );
 }
