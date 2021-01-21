@@ -74,7 +74,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const paths = getUniquePaths(chessTree);
 
-  const [beeper] = useState(new Beeper({ frequency: BEEPER_FREQUENCY }));
+  const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState<GuideMode>(guideMode);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
@@ -189,7 +189,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   const rectifyBadMove = () => {
-    beeper.beep(2);
+    if (beeper == undefined) {
+      defineBeeper().beep(2);
+    } else {
+      beeper.beep(2);
+    }
     undoMove();
     scheduleShowMoves({ delay: 500 });
   }
@@ -215,9 +219,21 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       dests,
       showDests: mode === 'practice',
       color: userPlaysAs,
-      events: {
-        after: () => beeper.resume() // Prep the beeper after a move is made
-      }
+      events: { after: afterMove }
+    }
+  }
+
+  const defineBeeper = (): Beeper => {
+    const newBeeper = new Beeper({ frequency: BEEPER_FREQUENCY })
+    setBeeper(newBeeper);
+    return newBeeper;
+  }
+
+  const afterMove = (): void => {
+    if (beeper == undefined) {
+      defineBeeper();
+    } else {
+      beeper.resume();
     }
   }
 
