@@ -3,7 +3,6 @@ import { makeStyles, CardHeader } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
-import ChessBoard from '../components/ChessBoard';
 
 const useStyles = makeStyles(() => ({
   mainCard: {
@@ -26,17 +25,7 @@ const HomePage: React.FunctionComponent = () => {
           <Card className={classes.mainCard}>
             <CardHeader className={classes.cardHeader} title='Home Page' />
             <CardContent>
-              <ChessBoard
-                width="38vw"
-                height="38vw"
-                drawable={{
-                  enabled: true,
-                  visible: true,
-                  eraseOnClick: false,
-                  defaultSnapToValidMove: true,
-                  shapes: [{ orig: 'e2', dest: 'e4', brush: 'green' }],
-                }}
-              />
+              <p>Welcome!</p>
             </CardContent>
           </Card>
         </Grid>

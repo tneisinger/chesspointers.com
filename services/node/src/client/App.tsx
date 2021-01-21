@@ -11,6 +11,7 @@ import { BrowserRouter, Switch } from 'react-router-dom'; // Pages
 import { SideMenu } from './components/SideMenu';
 import { makeRoutes } from './routes';
 import './globalStyles.css';
+import 'react-chessground/dist/styles/chessground.css';
 
 const theme = createMuiTheme({
   palette: {

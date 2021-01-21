@@ -1,7 +1,7 @@
 import React from 'react';
 import { Chess, ChessInstance, ShortMove, Square } from "chess.js";
 import { PieceColor } from '../../shared/chessTypes';
-import ChessBoard from '../components/ChessBoard';
+import Chessground from 'react-chessground';
 
 enum BrushColor {
   GREEN  = 'green',
@@ -95,8 +95,11 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
     }
   }
 
+  const drawable = makeDrawableProp();
+
   return (
-    <ChessBoard
+    <Chessground
+      key={String(drawable.visible) /* rerender when `props.drawable.visible` changes */}
       width={size}
       height={size}
       turnColor={turnColor}
@@ -106,7 +109,10 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
       onMove={onMove}
       movable={movable}
       resizable={true}
-      highlight={{ check: true }}
+      highlight={{
+        check: true,
+        lastMove: false,
+      }}
       check={check}
     />
   );
