@@ -381,13 +381,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     reset();
   }
 
-  const calcBoardSize = (): string => {
+  const calcBoardSize = (): number => {
     const pixels = (viewportHeight() * BOARD_SIZE_VH) / 100;
     // The final board size needs to be some multiple of eight pixels
     // See here: https://github.com/ornicar/chessground/issues/51
     const roundValue = 8;
     const roundedPixels = Math.floor(pixels / roundValue) * roundValue;
-    return roundedPixels + 'px';
+    return roundedPixels;
   }
 
   const debug = () => {
@@ -399,7 +399,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       <Grid item>
         <div className={classes.boardBorderDiv}>
           <ChessGuideBoard
-            size={calcBoardSize()}
+            size={calcBoardSize() + 'px'}
             playedMoves={playedMoves}
             boardPosition={fen}
             orientation={userPlaysAs}
@@ -432,6 +432,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       </Grid>
       <Grid item>
         <TabsPane
+          height={calcBoardSize() / 3}
           tabs={[
             {
               name: 'Moves',

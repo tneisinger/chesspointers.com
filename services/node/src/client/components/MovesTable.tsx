@@ -8,6 +8,7 @@ import MovesTableRow from './MovesTableRow';
 const useStyles = makeStyles(() => ({
   table: {
     tableLayout: 'fixed',
+    maxWidth: '16rem',
   }
 }));
 

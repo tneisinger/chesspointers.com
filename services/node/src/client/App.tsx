@@ -4,11 +4,13 @@ import {
   Theme,
   createMuiTheme,
   ThemeProvider,
+  StylesProvider,
 } from '@material-ui/core/styles';
 import React from 'react';
 import { BrowserRouter, Switch } from 'react-router-dom'; // Pages
 import { SideMenu } from './components/SideMenu';
 import { makeRoutes } from './routes';
+import './globalStyles.css';
 
 const theme = createMuiTheme({
   palette: {
@@ -36,12 +38,14 @@ export const App = () => {
       <div className={classes.root}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <SideMenu />
-          <main className={classes.main}>
-            <Switch>
-              {makeRoutes()}
-            </Switch>
-          </main>
+          <StylesProvider injectFirst>
+            <SideMenu />
+            <main className={classes.main}>
+              <Switch>
+                {makeRoutes()}
+              </Switch>
+            </main>
+          </StylesProvider>
         </ThemeProvider>
       </div>
     </BrowserRouter>
