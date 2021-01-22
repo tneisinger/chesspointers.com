@@ -83,6 +83,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [game] = useState<ChessInstance>(new Chess());
   const [fen, setFen] = useState(game.fen());
   const [checkMoveTimeout, setCheckMoveTimeout] = useState<number | undefined>(undefined);
+  const [wrongMoveFlashIdx, setWrongMoveFlashIdx] = useState<number>(0);
 
   const isUsersTurn = (): boolean => {
     return game.turn() === userPlaysAs.charAt(0);
@@ -194,6 +195,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     } else {
       beeper.beep(2);
     }
+    triggerWrongMoveBoardFlash();
     undoMove();
     scheduleShowMoves({ delay: 500 });
   }
@@ -409,6 +411,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return roundedPixels;
   }
 
+  const triggerWrongMoveBoardFlash = () => {
+    setWrongMoveFlashIdx(idx => idx + 1);
+  }
+
   const debug = () => {
     console.log('You pressed the debug button');
   }
@@ -430,6 +436,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             arePiecesDraggable={getNextMoves().length > 0}
             nextMoves={getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
+            wrongMoveFlashIdx={wrongMoveFlashIdx}
           />
         </div>
         <ChessGuideInfo

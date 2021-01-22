@@ -1,7 +1,9 @@
 import React from 'react';
 import { Chess, ChessInstance, ShortMove, Square } from "chess.js";
 import { PieceColor } from '../../shared/chessTypes';
+import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
+import ColorFlashOverlay from './ColorFlashOverlay';
 
 enum BrushColor {
   GREEN  = 'green',
@@ -9,6 +11,14 @@ enum BrushColor {
   BLUE   = 'blue',
   YELLOW = 'yellow',
 }
+
+const useStyles = makeStyles({
+  chessGuideBoardWrapper: {
+    position: 'relative',
+    width: (props: Props) => props.size,
+    height: (props: Props) => props.size,
+  },
+});
 
 interface ChessboardArrow {
   orig:  string;
@@ -29,27 +39,18 @@ interface Props {
   nextMoves: string[];
   shouldShowNextMoves: boolean;
   check: boolean;
+  wrongMoveFlashIdx: number;
 }
 
 
-const ChessGuideBoard: React.FunctionComponent<Props> = ({
-  size,
-  playedMoves,
-  boardPosition,
-  orientation = 'white',
-  turnColor,
-  onMove,
-  movable,
-  nextMoves,
-  shouldShowNextMoves,
-  check,
-}) => {
+const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
+  const classes = useStyles(props);
 
   const makeNextMoveGames = (): ChessInstance[] => {
     const games: ChessInstance[] = [];
-    nextMoves.forEach((move) => {
+    props.nextMoves.forEach((move) => {
       const game = new Chess();
-      [...playedMoves, move].forEach((m) => {
+      [...props.playedMoves, move].forEach((m) => {
         if (!game.move(m)) {
           throw new Error(`invalid move: ${m}`);
         };
@@ -70,7 +71,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   }
 
   const makeChessboardArrows = (): ChessboardArrow[] => {
-    if (!shouldShowNextMoves) return [];
+    if (!props.shouldShowNextMoves) return [];
     const result: ChessboardArrow[] = [];
     const nextMoves = getNextShortMoves();
     if (nextMoves.length > 0) {
@@ -88,7 +89,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   const makeDrawableProp = () => {
     return {
       enabled: true,
-      visible: shouldShowNextMoves,
+      visible: props.shouldShowNextMoves,
       eraseOnClick: false,
       defaultSnapToValidMove: true,
       autoShapes: makeChessboardArrows(),
@@ -98,23 +99,31 @@ const ChessGuideBoard: React.FunctionComponent<Props> = ({
   const drawable = makeDrawableProp();
 
   return (
-    <Chessground
-      key={String(drawable.visible) /* rerender when `props.drawable.visible` changes */}
-      width={size}
-      height={size}
-      turnColor={turnColor}
-      fen={boardPosition}
-      orientation={orientation}
-      drawable={makeDrawableProp()}
-      onMove={onMove}
-      movable={movable}
-      resizable={true}
-      highlight={{
-        check: true,
-        lastMove: false,
-      }}
-      check={check}
-    />
+    <div className={classes.chessGuideBoardWrapper}>
+      <ColorFlashOverlay
+        flashIdx={props.wrongMoveFlashIdx}
+        width={props.size}
+        height={props.size}
+        color='red'
+      />
+      <Chessground
+        key={String(drawable.visible) /* rerender when `props.drawable.visible` changes */}
+        width={props.size}
+        height={props.size}
+        turnColor={props.turnColor}
+        fen={props.boardPosition}
+        orientation={props.orientation}
+        drawable={makeDrawableProp()}
+        onMove={props.onMove}
+        movable={props.movable}
+        resizable={true}
+        highlight={{
+          check: true,
+          lastMove: false,
+        }}
+        check={props.check}
+      />
+    </div>
   );
 }
 
