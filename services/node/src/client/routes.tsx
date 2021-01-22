@@ -5,7 +5,6 @@ import HomeIcon from '@material-ui/icons/Home';
 import RouterIcon from '@material-ui/icons/Storage';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import StyledIcon from '@material-ui/icons/Style';
-import LazyIcon from '@material-ui/icons/SystemUpdateAlt';
 import LockIcon from '@material-ui/icons/Lock';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
 import { Route } from 'react-router-dom';
@@ -14,7 +13,6 @@ import ChessTrapsPage from './pages/ChessTraps';
 import ChessTrapPage from './pages/ChessTrap';
 import MergeTrapsPage from './pages/MergeTraps';
 import NotFoundPage from './pages/NotFound';
-import LazyLoadingPage from './pages/LazyLoading';
 import StyledComponentsPage from './pages/StyledComponents';
 import RouterPage from './pages/Router';
 import PrivatePage from './pages/Private';
@@ -64,14 +62,6 @@ export const routes: RouteInfo[] = [
     isPathExact: true,
     isPrivate: false,
     sideMenuIcon: MergeTypeIcon,
-  },
-  {
-    pageName: 'Lazy Loading',
-    component: LazyLoadingPage,
-    path: '/lazy-example',
-    isPathExact: false,
-    isPrivate: false,
-    sideMenuIcon: LazyIcon,
   },
   {
     pageName: 'Styled Components',
