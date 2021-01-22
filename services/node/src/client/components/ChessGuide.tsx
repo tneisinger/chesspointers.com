@@ -31,8 +31,6 @@ const BEEPER_FREQUENCY = 73;
 const BOARD_SIZE_VH = 70;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-  },
   belowChessBoard: {
     marginTop: '8px',
   },
@@ -420,7 +418,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }
 
   return (
-    <Grid container direction='row' className={classes.root} spacing={2}>
+    <Grid container direction='row' spacing={2}>
       <Grid item>
         <div className={classes.boardBorderDiv}>
           <ChessGuideBoard
