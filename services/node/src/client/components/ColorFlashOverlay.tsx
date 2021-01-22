@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 
-const Z_INDEX = 10;
+const DEFAULT_Z_INDEX = 10;
 const MAX_OPACITY = 0.3;
 
 const useStyles = makeStyles({
@@ -13,7 +13,7 @@ const useStyles = makeStyles({
     left: 0,
     width: (props: Props) => props.width,
     height: (props: Props) => props.height,
-    zIndex: (props: Props) => props.zIndex || Z_INDEX,
+    zIndex: (props: Props) => props.zIndex || DEFAULT_Z_INDEX,
     pointerEvents: 'none',
   },
   flash: {
@@ -44,12 +44,9 @@ interface Props {
   color: string;
   flashIdx: number;
   zIndex?: number;
-  flashSpeed?: number;
-  flashDuration?: number;
 }
 
 const ColorFlashOverlay: React.FC<Props> = (props) => {
-
   const classes = useStyles(props);
 
   const makeClasses = () => {
@@ -59,6 +56,7 @@ const ColorFlashOverlay: React.FC<Props> = (props) => {
     return classes.colorFlashOverlayRoot;
   }
 
+  // Use the `key` prop to make this div rerender whenever the `flashIdx` changes
   return <div key={props.flashIdx} className={makeClasses()} />;
 }
 
