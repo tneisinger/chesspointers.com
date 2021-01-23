@@ -2,7 +2,6 @@ import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
 import { PieceColor } from '../../shared/chessTypes';
 import { ChessTrap } from '../../shared/entity/chessTrap';
