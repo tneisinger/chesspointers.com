@@ -57,7 +57,10 @@ const ScrollablePane: React.FC<Props> = (props) => {
   return (
     <div
       className={classes.root}
-      style={{ height: (props.height - appBarHeight) + 'px' }}
+      style={{
+        height: (props.height - appBarHeight) + 'px',
+        marginBottom: appBarHeight + 'px',
+      }}
     >
       <AppBar ref={appBarRef} position="static">
         <Typography variant="button" className={classes.titleText}>
