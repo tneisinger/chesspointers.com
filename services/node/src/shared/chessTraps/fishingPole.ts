@@ -1,4 +1,3 @@
-import { ChessTree } from '../chessTypes';
 import { ChessTrap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
