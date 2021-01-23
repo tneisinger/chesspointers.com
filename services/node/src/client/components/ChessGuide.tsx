@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { Chess, ChessInstance, Square } from "chess.js";
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
@@ -52,6 +52,8 @@ interface Props {
   alwaysAutoplay?: boolean;
   userPlaysAs?: PieceColor;
   guideMode?: GuideMode;
+  playedMoves: string[];
+  setPlayedMoves: Dispatch<SetStateAction<string[]>>
   renderExtraControlsForTesting?: boolean
 }
 
@@ -66,6 +68,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   alwaysAutoplay = false,
   userPlaysAs = 'white',
   guideMode = 'learn',
+  playedMoves,
+  setPlayedMoves,
   renderExtraControlsForTesting,
 }) => {
   const classes = useStyles({});
@@ -75,7 +79,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState<GuideMode>(guideMode);
-  const [playedMoves, setPlayedMoves] = useState<string[]>([]);
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
   const [pathsCompleted, setPathsCompleted] = useState<PathStats[]>([]);
   const [game] = useState<ChessInstance>(new Chess());

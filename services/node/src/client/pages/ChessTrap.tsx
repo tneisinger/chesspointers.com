@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
@@ -25,6 +25,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ChessTrapPage: React.FunctionComponent = () => {
+  const [playedMoves, setPlayedMoves] = useState<string[]>([]);
   const dispatch = useDispatch();
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
   const classes = useStyles({});
@@ -70,6 +71,8 @@ const ChessTrapPage: React.FunctionComponent = () => {
           <ChessGuide
             chessTree={trap.chessTree}
             userPlaysAs={trap.playedByWhite ? 'white' : 'black'}
+            playedMoves={playedMoves}
+            setPlayedMoves={setPlayedMoves}
           />
         </Card>
       </Grid>
