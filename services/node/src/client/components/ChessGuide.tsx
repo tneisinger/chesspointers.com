@@ -16,7 +16,7 @@ import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
 import Modal from './Modal';
 import MovesTable from './MovesTable';
-import TabsPane from './TabsPane';
+import ScrollablePane from './ScrollablePane';
 import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
 import ChessGuideControls from './ChessGuideControls';
@@ -456,15 +456,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         />
       </Grid>
       <Grid item>
-        <TabsPane
+        <ScrollablePane
           height={calcBoardSize() / 3}
-          tabs={[
-            {
-              name: 'Moves',
-              content: <MovesTable moves={playedMoves} />
-            },
-          ]}
-        />
+          title='Moves'
+          autoScrollDownWhenContentAdded
+        >
+          <MovesTable moves={playedMoves} />
+        </ScrollablePane>
       </Grid>
 
       {SHOW_DEBUG_BTN &&
