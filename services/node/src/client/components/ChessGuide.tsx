@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Chess, ChessInstance, Square } from "chess.js";
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
@@ -15,13 +15,11 @@ import {
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
 import Modal from './Modal';
-import MovesTable from './MovesTable';
-import ScrollablePane from './ScrollablePane';
+import MovesPane from './MovesPane';
 import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
 import ChessGuideControls from './ChessGuideControls';
 import { GuideMode } from '../utils/types';
-import { viewportHeight } from '../utils';
 
 const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = 250;
@@ -52,8 +50,7 @@ interface Props {
   alwaysAutoplay?: boolean;
   userPlaysAs?: PieceColor;
   guideMode?: GuideMode;
-  playedMoves: string[];
-  setPlayedMoves: Dispatch<SetStateAction<string[]>>
+  boardSizePixels: number;
   renderExtraControlsForTesting?: boolean
 }
 
@@ -65,12 +62,11 @@ type PathStats = {
 
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
-  alwaysAutoplay = false,
+  boardSizePixels,
+  renderExtraControlsForTesting = false,
   userPlaysAs = 'white',
   guideMode = 'learn',
-  playedMoves,
-  setPlayedMoves,
-  renderExtraControlsForTesting,
+  alwaysAutoplay = false,
 }) => {
   const classes = useStyles({});
 
@@ -85,6 +81,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [fen, setFen] = useState(game.fen());
   const [checkMoveTimeout, setCheckMoveTimeout] = useState<number | undefined>(undefined);
   const [wrongMoveFlashIdx, setWrongMoveFlashIdx] = useState<number>(0);
+  const [playedMoves, setPlayedMoves] = useState<string[]>([]);
 
   const isUsersTurn = (): boolean => {
     return game.turn() === userPlaysAs.charAt(0);
@@ -374,14 +371,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     if (isAtPathEnd()) {
       recordPathCompletion();
       setIsModalOpen(true);
-    }
-
-    if (isUsersTurn()) {
-      scheduleShowMoves();
     } else {
-      doComputerMove();
+      if (isUsersTurn()) {
+        scheduleShowMoves();
+      } else {
+        doComputerMove();
+      }
     }
-
     // In cleanup, clear timeouts
     return () => {
       clearTimeouts();
@@ -403,15 +399,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     reset();
   }
 
-  const calcBoardSize = (): number => {
-    const pixels = (viewportHeight() * BOARD_SIZE_VH) / 100;
-    // The final board size needs to be some multiple of eight pixels
-    // See here: https://github.com/ornicar/chessground/issues/51
-    const roundValue = 8;
-    const roundedPixels = Math.floor(pixels / roundValue) * roundValue;
-    return roundedPixels;
-  }
-
   const triggerWrongMoveBoardFlash = () => {
     setWrongMoveFlashIdx(idx => idx + 1);
   }
@@ -425,7 +412,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       <Grid item>
         <div className={classes.boardBorderDiv}>
           <ChessGuideBoard
-            size={calcBoardSize() + 'px'}
+            size={boardSizePixels + 'px'}
             playedMoves={playedMoves}
             boardPosition={fen}
             orientation={userPlaysAs}
@@ -459,13 +446,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         />
       </Grid>
       <Grid item>
-        <ScrollablePane
-          height={calcBoardSize() / 3}
-          title='Moves'
-          autoScrollDownWhenContentAdded
-        >
-          <MovesTable moves={playedMoves} />
-        </ScrollablePane>
+        <MovesPane height={boardSizePixels} playedMoves={playedMoves} />
       </Grid>
 
       {SHOW_DEBUG_BTN &&

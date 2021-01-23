@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CardHeader, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
@@ -12,6 +12,7 @@ import allChessTraps from '../../shared/chessTraps/index';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { mergeTrees } from '../../shared/chessTree';
+import { calcChessBoardSize } from '../utils';
 
 const useStyles = makeStyles(() => ({
   mainCard: {
@@ -28,15 +29,14 @@ const MergeTrapsPage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
   const classes = useStyles({});
+  const [selectedTraps, setSelectedTraps] = useState<ChessTrap[]>([]);
+  const [userColor, setUserColor] = useState<PieceColor>('white');
 
   useEffect(() => {
     if (chessTrapsSlice.requestStatus === 'NO_REQUEST_YET') {
       dispatch(getChessTrapsThunk());
     }
   }, []);
-
-  const [selectedTraps, setSelectedTraps] = useState<ChessTrap[]>([]);
-  const [userColor, setUserColor] = useState<PieceColor>('white');
 
   if (chessTrapsSlice.requestStatus === 'ERROR') {
     return (
@@ -65,15 +65,20 @@ const MergeTrapsPage: React.FunctionComponent = () => {
                   <ChessGuide
                     chessTree={mergeSelectedTraps()}
                     userPlaysAs={userColor}
+                    boardSizePixels={calcChessBoardSize(70, 'vh')}
                   />
                 </Grid>
                 <Grid item>
-                  <ChessTrapsSelector
-                    allChessTraps={allChessTraps}
-                    setSelectedTraps={setSelectedTraps}
-                    userColor={userColor}
-                    setUserColor={setUserColor}
-                  />
+                  <Grid container direction='column' spacing={2}>
+                    <Grid item>
+                      <ChessTrapsSelector
+                        allChessTraps={allChessTraps}
+                        setSelectedTraps={setSelectedTraps}
+                        userColor={userColor}
+                        setUserColor={setUserColor}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </CardContent>

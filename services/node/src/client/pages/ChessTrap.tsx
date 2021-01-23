@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
@@ -8,13 +8,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import ChessGuide from '../components/ChessGuide';
+import MovesPane from '../components/MovesPane';
 import NotFoundPage from '../pages/NotFound';
 import { toDashedLowercase } from '../../shared/utils';
 import { formatTrapName } from '../../shared/chessTraps/index';
+import { calcChessBoardSize } from '../utils';
 
 const useStyles = makeStyles(() => ({
   mainCard: {
     padding: '32px',
+  },
+  gridItem: {
+    paddingTop: '0px!important',
+    paddingBottom: '0px!important',
   },
   trapName: {
     textAlign: 'center',
@@ -25,10 +31,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ChessTrapPage: React.FunctionComponent = () => {
-  const [playedMoves, setPlayedMoves] = useState<string[]>([]);
+  const boardSizePixels = calcChessBoardSize(70, 'vh');
+
+  const [containerHeight, setContainerHeight] = useState<number>(boardSizePixels)
   const dispatch = useDispatch();
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
   const classes = useStyles({});
+
+  const gridContainerRef = useCallback(card => {
+    if (card != null) {
+      setContainerHeight(card.clientHeight)
+    }
+  }, []);
 
   const { trapName } = useParams<{ trapName: string }>();
 
@@ -63,17 +77,20 @@ const ChessTrapPage: React.FunctionComponent = () => {
 
   return (
     <Grid container direction='row' justify='center'>
-      <Grid item>
+      <Grid item className={classes.gridItem}>
         <Typography className={classes.trapName} variant='h4' component='h2'>
           {formatTrapName(trap)}
         </Typography>
         <Card className={classes.mainCard}>
-          <ChessGuide
-            chessTree={trap.chessTree}
-            userPlaysAs={trap.playedByWhite ? 'white' : 'black'}
-            playedMoves={playedMoves}
-            setPlayedMoves={setPlayedMoves}
-          />
+          <Grid container ref={gridContainerRef} direction='row' spacing={2}>
+            <Grid item className={classes.gridItem}>
+              <ChessGuide
+                chessTree={trap.chessTree}
+                userPlaysAs={trap.playedByWhite ? 'white' : 'black'}
+                boardSizePixels={boardSizePixels}
+              />
+            </Grid>
+          </Grid>
         </Card>
       </Grid>
     </Grid>
