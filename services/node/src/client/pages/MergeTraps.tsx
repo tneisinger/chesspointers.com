@@ -6,9 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import ChessGuide from '../components/ChessGuide';
-import ChessTrapsSelector from '../components/ChessTrapsSelector';
+import SelectTrapsPane from '../components/SelectTrapsPane';
 import MovesPane from '../components/MovesPane';
-import allChessTraps from '../../shared/chessTraps/index';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { mergeTrees } from '../../shared/chessTree';
@@ -65,13 +64,13 @@ const MergeTrapsPage: React.FunctionComponent = () => {
                 userPlaysAs={userColor}
                 boardSizePixels={calcChessBoardSize(70, 'vh')}
               >
-                <MovesPane height={400} playedMoves={[]} />
-                <ChessTrapsSelector
-                  allChessTraps={allChessTraps}
+                <SelectTrapsPane
+                  height={300}
                   setSelectedTraps={setSelectedTraps}
                   userColor={userColor}
                   setUserColor={setUserColor}
                 />
+                <MovesPane height={300} playedMoves={[]} />
               </ChessGuide>
             </Grid>
           </Grid>
