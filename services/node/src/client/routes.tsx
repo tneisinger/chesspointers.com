@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react';
 import { OverridableComponent } from '@material-ui/core/OverridableComponent';
 import { SvgIconTypeMap } from '@material-ui/core/SvgIcon/SvgIcon';
 import HomeIcon from '@material-ui/icons/Home';
-import RouterIcon from '@material-ui/icons/Storage';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import LockIcon from '@material-ui/icons/Lock';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
@@ -12,7 +11,6 @@ import ChessTrapsPage from './pages/ChessTraps';
 import ChessTrapPage from './pages/ChessTrap';
 import MergeTrapsPage from './pages/MergeTraps';
 import NotFoundPage from './pages/NotFound';
-import RouterPage from './pages/Router';
 import PrivatePage from './pages/Private';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -60,15 +58,6 @@ export const routes: RouteInfo[] = [
     isPathExact: true,
     isPrivate: false,
     sideMenuIcon: MergeTypeIcon,
-  },
-  {
-    pageName: 'React Router',
-    component: RouterPage,
-    path: '/react-router/:slug',
-    isPathExact: false,
-    isPrivate: false,
-    sideMenuIcon: RouterIcon,
-    sideMenuLink: '/react-router/1234',
   },
   {
     pageName: 'Private Page',
