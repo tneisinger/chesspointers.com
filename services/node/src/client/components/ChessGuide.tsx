@@ -45,12 +45,12 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   chessTree: ChessTree;
+  boardSizePixels: number;
   // if 'alwaysAutoplay' set to true, always autoplay the computer's moves, even when the
   // step forward button is clicked.
   alwaysAutoplay?: boolean;
   userPlaysAs?: PieceColor;
   guideMode?: GuideMode;
-  boardSizePixels: number;
   renderExtraControlsForTesting?: boolean
 }
 
@@ -63,10 +63,10 @@ type PathStats = {
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
   boardSizePixels,
-  renderExtraControlsForTesting = false,
+  alwaysAutoplay = false,
   userPlaysAs = 'white',
   guideMode = 'learn',
-  alwaysAutoplay = false,
+  renderExtraControlsForTesting = false,
 }) => {
   const classes = useStyles({});
 
