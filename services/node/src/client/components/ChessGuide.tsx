@@ -452,7 +452,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         />
       </Grid>
       <Grid item>
-        {childrenWithPlayedMoves}
+        <Grid container direction='column' spacing={2}>
+          {childrenWithPlayedMoves && childrenWithPlayedMoves.map((child) => (
+            <Grid item>
+              {child}
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
 
       {SHOW_DEBUG_BTN &&
