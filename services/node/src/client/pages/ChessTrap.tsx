@@ -81,4 +81,3 @@ const ChessTrapPage: React.FunctionComponent = () => {
 };
 
 export default ChessTrapPage;
-
