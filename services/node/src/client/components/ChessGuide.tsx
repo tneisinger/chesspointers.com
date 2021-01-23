@@ -15,7 +15,6 @@ import {
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
 import Modal from './Modal';
-import MovesPane from './MovesPane';
 import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
 import ChessGuideControls from './ChessGuideControls';
@@ -26,7 +25,6 @@ const CHECK_MOVE_DELAY = 250;
 const SHOW_NEXT_MOVE_DELAY = 500;
 const SHOW_DEBUG_BTN = false;
 const BEEPER_FREQUENCY = 73;
-const BOARD_SIZE_VH = 70;
 
 const useStyles = makeStyles((theme) => ({
   belowChessBoard: {
@@ -67,6 +65,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   userPlaysAs = 'white',
   guideMode = 'learn',
   renderExtraControlsForTesting = false,
+  ...props
 }) => {
   const classes = useStyles({});
 
@@ -403,6 +402,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setWrongMoveFlashIdx(idx => idx + 1);
   }
 
+  const childrenWithPlayedMoves = React.Children.map(props.children, child => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { playedMoves });
+    }
+    return child;
+  });
+
   const debug = () => {
     console.log('You pressed the debug button');
   }
@@ -446,7 +452,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         />
       </Grid>
       <Grid item>
-        <MovesPane height={boardSizePixels} playedMoves={playedMoves} />
+        {childrenWithPlayedMoves}
       </Grid>
 
       {SHOW_DEBUG_BTN &&

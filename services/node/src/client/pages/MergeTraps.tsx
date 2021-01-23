@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import ChessGuide from '../components/ChessGuide';
 import ChessTrapsSelector from '../components/ChessTrapsSelector';
+import MovesPane from '../components/MovesPane';
 import allChessTraps from '../../shared/chessTraps/index';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
@@ -16,7 +16,7 @@ import { calcChessBoardSize } from '../utils';
 
 const useStyles = makeStyles(() => ({
   mainCard: {
-    padding: '0 40px',
+    padding: '32px',
   },
   cardHeader: {
     textAlign: 'center',
@@ -56,34 +56,26 @@ const MergeTrapsPage: React.FunctionComponent = () => {
 
   return (
     <Grid item xs={12}>
-      <Grid container direction='row' justify='center' spacing={2}>
-        <Grid item>
-          <Card className={classes.mainCard}>
-            <CardContent>
-              <Grid container direction='row' spacing={4}>
-                <Grid item>
-                  <ChessGuide
-                    chessTree={mergeSelectedTraps()}
-                    userPlaysAs={userColor}
-                    boardSizePixels={calcChessBoardSize(70, 'vh')}
-                  />
-                </Grid>
-                <Grid item>
-                  <Grid container direction='column' spacing={2}>
-                    <Grid item>
-                      <ChessTrapsSelector
-                        allChessTraps={allChessTraps}
-                        setSelectedTraps={setSelectedTraps}
-                        userColor={userColor}
-                        setUserColor={setUserColor}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
+      <Grid container direction='row' justify='center'>
+        <Card className={classes.mainCard}>
+          <Grid container direction='row' spacing={4}>
+            <Grid item>
+              <ChessGuide
+                chessTree={mergeSelectedTraps()}
+                userPlaysAs={userColor}
+                boardSizePixels={calcChessBoardSize(70, 'vh')}
+              >
+                <MovesPane height={400} playedMoves={[]} />
+                <ChessTrapsSelector
+                  allChessTraps={allChessTraps}
+                  setSelectedTraps={setSelectedTraps}
+                  userColor={userColor}
+                  setUserColor={setUserColor}
+                />
+              </ChessGuide>
+            </Grid>
+          </Grid>
+        </Card>
       </Grid>
     </Grid>
   );
