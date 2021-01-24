@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
   },
   colorSwitchWrapper: {
     padding: '8px 0 0 0',
-    marginLeft: '-8px',
     backgroundColor: theme.palette.action.hover,
   }
 }));

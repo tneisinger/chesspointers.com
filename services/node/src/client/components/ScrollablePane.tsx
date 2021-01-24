@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid #555',
     borderTop: 'none',
     borderRadius: '0 0 4px 4px',
+    overflowX: 'hidden',
     overflowY: 'overlay' as any,
     height: '100%'
   }
