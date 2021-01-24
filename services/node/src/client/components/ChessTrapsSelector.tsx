@@ -1,6 +1,8 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -114,9 +116,9 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid container direction='column' className={classes.trapsList}>
+      <List>
         { getChessTrapsOfUserColor().map(trap =>
-            <Grid item key={trap.name}>
+            <ListItem dense key={trap.name}>
               <FormControlLabel
                 label={
                   <Typography variant='caption'>
@@ -133,10 +135,10 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
                   />
                 }
               />
-            </Grid>
+            </ListItem>
           )
         }
-      </Grid>
+      </List>
     </div>
   );
 }
