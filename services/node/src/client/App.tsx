@@ -10,12 +10,34 @@ import React from 'react';
 import { BrowserRouter, Switch } from 'react-router-dom'; // Pages
 import { SideMenu } from './components/SideMenu';
 import { makeRoutes } from './routes';
-import './globalStyles.css';
 import 'react-chessground/dist/styles/chessground.css';
+
+const SCROLLBAR_BACKGROUND_COLOR = 'rgba(100, 100, 100, 1)';
+const SCROLLBAR_FOREGROUND_COLOR = 'rgba(150, 150, 150, 1)';
 
 const theme = createMuiTheme({
   palette: {
     type: 'dark',
+  },
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        '*': {
+          scrollbarWidth: 'thin',
+          scrollbarColor: `${SCROLLBAR_FOREGROUND_COLOR} ${SCROLLBAR_BACKGROUND_COLOR}`,
+        },
+        '*::-webkit-scrollbar': {
+          width: '10px',
+        },
+        '*::-webkit-scrollbar-track': {
+          background: SCROLLBAR_BACKGROUND_COLOR,
+        },
+        '*::-webkit-scrollbar-thumb': {
+          backgroundColor: SCROLLBAR_FOREGROUND_COLOR,
+          borderRadius: '5px',
+        }
+      }
+    }
   }
 });
 
