@@ -1,10 +1,18 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
 import { PieceColor } from '../../shared/chessTypes';
 import { ChessTrap } from '../../shared/entity/chessTrap';
+
+const useStyles = makeStyles({
+  chessTrapsSelectorRoot: {
+    padding: '16px',
+  },
+});
 
 interface Props {
   allChessTraps: ChessTrap[];
@@ -19,6 +27,8 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
   userColor,
   setUserColor,
 }) => {
+  const classes = useStyles({});
+
   const [selectedWhiteTraps, setSelectedWhiteTraps] = useState<ChessTrap[]>([]);
   const [selectedBlackTraps, setSelectedBlackTraps] = useState<ChessTrap[]>([]);
 
@@ -68,11 +78,16 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
   }, [selectedWhiteTraps, selectedBlackTraps]);
 
   return (
-    <div>
-      <Grid container direction='row' component="label" alignItems="center" spacing={1}>
-        <Grid item>White</Grid>
+    <div className={classes.chessTrapsSelectorRoot}>
+      <Grid container direction='row' alignContent="center" spacing={1}>
+        <Grid item>
+          <Typography variant='caption'>
+            White
+          </Typography>
+        </Grid>
         <Grid item>
           <Switch
+            size="small"
             checked={userColor === 'black'}
             onChange={toggleUserColor}
             name="selectColor"
@@ -80,12 +95,21 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
             inputProps={{ 'aria-label': 'Select piece color' }}
           />
         </Grid>
-        <Grid item>Black</Grid>
+        <Grid item>
+          <Typography variant='caption'>
+            Black
+          </Typography>
+        </Grid>
       </Grid>
       <Grid container direction='column'>
         { getChessTrapsOfUserColor().map(trap =>
             <Grid item key={trap.name}>
               <FormControlLabel
+                label={
+                  <Typography variant='caption'>
+                    {trap.name}
+                  </Typography>
+                }
                 control={
                   <Checkbox
                     name={trap.name}
@@ -95,7 +119,6 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
                     color="default"
                   />
                 }
-                label={trap.name}
               />
             </Grid>
           )
