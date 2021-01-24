@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ChessTrapsList: React.FC<void> = () => {
+const ChessTrapsList: React.FC = () => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
