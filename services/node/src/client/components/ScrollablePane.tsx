@@ -6,11 +6,22 @@ import Box from '@material-ui/core/Box';
 
 const ROUGH_APP_BAR_HEIGHT = 40; // pixels
 
+interface Props {
+  height: number;
+  title: string;
+  autoScrollDownWhenContentAdded?: boolean;
+}
+
+interface StyleProps extends Props {
+  appBarHeight: number,
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     maxWidth: '16rem',
-    height: (props: Props) => props.height,
+    height: (props: StyleProps) => (props.height - props.appBarHeight) + 'px',
+    marginBottom: (props: StyleProps) => props.appBarHeight + 'px',
   },
   titleText: {
     textAlign: 'center',
@@ -26,15 +37,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
-  height: number;
-  title: string;
-  autoScrollDownWhenContentAdded?: boolean;
-}
-
 const ScrollablePane: React.FC<Props> = (props) => {
-  const classes = useStyles(props);
   const [appBarHeight, setAppBarHeight] = useState(ROUGH_APP_BAR_HEIGHT);
+
+  const classes = useStyles({
+    ...props,
+    appBarHeight,
+  });
 
   const appBarRef = useCallback(appBar => {
     if (appBar != null) setAppBarHeight(appBar.clientHeight);
@@ -56,13 +65,7 @@ const ScrollablePane: React.FC<Props> = (props) => {
   });
 
   return (
-    <div
-      className={classes.root}
-      style={{
-        height: (props.height - appBarHeight) + 'px',
-        marginBottom: appBarHeight + 'px',
-      }}
-    >
+    <div className={classes.root}>
       <AppBar ref={appBarRef} position="static">
         <Typography variant="button" className={classes.titleText}>
           {props.title}
