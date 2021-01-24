@@ -1,5 +1,6 @@
 import { User } from './entity/user';
 import { ShortMove } from 'chess.js';
+import { ChessTrap } from './entity/chessTrap';
 
 export function getUserFullName(user: User): string {
   return `${user.firstName} ${user.lastName}`;
@@ -87,3 +88,13 @@ export function getScoreFromFen(fen: string): number {
 export function sameMoves(move1: ShortMove, move2: ShortMove): boolean {
   return move1.from === move2.from && move1.to === move2.to
 };
+
+function compareChessTrapsByName(trap1: ChessTrap, trap2: ChessTrap): number {
+  if (trap1.name < trap2.name) return -1;
+  if (trap1.name > trap2.name) return 1;
+  return 0;
+}
+
+export function sortChessTrapsByName(traps: ChessTrap[]): ChessTrap[] {
+  return traps.sort(compareChessTrapsByName);
+}
