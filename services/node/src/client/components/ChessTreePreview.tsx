@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Chessground from 'react-chessground';
 import { calcChessBoardSize } from '../utils';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
@@ -19,14 +19,33 @@ const ChessTreePreview: React.FC<Props> = (props) => {
   const endIdx = Math.floor(shortestPath.length * 0.75);
   const shortestPathTrimmed = shortestPath.slice(0, endIdx);
 
-  const chess = new Chess();
+  const [chess] = useState<ChessInstance>(new Chess());
 
   shortestPathTrimmed.forEach((move) => {
     chess.move(move);
   });
 
+  const [previewPos] = useState<string>(chess.fen());
+
   const [boardPosition, setBoardPosition] = useState<string>(chess.fen())
   const [isHovered, setIsHovered] = useState<boolean>(false);
+
+  const resetBoard = () => {
+    chess.reset();
+    setBoardPosition(chess.fen());
+  }
+
+  const resetToPreviewPos = () => {
+    setBoardPosition(previewPos);
+  }
+
+  useEffect(() => {
+    if (isHovered) {
+      resetBoard();
+    } else {
+      resetToPreviewPos()
+    }
+  }, [isHovered]);
 
   return (
     <>
