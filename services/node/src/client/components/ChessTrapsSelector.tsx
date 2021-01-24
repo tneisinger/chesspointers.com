@@ -8,11 +8,18 @@ import Switch from '@material-ui/core/Switch';
 import { PieceColor } from '../../shared/chessTypes';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   chessTrapsSelectorRoot: {
-    padding: '16px',
   },
-});
+  trapsList: {
+    padding: '0 16px',
+  },
+  colorSwitchWrapper: {
+    padding: '8px 0 0 0',
+    marginLeft: '-8px',
+    backgroundColor: theme.palette.action.hover,
+  }
+}));
 
 interface Props {
   allChessTraps: ChessTrap[];
@@ -79,7 +86,14 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
 
   return (
     <div className={classes.chessTrapsSelectorRoot}>
-      <Grid container direction='row' alignContent="center" spacing={1}>
+      <Grid
+        container
+        className={classes.colorSwitchWrapper}
+        component="label"
+        direction='row'
+        justify="center"
+        spacing={1}
+      >
         <Grid item>
           <Typography variant='caption'>
             White
@@ -101,7 +115,7 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid container direction='column'>
+      <Grid container direction='column' className={classes.trapsList}>
         { getChessTrapsOfUserColor().map(trap =>
             <Grid item key={trap.name}>
               <FormControlLabel
