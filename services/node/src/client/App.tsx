@@ -35,6 +35,16 @@ const theme = createMuiTheme({
         '*::-webkit-scrollbar-thumb': {
           backgroundColor: SCROLLBAR_FOREGROUND_COLOR,
           borderRadius: '5px',
+        },
+        a: {
+          color: 'white',
+          textDecoration: 'none',
+          '&:visited': {
+            color: '#d6d8de'
+          },
+          '&:hover': {
+            textDecoration: 'underline',
+          }
         }
       }
     }
