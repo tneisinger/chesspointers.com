@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -30,6 +30,18 @@ const MergeTrapsPage: React.FunctionComponent = () => {
   const classes = useStyles({});
   const [selectedTraps, setSelectedTraps] = useState<ChessTrap[]>([]);
   const [userColor, setUserColor] = useState<PieceColor>('white');
+  const [chessGuideWrapperHeight, setChessGuideWrapperHeight] = useState(0);
+
+  const chessGuideWrapperRef = useCallback(chessGuideWrapper => {
+    if (chessGuideWrapper != null) {
+      const style = getComputedStyle(chessGuideWrapper, null);
+      let height = chessGuideWrapper.clientHeight;
+      console.log(height);
+      height -= parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+      console.log(height);
+      setChessGuideWrapperHeight(height);
+    }
+  }, []);
 
   useEffect(() => {
     if (chessTrapsSlice.requestStatus === 'NO_REQUEST_YET') {
@@ -53,24 +65,28 @@ const MergeTrapsPage: React.FunctionComponent = () => {
     return mergeTrees(...selectedTraps.map(t => t.chessTree));
   }
 
+  const boardSize = calcChessBoardSize(75, 'vh');
+
+  const heightOfRightSidePanes = (chessGuideWrapperHeight / 2) - 8;
+
   return (
     <Grid item xs={12}>
       <Grid container direction='row' justify='center'>
         <Card className={classes.mainCard}>
           <Grid container direction='row' spacing={4}>
-            <Grid item>
+            <Grid item ref={chessGuideWrapperRef}>
               <ChessGuide
                 chessTree={mergeSelectedTraps()}
                 userPlaysAs={userColor}
-                boardSizePixels={calcChessBoardSize(70, 'vh')}
+                boardSizePixels={boardSize}
               >
                 <SelectTrapsPane
-                  height={300}
+                  height={heightOfRightSidePanes}
                   setSelectedTraps={setSelectedTraps}
                   userColor={userColor}
                   setUserColor={setUserColor}
                 />
-                <MovesPane height={300} playedMoves={[]} />
+                <MovesPane height={heightOfRightSidePanes} playedMoves={[]} />
               </ChessGuide>
             </Grid>
           </Grid>
