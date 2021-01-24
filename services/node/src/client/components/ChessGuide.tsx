@@ -453,10 +453,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       </Grid>
       <Grid item>
         <Grid container direction='column' spacing={2}>
-          {childrenWithPlayedMoves && childrenWithPlayedMoves.map((child) => (
-            <Grid item>
-              {child}
-            </Grid>
+          {childrenWithPlayedMoves &&
+            childrenWithPlayedMoves.map((child, idx) => (
+              <Grid key={`ChessGuide child ${idx}`} item>
+                {child}
+              </Grid>
           ))}
         </Grid>
       </Grid>
