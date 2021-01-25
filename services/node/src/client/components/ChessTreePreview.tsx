@@ -63,6 +63,7 @@ const ChessTreePreview: React.FC<Props> = ({
 
   const startMoving = () => {
     chess.reset();
+    setPlayedMoves([]);
     setBoardPosition(chess.fen());
     setupMoveInterval();
   }
@@ -99,7 +100,9 @@ const ChessTreePreview: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    isHovered ? startMoving() : stopMoving();
+    if (playMoves === 'onHover') {
+      isHovered ? startMoving() : stopMoving();
+    }
 
     // Clear the interval in cleanup
     return () => {
