@@ -4,6 +4,7 @@ import Chessground from 'react-chessground';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import { Chess, ChessInstance } from "chess.js";
+import { calcChessBoardSize, BoardSizeUnits } from '../utils';
 
 const FEN_START_POS = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
@@ -18,12 +19,16 @@ const useStyles = makeStyles({
 interface Props {
   chessTree: ChessTree;
   orientation: PieceColor;
-  msBetweenMoves?: number
+  boardSize?: number;
+  boardSizeUnits?: BoardSizeUnits;
+  msBetweenMoves?: number;
 }
 
 const ChessTreePreview: React.FC<Props> = ({
   chessTree,
   orientation,
+  boardSize = calcChessBoardSize(350, 'px'),
+  boardSizeUnits = 'px',
   msBetweenMoves = 600,
 }) => {
   const classes = useStyles({});
@@ -79,6 +84,11 @@ const ChessTreePreview: React.FC<Props> = ({
     setMoveInterval(interval);
   }
 
+  const calcBoardSize = (): number => {
+    if (boardSizeUnits === 'px') return boardSize;
+    return calcChessBoardSize(boardSize, boardSizeUnits);
+  }
+
   useEffect(() => {
     isHovered ? startMoving() : stopMoving();
 
@@ -90,6 +100,8 @@ const ChessTreePreview: React.FC<Props> = ({
     }
   }, [isHovered]);
 
+  const finalBoardSize = calcBoardSize();
+
   return (
     <>
       <button
@@ -98,6 +110,8 @@ const ChessTreePreview: React.FC<Props> = ({
         onMouseLeave={() => setIsHovered(false)}
       >
         <Chessground
+          width={finalBoardSize}
+          height={finalBoardSize}
           coordinates={false}
           fen={boardPosition}
           orientation={orientation}
