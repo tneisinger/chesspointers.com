@@ -123,6 +123,9 @@ const ChessTreePreview: React.FC<Props> = ({
         fen={boardPosition}
         orientation={orientation}
         viewOnly
+        highlight={{ check: true }}
+        check={chess.in_check()}
+        turnColor={chess.turn() === 'w' ? 'white' : 'black'}
       />
     </div>
   );
