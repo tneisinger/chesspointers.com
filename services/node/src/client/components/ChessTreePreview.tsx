@@ -45,7 +45,6 @@ const ChessTreePreview: React.FC<Props> = ({
   const [previewPos, setPreviewPos] = useState<string>(chess.fen());
   const [boardPosition, setBoardPosition] = useState<string>(chess.fen())
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [moveInterval, setMoveInterval] = useState<number | null>(null);
   const [currentPathIdx, setCurrentPathIdx] = useState<number>(0);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
 
@@ -75,10 +74,6 @@ const ChessTreePreview: React.FC<Props> = ({
   const stopMoving = () => {
     if (previewPos !== FEN_START_POS) {
       setBoardPosition(previewPos)
-    }
-    if (moveInterval != undefined) {
-      window.clearInterval(moveInterval);
-      setMoveInterval(null);
     }
   }
 
@@ -110,13 +105,6 @@ const ChessTreePreview: React.FC<Props> = ({
   useEffect(() => {
     if (playMoves === 'onHover') {
       isHovered ? startMoving() : stopMoving();
-    }
-
-    // Clear the interval in cleanup
-    return () => {
-      if (moveInterval != undefined) {
-        window.clearInterval(moveInterval);
-      }
     }
   }, [isHovered]);
 
