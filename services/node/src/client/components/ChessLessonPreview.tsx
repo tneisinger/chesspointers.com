@@ -16,8 +16,6 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
     <Grid
       container
       direction='column'
-      justify='center'
-      align-items='center'
       spacing={2}
     >
       <Grid item>
@@ -31,7 +29,7 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
       </Grid>
       <Grid item>
         <Grid container direction='row' justify='center'>
-          <Grid item xs={12}>
+          <Grid item>
             <ChessTreePreview
               chessTree={props.chessTree}
               orientation={props.orientation}
