@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import { Chess, ChessInstance } from "chess.js";
 
 const FEN_START_POS = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+
+const useStyles = makeStyles({
+  button: {
+    margin: 0,
+    padding: 0,
+    border: 'none',
+  }
+});
 
 interface Props {
   chessTree: ChessTree;
@@ -17,8 +26,9 @@ const ChessTreePreview: React.FC<Props> = ({
   orientation,
   msBetweenMoves = 600,
 }) => {
-  const [chess, setChess] = useState<ChessInstance>(new Chess());
+  const classes = useStyles({});
 
+  const [chess, setChess] = useState<ChessInstance>(new Chess());
   const [paths] = useState<string[][]>(getUniquePaths(chessTree));
   const [previewPos, setPreviewPos] = useState<string>(chess.fen());
   const [boardPosition, setBoardPosition] = useState<string>(chess.fen())
@@ -83,6 +93,7 @@ const ChessTreePreview: React.FC<Props> = ({
   return (
     <>
       <button
+        className={classes.button}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
