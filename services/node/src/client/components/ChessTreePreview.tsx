@@ -100,7 +100,7 @@ const ChessTreePreview: React.FC<Props> = ({
     }
   }, [isHovered]);
 
-  const finalBoardSize = calcBoardSize();
+  const finalBoardSize = calcBoardSize() + 'px';
 
   return (
     <>
