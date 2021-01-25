@@ -42,6 +42,7 @@ const ChessTreePreview: React.FC<Props> = ({
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [moveInterval, setMoveInterval] = useState<number | null>(null);
   const [currentPathIdx] = useState<number>(0);
+  const [playedMoves, setPlayedMoves] = useState<string[]>([]);
 
   useEffect(() => {
     const shortestPath = paths.reduce((oldPath, currentPath) => {
@@ -80,11 +81,15 @@ const ChessTreePreview: React.FC<Props> = ({
   const setupMoveInterval = (newChess: ChessInstance) => {
     const interval = window.setInterval(() => {
       const path = paths[currentPathIdx];
-      const nextMove = path[newChess.history().length];
-      if (nextMove != undefined) {
-        newChess.move(nextMove);
-        setBoardPosition(newChess.fen());
-      }
+      setPlayedMoves(currentPlayedMoves => {
+        const nextMove = path[currentPlayedMoves.length];
+        if (nextMove != undefined) {
+          newChess.move(nextMove);
+          setBoardPosition(newChess.fen());
+          return [...currentPlayedMoves, nextMove];
+        }
+        return currentPlayedMoves;
+      });
     }, msBetweenMoves);
     setMoveInterval(interval);
   }
