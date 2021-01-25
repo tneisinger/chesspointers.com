@@ -5,6 +5,7 @@ import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import { Chess, ChessInstance } from "chess.js";
 import { calcChessBoardSize, BoardSizeUnits } from '../utils';
+import useInterval from 'react-useinterval'
 
 const FEN_START_POS = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
@@ -39,13 +40,13 @@ const ChessTreePreview: React.FC<Props> = ({
     allowPointerEvents: playMoves === 'onHover',
   });
 
-  const [chess, setChess] = useState<ChessInstance>(new Chess());
+  const [chess] = useState<ChessInstance>(new Chess());
   const [paths] = useState<string[][]>(getUniquePaths(chessTree));
   const [previewPos, setPreviewPos] = useState<string>(chess.fen());
   const [boardPosition, setBoardPosition] = useState<string>(chess.fen())
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [moveInterval, setMoveInterval] = useState<number | null>(null);
-  const [currentPathIdx] = useState<number>(0);
+  const [currentPathIdx, setCurrentPathIdx] = useState<number>(0);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
 
   useEffect(() => {
@@ -69,7 +70,6 @@ const ChessTreePreview: React.FC<Props> = ({
     chess.reset();
     setPlayedMoves([]);
     setBoardPosition(chess.fen());
-    setupMoveInterval();
   }
 
   const stopMoving = () => {
@@ -82,21 +82,25 @@ const ChessTreePreview: React.FC<Props> = ({
     }
   }
 
-  const setupMoveInterval = () => {
-    const interval = window.setInterval(() => {
+  useInterval(() => {
+    if ((playMoves === 'onHover' && isHovered) || playMoves === 'always') {
       const path = paths[currentPathIdx];
-      setPlayedMoves(currentPlayedMoves => {
-        const nextMove = path[currentPlayedMoves.length];
-        if (nextMove != undefined) {
-          chess.move(nextMove);
-          setBoardPosition(chess.fen());
-          return [...currentPlayedMoves, nextMove];
-        }
-        return currentPlayedMoves;
-      });
-    }, msBetweenMoves);
-    setMoveInterval(interval);
-  }
+      if (path == undefined) throw new Error('Path undefined!');
+      if (playedMoves.length >= path.length) {
+        setCurrentPathIdx(idx => (idx < paths.length - 1) ? idx + 1 : 0);
+        chess.reset();
+        setBoardPosition(chess.fen());
+        setPlayedMoves([]);
+        return;
+      }
+      const nextMove = path[playedMoves.length];
+      if (nextMove != undefined) {
+        chess.move(nextMove);
+        setBoardPosition(chess.fen());
+        setPlayedMoves([...playedMoves, nextMove]);
+      }
+    }
+  }, msBetweenMoves);
 
   const calcBoardSize = (): number => {
     if (boardSizeUnits === 'px') return boardSize;
