@@ -22,6 +22,7 @@ interface Props {
   boardSize?: number;
   boardSizeUnits?: BoardSizeUnits;
   msBetweenMoves?: number;
+  playMoves?: 'always' | 'onHover';
 }
 
 const ChessTreePreview: React.FC<Props> = ({
@@ -30,6 +31,7 @@ const ChessTreePreview: React.FC<Props> = ({
   boardSize = calcChessBoardSize(350, 'px'),
   boardSizeUnits = 'px',
   msBetweenMoves = 600,
+  playMoves = 'onHover',
 }) => {
   const classes = useStyles({});
 
@@ -53,6 +55,9 @@ const ChessTreePreview: React.FC<Props> = ({
     });
     setBoardPosition(chess.fen());
     setPreviewPos(chess.fen());
+    if (playMoves === 'always') {
+      startMoving();
+    }
   }, []);
 
   const startMoving = () => {

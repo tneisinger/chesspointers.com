@@ -31,6 +31,7 @@ const HomePage: React.FunctionComponent = () => {
               <ChessTreePreview
                 chessTree={staffordTrap1.chessTree}
                 orientation={staffordTrap1.playedByWhite ? 'white' : 'black'}
+                playMoves='always'
               />
             </CardContent>
           </Card>
