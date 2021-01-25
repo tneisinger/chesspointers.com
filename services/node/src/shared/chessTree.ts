@@ -58,9 +58,7 @@ export const getUniquePaths = (tree: ChessTree, prePath: string[] = []): string[
   return paths;
 }
 
-export const validateChessTree = (
-  tree: ChessTree,
-): void => {
+export const validateChessTree = (tree: ChessTree): void => {
   const paths = getUniquePaths(tree);
   paths.forEach(path => {
     const game = new Chess();
