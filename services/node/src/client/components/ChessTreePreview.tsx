@@ -8,20 +8,13 @@ import { calcChessBoardSize, BoardSizeUnits } from '../utils';
 
 const FEN_START_POS = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
+interface StyleProps {
+  allowPointerEvents: boolean;
+}
+
 const useStyles = makeStyles({
-  container: {
-    width: (props: StyleProps) => props.finalBoardSize,
-    height: (props: StyleProps) => props.finalBoardSize,
-    position: 'relative',
-  },
   hoverDiv: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    top: 0,
-    bottom: 0,
     pointerEvents: (props: StyleProps) => props.allowPointerEvents ? 'auto' : 'none',
-    zIndex: 10,
   },
 });
 
@@ -34,11 +27,6 @@ interface Props {
   playMoves?: 'always' | 'onHover';
 }
 
-interface StyleProps {
-  finalBoardSize: string;
-  allowPointerEvents: boolean;
-}
-
 const ChessTreePreview: React.FC<Props> = ({
   chessTree,
   orientation,
@@ -47,6 +35,10 @@ const ChessTreePreview: React.FC<Props> = ({
   msBetweenMoves = 600,
   playMoves = 'onHover',
 }) => {
+  const classes = useStyles({
+    allowPointerEvents: playMoves === 'onHover',
+  });
+
   const [chess, setChess] = useState<ChessInstance>(new Chess());
   const [paths] = useState<string[][]>(getUniquePaths(chessTree));
   const [previewPos, setPreviewPos] = useState<string>(chess.fen());
@@ -126,27 +118,20 @@ const ChessTreePreview: React.FC<Props> = ({
 
   const finalBoardSize = calcBoardSize() + 'px';
 
-  const classes = useStyles({
-    finalBoardSize,
-    allowPointerEvents: playMoves === 'onHover',
-  });
-
   return (
-    <div className={classes.container}>
-      <div
-        className={classes.hoverDiv}
-        onMouseEnter={() => (playMoves === 'onHover') ? setIsHovered(true) : void(0)}
-        onMouseLeave={() => (playMoves === 'onHover') ? setIsHovered(false) : void(0)}
-      >
-        <Chessground
-          width={finalBoardSize}
-          height={finalBoardSize}
-          coordinates={false}
-          fen={boardPosition}
-          orientation={orientation}
-          viewOnly
-        />
-      </div>
+    <div
+      className={classes.hoverDiv}
+      onMouseEnter={() => (playMoves === 'onHover') ? setIsHovered(true) : void(0)}
+      onMouseLeave={() => (playMoves === 'onHover') ? setIsHovered(false) : void(0)}
+    >
+      <Chessground
+        width={finalBoardSize}
+        height={finalBoardSize}
+        coordinates={false}
+        fen={boardPosition}
+        orientation={orientation}
+        viewOnly
+      />
     </div>
   );
 }
