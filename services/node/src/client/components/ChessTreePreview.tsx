@@ -62,10 +62,9 @@ const ChessTreePreview: React.FC<Props> = ({
   }, []);
 
   const startMoving = () => {
-    const newChess = new Chess();
-    setChess(newChess);
-    setBoardPosition(newChess.fen());
-    setupMoveInterval(newChess);
+    chess.reset();
+    setBoardPosition(chess.fen());
+    setupMoveInterval();
   }
 
   const stopMoving = () => {
@@ -78,14 +77,14 @@ const ChessTreePreview: React.FC<Props> = ({
     }
   }
 
-  const setupMoveInterval = (newChess: ChessInstance) => {
+  const setupMoveInterval = () => {
     const interval = window.setInterval(() => {
       const path = paths[currentPathIdx];
       setPlayedMoves(currentPlayedMoves => {
         const nextMove = path[currentPlayedMoves.length];
         if (nextMove != undefined) {
-          newChess.move(nextMove);
-          setBoardPosition(newChess.fen());
+          chess.move(nextMove);
+          setBoardPosition(chess.fen());
           return [...currentPlayedMoves, nextMove];
         }
         return currentPlayedMoves;
