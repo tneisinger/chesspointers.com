@@ -1,49 +1,82 @@
 import React, { useState, useEffect } from 'react';
 import Chessground from 'react-chessground';
-import { calcChessBoardSize } from '../utils';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import { Chess, ChessInstance } from "chess.js";
 
+const FEN_START_POS = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+
 interface Props {
   chessTree: ChessTree;
   orientation: PieceColor;
+  msBetweenMoves?: number
 }
 
-const ChessTreePreview: React.FC<Props> = (props) => {
-  const paths = getUniquePaths(props.chessTree);
-  const shortestPath = paths.reduce((oldPath, currentPath) => {
-    return currentPath.length < oldPath.length ? currentPath : oldPath;
-  }, { length: Infinity }) as string[];
+const ChessTreePreview: React.FC<Props> = ({
+  chessTree,
+  orientation,
+  msBetweenMoves = 600,
+}) => {
+  const [chess, setChess] = useState<ChessInstance>(new Chess());
 
-  const endIdx = Math.floor(shortestPath.length * 0.75);
-  const shortestPathTrimmed = shortestPath.slice(0, endIdx);
-
-  const [chess] = useState<ChessInstance>(new Chess());
-
-  shortestPathTrimmed.forEach((move) => {
-    chess.move(move);
-  });
-
-  const [previewPos] = useState<string>(chess.fen());
-
+  const [paths] = useState<string[][]>(getUniquePaths(chessTree));
+  const [previewPos, setPreviewPos] = useState<string>(chess.fen());
   const [boardPosition, setBoardPosition] = useState<string>(chess.fen())
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [moveInterval, setMoveInterval] = useState<number | null>(null);
+  const [currentPathIdx] = useState<number>(0);
 
-  const resetBoard = () => {
-    chess.reset();
+  useEffect(() => {
+    const shortestPath = paths.reduce((oldPath, currentPath) => {
+      return currentPath.length < oldPath.length ? currentPath : oldPath;
+    }, { length: Infinity }) as string[];
+
+    const endIdx = Math.floor(shortestPath.length * 0.75);
+    const shortestPathTrimmed = shortestPath.slice(0, endIdx);
+    shortestPathTrimmed.forEach((move) => {
+      chess.move(move);
+    });
     setBoardPosition(chess.fen());
+    setPreviewPos(chess.fen());
+  }, []);
+
+  const startMoving = () => {
+    const newChess = new Chess();
+    setChess(newChess);
+    setBoardPosition(newChess.fen());
+    setupMoveInterval(newChess);
   }
 
-  const resetToPreviewPos = () => {
-    setBoardPosition(previewPos);
+  const stopMoving = () => {
+    if (previewPos !== FEN_START_POS) {
+      setBoardPosition(previewPos)
+    }
+    if (moveInterval != undefined) {
+      window.clearInterval(moveInterval);
+      setMoveInterval(null);
+    }
+  }
+
+  const setupMoveInterval = (newChess: ChessInstance) => {
+    const interval = window.setInterval(() => {
+      const path = paths[currentPathIdx];
+      const nextMove = path[newChess.history().length];
+      if (nextMove != undefined) {
+        newChess.move(nextMove);
+        setBoardPosition(newChess.fen());
+      }
+    }, msBetweenMoves);
+    setMoveInterval(interval);
   }
 
   useEffect(() => {
-    if (isHovered) {
-      resetBoard();
-    } else {
-      resetToPreviewPos()
+    isHovered ? startMoving() : stopMoving();
+
+    // Clear the interval in cleanup
+    return () => {
+      if (moveInterval != undefined) {
+        window.clearInterval(moveInterval);
+      }
     }
   }, [isHovered]);
 
@@ -56,7 +89,7 @@ const ChessTreePreview: React.FC<Props> = (props) => {
         <Chessground
           coordinates={false}
           fen={boardPosition}
-          orientation={props.orientation}
+          orientation={orientation}
           viewOnly
         />
       </button>
