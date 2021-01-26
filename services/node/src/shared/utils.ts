@@ -54,8 +54,8 @@ function stripCheckSymbol(move: string): string {
   return move;
 }
 
-// Calculate the score of a chess game from a fen string.  If white is ahead by n points,
-// return n.  If black is ahead by n points, return -n.  If the score is tied, return 0.
+// Calculate the score of a chess game from a fen string. If white is ahead by n points,
+// return n. If black is ahead by n points, return -n. If the score is tied, return 0.
 export function getScoreFromFen(fen: string): number {
   const pieces = fen.substr(0, fen.indexOf(' '));
   const numWhiteQueens = (pieces.match(/Q/g) || []).length;
