@@ -13,8 +13,10 @@ const branch_Kf2 = makeChessTree(
   []
 );
 
+const fxg1 = { move: 'fxg1=N+', isPreviewPosition: true };
+
 const branch_Ke2 = makeChessTree(
-  [ 'Ke2', 'fxg1=N+' ],
+  [ 'Ke2', fxg1 ],
   [ branch_Ke1,
     branch_Kf2,
   ]
@@ -26,11 +28,11 @@ const branch_Kxf2 = makeChessTree(
 );
 
 const chessTree = makeChessTree(
-  [ 'd4', 'd5',
-    'c4', 'e5',
+  [ 'd4',   'd5',
+    'c4',   'e5',
     'dxe5', 'd4',
-    'e3', 'Bb4+',
-    'Bd2', 'dxe3',
+    'e3',   'Bb4+',
+    'Bd2',  'dxe3',
     'Bxb4', 'exf2+',
   ],
   [ branch_Ke2,

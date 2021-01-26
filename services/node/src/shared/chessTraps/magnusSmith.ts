@@ -51,6 +51,8 @@ const branch_Nh5 = makeChessTree(
   ]
 );
 
+const Nxc6 = { move: 'Nxc6', isPreviewPosition: true };
+
 const chessTree = makeChessTree(
   [ 'e4',   'c5',
     'Nf3',  'd6',
@@ -58,7 +60,7 @@ const chessTree = makeChessTree(
     'Nxd4', 'Nf6',
     'Nc3',  'Nc6',
     'Bc4',  'g6',
-    'Nxc6', 'bxc6',
+     Nxc6,  'bxc6',
     'e5',
   ],
   [

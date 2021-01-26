@@ -1,16 +1,18 @@
 import { ChessTrap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
+const Ng4 = { move: 'Ng4', isPreviewPosition: true }
+
 const chessTree = makeChessTree(
-  [ 'e4', 'e5',
-    'Nf3', 'Nc6',
-    'Bb5', 'Nf6',
-    'O-O', 'Ng4',
-    'h3', 'h5',
+  [ 'e4',   'e5',
+    'Nf3',  'Nc6',
+    'Bb5',  'Nf6',
+    'O-O',   Ng4,
+    'h3',   'h5',
     'hxg4', 'hxg4',
-    'Ne1', 'Qh4',
-    'f3', 'g3',
-    'Rf2', 'Qh1#',
+    'Ne1',  'Qh4',
+    'f3',   'g3',
+    'Rf2',  'Qh1#',
   ],
   []
 );

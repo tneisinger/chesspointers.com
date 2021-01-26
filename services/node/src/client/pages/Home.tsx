@@ -3,6 +3,8 @@ import { makeStyles, CardHeader } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
+import ChessTreePreview from '../components/ChessTreePreview';
+import { staffordTrap1 } from '../../shared/chessTraps';
 
 const useStyles = makeStyles(() => ({
   mainCard: {
@@ -26,6 +28,11 @@ const HomePage: React.FunctionComponent = () => {
             <CardHeader className={classes.cardHeader} title='Home Page' />
             <CardContent>
               <p>Welcome!</p>
+              <ChessTreePreview
+                chessTree={staffordTrap1.chessTree}
+                orientation={staffordTrap1.playedByWhite ? 'white' : 'black'}
+                playMoves='always'
+              />
             </CardContent>
           </Card>
         </Grid>

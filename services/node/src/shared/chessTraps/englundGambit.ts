@@ -8,7 +8,7 @@ const branch_Qxc3 = makeChessTree(
 
 const branch_Nxc3 = makeChessTree(
   [ 'Nxc3', 'Qxa1+',
-    'Nd1', 'Nxe5',
+    'Nd1',  'Nxe5',
     'Nxe5', 'Qxe5',
   ],
   []
@@ -27,13 +27,15 @@ const branch_Qd2 = makeChessTree(
   ]
 );
 
+const Qb4_check = { move: 'Qb4+', isPreviewPosition: true };
+
 const chessTree = makeChessTree(
-  [ 'd4', 'e5',
+  [ 'd4',   'e5',
     'dxe5', 'Nc6',
-    'Nf3', 'Qe7',
-    'Bf4', 'Qb4+',
-    'Bd2', 'Qxb2',
-    'Bc3', 'Bb4',
+    'Nf3',  'Qe7',
+    'Bf4',   Qb4_check,
+    'Bd2',  'Qxb2',
+    'Bc3',  'Bb4',
   ],
   [ branch_Qd2,
     branch_Bxb4,

@@ -3,13 +3,16 @@ declare module "react-chessground" {
   import { Square } from 'chess.js';
 
   interface Props {
-      width?: string,
-      height?: string,
-      turnColor?: string,
-      check?: boolean,
-      fen?: string,
+      width?: string;
+      height?: string;
+      turnColor?: string;
+      check?: boolean;
+      coordinates?: boolean;
+      fen?: string;
+      selectable?: { enabled: boolean };
+      viewOnly?: boolean;
       orientation?: string;
-      onMove?: (from: Square, to: Square) => void
+      onMove?: (from: Square, to: Square) => void;
       lastMove?: string[];
       randomMove?: (moves: string[], move: string) => void;
       promotion?: (e: string) => void;
@@ -21,7 +24,7 @@ declare module "react-chessground" {
       resizable?: boolean;
       highlight?: {
         lastMove?: boolean,
-        check?: boolean
+        check?: boolean,
       };
   }
 

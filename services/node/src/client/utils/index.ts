@@ -14,10 +14,9 @@ export function vmax(): number {
   return Math.max(viewportWidth(), viewportHeight());
 }
 
-export type ViewportUnits = 'vh' | 'vw' | 'vmin' | 'vmax';
+export type BoardSizeUnits = 'vh' | 'vw' | 'vmin' | 'vmax' | 'px';
 
-
-export function calcChessBoardSize(value: number, units: ViewportUnits): number {
+export function calcChessBoardSize(value: number, units: BoardSizeUnits): number {
   let pixels = 0;
   switch (units) {
     case 'vh':
@@ -31,6 +30,9 @@ export function calcChessBoardSize(value: number, units: ViewportUnits): number 
       break;
     case 'vmax':
       pixels = (vmax() * value) / 100;
+      break;
+    case 'px':
+      pixels = value;
       break;
   }
   // The final board size of a Chessground chessboard needs to be some multiple of eight

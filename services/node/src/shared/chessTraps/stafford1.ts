@@ -29,12 +29,14 @@ const branch_Qe2 = makeChessTree(
   []
 );
 
+const d3 = { move: 'd3', isPreviewPosition: true };
+
 const chessTree = makeChessTree(
   [ 'e4',   'e5',
     'Nf3',  'Nf6',
     'Nxe5', 'Nc6',
     'Nxc6', 'dxc6',
-    'd3',   'Bc5',
+     d3,    'Bc5',
     'Bg5',  'Nxe4',
   ],
   [

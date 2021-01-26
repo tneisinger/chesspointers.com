@@ -83,6 +83,7 @@
     "pg": "^8.5.1",
     "react-chessground": "^1.5.0",
     "react-redux": "^7.2.2",
+    "react-useinterval": "^1.0.2",
     "redux-thunk": "^2.3.0",
     "reflect-metadata": "^0.1.13",
     "styled-components": "^5.2.0",
