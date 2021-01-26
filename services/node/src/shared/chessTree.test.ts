@@ -1,14 +1,16 @@
+/* eslint-disable */
 import { makeChessTree, getUniquePaths, mergeTrees } from './chessTree';
 
-const branch_Rf1 = makeChessTree(['Rf1','Qxe4+','Be2','Nf3#'], []);
-const branch_Nxh8 = makeChessTree(['Nxh8','Qxh1+','Bf1','Qe4+','Be2','Bc5'], []);
-const branch_g3 = makeChessTree(['g3','Qxe5'], []);
-const branch_Bxf7 = makeChessTree(['Bxf7+','Kd8'], []);
+const branch_Rf1  = makeChessTree(['Rf1', 'Qxe4+', 'Be2', 'Nf3#'], []);
+const branch_Nxh8 = makeChessTree(['Nxh8', 'Qxh1+', 'Bf1', 'Qe4+', 'Be2', 'Bc5'], []);
+const branch_g3   = makeChessTree(['g3', 'Qxe5'], []);
+const branch_Bxf7 = makeChessTree(['Bxf7+', 'Kd8'], []);
 const branch_Nxf7 = makeChessTree(['Nxf7', 'Qxg2'], [branch_Rf1, branch_Nxh8]);
+
 const complexTree = makeChessTree(
-  [ 'e4', 'e5',
-    'Nf3', 'Nc6',
-    'Bc4', 'Nd4',
+  [ 'e4',   'e5',
+    'Nf3',  'Nc6',
+    'Bc4',  'Nd4',
     'Nxe5', 'Qg5',
   ],
   [ branch_g3,
@@ -45,7 +47,7 @@ describe('makeChessTree()', () => {
 
   it('can make a tree with a simple branch', () => {
     const tree = makeChessTree(
-      [ 'e4', 'e5' ],
+      ['e4', 'e5'],
       [ { move: 'Nf3', children: [] },
         { move: 'f4', children: [] }
       ]

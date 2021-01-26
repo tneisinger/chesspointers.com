@@ -1,10 +1,10 @@
-import { Square } from "chess.js";
+import { Square } from 'chess.js';
 
 export type PieceColor = 'white' | 'black';
 
 export type ChessTree = {
-  move: string,
-  children: ChessTree[],
+  move: string;
+  children: ChessTree[];
 
   /*
   // Use `isPreviewPosition` to define which point in the tree should be used as the
@@ -19,20 +19,20 @@ export type ChessTree = {
   // the ChessTreePreview component will pick a position somewhere in the middle of the
   // tree.
   */
-  isPreviewPosition?: boolean,
+  isPreviewPosition?: boolean;
 };
 
 // This type is needed because the chessboardjsx package uses an object like this,
 // but does not export a type for it.
 export type ChessBoardMove = {
-  sourceSquare: Square,
-  targetSquare: Square,
-  piece: string,
-}
+  sourceSquare: Square;
+  targetSquare: Square;
+  piece: string;
+};
 
 export type MovePair = {
-  whiteMove: string,
-  blackMove?: string,
-}
+  whiteMove: string;
+  blackMove?: string;
+};
 
 export type CheckMateStatus = 'not in check' | 'check' | 'checkmate';

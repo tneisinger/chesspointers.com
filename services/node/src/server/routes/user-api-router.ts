@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { Repository } from 'typeorm';
 import { User } from '../../shared/entity/user';
 
-export function userApiRouter(userRepository: Repository<User>) {
+export function userApiRouter(userRepository: Repository<User>): Router {
   const router = Router();
   router.use(bodyParser.json());
 

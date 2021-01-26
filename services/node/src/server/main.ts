@@ -18,13 +18,14 @@ console.log(`*******************************************`);
 createConnection()
   .then(async (connection) => {
     // Get all the chessTraps that are saved in the db
-    const chessTrapsRepository: Repository<ChessTrap> =
-      connection.getRepository(ChessTrap);
+    const chessTrapsRepository: Repository<ChessTrap> = connection.getRepository(
+      ChessTrap,
+    );
     const chessTraps: ChessTrap[] = await chessTrapsRepository.find();
 
     // Insert any chessTraps that are not yet saved in the db
-    const namesOfTrapsInDB = chessTraps.map(trap => trap.name);
-    allTraps.forEach(trap => {
+    const namesOfTrapsInDB = chessTraps.map((trap) => trap.name);
+    allTraps.forEach((trap) => {
       if (!namesOfTrapsInDB.includes(trap.name)) {
         chessTrapsRepository.save(trap);
       }
