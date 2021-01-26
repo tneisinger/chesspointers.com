@@ -16,7 +16,7 @@ const branch_Ke2 = makeChessTree(
   []
 );
 
-const branch_d3_2 = makeChessTree(
+const branch_d3 = makeChessTree(
   [
     'd3',   'Bc5',
     'dxe4', 'Bxf2+',
@@ -36,15 +36,17 @@ const branch_d4 = makeChessTree(
   []
 );
 
+const e5 = { move: 'e5', isPreviewPosition: true };
+
 const chessTree = makeChessTree(
   [ 'e4',   'e5',
     'Nf3',  'Nf6',
     'Nxe5', 'Nc6',
     'Nxc6', 'dxc6',
-    'e5',   'Ne4',
+     e5,    'Ne4',
   ],
   [
-    branch_d3_2,
+    branch_d3,
     branch_d4,
   ]
 );

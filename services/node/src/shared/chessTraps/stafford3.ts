@@ -37,13 +37,15 @@ const branch_OO = makeChessTree(
   ]
 );
 
+const Nc3 = { move: 'Nc3', isPreviewPosition: true};
+
 const chessTree = makeChessTree(
   [
     'e4',   'e5',
     'Nf3',  'Nf6',
     'Nxe5', 'Nc6',
     'Nxc6', 'dxc6',
-    'Nc3',  'Bc5',
+     Nc3,   'Bc5',
     'Bc4',  'Ng4',
   ],
   [
