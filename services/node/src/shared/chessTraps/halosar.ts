@@ -39,11 +39,13 @@ const branch_Qg4 = makeChessTree(
   []
 );
 
+const Nb5 = { move: 'Nb5', isPreviewPosition: true };
+
 const branch_Qb4 = makeChessTree(
   [
              'Qb4',
     'O-O-O', 'Bg4',
-    'Nb5',
+     Nb5,
   ],
   [
     branch_Na6,
