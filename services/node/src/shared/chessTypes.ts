@@ -34,5 +34,3 @@ export type MovePair = {
   whiteMove: string,
   blackMove?: string,
 }
-
-export type CheckMateStatus = 'not in check' | 'check' | 'checkmate';
