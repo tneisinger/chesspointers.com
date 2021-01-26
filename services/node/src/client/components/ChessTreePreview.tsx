@@ -7,8 +7,6 @@ import { Chess, ChessInstance } from "chess.js";
 import { calcChessBoardSize, BoardSizeUnits } from '../utils';
 import useInterval from 'react-useinterval'
 
-const FEN_START_POS = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
-
 interface StyleProps {
   allowPointerEvents: boolean;
 }
@@ -40,26 +38,6 @@ const ChessTreePreview: React.FC<Props> = ({
     allowPointerEvents: playMoves === 'onHover',
   });
 
-  const [chess] = useState<ChessInstance>(new Chess());
-  const [paths] = useState<string[][]>(getUniquePaths(chessTree));
-  const [previewPos, setPreviewPos] = useState<string>(chess.fen());
-  const [boardPosition, setBoardPosition] = useState<string>(chess.fen())
-  const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [currentPathIdx, setCurrentPathIdx] = useState<number>(0);
-  const [playedMoves, setPlayedMoves] = useState<string[]>([]);
-
-  useEffect(() => {
-    const previewPosPath = getPreviewPosPath();
-    previewPosPath.forEach((move) => {
-      chess.move(move);
-    });
-    setBoardPosition(chess.fen());
-    setPreviewPos(chess.fen());
-    if (playMoves === 'always') {
-      startMoving();
-    }
-  }, []);
-
   // Try to get the PreviewPosPath from the chessTree. If the chessTree doesn't have a
   // node with isPreviewPosition === true, then just pick a spot somewhere in the middle
   // of the tree.
@@ -83,16 +61,36 @@ const ChessTreePreview: React.FC<Props> = ({
     return shortestPath.slice(0, endIdx);
   }
 
+
+  const [chess] = useState<ChessInstance>(new Chess());
+  const [paths] = useState<string[][]>(getUniquePaths(chessTree));
+  const [boardPosition, setBoardPosition] = useState<string>(chess.fen())
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [currentPathIdx, setCurrentPathIdx] = useState<number>(0);
+  const [playedMoves, setPlayedMoves] = useState<string[]>([]);
+  const [previewPosPath] = useState<string[]>(getPreviewPosPath());
+
+  useEffect(() => {
+    setBoardToPreviewPosition();
+    if (playMoves === 'always') {
+      startMoving();
+    }
+  }, []);
+
+  const setBoardToPreviewPosition = () => {
+    chess.reset();
+    previewPosPath.forEach((move) => {
+      if (!chess.move(move)) {
+        throw new Error(`Invalid move ${move} in previewPosPath`);
+      }
+    });
+    setBoardPosition(chess.fen());
+  }
+
   const startMoving = () => {
     chess.reset();
     setPlayedMoves([]);
     setBoardPosition(chess.fen());
-  }
-
-  const stopMoving = () => {
-    if (previewPos !== FEN_START_POS) {
-      setBoardPosition(previewPos)
-    }
   }
 
   useInterval(() => {
@@ -122,7 +120,7 @@ const ChessTreePreview: React.FC<Props> = ({
 
   useEffect(() => {
     if (playMoves === 'onHover') {
-      isHovered ? startMoving() : stopMoving();
+      isHovered ? startMoving() : setBoardToPreviewPosition();
     }
   }, [isHovered]);
 
