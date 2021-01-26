@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
-import { getUniquePaths } from '../../shared/chessTree';
+import { getUniquePaths, getPreviewPositionPath } from '../../shared/chessTree';
 import { Chess, ChessInstance } from "chess.js";
 import { calcChessBoardSize, BoardSizeUnits } from '../utils';
 import useInterval from 'react-useinterval'
@@ -49,13 +49,8 @@ const ChessTreePreview: React.FC<Props> = ({
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
 
   useEffect(() => {
-    const shortestPath = paths.reduce((oldPath, currentPath) => {
-      return currentPath.length < oldPath.length ? currentPath : oldPath;
-    }, { length: Infinity }) as string[];
-
-    const endIdx = Math.floor(shortestPath.length * 0.75);
-    const shortestPathTrimmed = shortestPath.slice(0, endIdx);
-    shortestPathTrimmed.forEach((move) => {
+    const previewPosPath = getPreviewPosPath();
+    previewPosPath.forEach((move) => {
       chess.move(move);
     });
     setBoardPosition(chess.fen());
@@ -64,6 +59,29 @@ const ChessTreePreview: React.FC<Props> = ({
       startMoving();
     }
   }, []);
+
+  // Try to get the PreviewPosPath from the chessTree. If the chessTree doesn't have a
+  // node with isPreviewPosition === true, then just pick a spot somewhere in the middle
+  // of the tree.
+  const getPreviewPosPath = (): string[] => {
+    const previewPosPath = getPreviewPositionPath(chessTree);
+    if (previewPosPath != null) {
+      return previewPosPath;
+    }
+    return calcPreviewPosPath();
+  }
+
+  // If the ChessTree does not have a node with 'isPreviewPosition' set, use this function
+  // to select a preview position instead. Just pick a spot somewhere in the middle of the
+  // tree.
+  const calcPreviewPosPath = (): string[] => {
+    const shortestPath = paths.reduce((oldPath, currentPath) => {
+      return currentPath.length < oldPath.length ? currentPath : oldPath;
+    }, { length: Infinity }) as string[];
+
+    const endIdx = Math.floor(shortestPath.length * 0.75);
+    return shortestPath.slice(0, endIdx);
+  }
 
   const startMoving = () => {
     chess.reset();

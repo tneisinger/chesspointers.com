@@ -2,30 +2,40 @@ import { Chess } from "chess.js";
 import { ChessTree } from './chessTypes';
 import { areChessMovesEquivalent, areChessPathsEquivalent } from './utils';
 
-export const makeChessTree = (moves: string[], childTrees: ChessTree[]): ChessTree => {
-  let result: ChessTree = { move: '', children: []};
+type MoveObject = { move: string, isPreviewPosition: boolean };
 
+export const makeChessTree = (
+  moves: (string | MoveObject)[],
+  childTrees: ChessTree[]
+): ChessTree => {
+  let result: ChessTree = { move: '', children: []};
   if (moves.length < 1) {
     return {
       move: '',
       children: childTrees
     };
   }
-
   const movesCopy = [...moves];
-
-  movesCopy.reverse().forEach((move, idx) => {
-    if (idx === 0) {
-      result = {
-        move: move,
-        children: childTrees,
-      }
+  movesCopy.reverse().forEach((moveOrObject, idx) => {
+    let move: string;
+    let isPreviewPosition = false;
+    if (typeof moveOrObject === 'string') {
+      move = moveOrObject;
     } else {
-      result = {
-        move: move,
-        children: [result]
-      }
+      move = moveOrObject.move;
+      isPreviewPosition = moveOrObject.isPreviewPosition;
     }
+    const newResult = new Object() as any;
+    if (isPreviewPosition) {
+      newResult.isPreviewPosition = true;
+    }
+    newResult.move = move;
+    if (idx === 0) {
+      newResult.children = childTrees;
+    } else {
+      newResult.children = [result];
+    }
+    result = newResult;
   });
 
   return result;
@@ -139,4 +149,36 @@ export function mergeTrees(...trees: ChessTree[]): ChessTree {
   }
 
   return result;
+}
+
+export function getPreviewPositionPath(tree: ChessTree): (string[] | null) {
+  if (tree.isPreviewPosition) {
+    return (tree.move === '') ? [] : [tree.move];
+  }
+  const paths = getUniquePaths(tree);
+
+  // Standardize tree so that first move is definitely the empty string.
+  if (tree.move === '') {
+    tree = tree;
+  } else {
+    tree = { move: '', children: [tree] };
+  }
+
+  for (let i = 0; i < paths.length; i++) {
+    let currentTree = tree;
+    let result: string[] = [];
+    const path = paths[i];
+    for (let j = 0; j < path.length; j++) {
+      const move = path[j];
+      result.push(move);
+      currentTree = currentTree.children.find(child => child.move === move);
+      if (currentTree == undefined) {
+        throw new Error(`Failed to find move ${move} at: ${result}`);
+      }
+      if (currentTree.isPreviewPosition) {
+        return result;
+      }
+    }
+  }
+  return null;
 }
