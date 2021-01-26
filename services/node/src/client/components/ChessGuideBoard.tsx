@@ -1,14 +1,14 @@
 import React from 'react';
-import { Chess, ChessInstance, ShortMove, Square } from "chess.js";
+import { Chess, ChessInstance, ShortMove, Square } from 'chess.js';
 import { PieceColor } from '../../shared/chessTypes';
 import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
 import ColorFlashOverlay from './ColorFlashOverlay';
 
 enum BrushColor {
-  GREEN  = 'green',
-  RED    = 'red',
-  BLUE   = 'blue',
+  GREEN = 'green',
+  RED = 'red',
+  BLUE = 'blue',
   YELLOW = 'yellow',
 }
 
@@ -21,8 +21,8 @@ const useStyles = makeStyles({
 });
 
 interface ChessboardArrow {
-  orig:  string;
-  dest:  string;
+  orig: string;
+  dest: string;
   brush: BrushColor;
 }
 
@@ -34,14 +34,13 @@ interface Props {
   isUsersTurn: boolean;
   turnColor: string;
   onMove: (startSquare: Square, endSquare: Square) => void;
-  movable: Object;
+  movable: Record<string, unknown>;
   arePiecesDraggable: boolean;
   nextMoves: string[];
   shouldShowNextMoves: boolean;
   check: boolean;
   wrongMoveFlashIdx: number;
 }
-
 
 const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles(props);
@@ -53,29 +52,29 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
       [...props.playedMoves, move].forEach((m) => {
         if (!game.move(m)) {
           throw new Error(`invalid move: ${m}`);
-        };
+        }
       });
       games.push(game);
     });
     return games;
-  }
+  };
 
   const getNextShortMoves = (): ShortMove[] => {
     return makeNextMoveGames().map((game) => {
-      const history = game.history({verbose: true});
+      const history = game.history({ verbose: true });
       if (history.length < 1) {
         throw new Error('nextMoveGames must have at least one move in their history');
       }
       return history[history.length - 1];
     });
-  }
+  };
 
   const makeChessboardArrows = (): ChessboardArrow[] => {
     if (!props.shouldShowNextMoves) return [];
     const result: ChessboardArrow[] = [];
     const nextMoves = getNextShortMoves();
     if (nextMoves.length > 0) {
-      nextMoves.forEach(({from , to}) => {
+      nextMoves.forEach(({ from, to }) => {
         result.push({
           orig: from,
           dest: to,
@@ -84,7 +83,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
       });
     }
     return result;
-  }
+  };
 
   const makeDrawableProp = () => {
     return {
@@ -93,8 +92,8 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
       eraseOnClick: false,
       defaultSnapToValidMove: true,
       autoShapes: makeChessboardArrows(),
-    }
-  }
+    };
+  };
 
   const drawable = makeDrawableProp();
 
@@ -107,7 +106,9 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
         color='red'
       />
       <Chessground
-        key={String(drawable.visible) /* rerender when `props.drawable.visible` changes */}
+        key={
+          String(drawable.visible) /* rerender when `props.drawable.visible` changes */
+        }
         width={props.size}
         height={props.size}
         turnColor={props.turnColor}
@@ -125,6 +126,6 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
       />
     </div>
   );
-}
+};
 
 export default ChessGuideBoard;

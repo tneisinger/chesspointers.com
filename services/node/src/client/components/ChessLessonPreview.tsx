@@ -11,19 +11,10 @@ interface Props {
 }
 
 const ChessLessonPreview: React.FC<Props> = (props) => {
-
   return (
-    <Grid
-      container
-      direction='column'
-      spacing={2}
-    >
+    <Grid container direction='column' spacing={2}>
       <Grid item>
-        <Typography
-          variant='h5'
-          component='h4'
-          align='center'
-        >
+        <Typography variant='h5' component='h4' align='center'>
           {props.title}
         </Typography>
       </Grid>
@@ -39,6 +30,6 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
       </Grid>
     </Grid>
   );
-}
+};
 
 export default ChessLessonPreview;

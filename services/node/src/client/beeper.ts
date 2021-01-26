@@ -20,11 +20,11 @@ class Beeper {
     this.audioContext = new window.AudioContext();
   }
 
-  resume() {
+  resume(): void {
     this.audioContext.resume();
   }
 
-  play() {
+  play(): void {
     const osc = this.audioContext.createOscillator();
     const gain = this.audioContext.createGain();
 
@@ -38,7 +38,7 @@ class Beeper {
     osc.onended = () => {
       gain.disconnect(this.audioContext.destination);
       osc.disconnect(gain);
-    }
+    };
 
     osc.type = 'sine';
     osc.frequency.value = this.frequency;
@@ -46,12 +46,13 @@ class Beeper {
     osc.stop(currentTime + RAMP_DURATION);
   }
 
-  beep(times = 1) {
+  beep(times = 1): void {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     (function loop(i) {
       self.play();
-      if (++i < times) setTimeout(loop, self.interval, i)
-    })(0)
+      if (++i < times) setTimeout(loop, self.interval, i);
+    })(0);
   }
 }
 

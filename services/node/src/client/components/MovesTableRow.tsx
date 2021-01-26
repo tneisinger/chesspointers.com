@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   tableRow: {
     '&:nth-child(even)': {
       backgroundColor: theme.palette.action.hover,
-    }
+    },
   },
   numberCell: {
     padding: '1rem 0 1rem 1rem',
@@ -23,14 +23,9 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   movePair: MovePair;
   moveNumber: number;
-
 }
 
-const MovesTableRow: React.FC<Props> = ({
-  movePair,
-  moveNumber,
-}) => {
-
+const MovesTableRow: React.FC<Props> = ({ movePair, moveNumber }) => {
   const classes = useStyles();
 
   return (
@@ -38,12 +33,10 @@ const MovesTableRow: React.FC<Props> = ({
       <TableCell className={classes.numberCell}>{moveNumber}.</TableCell>
       <TableCell className={classes.moveCell}>{movePair.whiteMove}</TableCell>
       <TableCell className={classes.moveCell}>
-        { movePair.blackMove != undefined &&
-          movePair.blackMove
-        }
+        {movePair.blackMove != undefined && movePair.blackMove}
       </TableCell>
     </TableRow>
   );
-}
+};
 
 export default MovesTableRow;

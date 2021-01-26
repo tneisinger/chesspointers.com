@@ -3,9 +3,9 @@ import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths, getPreviewPositionPath } from '../../shared/chessTree';
-import { Chess, ChessInstance } from "chess.js";
+import { Chess, ChessInstance } from 'chess.js';
 import { calcChessBoardSize, BoardSizeUnits } from '../utils';
-import useInterval from 'react-useinterval'
+import useInterval from 'react-useinterval';
 
 interface StyleProps {
   allowPointerEvents: boolean;
@@ -13,7 +13,7 @@ interface StyleProps {
 
 const useStyles = makeStyles({
   hoverDiv: {
-    pointerEvents: (props: StyleProps) => props.allowPointerEvents ? 'auto' : 'none',
+    pointerEvents: (props: StyleProps) => (props.allowPointerEvents ? 'auto' : 'none'),
   },
 });
 
@@ -47,24 +47,26 @@ const ChessTreePreview: React.FC<Props> = ({
       return previewPosPath;
     }
     return calcPreviewPosPath();
-  }
+  };
 
   // If the ChessTree does not have a node with 'isPreviewPosition' set, use this function
   // to select a preview position instead. Just pick a spot somewhere in the middle of the
   // tree.
   const calcPreviewPosPath = (): string[] => {
-    const shortestPath = paths.reduce((oldPath, currentPath) => {
-      return currentPath.length < oldPath.length ? currentPath : oldPath;
-    }, { length: Infinity }) as string[];
+    const shortestPath = paths.reduce(
+      (oldPath, currentPath) => {
+        return currentPath.length < oldPath.length ? currentPath : oldPath;
+      },
+      { length: Infinity },
+    ) as string[];
 
     const endIdx = Math.floor(shortestPath.length * 0.75);
     return shortestPath.slice(0, endIdx);
-  }
-
+  };
 
   const [chess] = useState<ChessInstance>(new Chess());
   const [paths] = useState<string[][]>(getUniquePaths(chessTree));
-  const [boardPosition, setBoardPosition] = useState<string>(chess.fen())
+  const [boardPosition, setBoardPosition] = useState<string>(chess.fen());
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [currentPathIdx, setCurrentPathIdx] = useState<number>(0);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
@@ -85,20 +87,20 @@ const ChessTreePreview: React.FC<Props> = ({
       }
     });
     setBoardPosition(chess.fen());
-  }
+  };
 
   const startMoving = () => {
     chess.reset();
     setPlayedMoves([]);
     setBoardPosition(chess.fen());
-  }
+  };
 
   useInterval(() => {
     if ((playMoves === 'onHover' && isHovered) || playMoves === 'always') {
       const path = paths[currentPathIdx];
       if (path == undefined) throw new Error('Path undefined!');
       if (playedMoves.length >= path.length) {
-        setCurrentPathIdx(idx => (idx < paths.length - 1) ? idx + 1 : 0);
+        setCurrentPathIdx((idx) => (idx < paths.length - 1 ? idx + 1 : 0));
         chess.reset();
         setBoardPosition(chess.fen());
         setPlayedMoves([]);
@@ -116,7 +118,7 @@ const ChessTreePreview: React.FC<Props> = ({
   const calcBoardSize = (): number => {
     if (boardSizeUnits === 'px') return boardSize;
     return calcChessBoardSize(boardSize, boardSizeUnits);
-  }
+  };
 
   useEffect(() => {
     if (playMoves === 'onHover') {
@@ -129,8 +131,8 @@ const ChessTreePreview: React.FC<Props> = ({
   return (
     <div
       className={classes.hoverDiv}
-      onMouseEnter={() => (playMoves === 'onHover') ? setIsHovered(true) : void(0)}
-      onMouseLeave={() => (playMoves === 'onHover') ? setIsHovered(false) : void(0)}
+      onMouseEnter={() => (playMoves === 'onHover' ? setIsHovered(true) : void 0)}
+      onMouseLeave={() => (playMoves === 'onHover' ? setIsHovered(false) : void 0)}
     >
       <Chessground
         width={finalBoardSize}
@@ -145,6 +147,6 @@ const ChessTreePreview: React.FC<Props> = ({
       />
     </div>
   );
-}
+};
 
 export default ChessTreePreview;

@@ -40,15 +40,15 @@ const theme = createMuiTheme({
           color: 'white',
           textDecoration: 'none',
           '&:visited': {
-            color: '#d6d8de'
+            color: '#d6d8de',
           },
           '&:hover': {
             textDecoration: 'underline',
-          }
-        }
-      }
-    }
-  }
+          },
+        },
+      },
+    },
+  },
 });
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const App = () => {
+export const App = (): JSX.Element => {
   const classes = useStyles({});
 
   return (
@@ -74,9 +74,7 @@ export const App = () => {
           <StylesProvider injectFirst>
             <SideMenu />
             <main className={classes.main}>
-              <Switch>
-                {makeRoutes()}
-              </Switch>
+              <Switch>{makeRoutes()}</Switch>
             </main>
           </StylesProvider>
         </ThemeProvider>

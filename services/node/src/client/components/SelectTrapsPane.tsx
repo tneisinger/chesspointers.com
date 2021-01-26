@@ -10,15 +10,11 @@ interface Props {
   setSelectedTraps: Dispatch<SetStateAction<ChessTrap[]>>;
   userColor: PieceColor;
   setUserColor: Dispatch<SetStateAction<PieceColor>>;
-
 }
 
 const SelectTrapsPane: React.FC<Props> = (props) => {
   return (
-    <ScrollablePane
-      height={props.height}
-      title='Traps'
-    >
+    <ScrollablePane height={props.height} title='Traps'>
       <ChessTrapsSelector
         allChessTraps={allChessTraps}
         setSelectedTraps={props.setSelectedTraps}
@@ -27,6 +23,6 @@ const SelectTrapsPane: React.FC<Props> = (props) => {
       />
     </ScrollablePane>
   );
-}
+};
 
 export default SelectTrapsPane;

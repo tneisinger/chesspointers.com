@@ -10,16 +10,16 @@ import { partition, sortChessTrapsByName } from '../../shared/utils';
 
 const useStyles = makeStyles({
   cardContent: {
-    padding: '0 3rem 0 3rem'
+    padding: '0 3rem 0 3rem',
   },
   cardTitle: {
     marginTop: '1rem',
     marginBottom: '1rem',
-  }
+  },
 });
 
 interface Props {
-  chessTraps: ChessTrap[]
+  chessTraps: ChessTrap[];
 }
 
 const DisplayAllChessTraps: React.FC<Props> = ({ chessTraps }) => {
@@ -64,6 +64,6 @@ const DisplayAllChessTraps: React.FC<Props> = ({ chessTraps }) => {
       </Grid>
     </Grid>
   );
-}
+};
 
 export default DisplayAllChessTraps;

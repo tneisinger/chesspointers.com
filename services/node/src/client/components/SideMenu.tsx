@@ -8,10 +8,10 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles
+  makeStyles,
 } from '@material-ui/core';
 import { createStyles } from '@material-ui/core/styles';
-import { useAuth0, Auth0ContextInterface } from "@auth0/auth0-react";
+import { useAuth0, Auth0ContextInterface } from '@auth0/auth0-react';
 import { routesWithPaths } from '../routes';
 
 const NavLinkMui = (to: string) =>
@@ -38,9 +38,7 @@ const useStyles = makeStyles(() =>
 export const SideMenu: React.FunctionComponent = () => {
   const classes = useStyles({});
 
-  const {
-    isAuthenticated,
-  }: Auth0ContextInterface = useAuth0();
+  const { isAuthenticated }: Auth0ContextInterface = useAuth0();
 
   return (
     <Drawer
@@ -50,8 +48,8 @@ export const SideMenu: React.FunctionComponent = () => {
         paper: classes.drawerPaper,
       }}
     >
-      <AppBar position="static">
-        <Typography className={classes.siteTitle} variant="h6" component="h1">
+      <AppBar position='static'>
+        <Typography className={classes.siteTitle} variant='h6' component='h1'>
           LearnChessTraps.com
         </Typography>
       </AppBar>

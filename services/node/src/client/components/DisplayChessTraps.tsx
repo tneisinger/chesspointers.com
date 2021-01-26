@@ -7,17 +7,15 @@ import { formatTrapName } from '../../shared/chessTraps/index';
 import { toDashedLowercase } from '../../shared/utils';
 
 interface Props {
-  chessTraps: ChessTrap[]
+  chessTraps: ChessTrap[];
 }
 
 const DisplayChessTraps: React.FC<Props> = ({ chessTraps }) => {
   return (
     <Grid container direction='column' spacing={6}>
-      {chessTraps.map(trap => (
+      {chessTraps.map((trap) => (
         <Grid key={trap.name} item>
-          <NavLink
-            to={`/traps/${toDashedLowercase(trap.name)}`}
-          >
+          <NavLink to={`/traps/${toDashedLowercase(trap.name)}`}>
             <ChessLessonPreview
               chessTree={trap.chessTree}
               orientation={trap.playedByWhite ? 'white' : 'black'}
@@ -28,6 +26,6 @@ const DisplayChessTraps: React.FC<Props> = ({ chessTraps }) => {
       ))}
     </Grid>
   );
-}
+};
 
 export default DisplayChessTraps;

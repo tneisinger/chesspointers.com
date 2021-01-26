@@ -9,20 +9,17 @@ const useStyles = makeStyles(() => ({
   table: {
     tableLayout: 'fixed',
     maxWidth: '16rem',
-  }
+  },
 }));
 
 interface Props {
   moves: string[];
 }
 
-const MovesTable: React.FunctionComponent<Props> = ({
-  moves,
-}) => {
-
+const MovesTable: React.FunctionComponent<Props> = ({ moves }) => {
   const classes = useStyles();
 
-  const makeMovePairs = (): MovePair[] => (
+  const makeMovePairs = (): MovePair[] =>
     moves.reduce((acc: MovePair[], move, idx) => {
       if (idx % 2 === 0) {
         const blackMove = moves[idx + 1];
@@ -30,22 +27,19 @@ const MovesTable: React.FunctionComponent<Props> = ({
         return [...acc, { whiteMove: move, blackMove }];
       }
       return acc;
-    }, [])
-  )
+    }, []);
 
   return (
     <>
-      <Table className={classes.table} aria-label="table of chess moves">
+      <Table className={classes.table} aria-label='table of chess moves'>
         <TableBody>
-        {
-          makeMovePairs().map((pair, idx) => (
+          {makeMovePairs().map((pair, idx) => (
             <MovesTableRow
               key={idx + pair.whiteMove}
               movePair={pair}
               moveNumber={idx + 1}
             />
-          ))
-        }
+          ))}
         </TableBody>
       </Table>
     </>

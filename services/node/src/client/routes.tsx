@@ -20,9 +20,9 @@ interface RouteInfo {
   path?: string;
   isPathExact: boolean;
   isPrivate: boolean;
-  sideMenuIcon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+  sideMenuIcon?: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
   sideMenuLink?: string;
-};
+}
 
 interface RouteInfoWithPath extends RouteInfo {
   path: string;
@@ -75,10 +75,10 @@ export const routes: RouteInfo[] = [
 ];
 
 export function routesWithPaths(): RouteInfoWithPath[] {
-  return routes.filter(route => route.path != undefined) as RouteInfoWithPath[];
+  return routes.filter((route) => route.path != undefined) as RouteInfoWithPath[];
 }
 
-export function makeRoutes() {
+export function makeRoutes(): JSX.Element[] {
   return routes.map((route, idx) => {
     const RouteComponent = route.isPrivate ? PrivateRoute : Route;
     if (route.path) {
@@ -92,11 +92,6 @@ export function makeRoutes() {
       );
     }
 
-    return (
-      <RouteComponent
-        key={"pathlessRoute" + idx}
-        component={route.component}
-      />
-    );
+    return <RouteComponent key={'pathlessRoute' + idx} component={route.component} />;
   });
 }

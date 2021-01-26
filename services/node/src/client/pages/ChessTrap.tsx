@@ -33,14 +33,14 @@ const useStyles = makeStyles(() => ({
 const ChessTrapPage: React.FunctionComponent = () => {
   const boardSizePixels = calcChessBoardSize(70, 'vh');
 
-  const [containerHeight, setContainerHeight] = useState<number>(boardSizePixels)
+  const [containerHeight, setContainerHeight] = useState<number>(boardSizePixels);
   const dispatch = useDispatch();
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
   const classes = useStyles({});
 
-  const gridContainerRef = useCallback(card => {
+  const gridContainerRef = useCallback((card) => {
     if (card != null) {
-      setContainerHeight(card.clientHeight)
+      setContainerHeight(card.clientHeight);
     }
   }, []);
 
@@ -53,26 +53,20 @@ const ChessTrapPage: React.FunctionComponent = () => {
   }, []);
 
   if (chessTrapsSlice.requestStatus === 'ERROR') {
-    return (
-      <p>An error occurred: {chessTrapsSlice.error}</p>
-    );
+    return <p>An error occurred: {chessTrapsSlice.error}</p>;
   }
 
   if (chessTrapsSlice.requestStatus !== 'LOADED') {
-    return (
-      <p>Loading...</p>
-    );
+    return <p>Loading...</p>;
   }
 
   // Find the trap with a name that matches the trapName param
-  const trap = chessTrapsSlice.traps.find(
-    t => toDashedLowercase(t.name) === trapName
-  );
+  const trap = chessTrapsSlice.traps.find((t) => toDashedLowercase(t.name) === trapName);
 
   // If `trap` is undefined, that means that the trapName param didn't match the name of
   // any of the traps in the db. In that case, treat it as not found.
   if (trap === undefined) {
-    return <NotFoundPage />
+    return <NotFoundPage />;
   }
 
   return (

@@ -13,14 +13,14 @@ interface Props {
 }
 
 interface StyleProps extends Props {
-  appBarHeight: number,
+  appBarHeight: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     maxWidth: '16rem',
-    height: (props: StyleProps) => (props.height - props.appBarHeight) + 'px',
+    height: (props: StyleProps) => props.height - props.appBarHeight + 'px',
     marginBottom: (props: StyleProps) => props.appBarHeight + 'px',
   },
   titleText: {
@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '0 0 4px 4px',
     overflowX: 'hidden',
     overflowY: 'overlay' as any,
-    height: '100%'
-  }
+    height: '100%',
+  },
 }));
 
 const ScrollablePane: React.FC<Props> = (props) => {
@@ -45,7 +45,7 @@ const ScrollablePane: React.FC<Props> = (props) => {
     appBarHeight,
   });
 
-  const appBarRef = useCallback(appBar => {
+  const appBarRef = useCallback((appBar) => {
     if (appBar != null) setAppBarHeight(appBar.clientHeight);
   }, []);
 
@@ -57,7 +57,7 @@ const ScrollablePane: React.FC<Props> = (props) => {
     if (div) {
       div.scrollIntoView({ behavior: 'smooth' });
     }
-  }
+  };
 
   // Every time this component rerenders, make sure that we scroll to the bottom
   useEffect(() => {
@@ -66,8 +66,8 @@ const ScrollablePane: React.FC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      <AppBar ref={appBarRef} position="static">
-        <Typography variant="button" className={classes.titleText}>
+      <AppBar ref={appBarRef} position='static'>
+        <Typography variant='button' className={classes.titleText}>
           {props.title}
         </Typography>
       </AppBar>
@@ -77,6 +77,6 @@ const ScrollablePane: React.FC<Props> = (props) => {
       </Box>
     </div>
   );
-}
+};
 
 export default ScrollablePane;
