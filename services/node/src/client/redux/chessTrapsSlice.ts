@@ -5,16 +5,16 @@ import { RequestStatus } from '../types/general';
 import AppThunk from './appThunk';
 
 export interface ChessTrapsState {
-  traps: ChessTrap[]
-  error: string | null
-  requestStatus: RequestStatus
+  traps: ChessTrap[];
+  error: string | null;
+  requestStatus: RequestStatus;
 }
 
 const initialState: ChessTrapsState = {
   traps: [],
   error: null,
-  requestStatus: 'NO_REQUEST_YET'
-}
+  requestStatus: 'NO_REQUEST_YET',
+};
 
 export const chessTrapsSlice = createSlice({
   name: 'chessTraps',
@@ -32,24 +32,24 @@ export const chessTrapsSlice = createSlice({
       state.traps = [];
       state.error = action.payload;
       state.requestStatus = 'ERROR';
-    }
-  }
+    },
+  },
 });
 
 const {
   getChessTrapsStart,
   getChessTrapsSuccess,
-  getChessTrapsFailed
+  getChessTrapsFailed,
 } = chessTrapsSlice.actions;
 
 export function getChessTrapsThunk(): AppThunk {
-  return (async dispatch => {
-    dispatch(getChessTrapsStart())
+  return async (dispatch) => {
+    dispatch(getChessTrapsStart());
     try {
       const traps = await fetchChessTraps();
       dispatch(getChessTrapsSuccess(traps));
     } catch (err) {
       dispatch(getChessTrapsFailed(err.toString()));
     }
-  });
+  };
 }

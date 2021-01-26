@@ -25,9 +25,8 @@ export class ChessTrap {
     array: false,
     nullable: false,
   })
-  chessTree: ChessTree
+  chessTree: ChessTree;
 
   @CreateDateColumn()
   addedOn: Date;
 }
-

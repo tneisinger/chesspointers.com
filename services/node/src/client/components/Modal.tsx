@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   modalContentDiv: {
     padding: '0 40px 20px',
     textAlign: 'center',
-  }
+  },
 }));
 
 interface Props {
@@ -95,16 +95,14 @@ const MyModal: React.FunctionComponent<Props> = ({
         <div className={classes.modalDiv}>
           <div className={classes.modalCloseBtn}>
             <IconButton
-              aria-label="close"
+              aria-label='close'
               style={{ padding: '4px' }}
               onClick={handleClose}
             >
               <CloseIcon />
             </IconButton>
           </div>
-          <div className={classes.modalContentDiv}>
-            {children}
-          </div>
+          <div className={classes.modalContentDiv}>{children}</div>
         </div>
       </Fade>
     </Modal>

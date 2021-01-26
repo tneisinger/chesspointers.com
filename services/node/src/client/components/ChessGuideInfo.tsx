@@ -16,40 +16,31 @@ const ChessGuideInfo: React.FunctionComponent<Props> = ({
   currentGuideMode,
   score,
 }) => {
-
   const makeScoreString = (): string => {
     if (score === 0) {
-      return "tied game";
+      return 'tied game';
     } else if (score > 0) {
       return `white +${score}`;
     } else {
       return `black +${Math.abs(score)}`;
     }
-  }
+  };
 
   return (
-          <Grid
-            container
-            direction='row'
-            justify='space-between'
-          >
-            <Grid item>
-              <Typography variant='caption'>
-                Paths completed: {numPathsCompleted}/{numPaths}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant='caption'>
-                {makeScoreString()}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant='caption'>
-                Current mode: {currentGuideMode}
-              </Typography>
-            </Grid>
-          </Grid>
-        );
-}
+    <Grid container direction='row' justify='space-between'>
+      <Grid item>
+        <Typography variant='caption'>
+          Paths completed: {numPathsCompleted}/{numPaths}
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Typography variant='caption'>{makeScoreString()}</Typography>
+      </Grid>
+      <Grid item>
+        <Typography variant='caption'>Current mode: {currentGuideMode}</Typography>
+      </Grid>
+    </Grid>
+  );
+};
 
 export default ChessGuideInfo;

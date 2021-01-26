@@ -18,9 +18,4 @@ pinker.lastName = 'Pinker';
 pinker.age = 66;
 pinker.email = 'theblank@slate.com';
 
-
-export const defaultUsers: User[] = [
-  joanna,
-  borges,
-  pinker,
-]
+export const defaultUsers: User[] = [joanna, borges, pinker];

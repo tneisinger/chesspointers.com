@@ -11,22 +11,21 @@ import { PieceColor } from '../../shared/chessTypes';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 
 const useStyles = makeStyles((theme) => ({
-  chessTrapsSelectorRoot: {
-  },
+  chessTrapsSelectorRoot: {},
   trapsList: {
     padding: '0 16px',
   },
   colorSwitchWrapper: {
     padding: '8px 0 0 0',
     backgroundColor: theme.palette.action.hover,
-  }
+  },
 }));
 
 interface Props {
   allChessTraps: ChessTrap[];
-  setSelectedTraps: Dispatch<SetStateAction<ChessTrap[]>>
+  setSelectedTraps: Dispatch<SetStateAction<ChessTrap[]>>;
   userColor: PieceColor;
-  setUserColor: Dispatch<SetStateAction<PieceColor>>
+  setUserColor: Dispatch<SetStateAction<PieceColor>>;
 }
 
 const ChessTrapsSelector: React.FunctionComponent<Props> = ({
@@ -42,33 +41,34 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
 
   const handleTrapSelectChange = (
     trap: ChessTrap,
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const [selectedTraps, setSelectedTraps] = trap.playedByWhite ?
-        [ selectedWhiteTraps, setSelectedWhiteTraps] :
-        [ selectedBlackTraps, setSelectedBlackTraps];
+    const [selectedTraps, setSelectedTraps] = trap.playedByWhite
+      ? [selectedWhiteTraps, setSelectedWhiteTraps]
+      : [selectedBlackTraps, setSelectedBlackTraps];
     if (event.target.checked && !isTrapSelected(trap)) {
       setSelectedTraps([...selectedTraps, trap]);
     } else if (!event.target.checked && isTrapSelected(trap)) {
-      setSelectedTraps(selectedTraps.filter(t => t.name !== trap.name));
+      setSelectedTraps(selectedTraps.filter((t) => t.name !== trap.name));
     }
   };
 
   const getChessTrapsOfUserColor = (): ChessTrap[] => {
-    return allChessTraps.filter(t => (
-      (t.playedByWhite && userColor === 'white')
-      || (!t.playedByWhite && userColor === 'black')
-    ));
-  }
+    return allChessTraps.filter(
+      (t) =>
+        (t.playedByWhite && userColor === 'white') ||
+        (!t.playedByWhite && userColor === 'black'),
+    );
+  };
 
   const isTrapSelected = (trap: ChessTrap) => {
     const selectedTraps = trap.playedByWhite ? selectedWhiteTraps : selectedBlackTraps;
-    return selectedTraps.map(t => t.name).includes(trap.name);
-  }
+    return selectedTraps.map((t) => t.name).includes(trap.name);
+  };
 
   const getSelectedTraps = (): ChessTrap[] => {
     return userColor === 'white' ? selectedWhiteTraps : selectedBlackTraps;
-  }
+  };
 
   const toggleUserColor = (): void => {
     if (userColor === 'white') {
@@ -79,7 +79,7 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
       setUserColor('white');
       setSelectedTraps(selectedWhiteTraps);
     }
-  }
+  };
 
   useEffect(() => {
     setSelectedTraps(getSelectedTraps());
@@ -90,57 +90,48 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
       <Grid
         container
         className={classes.colorSwitchWrapper}
-        component="label"
+        component='label'
         direction='row'
-        justify="center"
+        justify='center'
         spacing={1}
       >
         <Grid item>
-          <Typography variant='caption'>
-            White
-          </Typography>
+          <Typography variant='caption'>White</Typography>
         </Grid>
         <Grid item>
           <Switch
-            size="small"
+            size='small'
             checked={userColor === 'black'}
             onChange={toggleUserColor}
-            name="selectColor"
-            color="default"
+            name='selectColor'
+            color='default'
             inputProps={{ 'aria-label': 'Select piece color' }}
           />
         </Grid>
         <Grid item>
-          <Typography variant='caption'>
-            Black
-          </Typography>
+          <Typography variant='caption'>Black</Typography>
         </Grid>
       </Grid>
       <List>
-        { getChessTrapsOfUserColor().map(trap =>
-            <ListItem dense key={trap.name}>
-              <FormControlLabel
-                label={
-                  <Typography variant='caption'>
-                    {trap.name}
-                  </Typography>
-                }
-                control={
-                  <Checkbox
-                    name={trap.name}
-                    size='small'
-                    checked={isTrapSelected(trap)}
-                    onChange={(e) => handleTrapSelectChange(trap, e)}
-                    color="default"
-                  />
-                }
-              />
-            </ListItem>
-          )
-        }
+        {getChessTrapsOfUserColor().map((trap) => (
+          <ListItem dense key={trap.name}>
+            <FormControlLabel
+              label={<Typography variant='caption'>{trap.name}</Typography>}
+              control={
+                <Checkbox
+                  name={trap.name}
+                  size='small'
+                  checked={isTrapSelected(trap)}
+                  onChange={(e) => handleTrapSelectChange(trap, e)}
+                  color='default'
+                />
+              }
+            />
+          </ListItem>
+        ))}
       </List>
     </div>
   );
-}
+};
 
 export default ChessTrapsSelector;

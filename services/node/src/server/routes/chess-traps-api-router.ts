@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { Repository } from 'typeorm';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 
-export function chessTrapApiRouter(chessTrapRepository: Repository<ChessTrap>) {
+export function chessTrapApiRouter(chessTrapRepository: Repository<ChessTrap>): Router {
   const router = Router();
   router.use(bodyParser.json());
 

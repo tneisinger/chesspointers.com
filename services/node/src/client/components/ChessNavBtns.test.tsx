@@ -9,7 +9,7 @@ const btnLabelStepForward = 'step forward';
 const btnLabelStepBack = 'step back';
 
 // Creates the string used to select a button using its aria-label
-const withLabel = (ariaLabel: string): string => `[aria-label="${ariaLabel}"]`
+const withLabel = (ariaLabel: string): string => `[aria-label="${ariaLabel}"]`;
 
 describe('ChessNavBtns with backBtns enabled and forwardBtns disabled', () => {
   const wrapper = shallow(
@@ -20,7 +20,7 @@ describe('ChessNavBtns with backBtns enabled and forwardBtns disabled', () => {
       jumpToEnd={() => {}}
       stepForward={() => {}}
       stepBack={() => {}}
-    />
+    />,
   );
 
   it('should have a disabled jumpToStart button', () => {
@@ -38,7 +38,6 @@ describe('ChessNavBtns with backBtns enabled and forwardBtns disabled', () => {
   it('should have an enabled jumpToEnd button', () => {
     expect(wrapper.find(withLabel(btnLabelToEnd)).prop('disabled')).toBe(false);
   });
-
 });
 
 describe('ChessNavBtns with backBtns disabled and forwardBtns enabled', () => {
@@ -50,7 +49,7 @@ describe('ChessNavBtns with backBtns disabled and forwardBtns enabled', () => {
       jumpToEnd={() => {}}
       stepForward={() => {}}
       stepBack={() => {}}
-    />
+    />,
   );
 
   it('should have an enabled jumpToStart button', () => {
@@ -85,7 +84,7 @@ describe('ChessNavBtns with backBtns and forwardBtns disabled', () => {
       stepBack={mockStepBackFn}
       stepForward={mockStepForwardFn}
       jumpToEnd={mockJumpToEndFn}
-    />
+    />,
   );
 
   // Get each of the buttons

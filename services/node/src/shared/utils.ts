@@ -7,8 +7,7 @@ export function getUserFullName(user: User): string {
 }
 
 export function arraysEqual<T>(a: T[], b: T[]): boolean {
-  return a.length === b.length &&
-    a.every((val, idx) => val === b[idx]);
+  return a.length === b.length && a.every((val, idx) => val === b[idx]);
 }
 
 export function getArrayDiff<T>(setA: T[], setB: T[]): T[] {
@@ -16,12 +15,15 @@ export function getArrayDiff<T>(setA: T[], setB: T[]): T[] {
 }
 
 export function partition<T>(array: T[], isValid: (t: T) => boolean): T[][] {
-  return array.reduce(([pass, fail], elem) => {
-    return isValid(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]];
-  }, [[], []]);
+  return array.reduce(
+    ([pass, fail], elem) => {
+      return isValid(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]];
+    },
+    [[], []],
+  );
 }
 
-export function randomElem<T>(array: T[]): (T | undefined) {
+export function randomElem<T>(array: T[]): T | undefined {
   return array[Math.floor(Math.random() * array.length)];
 }
 
@@ -30,8 +32,10 @@ export function toDashedLowercase(str: string): string {
 }
 
 export function areChessPathsEquivalent(path1: string[], path2: string[]): boolean {
-  return path1.length == path2.length &&
-    path1.every((move, idx) => areChessMovesEquivalent(move, path2[idx]));
+  return (
+    path1.length == path2.length &&
+    path1.every((move, idx) => areChessMovesEquivalent(move, path2[idx]))
+  );
 }
 
 // In chess move notation, the '+' symbol means check and the '#' symbol means checkmate.
@@ -54,8 +58,8 @@ function stripCheckSymbol(move: string): string {
   return move;
 }
 
-// Calculate the score of a chess game from a fen string.  If white is ahead by n points,
-// return n.  If black is ahead by n points, return -n.  If the score is tied, return 0.
+// Calculate the score of a chess game from a fen string. If white is ahead by n points,
+// return n. If black is ahead by n points, return -n. If the score is tied, return 0.
 export function getScoreFromFen(fen: string): number {
   const pieces = fen.substr(0, fen.indexOf(' '));
   const numWhiteQueens = (pieces.match(/Q/g) || []).length;
@@ -86,8 +90,8 @@ export function getScoreFromFen(fen: string): number {
 }
 
 export function sameMoves(move1: ShortMove, move2: ShortMove): boolean {
-  return move1.from === move2.from && move1.to === move2.to
-};
+  return move1.from === move2.from && move1.to === move2.to;
+}
 
 function compareChessTrapsByName(trap1: ChessTrap, trap2: ChessTrap): number {
   if (trap1.name < trap2.name) return -1;

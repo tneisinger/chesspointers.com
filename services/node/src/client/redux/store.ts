@@ -3,8 +3,8 @@ import { chessTrapsSlice } from './chessTrapsSlice';
 
 const store = configureStore({
   reducer: {
-    chessTrapsSlice: chessTrapsSlice.reducer
-  }
+    chessTrapsSlice: chessTrapsSlice.reducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

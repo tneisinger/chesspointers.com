@@ -21,7 +21,7 @@ interface Props {
   onStepForwardBtnClick: () => void;
   onResetBtnClick: () => void;
   onModeSwitchBtnClick: () => void;
-  currentMode: GuideMode,
+  currentMode: GuideMode;
 }
 
 const ChessGuideControls: React.FC<Props> = ({
@@ -38,42 +38,29 @@ const ChessGuideControls: React.FC<Props> = ({
   const classes = useStyles({});
 
   return (
-      <Grid
-        className={classes.root}
-        container
-        direction='row'
-        justify='space-evenly'
-      >
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={onResetBtnClick}
-          >
-            Reset Board
-          </Button>
-        </Grid>
-        <Grid item>
-          <ChessNavBtns
-            areBackBtnsEnabled={areBackBtnsEnabled}
-            areForwardBtnsEnabled={areForwardBtnsEnabled}
-            jumpToStart={onJumpBackBtnClick}
-            jumpToEnd={onJumpForwardBtnClick}
-            stepForward={onStepForwardBtnClick}
-            stepBack={onStepBackBtnClick}
-          />
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={onModeSwitchBtnClick}
-          >
-            Switch to {currentMode === 'learn' ? 'practice' : 'learn'} mode
-          </Button>
-        </Grid>
+    <Grid className={classes.root} container direction='row' justify='space-evenly'>
+      <Grid item>
+        <Button variant='contained' color='primary' onClick={onResetBtnClick}>
+          Reset Board
+        </Button>
       </Grid>
+      <Grid item>
+        <ChessNavBtns
+          areBackBtnsEnabled={areBackBtnsEnabled}
+          areForwardBtnsEnabled={areForwardBtnsEnabled}
+          jumpToStart={onJumpBackBtnClick}
+          jumpToEnd={onJumpForwardBtnClick}
+          stepForward={onStepForwardBtnClick}
+          stepBack={onStepBackBtnClick}
+        />
+      </Grid>
+      <Grid item>
+        <Button variant='contained' color='primary' onClick={onModeSwitchBtnClick}>
+          Switch to {currentMode === 'learn' ? 'practice' : 'learn'} mode
+        </Button>
+      </Grid>
+    </Grid>
   );
-}
+};
 
 export default ChessGuideControls;

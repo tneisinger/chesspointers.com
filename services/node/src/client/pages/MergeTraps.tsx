@@ -32,7 +32,7 @@ const MergeTrapsPage: React.FunctionComponent = () => {
   const [userColor, setUserColor] = useState<PieceColor>('white');
   const [chessGuideWrapperHeight, setChessGuideWrapperHeight] = useState(0);
 
-  const chessGuideWrapperRef = useCallback(chessGuideWrapper => {
+  const chessGuideWrapperRef = useCallback((chessGuideWrapper) => {
     if (chessGuideWrapper != null) {
       const style = getComputedStyle(chessGuideWrapper, null);
       let height = chessGuideWrapper.clientHeight;
@@ -50,24 +50,20 @@ const MergeTrapsPage: React.FunctionComponent = () => {
   }, []);
 
   if (chessTrapsSlice.requestStatus === 'ERROR') {
-    return (
-      <p>An error occurred: {chessTrapsSlice.error}</p>
-    );
+    return <p>An error occurred: {chessTrapsSlice.error}</p>;
   }
 
   if (chessTrapsSlice.requestStatus !== 'LOADED') {
-    return (
-      <p>Loading...</p>
-    );
+    return <p>Loading...</p>;
   }
 
   const mergeSelectedTraps = (): ChessTree => {
-    return mergeTrees(...selectedTraps.map(t => t.chessTree));
-  }
+    return mergeTrees(...selectedTraps.map((t) => t.chessTree));
+  };
 
   const boardSize = calcChessBoardSize(75, 'vh');
 
-  const heightOfRightSidePanes = (chessGuideWrapperHeight / 2) - 8;
+  const heightOfRightSidePanes = chessGuideWrapperHeight / 2 - 8;
 
   return (
     <Grid item xs={12}>

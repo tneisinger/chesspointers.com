@@ -11,9 +11,7 @@ const NotFoundPage: React.FunctionComponent = () => {
       <Card>
         <CardHeader title='Page Not Found' />
         <CardContent>
-          <Typography>
-            There's nothing here :(
-          </Typography>
+          <Typography>There is nothing here :(</Typography>
         </CardContent>
       </Card>
     </Grid>

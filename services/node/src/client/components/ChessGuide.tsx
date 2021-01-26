@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import React, { useState, useEffect } from 'react';
-import { Chess, ChessInstance, Square } from "chess.js";
+import { Chess, ChessInstance, Square } from 'chess.js';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import {
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '13px',
     backgroundColor: theme.palette.background.default,
     borderRadius: '5px',
-  }
+  },
 }));
 
 interface Props {
@@ -49,14 +49,14 @@ interface Props {
   alwaysAutoplay?: boolean;
   userPlaysAs?: PieceColor;
   guideMode?: GuideMode;
-  renderExtraControlsForTesting?: boolean
+  renderExtraControlsForTesting?: boolean;
 }
 
 type PathStats = {
-  mode: GuideMode,
-  path: string[],
-  timesCompleted: number,
-}
+  mode: GuideMode;
+  path: string[];
+  timesCompleted: number;
+};
 
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
@@ -84,12 +84,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const isUsersTurn = (): boolean => {
     return game.turn() === userPlaysAs.charAt(0);
-  }
+  };
 
   const clearTimeouts = () => {
     window.clearTimeout(checkMoveTimeout);
     setCheckMoveTimeout(undefined);
-  }
+  };
 
   // Initialize all possible 'pathsCompleted' values with their 'timesCompleted' values
   // set to zero.
@@ -106,8 +106,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         timesCompleted: 0,
       };
       return [...acc, practicePath, learnPath];
-    }, [])
-  }
+    }, []);
+  };
 
   // Use this function to set the fen variable, which will update the board position.
   const updateBoard = () => setFen(game.fen());
@@ -119,12 +119,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       [...playedMoves, move].forEach((m) => {
         if (!game.move(m)) {
           throw new Error(`invalid move: ${m}`);
-        };
+        }
       });
       games.push(game);
     });
     return games;
-  }
+  };
 
   useEffect(() => {
     reset();
@@ -145,23 +145,23 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       }
     });
     return result;
-  }
+  };
 
   const relevantPaths = (): string[][] => {
     return paths.filter((path) => {
       return playedMoves.every((move, idx) => areChessMovesEquivalent(move, path[idx]));
     });
-  }
+  };
 
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
 
   const handleMove = (from: Square, to: Square) => {
-    const moves = game.moves({ verbose: true })
+    const moves = game.moves({ verbose: true });
     for (let i = 0, len = moves.length; i < len; i++) { /* eslint-disable-line */
-      if (moves[i].flags.indexOf("p") !== -1 && moves[i].from === from) {
+      if (moves[i].flags.indexOf('p') !== -1 && moves[i].from === from) {
         // setPendingMove([from, to])
         // setSelectVisible(true)
-        return
+        return;
       }
     }
     if (game.move({ from, to })) {
@@ -176,15 +176,15 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       setCheckMoveTimeout(window.setTimeout(nextAction, CHECK_MOVE_DELAY));
       // setLastMove([from, to])
     }
-  }
+  };
 
   const handleGoodMove = () => {
     setPlayedMoves([...playedMoves, getLastMove()]);
-  }
+  };
 
   const wasLastMoveBad = () => {
     return !getNextMoves().includes(getLastMove());
-  }
+  };
 
   const rectifyBadMove = () => {
     if (beeper == undefined) {
@@ -195,38 +195,42 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     triggerWrongMoveBoardFlash();
     undoMove();
     scheduleShowMoves({ delay: 500 });
-  }
+  };
 
   const undoMove = () => {
     game.undo();
     setFen(game.fen());
-  }
+  };
 
   const getLastMove = () => {
     const history = game.history();
     return history[history.length - 1];
-  }
+  };
 
   const calcMovable = () => {
     const dests = new Map();
-    game.SQUARES.forEach(s => {
-      const ms = game.moves({ square: s, verbose: true })
-      if (ms.length) dests.set(s,ms.map(m => m.to));
-    })
+    game.SQUARES.forEach((s) => {
+      const ms = game.moves({ square: s, verbose: true });
+      if (ms.length)
+        dests.set(
+          s,
+          ms.map((m) => m.to),
+        );
+    });
     return {
       free: false,
       dests,
       showDests: mode === 'practice',
       color: userPlaysAs,
-      events: { after: afterMove }
-    }
-  }
+      events: { after: afterMove },
+    };
+  };
 
   const defineBeeper = (): Beeper => {
-    const newBeeper = new Beeper({ frequency: BEEPER_FREQUENCY })
+    const newBeeper = new Beeper({ frequency: BEEPER_FREQUENCY });
     setBeeper(newBeeper);
     return newBeeper;
-  }
+  };
 
   const afterMove = (): void => {
     if (beeper == undefined) {
@@ -234,11 +238,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     } else {
       beeper.resume();
     }
-  }
+  };
 
   const turnColor = () => {
     return game.turn() === 'w' ? 'white' : 'black';
-  }
+  };
 
   const doNextMove = (move: string) => {
     if (game.move(move)) {
@@ -258,10 +262,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const moveBack = () => {
     // When the user clicks the back button, turn off doesComputerAutoplay
     setDoesComputerAutoplay(false);
-    setPlayedMoves(playedMoves.slice(0,-1));
+    setPlayedMoves(playedMoves.slice(0, -1));
     game.undo();
     updateBoard();
-  }
+  };
 
   const moveForward = () => {
     // Unless the `alwaysAutoplay` prop is set to true, whenever the user clicks
@@ -271,12 +275,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     if (nextMoves.length === 1) {
       doNextMove(nextMoves[0]);
     }
-  }
+  };
 
   const jumpToEndOrNextTreeFork = () => {
     const movesToPlay: string[] = [];
-    const forwardPaths: string[][] = relevantPaths().map(
-      (path) => (path.slice(playedMoves.length))
+    const forwardPaths: string[][] = relevantPaths().map((path) =>
+      path.slice(playedMoves.length),
     );
     const shortestPathLen = Math.min(...forwardPaths.map((p) => p.length));
 
@@ -301,16 +305,16 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       updateBoard();
       scheduleShowMoves();
     }
-  }
+  };
 
-  const scheduleShowMoves = (options: { forceShow?: boolean, delay?: number } = {}) => {
+  const scheduleShowMoves = (options: { forceShow?: boolean; delay?: number } = {}) => {
     const delay = options.delay == undefined ? SHOW_NEXT_MOVE_DELAY : options.delay;
     if (mode === 'learn' || options.forceShow) {
       setTimeout(() => {
         setIsShowingMoves(true);
       }, delay);
     }
-  }
+  };
 
   const doComputerMove = () => {
     const moves = getNextMoves();
@@ -324,35 +328,36 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       // the fewest number of the times.
       const move = randomElem(getMovesThatLeadToLeastCompletedPaths());
       if (move == undefined) {
-        throw new Error("No moves returned by getMovesThatLeadToLeastCompletedPaths()");
+        throw new Error('No moves returned by getMovesThatLeadToLeastCompletedPaths()');
       }
       setTimeout(() => {
         doNextMove(move);
       }, COMPUTER_THINK_TIME);
     }
-  }
+  };
 
   const isAtPathEnd = (): boolean =>
-    paths.some(path => areChessPathsEquivalent(path, playedMoves));
+    paths.some((path) => areChessPathsEquivalent(path, playedMoves));
 
   const getMovesThatLeadToLeastCompletedPaths = (): string[] => {
     // Get the paths that are reachable from the current position forward.
-    const relevantPaths = pathsCompleted.filter(p => {
+    const relevantPaths = pathsCompleted.filter((p) => {
       return (
-        p.mode == mode
-        && playedMoves.every((move, idx) => areChessMovesEquivalent(move, p.path[idx]))
+        p.mode == mode &&
+        playedMoves.every((move, idx) => areChessMovesEquivalent(move, p.path[idx]))
       );
     });
-    const lowestTimesCompleted = Math.min(...relevantPaths.map(p => p.timesCompleted));
-    const leastCompletedPaths =
-      relevantPaths.filter(p => p.timesCompleted === lowestTimesCompleted);
-    return leastCompletedPaths.map(p => p.path[playedMoves.length]);
-  }
+    const lowestTimesCompleted = Math.min(...relevantPaths.map((p) => p.timesCompleted));
+    const leastCompletedPaths = relevantPaths.filter(
+      (p) => p.timesCompleted === lowestTimesCompleted,
+    );
+    return leastCompletedPaths.map((p) => p.path[playedMoves.length]);
+  };
 
   const recordPathCompletion = () => {
     const [matchingPaths, nonMatchingPaths] = partition(
       pathsCompleted,
-      (p) => areChessPathsEquivalent(p.path, playedMoves) && p.mode === mode
+      (p) => areChessPathsEquivalent(p.path, playedMoves) && p.mode === mode,
     );
     if (matchingPaths.length !== 1) {
       throw new Error(`Unexpected number of matchingPaths: ${matchingPaths.length}`);
@@ -360,10 +365,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       const updatedPathStats: PathStats = {
         ...matchingPaths[0],
         timesCompleted: matchingPaths[0].timesCompleted + 1,
-      }
+      };
       setPathsCompleted([...nonMatchingPaths, updatedPathStats]);
     }
-  }
+  };
 
   // Whenever `playedMoves` changes
   useEffect(() => {
@@ -380,7 +385,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     // In cleanup, clear timeouts
     return () => {
       clearTimeouts();
-    }
+    };
   }, [playedMoves]);
 
   const getNumPathsCompleted = (): number => {
@@ -391,18 +396,18 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         return acc;
       }
     }, 0);
-  }
+  };
 
   const toggleGuideMode = () => {
     mode === 'learn' ? setMode('practice') : setMode('learn');
     reset();
-  }
+  };
 
   const triggerWrongMoveBoardFlash = () => {
-    setWrongMoveFlashIdx(idx => idx + 1);
-  }
+    setWrongMoveFlashIdx((idx) => idx + 1);
+  };
 
-  const childrenWithPlayedMoves = React.Children.map(props.children, child => {
+  const childrenWithPlayedMoves = React.Children.map(props.children, (child) => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, { playedMoves });
     }
@@ -411,7 +416,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const debug = () => {
     console.log('You pressed the debug button');
-  }
+  };
 
   return (
     <Grid container direction='row' spacing={2}>
@@ -458,19 +463,15 @@ const ChessGuide: React.FunctionComponent<Props> = ({
               <Grid key={`ChessGuide child ${idx}`} item>
                 {child}
               </Grid>
-          ))}
+            ))}
         </Grid>
       </Grid>
 
-      {SHOW_DEBUG_BTN &&
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={debug}
-        >
+      {SHOW_DEBUG_BTN && (
+        <Button variant='contained' color='primary' onClick={debug}>
           Debug
         </Button>
-      }
+      )}
 
       <Modal
         isModalOpenOrOpening={isModalOpen}
@@ -478,10 +479,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         delayOpenFor={500}
       >
         <h3>Path Complete!</h3>
-        <p>{getNumPathsCompleted()} of {paths.length} paths complete</p>
+        <p>
+          {getNumPathsCompleted()} of {paths.length} paths complete
+        </p>
         <Button
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           onClick={() => {
             reset();
             setIsModalOpen(false);
@@ -491,15 +494,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         </Button>
       </Modal>
 
-      {renderExtraControlsForTesting &&
-        <ChessMoveSelector
-          nextMoveGames={getNextMoveGames()}
-          handleSubmit={handleMove}
-        />
-      }
-
+      {renderExtraControlsForTesting && (
+        <ChessMoveSelector nextMoveGames={getNextMoveGames()} handleSubmit={handleMove} />
+      )}
     </Grid>
   );
-}
+};
 
 export default ChessGuide;

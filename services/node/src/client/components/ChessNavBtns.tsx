@@ -20,7 +20,7 @@ interface Props {
   jumpToEnd: () => void;
   stepForward: () => void;
   stepBack: () => void;
-};
+}
 
 const ChessNavBtns: React.FunctionComponent<Props> = ({
   areBackBtnsEnabled,
@@ -36,7 +36,7 @@ const ChessNavBtns: React.FunctionComponent<Props> = ({
     <Grid item>
       <IconButton
         className={classes.arrowButton}
-        aria-label="jump to start"
+        aria-label='jump to start'
         onClick={jumpToStart}
         disabled={areBackBtnsEnabled}
       >
@@ -44,15 +44,15 @@ const ChessNavBtns: React.FunctionComponent<Props> = ({
       </IconButton>
       <IconButton
         className={classes.arrowButton}
-        aria-label="step back"
+        aria-label='step back'
         onClick={stepBack}
         disabled={areBackBtnsEnabled}
       >
-        <ArrowLeftIcon fontSize='large'/>
+        <ArrowLeftIcon fontSize='large' />
       </IconButton>
       <IconButton
         className={classes.arrowButton}
-        aria-label="step forward"
+        aria-label='step forward'
         onClick={stepForward}
         disabled={areForwardBtnsEnabled}
       >
@@ -60,7 +60,7 @@ const ChessNavBtns: React.FunctionComponent<Props> = ({
       </IconButton>
       <IconButton
         className={classes.arrowButton}
-        aria-label="jump to end"
+        aria-label='jump to end'
         onClick={jumpToEnd}
         disabled={areForwardBtnsEnabled}
       >
@@ -68,6 +68,6 @@ const ChessNavBtns: React.FunctionComponent<Props> = ({
       </IconButton>
     </Grid>
   );
-}
+};
 
 export default ChessNavBtns;

@@ -3,12 +3,13 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import React, { lazy, Suspense } from 'react';
 
-const LazilyLoadedContent = lazy(() =>
-  // webpackChunkName: "LazilyLoadedContent"
-  import('../components/LazilyLoadedContent')
+const LazilyLoadedContent = lazy(
+  () =>
+    // webpackChunkName: "LazilyLoadedContent"
+    import('../components/LazilyLoadedContent'),
 );
 
-const Spinner = () => (<div>LOADING...</div>);
+const Spinner = () => <div>LOADING...</div>;
 
 const LazyLoadingPage: React.FunctionComponent = () => (
   <Card>

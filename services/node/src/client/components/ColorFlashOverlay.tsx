@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   flash: {
     animation: `$blink 500ms`,
   },
-  "@keyframes blink": {
+  '@keyframes blink': {
     '0%': {
       opacity: 0,
     },
@@ -27,13 +27,13 @@ const useStyles = makeStyles({
       opacity: MAX_OPACITY,
     },
     '50%': {
-      opacity: 0
+      opacity: 0,
     },
     '75%': {
       opacity: MAX_OPACITY,
     },
     '100%': {
-      opacity: 0
+      opacity: 0,
     },
   },
 });
@@ -54,10 +54,10 @@ const ColorFlashOverlay: React.FC<Props> = (props) => {
       return `${classes.colorFlashOverlayRoot} ${classes.flash}`;
     }
     return classes.colorFlashOverlayRoot;
-  }
+  };
 
   // Use the `key` prop to make this div rerender whenever the `flashIdx` changes
   return <div key={props.flashIdx} className={makeClasses()} />;
-}
+};
 
 export default ColorFlashOverlay;

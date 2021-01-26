@@ -1,7 +1,7 @@
 import { AppBar, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import { createStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
-import { LogInOutWidget } from "./LogInOutWidget"
+import { LogInOutWidget } from './LogInOutWidget';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
-    }
+    },
   }),
 );
 
