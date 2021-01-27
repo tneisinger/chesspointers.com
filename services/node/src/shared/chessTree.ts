@@ -228,3 +228,7 @@ export function isPathInTree(path: string[], tree: ChessTree): boolean {
   const paths = getUniquePaths(tree);
   return paths.some((treePath) => arraysEqual(treePath.slice(0, path.length), path));
 }
+
+export function filterTrapsWithPath(path: string[], traps: ChessTrap[]): ChessTrap[] {
+  return traps.filter((trap) => isPathInTree(path, trap.chessTree));
+}

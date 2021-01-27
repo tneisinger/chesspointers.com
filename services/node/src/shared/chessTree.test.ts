@@ -6,6 +6,7 @@ import {
   doesTreeReachPosition,
   filterTrapsWithOpenings,
   isPathInTree,
+  filterTrapsWithPath,
 } from './chessTree';
 import { ChessOpening } from './chessTypes';
 import {
@@ -456,5 +457,30 @@ describe('isPathInTree()', () => {
 
   it('returns true if the path is in the tree', () => {
     expect(isPathInTree(['e4', 'e5'], legalTrap.chessTree)).toBe(true);
+  });
+});
+
+describe('filterTrapsWithPath()', () => {
+  const traps = [
+    legalTrap,
+    englundGambitTrap,
+    elephantTrap,
+    laskerTrap,
+    magnusSmithTrap,
+  ];
+
+  it('returns no traps if path does not match any of the traps', () => {
+    expect(filterTrapsWithPath(['a4', 'a5'], traps)).toEqual([]);
+  });
+
+  it('returns correct trap if path matches one of the traps', () => {
+    expect(filterTrapsWithPath(['d4', 'e5'], traps))
+      .toStrictEqual([englundGambitTrap]);
+  });
+
+  it('returns multiple correct traps if path matches multiple of the traps', () => {
+    const filtered = filterTrapsWithPath(['d4', 'd5'], traps)
+    expect(filtered.map((t) => t.name).sort())
+      .toEqual([laskerTrap, elephantTrap].map((t) => t.name).sort());
   });
 });
