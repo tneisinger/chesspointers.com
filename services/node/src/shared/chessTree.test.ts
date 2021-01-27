@@ -5,6 +5,7 @@ import {
   mergeTrees,
   doesTreeReachPosition,
   filterTrapsWithOpenings,
+  isPathInTree,
 } from './chessTree';
 import { ChessOpening } from './chessTypes';
 import {
@@ -445,5 +446,15 @@ describe('filterTreesWithOpenings()', () => {
     expect(filtered.map((t) => t.name).sort()).toEqual(
       [magnusSmithTrap].map((t) => t.name).sort()
     );
+  });
+});
+
+describe('isPathInTree()', () => {
+  it('returns false if the path is not in tree', () => {
+    expect(isPathInTree(['e4', 'e5'], magnusSmithTrap.chessTree)).toBe(false);
+  });
+
+  it('returns true if the path is in the tree', () => {
+    expect(isPathInTree(['e4', 'e5'], legalTrap.chessTree)).toBe(true);
   });
 });
