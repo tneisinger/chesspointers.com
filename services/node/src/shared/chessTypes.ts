@@ -35,4 +35,10 @@ export type MovePair = {
   blackMove?: string;
 };
 
-export type CheckMateStatus = 'not in check' | 'check' | 'checkmate';
+export enum ChessOpening {
+  CaroKannDefense = 'Caro-Kann Defense',
+  EnglundGambit = 'Englund Gambit',
+  ItalianGame = 'Italian Game',
+  QueensGambit = "Queen's Gambit",
+  SicilianDefense = 'Sicilian Defense',
+}

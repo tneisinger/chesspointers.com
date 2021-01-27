@@ -1,6 +1,7 @@
 import { User } from './entity/user';
 import { ShortMove } from 'chess.js';
 import { ChessTrap } from './entity/chessTrap';
+import { ChessOpening } from './chessTypes'
 
 export function getUserFullName(user: User): string {
   return `${user.firstName} ${user.lastName}`;
@@ -101,4 +102,27 @@ function compareChessTrapsByName(trap1: ChessTrap, trap2: ChessTrap): number {
 
 export function sortChessTrapsByName(traps: ChessTrap[]): ChessTrap[] {
   return traps.sort(compareChessTrapsByName);
+}
+
+// TODO: Some openings can be represented with a list of moves, but some
+// others are better described with a board position, because there are multiple
+// ways to reach that particular board position. For example, the Italian game
+// can be reached with [e4, e5, Bc4, Nc6, Nf3] or with [e4, e5, Nf3, Nc6, Nf3].
+// Maybe representing them wth board positions is better?
+export function getChessOpeningMoves(opening: ChessOpening): string[] {
+  switch (opening) {
+    case ChessOpening.CaroKannDefense:
+      return ['e4', 'c6'];
+    case ChessOpening.EnglundGambit:
+      return ['d4', 'e5'];
+    case ChessOpening.ItalianGame:
+      return ['e4', 'e5', 'Bc4', 'Nc6', 'Nf3']; // TODO: or [e4, e5, Nf3, Nc6, Nf3]
+    case ChessOpening.QueensGambit:
+      return ['d4', 'd5', 'c4'];
+    case ChessOpening.SicilianDefense:
+      return ['e4', 'c5'];
+    default:
+      const _exhaustiveMatch: never = opening;
+      throw new Error('Non-exhaustive match for ChessOpening');
+  }
 }
