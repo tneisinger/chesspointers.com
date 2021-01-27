@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ChessTree } from '../chessTypes';
 import { ChessTrap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
@@ -29,8 +30,7 @@ const branch_Bxf7: ChessTree = makeChessTree(
     'Bxf7+', 'Kd8',
     'Ng4',   'Nh6',
     'h3',    'Nxf7',
-  ],
-  []
+  ], []
 );
 
 const branch_Nxf7: ChessTree = makeChessTree(
@@ -39,6 +39,13 @@ const branch_Nxf7: ChessTree = makeChessTree(
     branch_Rf1,
     branch_Nxh8,
   ]
+);
+
+const branch_Ng4 = makeChessTree(
+  [
+    'Ng4',  'd5',
+    'Bxd5', 'Bxg4',
+  ], []
 );
 
 const Qg5 = { move: 'Qg5', isPreviewPosition: true };
@@ -51,7 +58,8 @@ const chessTree = makeChessTree(
   ],
   [ branch_g3,
     branch_Nxf7,
-    branch_Bxf7
+    branch_Bxf7,
+    branch_Ng4,
   ]
 )
 
