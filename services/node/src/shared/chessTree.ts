@@ -186,12 +186,13 @@ export function getPreviewPositionPath(tree: ChessTree): string[] | null {
 }
 
 export function doesTreeReachPosition(fen: string, tree: ChessTree): boolean {
-  function getPosition(someFen: string) {
-    return someFen.split(' ')[0];
+  // Drop the halfmove clock and the fullmove number from a fen string.
+  function dropClockAndMoveNum(someFen: string) {
+    return someFen.slice(0, -3);
   }
 
-  // We only care about the position of the pieces, so drop everything else.
-  const position = getPosition(fen);
+  // We don't care about the halfmove clock or the fullmove number, so drop those
+  fen = dropClockAndMoveNum(fen);
 
   const chess = new Chess();
   const paths = getUniquePaths(tree);
@@ -201,7 +202,7 @@ export function doesTreeReachPosition(fen: string, tree: ChessTree): boolean {
     for (let j = 0; j < path.length; j++) {
       const move = path[j];
       if (!chess.move(move)) throw new Error(`Invalid move: ${move}`);
-      if (getPosition(chess.fen()) === position) return true;
+      if (dropClockAndMoveNum(chess.fen()) === fen) return true;
     }
   }
   return false;
