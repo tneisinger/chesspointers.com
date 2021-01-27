@@ -1,6 +1,7 @@
 import { Chess } from 'chess.js';
-import { ChessTree } from './chessTypes';
-import { areChessMovesEquivalent, areChessPathsEquivalent } from './utils';
+import { ChessTree, ChessOpening } from './chessTypes';
+import { ChessTrap } from './entity/chessTrap';
+import { areChessMovesEquivalent, areChessPathsEquivalent, getFen } from './utils';
 
 type MoveObject = { move: string; isPreviewPosition: boolean };
 
@@ -206,4 +207,14 @@ export function doesTreeReachPosition(fen: string, tree: ChessTree): boolean {
     }
   }
   return false;
+}
+
+export function filterTrapsWithOpenings(
+  openings: ChessOpening[],
+  traps: ChessTrap[],
+): ChessTrap[] {
+  const fens = openings.map((opening) => getFen(opening));
+  return traps.filter((trap) =>
+    fens.some((fen) => doesTreeReachPosition(fen, trap.chessTree)),
+  );
 }
