@@ -1,10 +1,14 @@
 import { User } from './entity/user';
 import { ShortMove } from 'chess.js';
 import { ChessTrap } from './entity/chessTrap';
-import { ChessOpening } from './chessTypes'
+import { ChessOpening } from './chessTypes';
 
 export function getUserFullName(user: User): string {
   return `${user.firstName} ${user.lastName}`;
+}
+
+export function assertUnreachable(_x: never): never {
+  throw new Error('This error should never be thrown');
 }
 
 export function arraysEqual<T>(a: T[], b: T[]): boolean {
@@ -104,25 +108,19 @@ export function sortChessTrapsByName(traps: ChessTrap[]): ChessTrap[] {
   return traps.sort(compareChessTrapsByName);
 }
 
-// TODO: Some openings can be represented with a list of moves, but some
-// others are better described with a board position, because there are multiple
-// ways to reach that particular board position. For example, the Italian game
-// can be reached with [e4, e5, Bc4, Nc6, Nf3] or with [e4, e5, Nf3, Nc6, Nf3].
-// Maybe representing them wth board positions is better?
-export function getChessOpeningMoves(opening: ChessOpening): string[] {
+export function getFen(opening: ChessOpening): string {
   switch (opening) {
     case ChessOpening.CaroKannDefense:
-      return ['e4', 'c6'];
+      return 'rnbqkbnr/pp1ppppp/2p5/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2';
     case ChessOpening.EnglundGambit:
-      return ['d4', 'e5'];
+      return 'rnbqkbnr/pppp1ppp/8/4p3/3P4/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 2';
     case ChessOpening.ItalianGame:
-      return ['e4', 'e5', 'Bc4', 'Nc6', 'Nf3']; // TODO: or [e4, e5, Nf3, Nc6, Nf3]
+      return 'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1';
     case ChessOpening.QueensGambit:
-      return ['d4', 'd5', 'c4'];
+      return 'rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq c3 0 2';
     case ChessOpening.SicilianDefense:
-      return ['e4', 'c5'];
+      return 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2';
     default:
-      const _exhaustiveMatch: never = opening;
-      throw new Error('Non-exhaustive match for ChessOpening');
+      return assertUnreachable(opening);
   }
 }
