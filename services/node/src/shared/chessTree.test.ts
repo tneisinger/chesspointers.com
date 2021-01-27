@@ -1,5 +1,11 @@
 /* eslint-disable */
-import { makeChessTree, getUniquePaths, mergeTrees } from './chessTree';
+import {
+  makeChessTree,
+  getUniquePaths,
+  mergeTrees,
+  doesTreeReachPosition,
+} from './chessTree';
+import { legalTrap, englundGambitTrap } from './chessTraps';
 
 const branch_Rf1  = makeChessTree(['Rf1', 'Qxe4+', 'Be2', 'Nf3#'], []);
 const branch_Nxh8 = makeChessTree(['Nxh8', 'Qxh1+', 'Bf1', 'Qe4+', 'Be2', 'Bc5'], []);
@@ -337,5 +343,20 @@ describe('mergeTrees()', () => {
         ])
       ).sort()
     );
+  });
+});
+
+describe('doesTreeReachPosition()', () => {
+  const italianGameFen =
+    'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1';
+
+  it('returns true with italian game fen and the legal trap tree', () => {
+    expect(doesTreeReachPosition(italianGameFen, legalTrap.chessTree)).toBe(true);
+  });
+
+  it('returns false with italian game fen and the englund gambit trap tree', () => {
+    expect(
+      doesTreeReachPosition(italianGameFen, englundGambitTrap.chessTree)
+    ).toBe(false);
   });
 });

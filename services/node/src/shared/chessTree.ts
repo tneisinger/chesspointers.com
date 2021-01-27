@@ -184,3 +184,25 @@ export function getPreviewPositionPath(tree: ChessTree): string[] | null {
   }
   return null;
 }
+
+export function doesTreeReachPosition(fen: string, tree: ChessTree): boolean {
+  function getPosition(someFen: string) {
+    return someFen.split(' ')[0];
+  }
+
+  // We only care about the position of the pieces, so drop everything else.
+  const position = getPosition(fen);
+
+  const chess = new Chess();
+  const paths = getUniquePaths(tree);
+  for (let i = 0; i < paths.length; i++) {
+    chess.reset();
+    const path = paths[i];
+    for (let j = 0; j < path.length; j++) {
+      const move = path[j];
+      if (!chess.move(move)) throw new Error(`Invalid move: ${move}`);
+      if (getPosition(chess.fen()) === position) return true;
+    }
+  }
+  return false;
+}
