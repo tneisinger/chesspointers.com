@@ -1,6 +1,6 @@
 import { ChessTrap } from '../entity/chessTrap';
 
-import bsgTrap from './blackburneShillingGambit';
+import bsgTrap from './blackburneShilling';
 export { bsgTrap as bsgTrap};
 
 import elephantTrap from './elephant';
