@@ -7,7 +7,7 @@ import { ChessOpening } from '../../shared/chessTypes';
 
 const useStyles = makeStyles({
   autocomplete: {
-    width: 300,
+    minWidth: 225,
   },
 });
 
