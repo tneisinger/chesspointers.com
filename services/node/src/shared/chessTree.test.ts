@@ -9,7 +9,7 @@ import {
   filterTrapsWithPath,
 } from './chessTree';
 import { ChessOpening } from './chessTypes';
-import {
+import allChessTraps, {
   legalTrap,
   englundGambitTrap,
   elephantTrap,
@@ -379,7 +379,7 @@ describe('filterTreesWithOpenings()', () => {
   it('returns [] when no traps match one opening', () => {
     const traps = [
       magnusSmithTrap,
-      legalTrap,
+      laskerTrap,
       englundGambitTrap,
     ];
     expect(filterTrapsWithOpenings([ChessOpening.ItalianGame], traps)).toEqual([]);
@@ -447,6 +447,12 @@ describe('filterTreesWithOpenings()', () => {
     expect(filtered.map((t) => t.name).sort()).toEqual(
       [magnusSmithTrap].map((t) => t.name).sort()
     );
+  });
+
+  it('returns correct traps when given ItalianGame opening', () => {
+    const filtered = filterTrapsWithOpenings([ChessOpening.ItalianGame], allChessTraps);
+    console.log(filtered.length);
+    expect(filtered.length > 0).toBe(true);
   });
 });
 

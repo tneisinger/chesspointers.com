@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles, CardHeader } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
-import ChessTreePreview from '../components/ChessTreePreview';
-import { staffordTrap1 } from '../../shared/chessTraps';
+import ChessTrapFilters from '../components/ChessTrapFilters';
+import allChessTraps from '../../shared/chessTraps';
+import { ChessTrap } from '../../shared/entity/chessTrap';
 
 const useStyles = makeStyles(() => ({
   mainCard: {
@@ -20,6 +21,8 @@ const useStyles = makeStyles(() => ({
 const HomePage: React.FunctionComponent = () => {
   const classes = useStyles({});
 
+  const [selectedTraps, setSelectedTraps] = useState<ChessTrap[]>(allChessTraps);
+
   return (
     <Grid item xs={12}>
       <Grid container direction='row' justify='center' spacing={2}>
@@ -28,11 +31,15 @@ const HomePage: React.FunctionComponent = () => {
             <CardHeader className={classes.cardHeader} title='Home Page' />
             <CardContent>
               <p>Welcome!</p>
-              <ChessTreePreview
-                chessTree={staffordTrap1.chessTree}
-                orientation={staffordTrap1.playedByWhite ? 'white' : 'black'}
-                playMoves='always'
+              <ChessTrapFilters
+                traps={allChessTraps}
+                setSelectedTraps={setSelectedTraps}
               />
+              <div>
+                {selectedTraps.map((trap) => (
+                  <p key={trap.name}>{trap.name}</p>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </Grid>
