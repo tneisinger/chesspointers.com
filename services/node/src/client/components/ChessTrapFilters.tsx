@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import ColorSwitch from './ColorSwitch';
 import ChessOpeningsDropDown from './ChessOpeningsDropDown';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
@@ -35,10 +34,7 @@ const ChessTrapFilters: React.FC<Props> = ({ traps, setSelectedTraps }) => {
   }, [isColorFilterEnabled, selectedColor, selectedOpening]);
 
   return (
-    <Grid container direction='column' spacing={2}>
-      <Grid item>
-        <Typography>Filters</Typography>
-      </Grid>
+    <Grid container direction='column' spacing={1}>
       <Grid item>
         <ColorSwitch
           isEnabled={isColorFilterEnabled}
