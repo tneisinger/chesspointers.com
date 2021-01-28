@@ -104,8 +104,8 @@ function compareChessTrapsByName(trap1: ChessTrap, trap2: ChessTrap): number {
   return 0;
 }
 
-export function sortChessTrapsByName(traps: ChessTrap[]): ChessTrap[] {
-  return traps.sort(compareChessTrapsByName);
+export function sortChessTrapsByName(traps: ChessTrap[]): void {
+  traps.sort(compareChessTrapsByName);
 }
 
 export function getFen(opening: ChessOpening): string {
