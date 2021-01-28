@@ -451,7 +451,6 @@ describe('filterTreesWithOpenings()', () => {
 
   it('returns correct traps when given ItalianGame opening', () => {
     const filtered = filterTrapsWithOpenings([ChessOpening.ItalianGame], allChessTraps);
-    console.log(filtered.length);
     expect(filtered.length > 0).toBe(true);
   });
 });
