@@ -32,7 +32,7 @@ const HomePage: React.FunctionComponent = () => {
             <CardContent>
               <p>Welcome!</p>
               <ChessTrapFilters
-                traps={allChessTraps}
+                allTraps={allChessTraps}
                 setSelectedTraps={setSelectedTraps}
               />
               <div>

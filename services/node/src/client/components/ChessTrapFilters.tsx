@@ -7,17 +7,17 @@ import { PieceColor, ChessOpening } from '../../shared/chessTypes';
 import { filterTrapsWithOpenings } from '../../shared/chessTree';
 
 interface Props {
-  traps: ChessTrap[];
+  allTraps: ChessTrap[];
   setSelectedTraps: Dispatch<SetStateAction<ChessTrap[]>>;
 }
 
-const ChessTrapFilters: React.FC<Props> = ({ traps, setSelectedTraps }) => {
+const ChessTrapFilters: React.FC<Props> = ({ allTraps, setSelectedTraps }) => {
   const [selectedColor, setSelectedColor] = useState<PieceColor>('white');
   const [isColorFilterEnabled, setIsColorFilterEnabled] = useState(false);
   const [selectedOpening, setSelectedOpening] = useState<ChessOpening | null>(null);
 
   const filterTraps = () => {
-    let filteredTraps = traps;
+    let filteredTraps = allTraps;
     if (isColorFilterEnabled) {
       filteredTraps = filteredTraps.filter(
         (trap) => trap.playedByWhite === (selectedColor === 'white'),
