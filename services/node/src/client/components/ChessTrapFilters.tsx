@@ -12,12 +12,10 @@ interface Props {
   setSelectedTraps: Dispatch<SetStateAction<ChessTrap[]>>;
 }
 
-type ChessOpeningOrNone = ChessOpening | 'None';
-
 const ChessTrapFilters: React.FC<Props> = ({ traps, setSelectedTraps }) => {
   const [selectedColor, setSelectedColor] = useState<PieceColor>('white');
   const [isColorFilterEnabled, setIsColorFilterEnabled] = useState(false);
-  const [selectedOpening, setSelectedOpening] = useState<ChessOpeningOrNone>('None');
+  const [selectedOpening, setSelectedOpening] = useState<ChessOpening | null>(null);
 
   const filterTraps = () => {
     let filteredTraps = traps;
@@ -26,7 +24,7 @@ const ChessTrapFilters: React.FC<Props> = ({ traps, setSelectedTraps }) => {
         (trap) => trap.playedByWhite === (selectedColor === 'white'),
       );
     }
-    if (selectedOpening !== 'None') {
+    if (selectedOpening != null) {
       filteredTraps = filterTrapsWithOpenings([selectedOpening], filteredTraps);
     }
     setSelectedTraps(filteredTraps);
@@ -51,7 +49,6 @@ const ChessTrapFilters: React.FC<Props> = ({ traps, setSelectedTraps }) => {
       </Grid>
       <Grid item>
         <ChessOpeningsDropDown
-          enabled
           selectedOpening={selectedOpening}
           onChange={setSelectedOpening}
         />

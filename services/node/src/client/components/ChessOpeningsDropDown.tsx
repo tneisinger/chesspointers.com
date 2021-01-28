@@ -1,38 +1,38 @@
 import React from 'react';
-import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import { ChessOpening } from '../../shared/chessTypes';
 
+const useStyles = makeStyles({
+  autocomplete: {
+    width: 300,
+  },
+});
+
 interface Props {
-  enabled: boolean;
-  selectedOpening: string;
-  onChange: (opening: ChessOpening) => void;
+  selectedOpening: ChessOpening | null;
+  onChange: (opening: ChessOpening | null) => void;
 }
 
 const ChessOpeningsDropDown: React.FC<Props> = (props) => {
+  const classes = useStyles({});
+
   return (
     <Grid container direction='row' spacing={2}>
       <Grid item>
-        <FormControl>
-          <InputLabel id='opening-select-label'>Opening</InputLabel>
-          <Select
-            labelId='opening-select-label'
-            value={props.selectedOpening}
-            onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-              props.onChange(event.target.value as ChessOpening);
-            }}
-          >
-            <MenuItem value='None'>None</MenuItem>
-            {Object.entries(ChessOpening).map(([key, value]) => (
-              <MenuItem key={key} value={value}>
-                {value}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Autocomplete
+          className={classes.autocomplete}
+          options={[null, ...Object.values(ChessOpening)]}
+          getOptionLabel={(option) => (option == null ? 'None' : option)}
+          renderInput={(params) => (
+            <TextField {...params} label='Chess Opening' variant='outlined' />
+          )}
+          onChange={(_event: any, newValue) => {
+            props.onChange(newValue);
+          }}
+        />
       </Grid>
     </Grid>
   );
