@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { OverridableComponent } from '@material-ui/core/OverridableComponent';
 import { SvgIconTypeMap } from '@material-ui/core/SvgIcon/SvgIcon';
-import HomeIcon from '@material-ui/icons/Home';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import LockIcon from '@material-ui/icons/Lock';
 import MergeTypeIcon from '@material-ui/icons/MergeType';
@@ -35,7 +34,6 @@ export const routes: RouteInfo[] = [
     path: '/',
     isPathExact: true,
     isPrivate: false,
-    sideMenuIcon: HomeIcon,
   },
   {
     pageName: 'Chess Traps',

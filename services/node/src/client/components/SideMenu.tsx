@@ -50,7 +50,7 @@ export const SideMenu: React.FunctionComponent = () => {
     >
       <AppBar position='static'>
         <Typography className={classes.siteTitle} variant='h6' component='h1'>
-          LearnChessTraps.com
+          <NavLink to={'/'}>LearnChessTraps.com</NavLink>
         </Typography>
       </AppBar>
       <List>
