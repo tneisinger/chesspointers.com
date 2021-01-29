@@ -416,9 +416,22 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setWrongMoveFlashIdx((idx) => idx + 1);
   };
 
-  const childrenWithPlayedMoves = React.Children.map(props.children, (child) => {
+  const getSelectedMoveIdx = (): number | null => {
+    if (movesPosition === 0) return null;
+    return movesPosition - 1;
+  };
+
+  const changeSelectedMoveIdx = (idx: number) => {
+    setMovesPosition(idx + 1);
+  };
+
+  const childrenWithProps = React.Children.map(props.children, (child) => {
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, { playedMoves });
+      return React.cloneElement(child, {
+        playedMoves,
+        selectedMoveIdx: getSelectedMoveIdx(),
+        changeSelectedMoveIdx,
+      });
     }
     return child;
   });
@@ -468,8 +481,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       </Grid>
       <Grid item>
         <Grid container direction='column' spacing={2}>
-          {childrenWithPlayedMoves &&
-            childrenWithPlayedMoves.map((child, idx) => (
+          {childrenWithProps &&
+            childrenWithProps.map((child, idx) => (
               <Grid key={`ChessGuide child ${idx}`} item>
                 {child}
               </Grid>

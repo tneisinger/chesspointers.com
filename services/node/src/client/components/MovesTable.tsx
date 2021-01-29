@@ -14,15 +14,17 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   moves: string[];
+  selectedMoveIdx: number | null;
+  changeSelectedMoveIdx: (idx: number) => void;
 }
 
-const MovesTable: React.FunctionComponent<Props> = ({ moves }) => {
+const MovesTable: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
 
   const makeMovePairs = (): MovePair[] =>
-    moves.reduce((acc: MovePair[], move, idx) => {
+    props.moves.reduce((acc: MovePair[], move, idx) => {
       if (idx % 2 === 0) {
-        const blackMove = moves[idx + 1];
+        const blackMove = props.moves[idx + 1];
         if (blackMove == undefined) return [...acc, { whiteMove: move }];
         return [...acc, { whiteMove: move, blackMove }];
       }
@@ -38,6 +40,7 @@ const MovesTable: React.FunctionComponent<Props> = ({ moves }) => {
               key={idx + pair.whiteMove}
               movePair={pair}
               moveNumber={idx + 1}
+              {...props}
             />
           ))}
         </TableBody>

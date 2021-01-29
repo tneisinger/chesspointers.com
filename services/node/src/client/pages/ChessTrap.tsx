@@ -84,7 +84,12 @@ const ChessTrapPage: React.FunctionComponent = () => {
                 userPlaysAs={trap.playedByWhite ? 'white' : 'black'}
                 boardSizePixels={boardSizePixels}
               >
-                <MovesPane height={containerHeight} playedMoves={[]} />
+                <MovesPane
+                  height={containerHeight}
+                  playedMoves={[]}
+                  selectedMoveIdx={null}
+                  changeSelectedMoveIdx={(idx) => void idx}
+                />
               </ChessGuide>
             </Grid>
           </Grid>
