@@ -82,7 +82,12 @@ const MergeTrapsPage: React.FunctionComponent = () => {
                   userColor={userColor}
                   setUserColor={setUserColor}
                 />
-                <MovesPane height={heightOfRightSidePanes} playedMoves={[]} />
+                <MovesPane
+                  height={heightOfRightSidePanes}
+                  playedMoves={[]}
+                  selectedMoveIdx={null}
+                  changeSelectedMoveIdx={(idx) => void idx}
+                />
               </ChessGuide>
             </Grid>
           </Grid>
