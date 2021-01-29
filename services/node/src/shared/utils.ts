@@ -1,7 +1,7 @@
 import { User } from './entity/user';
 import { ShortMove } from 'chess.js';
 import { ChessTrap } from './entity/chessTrap';
-import { ChessOpening } from './chessTypes';
+import { ChessOpening, FenParts } from './chessTypes';
 
 export function getUserFullName(user: User): string {
   return `${user.firstName} ${user.lastName}`;
@@ -34,6 +34,18 @@ export function randomElem<T>(array: T[]): T | undefined {
 
 export function toDashedLowercase(str: string): string {
   return str.toLowerCase().replace(/ /g, '-');
+}
+
+export function idxOfFirstPairThat<T>(
+  p: (v1: T, v2: T) => boolean,
+  arr1: T[],
+  arr2: T[],
+): number | null {
+  const shorterLength = Math.min(arr1.length, arr2.length);
+  for (let i = 0; i < shorterLength; i++) {
+    if (p(arr1[i], arr2[i])) return i;
+  }
+  return null;
 }
 
 export function areChessPathsEquivalent(path1: string[], path2: string[]): boolean {
@@ -129,4 +141,23 @@ export function getFen(opening: ChessOpening): string {
     default:
       return assertUnreachable(opening);
   }
+}
+
+export function numHalfMovesPlayed(fen: string): number {
+  const { fullMoveNumber, activeColor } = getFenParts(fen);
+  const minMoves = (fullMoveNumber - 1) * 2;
+  if (activeColor === 'white') return minMoves;
+  return minMoves + 1;
+}
+
+export function getFenParts(fen: string): FenParts {
+  const [placement, color, castling, enPasSq, halfClock, fullMoveNum] = fen.split(' ');
+  return {
+    piecePlacement: placement,
+    activeColor: color === 'w' ? 'white' : 'black',
+    castling,
+    enPassantSquare: enPasSq,
+    halfMoveClock: Number(halfClock),
+    fullMoveNumber: Number(fullMoveNum),
+  };
 }

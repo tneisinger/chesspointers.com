@@ -6,6 +6,8 @@ import {
   areChessPathsEquivalent,
   arraysEqual,
   getFen,
+  idxOfFirstPairThat,
+  numHalfMovesPlayed,
 } from './utils';
 
 type MoveObject = { move: string; isPreviewPosition: boolean };
@@ -196,10 +198,8 @@ export function doesTreeReachPosition(fen: string, tree: ChessTree): boolean {
   function dropClockAndMoveNum(someFen: string) {
     return someFen.slice(0, -3);
   }
-
   // We don't care about the halfmove clock or the fullmove number, so drop those
   fen = dropClockAndMoveNum(fen);
-
   const chess = new Chess();
   const paths = getUniquePaths(tree);
   for (let i = 0; i < paths.length; i++) {
@@ -214,13 +214,80 @@ export function doesTreeReachPosition(fen: string, tree: ChessTree): boolean {
   return false;
 }
 
+// Return true if `chessTree` has a node that represents a game state equivalent to `fen`.
+// This function calculates the number of moves played in `fen`, and will return early
+// if no match is found within that number of moves.
+export function doesTreeReachFen(fen: string, chessTree: ChessTree): boolean {
+  const chess = new Chess();
+
+  // Check that the fen string is valid
+  const { valid, error } = chess.validate_fen(fen);
+  if (!valid) throw new Error(`Invalid fen: ${fen}, ${error}`);
+  if (fen === chess.fen()) return true;
+  if (chessTree.move !== '') {
+    chessTree = { ...chessTree, move: '', children: [chessTree] };
+  }
+
+  // Figure out how many (half) moves have been played in the fen string game
+  // We will use this to determine if we need to look any deeper into the tree.
+  const numFenMoves = numHalfMovesPlayed(fen);
+
+  // Create an array which will store all the uncheckedNodes as we discover them.
+  // We will use a while loop to go through each element of this list.
+  const uncheckedNodes: { moves: string[]; tree: ChessTree }[] = [];
+  chessTree.children.forEach((child) => {
+    uncheckedNodes.push({ moves: [], tree: child });
+  });
+
+  // While there are nodes still to be checked...
+  while (uncheckedNodes.length > 0) {
+    const { moves, tree } = uncheckedNodes.shift();
+    const history = chess.history();
+
+    // Maybe get the idx of the first move that differs from chess.history()
+    const idxOfFirstDiff = idxOfFirstPairThat((m1, m2) => m1 !== m2, history, moves);
+
+    if (idxOfFirstDiff != null) {
+      // If there is a divergence, undo the outdated moves from `chess` and apply the
+      // relevant moves.
+      const numBadMoves = history.length - idxOfFirstDiff;
+      for (let i = numBadMoves; i > 0; i--) chess.undo();
+      moves.slice(idxOfFirstDiff).forEach((move) => {
+        if (!chess.move(move)) throw new Error(`Bad move! ${move}`);
+      });
+    } else if (history.length > moves.length) {
+      // If there's no divergence but chess.history() is too long, then just
+      // undo the extra moves
+      for (let i = history.length - moves.length; i > 0; i--) chess.undo();
+    }
+
+    // Do the new move
+    if (!chess.move(tree.move)) throw new Error(`Bad move: ${tree.move}`);
+
+    // Success case!
+    if (chess.fen() === fen) return true;
+
+    // We don't want to look deeper into the tree than is necessary. Only add the childen
+    // to the `uncheckedNodes` array if the number of moves played hasn't exceeded the
+    // number of moves played in the `fen` string.
+    if (moves.length < numFenMoves) {
+      tree.children.forEach((child) => {
+        uncheckedNodes.push({ moves: [...moves, tree.move], tree: child });
+      });
+    }
+  }
+
+  // If we didn't find a match, return false.
+  return false;
+}
+
 export function filterTrapsWithOpenings(
   openings: ChessOpening[],
   traps: ChessTrap[],
 ): ChessTrap[] {
   const fens = openings.map((opening) => getFen(opening));
   return traps.filter((trap) =>
-    fens.some((fen) => doesTreeReachPosition(fen, trap.chessTree)),
+    fens.some((fen) => doesTreeReachFen(fen, trap.chessTree)),
   );
 }
 

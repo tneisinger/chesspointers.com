@@ -45,3 +45,12 @@ export enum ChessOpening {
   RuyLopez = 'Ruy López',
   SicilianDefense = 'Sicilian Defense',
 }
+
+export type FenParts = {
+  piecePlacement: string;
+  activeColor: PieceColor;
+  castling: string;
+  enPassantSquare: string;
+  halfMoveClock: number;
+  fullMoveNumber: number;
+};
