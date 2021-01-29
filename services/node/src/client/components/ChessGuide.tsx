@@ -468,7 +468,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           score={getScoreFromFen(game.fen())}
         />
         <ChessGuideControls
-          areBackBtnsEnabled={playedMoves.length > 0}
+          areBackBtnsEnabled={movesPosition > 0}
           areForwardBtnsEnabled={playedMoves.length > movesPosition}
           onJumpBackBtnClick={jumpToStartOfPlayedMoves}
           onJumpForwardBtnClick={jumpToEndOfPlayedMoves}
