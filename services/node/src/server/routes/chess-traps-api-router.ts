@@ -8,7 +8,11 @@ export function chessTrapApiRouter(chessTrapRepository: Repository<ChessTrap>): 
   router.use(bodyParser.json());
 
   router.get('/api/traps', async (_req, res) => {
-    const traps: ChessTrap[] = await chessTrapRepository.find();
+    const traps: ChessTrap[] = await chessTrapRepository.find({
+      order: {
+        name: 'ASC',
+      },
+    });
     res.json(traps);
   });
 
