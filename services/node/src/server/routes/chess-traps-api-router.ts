@@ -10,7 +10,7 @@ export function chessTrapApiRouter(chessTrapRepository: Repository<ChessTrap>): 
   router.get('/api/traps', async (_req, res) => {
     const traps: ChessTrap[] = await chessTrapRepository.find({
       order: {
-        name: 'ASC',
+        shortName: 'ASC',
       },
     });
     res.json(traps);

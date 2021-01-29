@@ -70,7 +70,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Halosar'
+trap.fullName = 'The Halosar Trap';
+trap.shortName = 'Halosar';
 trap.playedByWhite = true;
 trap.chessTree = chessTree;
 

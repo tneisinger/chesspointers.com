@@ -51,7 +51,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Monticelli'
+trap.fullName = 'The Monticelli Trap';
+trap.shortName = 'Monticelli';
 trap.playedByWhite = true;
 trap.chessTree = chessTree;
 

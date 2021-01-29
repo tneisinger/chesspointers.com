@@ -107,7 +107,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Fried Liver'
+trap.fullName = 'The Fried Liver Attack'
+trap.shortName = 'Fried Liver'
 trap.playedByWhite = true;
 trap.chessTree = chessTree;
 

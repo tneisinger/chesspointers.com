@@ -12,7 +12,15 @@ export class ChessTrap {
     unique: true,
     nullable: false,
   })
-  name: string;
+  fullName: string;
+
+  @Column({
+    type: 'varchar',
+    length: 30,
+    unique: true,
+    nullable: false,
+  })
+  shortName: string;
 
   @Column({
     type: 'bool',

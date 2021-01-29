@@ -406,8 +406,8 @@ describe('filterTreesWithOpenings()', () => {
     ];
 
     const filtered = filterTrapsWithOpenings([ChessOpening.QueensGambit], traps);
-    expect(filtered.map((t) => t.name).sort()).toEqual(
-      [elephantTrap, laskerTrap].map((t) => t.name).sort()
+    expect(filtered.map((t) => t.shortName).sort()).toEqual(
+      [elephantTrap, laskerTrap].map((t) => t.shortName).sort()
     );
   });
 
@@ -424,8 +424,8 @@ describe('filterTreesWithOpenings()', () => {
       [ChessOpening.QueensGambit, ChessOpening.SicilianDefense],
       traps
     );
-    expect(filtered.map((t) => t.name).sort()).toEqual(
-      [elephantTrap, laskerTrap, magnusSmithTrap].map((t) => t.name).sort()
+    expect(filtered.map((t) => t.shortName).sort()).toEqual(
+      [elephantTrap, laskerTrap, magnusSmithTrap].map((t) => t.shortName).sort()
     );
   });
 
@@ -444,8 +444,8 @@ describe('filterTreesWithOpenings()', () => {
     ];
 
     const filtered = filterTrapsWithOpenings(openings, traps);
-    expect(filtered.map((t) => t.name).sort()).toEqual(
-      [magnusSmithTrap].map((t) => t.name).sort()
+    expect(filtered.map((t) => t.shortName).sort()).toEqual(
+      [magnusSmithTrap].map((t) => t.shortName).sort()
     );
   });
 });
@@ -480,7 +480,7 @@ describe('filterTrapsWithPath()', () => {
 
   it('returns multiple correct traps if path matches multiple of the traps', () => {
     const filtered = filterTrapsWithPath(['d4', 'd5'], traps)
-    expect(filtered.map((t) => t.name).sort())
-      .toEqual([laskerTrap, elephantTrap].map((t) => t.name).sort());
+    expect(filtered.map((t) => t.shortName).sort())
+      .toEqual([laskerTrap, elephantTrap].map((t) => t.shortName).sort());
   });
 });

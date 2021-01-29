@@ -43,7 +43,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Englund Gambit'
+trap.fullName = 'The Englund Gambit Trap';
+trap.shortName = 'Englund Gambit';
 trap.playedByWhite = false;
 trap.chessTree = chessTree;
 

@@ -11,7 +11,6 @@ import ChessGuide from '../components/ChessGuide';
 import MovesPane from '../components/MovesPane';
 import NotFoundPage from '../pages/NotFound';
 import { toDashedLowercase } from '../../shared/utils';
-import { formatTrapName } from '../../shared/chessTraps/index';
 import { calcChessBoardSize } from '../utils';
 
 const useStyles = makeStyles(() => ({
@@ -61,7 +60,9 @@ const ChessTrapPage: React.FunctionComponent = () => {
   }
 
   // Find the trap with a name that matches the trapName param
-  const trap = chessTrapsSlice.traps.find((t) => toDashedLowercase(t.name) === trapName);
+  const trap = chessTrapsSlice.traps.find(
+    (t) => toDashedLowercase(t.shortName) === trapName,
+  );
 
   // If `trap` is undefined, that means that the trapName param didn't match the name of
   // any of the traps in the db. In that case, treat it as not found.
@@ -73,7 +74,7 @@ const ChessTrapPage: React.FunctionComponent = () => {
     <Grid container direction='row' justify='center'>
       <Grid item className={classes.gridItem}>
         <Typography className={classes.trapName} variant='h4' component='h2'>
-          {formatTrapName(trap)}
+          {trap.fullName}
         </Typography>
         <Card className={classes.mainCard}>
           <Grid container ref={gridContainerRef} direction='row' spacing={2}>

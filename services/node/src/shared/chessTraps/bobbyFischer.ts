@@ -50,7 +50,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Bobby Fischer'
+trap.fullName = 'The Bobby Fischer Trap';
+trap.shortName = 'Bobby Fischer';
 trap.playedByWhite = true;
 trap.chessTree = chessTree;
 

@@ -16,7 +16,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Karpov Smothering'
+trap.fullName = 'The Karpov Smothering Trap';
+trap.shortName = 'Karpov Smothering';
 trap.playedByWhite = true;
 trap.chessTree = chessTree;
 

@@ -111,8 +111,8 @@ export function sameMoves(move1: ShortMove, move2: ShortMove): boolean {
 }
 
 function compareChessTrapsByName(trap1: ChessTrap, trap2: ChessTrap): number {
-  if (trap1.name < trap2.name) return -1;
-  if (trap1.name > trap2.name) return 1;
+  if (trap1.shortName < trap2.shortName) return -1;
+  if (trap1.shortName > trap2.shortName) return 1;
   return 0;
 }
 

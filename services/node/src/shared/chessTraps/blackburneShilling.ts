@@ -64,7 +64,8 @@ const chessTree = makeChessTree(
 )
 
 const trap = new ChessTrap();
-trap.name = 'Blackburne-Shilling'
+trap.fullName = 'The Blackburne-Shilling Trap';
+trap.shortName = 'Blackburne-Shilling';
 trap.playedByWhite = false;
 trap.chessTree = chessTree;
 

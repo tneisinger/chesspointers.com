@@ -37,7 +37,7 @@ const HomePage: React.FunctionComponent = () => {
               />
               <div>
                 {selectedTraps.map((trap) => (
-                  <p key={trap.name}>{trap.name}</p>
+                  <p key={trap.shortName}>{trap.shortName}</p>
                 ))}
               </div>
             </CardContent>

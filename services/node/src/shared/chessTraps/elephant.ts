@@ -18,7 +18,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Elephant'
+trap.fullName = 'The Elephant Trap';
+trap.shortName = 'Elephant';
 trap.playedByWhite = false;
 trap.chessTree = chessTree;
 

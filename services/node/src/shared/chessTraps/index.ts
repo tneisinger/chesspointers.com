@@ -63,14 +63,4 @@ const allTraps: ChessTrap[] = [
   friedLiver,
 ];
 
-export function formatTrapName(trap: ChessTrap): string {
-  const regex = RegExp(' \\d$');
-  if (regex.test(trap.name)) {
-    const name = trap.name.slice(0,-2);
-    const digit = trap.name.slice(-1, trap.name.length)
-    return `${name} Trap #${digit}`;
-  }
-  return `The ${trap.name} Trap`;
-}
-
 export default allTraps;

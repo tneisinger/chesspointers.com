@@ -18,7 +18,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Fishing Pole'
+trap.fullName = 'The Fishing Pole Trap';
+trap.shortName = 'Fishing Pole';
 trap.playedByWhite = false;
 trap.chessTree = chessTree;
 

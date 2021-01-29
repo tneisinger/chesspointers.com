@@ -71,7 +71,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Magnus Smith'
+trap.fullName = 'The Magnus Smith Trap';
+trap.shortName = 'Magnus Smith';
 trap.playedByWhite = true;
 trap.chessTree = chessTree;
 

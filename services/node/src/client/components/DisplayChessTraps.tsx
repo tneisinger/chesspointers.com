@@ -5,7 +5,6 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ChessLessonPreview from './ChessLessonPreview';
 import { ChessTrap } from '../../shared/entity/chessTrap';
-import { formatTrapName } from '../../shared/chessTraps/index';
 import { toDashedLowercase } from '../../shared/utils';
 
 const useStyles = makeStyles({
@@ -28,13 +27,13 @@ const DisplayChessTraps: React.FC<Props> = ({ chessTraps }) => {
   return (
     <>
       {chessTraps.map((trap) => (
-        <Card key={trap.name} className={classes.card}>
+        <Card key={trap.shortName} className={classes.card}>
           <CardContent className={classes.cardContent}>
-            <NavLink to={`/traps/${toDashedLowercase(trap.name)}`}>
+            <NavLink to={`/traps/${toDashedLowercase(trap.shortName)}`}>
               <ChessLessonPreview
                 chessTree={trap.chessTree}
                 orientation={trap.playedByWhite ? 'white' : 'black'}
-                title={formatTrapName(trap)}
+                title={trap.fullName}
               />
             </NavLink>
           </CardContent>

@@ -41,7 +41,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Lasker'
+trap.fullName = 'The Lasker Trap';
+trap.shortName = 'Lasker';
 trap.playedByWhite = false;
 trap.chessTree = chessTree;
 

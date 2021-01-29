@@ -49,7 +49,7 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
     if (event.target.checked && !isTrapSelected(trap)) {
       setSelectedTraps([...selectedTraps, trap]);
     } else if (!event.target.checked && isTrapSelected(trap)) {
-      setSelectedTraps(selectedTraps.filter((t) => t.name !== trap.name));
+      setSelectedTraps(selectedTraps.filter((t) => t.shortName !== trap.shortName));
     }
   };
 
@@ -63,7 +63,7 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
 
   const isTrapSelected = (trap: ChessTrap) => {
     const selectedTraps = trap.playedByWhite ? selectedWhiteTraps : selectedBlackTraps;
-    return selectedTraps.map((t) => t.name).includes(trap.name);
+    return selectedTraps.map((t) => t.shortName).includes(trap.shortName);
   };
 
   const getSelectedTraps = (): ChessTrap[] => {
@@ -114,12 +114,12 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
       </Grid>
       <List>
         {getChessTrapsOfUserColor().map((trap) => (
-          <ListItem dense key={trap.name}>
+          <ListItem dense key={trap.shortName}>
             <FormControlLabel
-              label={<Typography variant='caption'>{trap.name}</Typography>}
+              label={<Typography variant='caption'>{trap.shortName}</Typography>}
               control={
                 <Checkbox
-                  name={trap.name}
+                  name={trap.shortName}
                   size='small'
                   checked={isTrapSelected(trap)}
                   onChange={(e) => handleTrapSelectChange(trap, e)}

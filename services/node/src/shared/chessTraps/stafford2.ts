@@ -52,7 +52,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Stafford 2'
+trap.fullName = 'Stafford Trap #2';
+trap.shortName = 'Stafford 2';
 trap.playedByWhite = false;
 trap.chessTree = chessTree;
 

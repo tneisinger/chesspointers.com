@@ -17,7 +17,8 @@ const chessTree = makeChessTree(
 );
 
 const trap = new ChessTrap();
-trap.name = 'Legal'
+trap.fullName = 'The Legal Trap';
+trap.shortName = 'Legal';
 trap.playedByWhite = true;
 trap.chessTree = chessTree;
 
