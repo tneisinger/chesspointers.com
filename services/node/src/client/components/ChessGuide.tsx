@@ -80,7 +80,33 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [fen, setFen] = useState(game.fen());
   const [checkMoveTimeout, setCheckMoveTimeout] = useState<number | undefined>(undefined);
   const [wrongMoveFlashIdx, setWrongMoveFlashIdx] = useState<number>(0);
+  const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
+  const [isDetached, setIsDetached] = useState<boolean>(false);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
+  const [movesPosition, setMovesPosition] = useState<number>(0);
+
+  // Whenever `movesPosition` changes...
+  useEffect(() => {
+    // Reset the board to the specified position
+    game.reset();
+    for (let i = 0; i < movesPosition; i++) {
+      game.move(playedMoves[i]);
+    }
+    updateBoard();
+
+    if (movesPosition < playedMoves.length) {
+      // If the new `movesPosition` is not at the end of the `playedMoves` array,
+      // hide any move arrows and declare that the board `isDetached`.
+      if (isShowingMoves) scheduleHideMoves({ delay: 300 });
+      setIsDetached(true);
+    } else if (isDetached) {
+      // If `movesPosition` has been set to the end of `playedMoves` and `isDetached` is
+      // currently set to true, then that means that we are coming out of the detached
+      // state. In that case, set `isDetached` to false and schedule to show move arrows.
+      scheduleShowMoves({ delay: 300 });
+      setIsDetached(false);
+    }
+  }, [movesPosition]);
 
   const isUsersTurn = (): boolean => {
     return game.turn() === userPlaysAs.charAt(0);
@@ -153,8 +179,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     });
   };
 
-  const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
-
   const handleMove = (from: Square, to: Square) => {
     const moves = game.moves({ verbose: true });
     for (let i = 0, len = moves.length; i < len; i++) { /* eslint-disable-line */
@@ -179,7 +203,16 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const handleGoodMove = () => {
-    setPlayedMoves([...playedMoves, getLastMove()]);
+    addMoveToPlayedMoves();
+  };
+
+  const addMoveToPlayedMoves = (move?: string): void => {
+    if (move == undefined) {
+      move = getLastMove();
+    }
+    const newPlayedMoves = [...playedMoves, move];
+    setPlayedMoves(newPlayedMoves);
+    setMovesPosition(newPlayedMoves.length);
   };
 
   const wasLastMoveBad = () => {
@@ -246,13 +279,15 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const doNextMove = (move: string) => {
     if (game.move(move)) {
-      setPlayedMoves([...playedMoves, move]);
+      addMoveToPlayedMoves(move);
       updateBoard();
     }
   };
 
   const reset = () => {
     setPlayedMoves([]);
+    setIsDetached(false);
+    setMovesPosition(0);
     setDoesComputerAutoplay(true);
     game.reset();
     updateBoard();
@@ -260,51 +295,19 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const moveBack = () => {
-    // When the user clicks the back button, turn off doesComputerAutoplay
-    setDoesComputerAutoplay(false);
-    setPlayedMoves(playedMoves.slice(0, -1));
-    game.undo();
-    updateBoard();
+    setMovesPosition((idx) => (idx > 0 ? idx - 1 : idx));
   };
 
   const moveForward = () => {
-    // Unless the `alwaysAutoplay` prop is set to true, whenever the user clicks
-    // the forward button, turn off doesComputerAutoplay
-    if (!alwaysAutoplay) setDoesComputerAutoplay(false);
-    const nextMoves = getNextMoves();
-    if (nextMoves.length === 1) {
-      doNextMove(nextMoves[0]);
-    }
+    setMovesPosition((idx) => (idx < playedMoves.length ? idx + 1 : idx));
   };
 
-  const jumpToEndOrNextTreeFork = () => {
-    const movesToPlay: string[] = [];
-    const forwardPaths: string[][] = relevantPaths().map((path) =>
-      path.slice(playedMoves.length),
-    );
-    const shortestPathLen = Math.min(...forwardPaths.map((p) => p.length));
+  const jumpToEndOfPlayedMoves = () => {
+    setMovesPosition(playedMoves.length);
+  };
 
-    let moveIdx = 0;
-    let branchesMatchSoFar = true;
-    do {
-      const moves = forwardPaths.map((p) => p[moveIdx]);
-      if (moves.every((m) => m === moves[0])) {
-        movesToPlay.push(moves[0]);
-      } else {
-        branchesMatchSoFar = false;
-      }
-      moveIdx++;
-    } while (moveIdx < shortestPathLen && branchesMatchSoFar);
-
-    if (movesToPlay.length > 0) {
-      setIsShowingMoves(false);
-      movesToPlay.forEach((move) => {
-        game.move(move);
-      });
-      setPlayedMoves([...playedMoves, ...movesToPlay]);
-      updateBoard();
-      scheduleShowMoves();
-    }
+  const jumpToStartOfPlayedMoves = () => {
+    setMovesPosition(0);
   };
 
   const scheduleShowMoves = (options: { forceShow?: boolean; delay?: number } = {}) => {
@@ -314,6 +317,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         setIsShowingMoves(true);
       }, delay);
     }
+  };
+
+  const scheduleHideMoves = (options = { delay: SHOW_NEXT_MOVE_DELAY }) => {
+    setTimeout(() => {
+      setIsShowingMoves(false);
+    }, options.delay);
   };
 
   const doComputerMove = () => {
@@ -445,10 +454,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           score={getScoreFromFen(game.fen())}
         />
         <ChessGuideControls
-          areBackBtnsEnabled={playedMoves.length === 0}
-          areForwardBtnsEnabled={getNextMoves().length !== 1}
-          onJumpBackBtnClick={reset}
-          onJumpForwardBtnClick={jumpToEndOrNextTreeFork}
+          areBackBtnsEnabled={playedMoves.length > 0}
+          areForwardBtnsEnabled={playedMoves.length > movesPosition}
+          onJumpBackBtnClick={jumpToStartOfPlayedMoves}
+          onJumpForwardBtnClick={jumpToEndOfPlayedMoves}
           onStepBackBtnClick={moveBack}
           onStepForwardBtnClick={moveForward}
           onResetBtnClick={reset}
