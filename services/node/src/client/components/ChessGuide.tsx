@@ -445,6 +445,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             nextMoves={getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
             wrongMoveFlashIdx={wrongMoveFlashIdx}
+            isBoardDisabled={isDetached}
           />
         </div>
         <ChessGuideInfo
