@@ -42,6 +42,9 @@ export { staffordTrap3 as staffordTrap3 };
 import monticelliTrap from './monticelli';
 export { monticelliTrap as monticelliTrap };
 
+import friedLiver from './friedLiver';
+export { friedLiver as friedLiver };
+
 const allTraps: ChessTrap[] = [
   bsgTrap,
   elephantTrap,
@@ -57,6 +60,7 @@ const allTraps: ChessTrap[] = [
   staffordTrap2,
   staffordTrap3,
   monticelliTrap,
+  friedLiver,
 ];
 
 export function formatTrapName(trap: ChessTrap): string {
