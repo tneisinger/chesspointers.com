@@ -38,7 +38,7 @@ const ChessNavBtns: React.FunctionComponent<Props> = ({
         className={classes.arrowButton}
         aria-label='jump to start'
         onClick={jumpToStart}
-        disabled={areBackBtnsEnabled}
+        disabled={!areBackBtnsEnabled}
       >
         <SkipPreviousIcon />
       </IconButton>
@@ -46,7 +46,7 @@ const ChessNavBtns: React.FunctionComponent<Props> = ({
         className={classes.arrowButton}
         aria-label='step back'
         onClick={stepBack}
-        disabled={areBackBtnsEnabled}
+        disabled={!areBackBtnsEnabled}
       >
         <ArrowLeftIcon fontSize='large' />
       </IconButton>
@@ -54,7 +54,7 @@ const ChessNavBtns: React.FunctionComponent<Props> = ({
         className={classes.arrowButton}
         aria-label='step forward'
         onClick={stepForward}
-        disabled={areForwardBtnsEnabled}
+        disabled={!areForwardBtnsEnabled}
       >
         <ArrowRightIcon fontSize='large' />
       </IconButton>
@@ -62,7 +62,7 @@ const ChessNavBtns: React.FunctionComponent<Props> = ({
         className={classes.arrowButton}
         aria-label='jump to end'
         onClick={jumpToEnd}
-        disabled={areForwardBtnsEnabled}
+        disabled={!areForwardBtnsEnabled}
       >
         <SkipNextIcon />
       </IconButton>
