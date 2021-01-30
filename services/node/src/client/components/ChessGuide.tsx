@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Chess, ChessInstance, Square } from 'chess.js';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
@@ -78,12 +78,36 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [pathsCompleted, setPathsCompleted] = useState<PathStats[]>([]);
   const [game] = useState<ChessInstance>(new Chess());
   const [fen, setFen] = useState(game.fen());
-  const [checkMoveTimeout, setCheckMoveTimeout] = useState<number | undefined>(undefined);
   const [wrongMoveFlashIdx, setWrongMoveFlashIdx] = useState<number>(0);
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
   const [isDetached, setIsDetached] = useState<boolean>(false);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
   const [movesPosition, setMovesPosition] = useState<number>(0);
+
+  // timeout refs
+  const checkMoveTimeout = useRef<number | undefined>(undefined);
+  const addToPlayedMovesTimeout = useRef<number | undefined>(undefined);
+  const showMovesTimeout = useRef<number | undefined>(undefined);
+  const hideMovesTimeout = useRef<number | undefined>(undefined);
+  const doNextMoveTimeout = useRef<number | undefined>(undefined);
+  const updateBoardTimeout = useRef<number | undefined>(undefined);
+
+  const clearTimeouts = () => {
+    const allTimeoutRefs = [
+      checkMoveTimeout,
+      addToPlayedMovesTimeout,
+      showMovesTimeout,
+      hideMovesTimeout,
+      doNextMoveTimeout,
+      updateBoardTimeout,
+    ];
+    allTimeoutRefs.forEach((ref) => window.clearTimeout(ref.current));
+  };
+
+  // Clear all the timeouts on unmount
+  useEffect(() => {
+    return clearTimeouts;
+  }, []);
 
   // Whenever `movesPosition` changes...
   useEffect(() => {
@@ -92,7 +116,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     for (let i = 0; i < movesPosition; i++) {
       game.move(playedMoves[i]);
     }
-    window.setTimeout(() => updateBoard(), 350);
+    updateBoardTimeout.current = window.setTimeout(() => updateBoard(), 350);
 
     if (movesPosition < playedMoves.length) {
       // If the new `movesPosition` is not at the end of the `playedMoves` array,
@@ -110,11 +134,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const isUsersTurn = (): boolean => {
     return game.turn() === userPlaysAs.charAt(0);
-  };
-
-  const clearTimeouts = () => {
-    window.clearTimeout(checkMoveTimeout);
-    setCheckMoveTimeout(undefined);
   };
 
   // Initialize all possible 'pathsCompleted' values with their 'timesCompleted' values
@@ -197,7 +216,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         setIsShowingMoves(false);
         nextAction = handleGoodMove;
       }
-      setCheckMoveTimeout(window.setTimeout(nextAction, CHECK_MOVE_DELAY));
+      checkMoveTimeout.current = window.setTimeout(nextAction, CHECK_MOVE_DELAY);
       // setLastMove([from, to])
     }
   };
@@ -280,7 +299,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const doNextMove = (move: string) => {
     if (game.move(move)) {
       updateBoard();
-      window.setTimeout(() => addMoveToPlayedMoves(move), 350);
+      addToPlayedMovesTimeout.current = window.setTimeout(
+        () => addMoveToPlayedMoves(move),
+        350,
+      );
     }
   };
 
@@ -313,14 +335,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const scheduleShowMoves = (options: { forceShow?: boolean; delay?: number } = {}) => {
     const delay = options.delay == undefined ? SHOW_NEXT_MOVE_DELAY : options.delay;
     if (mode === 'learn' || options.forceShow) {
-      setTimeout(() => {
+      showMovesTimeout.current = window.setTimeout(() => {
         setIsShowingMoves(true);
       }, delay);
     }
   };
 
   const scheduleHideMoves = (options = { delay: SHOW_NEXT_MOVE_DELAY }) => {
-    setTimeout(() => {
+    hideMovesTimeout.current = window.setTimeout(() => {
       setIsShowingMoves(false);
     }, options.delay);
   };
@@ -328,7 +350,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const doComputerMove = () => {
     const moves = getNextMoves();
     if (moves.length === 1 && doesComputerAutoplay) {
-      setTimeout(() => {
+      doNextMoveTimeout.current = window.setTimeout(() => {
         doNextMove(moves[0]);
       }, COMPUTER_THINK_TIME);
     } else if (moves.length > 1) {
@@ -339,7 +361,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       if (move == undefined) {
         throw new Error('No moves returned by getMovesThatLeadToLeastCompletedPaths()');
       }
-      setTimeout(() => {
+      doNextMoveTimeout.current = window.setTimeout(() => {
         doNextMove(move);
       }, COMPUTER_THINK_TIME);
     }
