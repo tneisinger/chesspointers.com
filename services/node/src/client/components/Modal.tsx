@@ -34,6 +34,7 @@ interface Props {
   isModalOpenOrOpening: boolean;
   handleClose: () => void;
   delayOpenFor?: number;
+  includeCloseBtn?: boolean;
 }
 
 const MyModal: React.FunctionComponent<Props> = ({
@@ -41,6 +42,7 @@ const MyModal: React.FunctionComponent<Props> = ({
   handleClose,
   delayOpenFor,
   children,
+  includeCloseBtn = true,
 }) => {
   const classes = useStyles({});
 
@@ -94,13 +96,15 @@ const MyModal: React.FunctionComponent<Props> = ({
       <Fade in={isModalOpen}>
         <div className={classes.modalDiv}>
           <div className={classes.modalCloseBtn}>
-            <IconButton
-              aria-label='close'
-              style={{ padding: '4px' }}
-              onClick={handleClose}
-            >
-              <CloseIcon />
-            </IconButton>
+            {includeCloseBtn && (
+              <IconButton
+                aria-label='close'
+                style={{ padding: '4px' }}
+                onClick={handleClose}
+              >
+                <CloseIcon />
+              </IconButton>
+            )}
           </div>
           <div className={classes.modalContentDiv}>{children}</div>
         </div>

@@ -2,8 +2,8 @@ import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import React, { useState, useEffect, useRef } from 'react';
-import { Chess, ChessInstance, Square } from 'chess.js';
-import { ChessTree, PieceColor } from '../../shared/chessTypes';
+import { Chess, ChessInstance, Square, ShortMove } from 'chess.js';
+import { ChessTree, PieceColor, PromotionPiece } from '../../shared/chessTypes';
 import { getUniquePaths } from '../../shared/chessTree';
 import {
   areChessPathsEquivalent,
@@ -19,6 +19,7 @@ import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
 import ChessGuideControls from './ChessGuideControls';
 import { GuideMode } from '../utils/types';
+import PawnPromoteModal from './PawnPromoteModal';
 
 const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = 250;
@@ -58,6 +59,11 @@ type PathStats = {
   timesCompleted: number;
 };
 
+type MoveFromTo = {
+  from: Square;
+  to: Square;
+};
+
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
   boardSizePixels,
@@ -73,11 +79,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
   const [mode, setMode] = useState<GuideMode>(guideMode);
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
   const [pathsCompleted, setPathsCompleted] = useState<PathStats[]>([]);
   const [game] = useState<ChessInstance>(new Chess());
   const [fen, setFen] = useState(game.fen());
+  const [pendingMove, setPendingMove] = useState<MoveFromTo | undefined>(undefined);
   const [wrongMoveFlashIdx, setWrongMoveFlashIdx] = useState<number>(0);
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
   const [isDetached, setIsDetached] = useState<boolean>(false);
@@ -202,12 +210,18 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     const moves = game.moves({ verbose: true });
     for (let i = 0, len = moves.length; i < len; i++) { /* eslint-disable-line */
       if (moves[i].flags.indexOf('p') !== -1 && moves[i].from === from) {
-        // setPendingMove([from, to])
-        // setSelectVisible(true)
+        setPendingMove({ from, to });
+        setIsPromoteModalOpen(true);
         return;
       }
     }
-    if (game.move({ from, to })) {
+    attemptMove(from, to);
+  };
+
+  const attemptMove = (from: Square, to: Square, promotion?: PromotionPiece) => {
+    const move: ShortMove = { from, to };
+    if (promotion != undefined) move.promotion = promotion;
+    if (game.move(move)) {
       updateBoard();
       let nextAction: () => void;
       if (wasLastMoveBad()) {
@@ -217,7 +231,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         nextAction = handleGoodMove;
       }
       checkMoveTimeout.current = window.setTimeout(nextAction, CHECK_MOVE_DELAY);
-      // setLastMove([from, to])
     }
   };
 
@@ -458,6 +471,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return child;
   });
 
+  const onPawnPromoteSelection = (promotionPiece: PromotionPiece): void => {
+    if (pendingMove == undefined) throw new Error('No pendingMove set for promotion');
+    const { from, to } = pendingMove;
+    setIsPromoteModalOpen(false);
+    attemptMove(from, to, promotionPiece);
+  };
+
   const debug = () => {
     console.log('You pressed the debug button');
   };
@@ -538,6 +558,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           Reset Game to Complete Next Path
         </Button>
       </Modal>
+
+      <PawnPromoteModal
+        isOpenOrOpening={isPromoteModalOpen}
+        color={userPlaysAs}
+        handlePieceSelected={onPawnPromoteSelection}
+      />
 
       {renderExtraControlsForTesting && (
         <ChessMoveSelector nextMoveGames={getNextMoveGames()} handleSubmit={handleMove} />

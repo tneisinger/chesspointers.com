@@ -54,3 +54,10 @@ export type FenParts = {
   halfMoveClock: number;
   fullMoveNumber: number;
 };
+
+export enum PromotionPiece {
+  Bishop = 'b',
+  Knight = 'n',
+  Rook = 'r',
+  Queen = 'q',
+}
