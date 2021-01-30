@@ -92,18 +92,18 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     for (let i = 0; i < movesPosition; i++) {
       game.move(playedMoves[i]);
     }
-    updateBoard();
+    window.setTimeout(() => updateBoard(), 350);
 
     if (movesPosition < playedMoves.length) {
       // If the new `movesPosition` is not at the end of the `playedMoves` array,
       // hide any move arrows and declare that the board `isDetached`.
-      if (isShowingMoves) scheduleHideMoves({ delay: 300 });
+      if (isShowingMoves) scheduleHideMoves({ delay: 200 });
       setIsDetached(true);
     } else if (isDetached) {
       // If `movesPosition` has been set to the end of `playedMoves` and `isDetached` is
       // currently set to true, then that means that we are coming out of the detached
       // state. In that case, set `isDetached` to false and schedule to show move arrows.
-      scheduleShowMoves({ delay: 300 });
+      scheduleShowMoves({ delay: 600 });
       setIsDetached(false);
     }
   }, [movesPosition]);
