@@ -279,8 +279,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const doNextMove = (move: string) => {
     if (game.move(move)) {
-      addMoveToPlayedMoves(move);
       updateBoard();
+      window.setTimeout(() => addMoveToPlayedMoves(move), 350);
     }
   };
 
