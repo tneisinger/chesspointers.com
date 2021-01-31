@@ -28,12 +28,6 @@ const SHOW_DEBUG_BTN = false;
 const BEEPER_FREQUENCY = 73;
 
 const useStyles = makeStyles((theme) => ({
-  belowChessBoard: {
-    marginTop: '8px',
-  },
-  chessGuideInfo: {
-    marginTop: '0rem',
-  },
   boardBorderDiv: {
     display: 'inline-block',
     padding: '13px',
