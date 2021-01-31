@@ -1,5 +1,5 @@
 import { Chess } from 'chess.js';
-import { ChessTree, ChessOpening } from './chessTypes';
+import { ChessTree, ChessOpening, ChessMoveObject } from './chessTypes';
 import { ChessTrap } from './entity/chessTrap';
 import {
   areChessMovesEquivalent,
@@ -10,10 +10,8 @@ import {
   numHalfMovesPlayed,
 } from './utils';
 
-type MoveObject = { move: string; isPreviewPosition?: boolean };
-
 export const makeChessTree = (
-  moves: (string | MoveObject)[],
+  moves: (string | ChessMoveObject)[],
   childTrees: ChessTree[],
 ): ChessTree => {
   let result: ChessTree = { move: '', children: [] };

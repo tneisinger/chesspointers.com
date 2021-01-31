@@ -2,10 +2,8 @@ import { Square } from 'chess.js';
 
 export type PieceColor = 'white' | 'black';
 
-export type ChessTree = {
+export type ChessMoveObject = {
   move: string;
-  children: ChessTree[];
-
   /*
   // Use `isPreviewPosition` to define which point in the tree should be used as the
   // 'freeze framed' position. When a tree is given to the ChessTreePreview component, if
@@ -22,6 +20,10 @@ export type ChessTree = {
   isPreviewPosition?: boolean;
   teachingPriority?: number;
 };
+
+export interface ChessTree extends ChessMoveObject {
+  children: ChessTree[];
+}
 
 // This type is needed because the chessboardjsx package uses an object like this,
 // but does not export a type for it.
