@@ -25,7 +25,7 @@ createConnection()
 
     // Insert any chessTraps that are not yet saved in the db
     const namesOfTrapsInDB = chessTraps.map((trap) => trap.shortName);
-    allTraps.forEach((trap) => {
+    Object.values(allTraps).forEach((trap) => {
       if (!namesOfTrapsInDB.includes(trap.shortName)) {
         chessTrapsRepository.save(trap);
       }

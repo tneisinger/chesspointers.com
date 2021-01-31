@@ -2,21 +2,14 @@
 import {
   makeChessTree,
   getTreePaths,
-  PathObject,
   mergeTrees,
   doesTreeReachPosition,
   filterTrapsWithOpenings,
   isPathInTree,
   filterTrapsWithPath,
 } from './chessTree';
-import { ChessOpening } from './chessTypes';
-import {
-  legalTrap,
-  englundGambitTrap,
-  elephantTrap,
-  laskerTrap,
-  magnusSmithTrap,
-} from './chessTraps';
+import { ChessOpening, ChessTreePath } from './chessTypes';
+import traps from './chessTraps';
 import { basicCompare } from './utils';
 
 const Bc5 = { move: 'Bc5', teachingPriority: 10 };
@@ -296,7 +289,7 @@ describe("getTreePaths(tree, 'verbose')", () => {
   });
 
   it('works for a complex tree', () => {
-    const received = getTreePaths(complexTree, 'verbose') as PathObject[];
+    const received = getTreePaths(complexTree, 'verbose') as ChessTreePath[];
     received.sort((p1, p2) => basicCompare(p1.path, p2.path));
     const expected = [
       {
@@ -497,12 +490,12 @@ describe('doesTreeReachPosition()', () => {
     'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3';
 
   it('returns true with italian game fen and the legal trap tree', () => {
-    expect(doesTreeReachPosition(italianGameFen, legalTrap.chessTree)).toBe(true);
+    expect(doesTreeReachPosition(italianGameFen, traps.legal.chessTree)).toBe(true);
   });
 
   it('returns false with italian game fen and the englund gambit trap tree', () => {
     expect(
-      doesTreeReachPosition(italianGameFen, englundGambitTrap.chessTree)
+      doesTreeReachPosition(italianGameFen, traps.englundGambit.chessTree)
     ).toBe(false);
   });
 });
@@ -513,64 +506,64 @@ describe('filterTreesWithOpenings()', () => {
   });
 
   it('returns [] when no traps match one opening', () => {
-    const traps = [
-      magnusSmithTrap,
-      laskerTrap,
-      englundGambitTrap,
+    const chessTraps = [
+      traps.magnusSmith,
+      traps.lasker,
+      traps.englundGambit,
     ];
-    expect(filterTrapsWithOpenings([ChessOpening.ItalianGame], traps)).toEqual([]);
+    expect(filterTrapsWithOpenings([ChessOpening.ItalianGame], chessTraps)).toEqual([]);
   });
 
   it('returns correct trap when one trap matches one opening', () => {
-    const traps = [
-      magnusSmithTrap,
-      legalTrap,
-      englundGambitTrap,
-      elephantTrap,
+    const chessTraps = [
+      traps.magnusSmith,
+      traps.legal,
+      traps.englundGambit,
+      traps.elephant,
     ];
-    expect(filterTrapsWithOpenings([ChessOpening.QueensGambit], traps))
-      .toStrictEqual([elephantTrap]);
+    expect(filterTrapsWithOpenings([ChessOpening.QueensGambit], chessTraps))
+      .toStrictEqual([traps.elephant]);
   });
 
   it('returns correct two traps when two traps match one opening', () => {
-    const traps = [
-      magnusSmithTrap,
-      laskerTrap,
-      legalTrap,
-      englundGambitTrap,
-      elephantTrap,
+    const chessTraps = [
+      traps.magnusSmith,
+      traps.lasker,
+      traps.legal,
+      traps.englundGambit,
+      traps.elephant,
     ];
 
-    const filtered = filterTrapsWithOpenings([ChessOpening.QueensGambit], traps);
+    const filtered = filterTrapsWithOpenings([ChessOpening.QueensGambit], chessTraps);
     expect(filtered.map((t) => t.shortName).sort()).toEqual(
-      [elephantTrap, laskerTrap].map((t) => t.shortName).sort()
+      [traps.elephant, traps.lasker].map((t) => t.shortName).sort()
     );
   });
 
   it('returns correct three traps when three traps match two openings', () => {
-    const traps = [
-      magnusSmithTrap,
-      laskerTrap,
-      legalTrap,
-      englundGambitTrap,
-      elephantTrap,
+    const chessTraps = [
+      traps.magnusSmith,
+      traps.lasker,
+      traps.legal,
+      traps.englundGambit,
+      traps.elephant,
     ];
 
     const filtered = filterTrapsWithOpenings(
       [ChessOpening.QueensGambit, ChessOpening.SicilianDefense],
-      traps
+      chessTraps
     );
     expect(filtered.map((t) => t.shortName).sort()).toEqual(
-      [elephantTrap, laskerTrap, magnusSmithTrap].map((t) => t.shortName).sort()
+      [traps.elephant, traps.lasker, traps.magnusSmith].map((t) => t.shortName).sort()
     );
   });
 
   it('returns correct trap from many when one of many openings match', () => {
-    const traps = [
-      magnusSmithTrap,
-      laskerTrap,
-      legalTrap,
-      elephantTrap,
+    const chessTraps = [
+      traps.magnusSmith,
+      traps.lasker,
+      traps.legal,
+      traps.elephant,
     ];
 
     const openings = [
@@ -579,44 +572,44 @@ describe('filterTreesWithOpenings()', () => {
       ChessOpening.EnglundGambit,
     ];
 
-    const filtered = filterTrapsWithOpenings(openings, traps);
+    const filtered = filterTrapsWithOpenings(openings, chessTraps);
     expect(filtered.map((t) => t.shortName).sort()).toEqual(
-      [magnusSmithTrap].map((t) => t.shortName).sort()
+      [traps.magnusSmith].map((t) => t.shortName).sort()
     );
   });
 });
 
 describe('isPathInTree()', () => {
   it('returns false if the path is not in tree', () => {
-    expect(isPathInTree(['e4', 'e5'], magnusSmithTrap.chessTree)).toBe(false);
+    expect(isPathInTree(['e4', 'e5'], traps.magnusSmith.chessTree)).toBe(false);
   });
 
   it('returns true if the path is in the tree', () => {
-    expect(isPathInTree(['e4', 'e5'], legalTrap.chessTree)).toBe(true);
+    expect(isPathInTree(['e4', 'e5'], traps.legal.chessTree)).toBe(true);
   });
 });
 
 describe('filterTrapsWithPath()', () => {
-  const traps = [
-    legalTrap,
-    englundGambitTrap,
-    elephantTrap,
-    laskerTrap,
-    magnusSmithTrap,
+  const chessTraps = [
+    traps.legal,
+    traps.englundGambit,
+    traps.elephant,
+    traps.lasker,
+    traps.magnusSmith,
   ];
 
   it('returns no traps if path does not match any of the traps', () => {
-    expect(filterTrapsWithPath(['a4', 'a5'], traps)).toEqual([]);
+    expect(filterTrapsWithPath(['a4', 'a5'], chessTraps)).toEqual([]);
   });
 
   it('returns correct trap if path matches one of the traps', () => {
-    expect(filterTrapsWithPath(['d4', 'e5'], traps))
-      .toStrictEqual([englundGambitTrap]);
+    expect(filterTrapsWithPath(['d4', 'e5'], chessTraps))
+      .toStrictEqual([traps.englundGambit]);
   });
 
   it('returns multiple correct traps if path matches multiple of the traps', () => {
-    const filtered = filterTrapsWithPath(['d4', 'd5'], traps)
+    const filtered = filterTrapsWithPath(['d4', 'd5'], chessTraps)
     expect(filtered.map((t) => t.shortName).sort())
-      .toEqual([laskerTrap, elephantTrap].map((t) => t.shortName).sort());
+      .toEqual([traps.lasker, traps.elephant].map((t) => t.shortName).sort());
   });
 });
