@@ -44,25 +44,15 @@ export const getUniquePaths = (tree: ChessTree, prePath: string[] = []): string[
     if (tree.children.length < 1) return tree.move === '' ? [] : [[tree.move]];
     if (tree.move !== '') prePath.push(tree.move);
   }
-  if (tree.children.length > 0) {
-    tree.children.forEach((childTree) => {
-      // To define a ChessTree that allows for multiple first move options, the root node
-      // should have its 'move' value set to the empty string, and have multiple children.
-      // This means that the move of a node can only be the empty string if it is the root
-      // node of the ChessTree. If we find a child node where move === '', throw an error
-      if (childTree.move === '') {
-        throw new Error('Empty move strings are only allowed at the root of a ChessTree');
-      }
-      const newPath = [...prePath, childTree.move];
-      const deeperPaths = getUniquePaths(childTree, newPath);
-      if (deeperPaths.length > 0) {
-        deeperPaths.forEach((p) => paths.push(p));
-      } else {
-        paths.push(newPath);
-      }
-    });
-  }
-
+  tree.children.forEach((childTree) => {
+    const newPath = [...prePath, childTree.move];
+    const deeperPaths = getUniquePaths(childTree, newPath);
+    if (deeperPaths.length > 0) {
+      deeperPaths.forEach((p) => paths.push(p));
+    } else {
+      paths.push(newPath);
+    }
+  });
   return paths;
 };
 
