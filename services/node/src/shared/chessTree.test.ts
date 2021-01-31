@@ -194,6 +194,38 @@ describe('makeChessTree()', () => {
       }]
     });
   })
+
+  it('can make a tree with defined teachingPriority values', () => {
+    const Nf3 = { move: 'Nf3', teachingPriority: 10 };
+    const branch_Nf3 = makeChessTree([Nf3],[]);
+    const f4 = { move: 'f4', teachingPriority: 5 };
+    const branch_f4 = makeChessTree([f4],[]);
+    const tree = makeChessTree(
+      ['e4', 'e5'],
+      [
+        branch_Nf3,
+        branch_f4
+      ]
+    );
+    expect(tree).toStrictEqual({
+      move: 'e4',
+      children: [{
+        move: 'e5',
+        children: [
+          {
+            move: 'Nf3',
+            teachingPriority: 10,
+            children: []
+          },
+          {
+            move: 'f4',
+            teachingPriority: 5,
+            children: []
+          }
+        ]
+      }]
+    });
+  })
 });
 
 describe('getUniquePaths()', () => {

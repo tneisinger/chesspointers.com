@@ -20,6 +20,7 @@ export type ChessTree = {
   // tree.
   */
   isPreviewPosition?: boolean;
+  teachingPriority?: number;
 };
 
 // This type is needed because the chessboardjsx package uses an object like this,
