@@ -58,7 +58,8 @@ export function getTreePaths(tree: ChessTree, verbose?: 'verbose'): any[] {
     if (subtree.children.length < 1) {
       const completePath = subtree.move == '' ? path : [...path, subtree.move];
 
-      // If `options.verbose` === true, include extra information with each path
+      // If the `verbose` flag was included in the function call, include extra
+      // information with each path
       const result = verbose
         ? { path: completePath, teachingPriority: subtree.teachingPriority || 0 }
         : completePath;
