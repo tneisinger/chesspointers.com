@@ -48,6 +48,12 @@ export function idxOfFirstPairThat<T>(
   return null;
 }
 
+export function basicCompare<T>(a: T, b: T): number {
+  if (a < b) return -1;
+  if (a > b) return 1;
+  return 0;
+}
+
 export function areChessPathsEquivalent(path1: string[], path2: string[]): boolean {
   return (
     path1.length == path2.length &&
