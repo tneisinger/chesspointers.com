@@ -43,52 +43,36 @@ export type PathObject = {
   teachingPriority: number;
 };
 
-export const getTreePaths = (tree: ChessTree, prePath: string[] = []): string[][] => {
+export function getTreePaths(tree: ChessTree): string[][];
+export function getTreePaths(tree: ChessTree, verbose: 'verbose'): PathObject[];
+export function getTreePaths(tree: ChessTree, verbose?: 'verbose'): any[] {
   const paths = [];
-  if (prePath.length === 0) {
-    if (tree.children.length < 1) return tree.move === '' ? [] : [[tree.move]];
-    if (tree.move !== '') prePath.push(tree.move);
+  if (tree.move != '') {
+    tree = { move: '', children: [tree], ...tree };
   }
-  tree.children.forEach((childTree) => {
-    const newPath = [...prePath, childTree.move];
-    const deeperPaths = getTreePaths(childTree, newPath);
-    if (deeperPaths.length > 0) {
-      deeperPaths.forEach((p) => paths.push(p));
-    } else {
-      paths.push(newPath);
-    }
-  });
-  return paths;
-};
+  const incompletePaths: { path: string[]; subtree: ChessTree }[] = [
+    { path: [], subtree: tree },
+  ];
+  while (incompletePaths.length > 0) {
+    const { path, subtree } = incompletePaths.shift();
+    if (subtree.children.length < 1) {
+      const completePath = subtree.move == '' ? path : [...path, subtree.move];
 
-export const getTreePathObjects = (
-  tree: ChessTree,
-  prePath: string[] = [],
-): PathObject[] => {
-  const pathObjects: PathObject[] = [];
-  if (prePath.length === 0) {
-    if (tree.children.length < 1) {
-      const path: string[] = tree.move === '' ? [] : [tree.move];
-      const teachingPriority = tree.teachingPriority || 0;
-      return [{ path, teachingPriority }];
-    }
-    if (tree.move !== '') prePath.push(tree.move);
-  }
-  tree.children.forEach((childTree) => {
-    const newPath = [...prePath, childTree.move];
-    const deeperPathObjects = getTreePathObjects(childTree, newPath);
-    if (deeperPathObjects.length > 0) {
-      deeperPathObjects.forEach((p) => pathObjects.push(p));
+      // If `options.verbose` === true, include extra information with each path
+      const result = verbose
+        ? { path: completePath, teachingPriority: subtree.teachingPriority || 0 }
+        : completePath;
+
+      paths.push(result);
     } else {
-      const newPathObject = {
-        path: newPath,
-        teachingPriority: childTree.teachingPriority || 0,
-      };
-      pathObjects.push(newPathObject);
+      subtree.children.forEach((child) => {
+        const newPath = subtree.move === '' ? path : [...path, subtree.move];
+        incompletePaths.push({ path: newPath, subtree: child });
+      });
     }
-  });
-  return pathObjects;
-};
+  }
+  return paths;
+}
 
 export const validateChessTree = (tree: ChessTree): void => {
   const paths = getTreePaths(tree);

@@ -2,7 +2,7 @@
 import {
   makeChessTree,
   getTreePaths,
-  getTreePathObjects,
+  PathObject,
   mergeTrees,
   doesTreeReachPosition,
   filterTrapsWithOpenings,
@@ -17,6 +17,7 @@ import {
   laskerTrap,
   magnusSmithTrap,
 } from './chessTraps';
+import { basicCompare } from './utils';
 
 const Bc5 = { move: 'Bc5', teachingPriority: 10 };
 const Kd8 = { move: 'Kd8', teachingPriority: 15 };
@@ -234,7 +235,7 @@ describe('makeChessTree()', () => {
   })
 });
 
-describe('getTreePaths()', () => {
+describe('getTreePaths(tree)', () => {
   it('works for a tree with no branches', () => {
     const moves = ['e4', 'e5', 'Nf3', 'Nc6'];
     const tree = makeChessTree(moves, []);
@@ -242,7 +243,7 @@ describe('getTreePaths()', () => {
   });
 
   it('works for a complex tree', () => {
-    expect(getTreePaths(complexTree)).toEqual([
+    expect(getTreePaths(complexTree).sort()).toEqual([
       [
         'e4', 'e5',
         'Nf3', 'Nc6',
@@ -276,7 +277,7 @@ describe('getTreePaths()', () => {
         'Nxe5', 'Qg5',
         'Bxf7+', 'Kd8',
       ]
-    ]);
+    ].sort());
   });
 
   it('works for a tree with just one move', () => {
@@ -286,15 +287,18 @@ describe('getTreePaths()', () => {
   });
 });
 
-describe('getTreePathObjects()', () => {
+describe("getTreePaths(tree, 'verbose')", () => {
   it('works for a tree with no branches', () => {
     const moves = ['e4', 'e5', 'Nf3', 'Nc6'];
     const tree = makeChessTree(moves, []);
-    expect(getTreePathObjects(tree)).toEqual([{ path: moves, teachingPriority: 0}]);
+    expect(getTreePaths(tree, 'verbose'))
+      .toEqual([{ path: moves, teachingPriority: 0}]);
   });
 
   it('works for a complex tree', () => {
-    expect(getTreePathObjects(complexTree)).toEqual([
+    const received = getTreePaths(complexTree, 'verbose') as PathObject[];
+    received.sort((p1, p2) => basicCompare(p1.path, p2.path));
+    const expected = [
       {
         path: [
           'e4', 'e5',
@@ -340,13 +344,16 @@ describe('getTreePathObjects()', () => {
         ],
         teachingPriority: 15,
       }
-    ]);
+    ].sort((p1, p2) => basicCompare(p1.path, p2.path));
+
+    expect(received).toStrictEqual(expected);
   });
 
   it('works for a tree with just one move', () => {
     const moves = ['e4'];
     const tree = makeChessTree(moves, []);
-    expect(getTreePathObjects(tree)).toStrictEqual([{ path: moves, teachingPriority: 0 }]);
+    expect(getTreePaths(tree, 'verbose'))
+      .toStrictEqual([{ path: moves, teachingPriority: 0 }]);
   });
 });
 
