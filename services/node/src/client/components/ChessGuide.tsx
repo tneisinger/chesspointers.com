@@ -51,6 +51,7 @@ type PathStats = {
   mode: GuideMode;
   path: string[];
   timesCompleted: number;
+  teachingPriority: number;
 };
 
 type MoveFromTo = {
@@ -69,6 +70,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 }) => {
   const classes = useStyles({});
 
+  const pathObjects = getTreePaths(chessTree, 'verbose');
   const paths = getTreePaths(chessTree);
 
   const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
@@ -76,7 +78,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
   const [mode, setMode] = useState<GuideMode>(guideMode);
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
-  const [pathsCompleted, setPathsCompleted] = useState<PathStats[]>([]);
+  const [pathStats, setPathStats] = useState<PathStats[]>([]);
   const [game] = useState<ChessInstance>(new Chess());
   const [fen, setFen] = useState(game.fen());
   const [pendingMove, setPendingMove] = useState<MoveFromTo | undefined>(undefined);
@@ -138,19 +140,21 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return game.turn() === userPlaysAs.charAt(0);
   };
 
-  // Initialize all possible 'pathsCompleted' values with their 'timesCompleted' values
+  // Initialize 'pathStats' for all paths, setting their 'timesCompleted' values
   // set to zero.
-  const makeInitialPathsCompletedValue = (): PathStats[] => {
-    return paths.reduce((acc: PathStats[], path) => {
+  const makeInitialPathStatsValues = (): PathStats[] => {
+    return pathObjects.reduce((acc: PathStats[], pathObject) => {
       const practicePath: PathStats = {
         mode: 'practice',
-        path,
+        path: pathObject.path,
         timesCompleted: 0,
+        teachingPriority: 0,
       };
       const learnPath: PathStats = {
         mode: 'learn',
-        path,
+        path: pathObject.path,
         timesCompleted: 0,
+        teachingPriority: pathObject.teachingPriority,
       };
       return [...acc, practicePath, learnPath];
     }, []);
@@ -175,12 +179,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   useEffect(() => {
     reset();
-    setPathsCompleted(makeInitialPathsCompletedValue());
+    setPathStats(makeInitialPathStatsValues());
   }, []);
 
   useEffect(() => {
     reset();
-    setPathsCompleted(makeInitialPathsCompletedValue());
+    setPathStats(makeInitialPathStatsValues());
   }, [chessTree, userPlaysAs]);
 
   const getNextMoves = (): string[] => {
@@ -364,9 +368,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       // If there is more than one move that the computer can play, the computer randomly
       // selects a move from among the moves that are on paths that have been completed
       // the fewest number of the times.
-      const move = randomElem(getMovesThatLeadToLeastCompletedPaths());
+      const move = randomElem(getBestNextMoves());
       if (move == undefined) {
-        throw new Error('No moves returned by getMovesThatLeadToLeastCompletedPaths()');
+        throw new Error('No moves returned by getBestNextMoves()');
       }
       doNextMoveTimeout.current = window.setTimeout(() => {
         doNextMove(move);
@@ -377,9 +381,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const isAtPathEnd = (): boolean =>
     paths.some((path) => areChessPathsEquivalent(path, playedMoves));
 
-  const getMovesThatLeadToLeastCompletedPaths = (): string[] => {
+  const getBestNextMoves = (): string[] => {
     // Get the paths that are reachable from the current position forward.
-    const relevantPaths = pathsCompleted.filter((p) => {
+    const relevantPaths = pathStats.filter((p) => {
       return (
         p.mode == mode &&
         playedMoves.every((move, idx) => areChessMovesEquivalent(move, p.path[idx]))
@@ -389,12 +393,18 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     const leastCompletedPaths = relevantPaths.filter(
       (p) => p.timesCompleted === lowestTimesCompleted,
     );
-    return leastCompletedPaths.map((p) => p.path[playedMoves.length]);
+    const highestTeachingPriority = Math.max(
+      ...leastCompletedPaths.map((p) => p.teachingPriority),
+    );
+    const bestPaths = leastCompletedPaths.filter(
+      (p) => p.teachingPriority === highestTeachingPriority,
+    );
+    return bestPaths.map((p) => p.path[playedMoves.length]);
   };
 
   const recordPathCompletion = () => {
     const [matchingPaths, nonMatchingPaths] = partition(
-      pathsCompleted,
+      pathStats,
       (p) => areChessPathsEquivalent(p.path, playedMoves) && p.mode === mode,
     );
     if (matchingPaths.length !== 1) {
@@ -404,7 +414,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         ...matchingPaths[0],
         timesCompleted: matchingPaths[0].timesCompleted + 1,
       };
-      setPathsCompleted([...nonMatchingPaths, updatedPathStats]);
+      setPathStats([...nonMatchingPaths, updatedPathStats]);
     }
   };
 
@@ -427,7 +437,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   }, [playedMoves]);
 
   const getNumPathsCompleted = (): number => {
-    return pathsCompleted.reduce((acc: number, p) => {
+    return pathStats.reduce((acc: number, p) => {
       if (p.mode === mode && p.timesCompleted > 0) {
         return acc + 1;
       } else {
