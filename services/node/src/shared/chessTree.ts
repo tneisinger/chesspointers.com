@@ -17,27 +17,17 @@ export const makeChessTree = (
   childTrees: ChessTree[],
 ): ChessTree => {
   let result: ChessTree = { move: '', children: [] };
-  if (moves.length < 1) {
-    return {
-      move: '',
-      children: childTrees,
-    };
-  }
+  if (moves.length < 1) return { move: '', children: childTrees };
   const movesCopy = [...moves];
   movesCopy.reverse().forEach((moveOrObject, idx) => {
-    let move: string;
-    let isPreviewPosition = false;
+    const newResult = {} as any;
     if (typeof moveOrObject === 'string') {
-      move = moveOrObject;
+      newResult.move = moveOrObject;
     } else {
-      move = moveOrObject.move;
-      isPreviewPosition = moveOrObject.isPreviewPosition;
+      Object.entries(moveOrObject).forEach(([key, value]) => {
+        if (value != undefined) newResult[key] = value;
+      });
     }
-    const newResult = new Object() as any;
-    if (isPreviewPosition) {
-      newResult.isPreviewPosition = true;
-    }
-    newResult.move = move;
     if (idx === 0) {
       newResult.children = childTrees;
     } else {
@@ -45,7 +35,6 @@ export const makeChessTree = (
     }
     result = newResult;
   });
-
   return result;
 };
 
