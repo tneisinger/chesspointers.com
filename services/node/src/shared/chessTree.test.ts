@@ -173,6 +173,27 @@ describe('makeChessTree()', () => {
       children: [ simpleTree1, simpleTree2 ],
     });
   });
+
+  it('can make a tree with a defined preview position', () => {
+    const e5 = { move: 'e5', isPreviewPosition: true };
+    const tree = makeChessTree(
+      ['e4', e5],
+      [ { move: 'Nf3', children: [] },
+        { move: 'f4', children: [] }
+      ]
+    );
+    expect(tree).toStrictEqual({
+      move: 'e4',
+      children: [{
+        move: 'e5',
+        isPreviewPosition: true,
+        children: [
+          { move: 'Nf3', children: [] },
+          { move: 'f4', children: [] }
+        ]
+      }]
+    });
+  })
 });
 
 describe('getUniquePaths()', () => {
