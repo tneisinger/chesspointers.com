@@ -272,6 +272,12 @@ describe('getUniquePaths()', () => {
       ]
     ]);
   });
+
+  it('works for a tree with just one move', () => {
+    const moves = ['e4'];
+    const tree = makeChessTree(moves, []);
+    expect(getUniquePaths(tree)).toEqual([moves]);
+  });
 });
 
 describe('mergeTrees()', () => {

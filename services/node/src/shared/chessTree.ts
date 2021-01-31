@@ -40,8 +40,9 @@ export const makeChessTree = (
 
 export const getUniquePaths = (tree: ChessTree, prePath: string[] = []): string[][] => {
   const paths = [];
-  if (prePath.length === 0 && tree.move !== '') {
-    prePath.push(tree.move);
+  if (prePath.length === 0) {
+    if (tree.children.length < 1) return tree.move === '' ? [] : [[tree.move]];
+    if (tree.move !== '') prePath.push(tree.move);
   }
   if (tree.children.length > 0) {
     tree.children.forEach((childTree) => {
