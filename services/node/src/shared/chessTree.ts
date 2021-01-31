@@ -38,7 +38,12 @@ export const makeChessTree = (
   return result;
 };
 
-export const getUniquePaths = (tree: ChessTree, prePath: string[] = []): string[][] => {
+export type PathObject = {
+  path: string[];
+  teachingPriority: number;
+};
+
+export const getTreePaths = (tree: ChessTree, prePath: string[] = []): string[][] => {
   const paths = [];
   if (prePath.length === 0) {
     if (tree.children.length < 1) return tree.move === '' ? [] : [[tree.move]];
@@ -46,7 +51,7 @@ export const getUniquePaths = (tree: ChessTree, prePath: string[] = []): string[
   }
   tree.children.forEach((childTree) => {
     const newPath = [...prePath, childTree.move];
-    const deeperPaths = getUniquePaths(childTree, newPath);
+    const deeperPaths = getTreePaths(childTree, newPath);
     if (deeperPaths.length > 0) {
       deeperPaths.forEach((p) => paths.push(p));
     } else {
@@ -56,8 +61,37 @@ export const getUniquePaths = (tree: ChessTree, prePath: string[] = []): string[
   return paths;
 };
 
+export const getTreePathObjects = (
+  tree: ChessTree,
+  prePath: string[] = [],
+): PathObject[] => {
+  const pathObjects: PathObject[] = [];
+  if (prePath.length === 0) {
+    if (tree.children.length < 1) {
+      const path: string[] = tree.move === '' ? [] : [tree.move];
+      const teachingPriority = tree.teachingPriority || 0;
+      return [{ path, teachingPriority }];
+    }
+    if (tree.move !== '') prePath.push(tree.move);
+  }
+  tree.children.forEach((childTree) => {
+    const newPath = [...prePath, childTree.move];
+    const deeperPathObjects = getTreePathObjects(childTree, newPath);
+    if (deeperPathObjects.length > 0) {
+      deeperPathObjects.forEach((p) => pathObjects.push(p));
+    } else {
+      const newPathObject = {
+        path: newPath,
+        teachingPriority: childTree.teachingPriority || 0,
+      };
+      pathObjects.push(newPathObject);
+    }
+  });
+  return pathObjects;
+};
+
 export const validateChessTree = (tree: ChessTree): void => {
-  const paths = getUniquePaths(tree);
+  const paths = getTreePaths(tree);
   paths.forEach((path) => {
     const game = new Chess();
     path.forEach((move) => {
@@ -95,7 +129,9 @@ function getSubtreeAtPath(path: string[], tree: ChessTree): ChessTree {
 export function mergeTrees(...trees: ChessTree[]): ChessTree {
   // Put all the paths of all the trees into one list
   const paths: string[][] = [];
-  trees.forEach((tree) => getUniquePaths(tree).forEach((path) => paths.push(path)));
+  trees.forEach((tree) => {
+    getTreePaths(tree).forEach((path) => paths.push(path));
+  });
 
   // If there are no paths, just return an empty tree
   if (paths.length <= 0) {
@@ -145,7 +181,7 @@ export function getPreviewPositionPath(tree: ChessTree): string[] | null {
   if (tree.isPreviewPosition) {
     return tree.move === '' ? [] : [tree.move];
   }
-  const paths = getUniquePaths(tree);
+  const paths = getTreePaths(tree);
 
   // Standardize tree so that first move is definitely the empty string.
   if (tree.move === '') {
@@ -181,7 +217,7 @@ export function doesTreeReachPosition(fen: string, tree: ChessTree): boolean {
   // We don't care about the halfmove clock or the fullmove number, so drop those
   fen = dropClockAndMoveNum(fen);
   const chess = new Chess();
-  const paths = getUniquePaths(tree);
+  const paths = getTreePaths(tree);
   for (let i = 0; i < paths.length; i++) {
     chess.reset();
     const path = paths[i];
@@ -272,7 +308,7 @@ export function filterTrapsWithOpenings(
 }
 
 export function isPathInTree(path: string[], tree: ChessTree): boolean {
-  const paths = getUniquePaths(tree);
+  const paths = getTreePaths(tree);
   return paths.some((treePath) => arraysEqual(treePath.slice(0, path.length), path));
 }
 

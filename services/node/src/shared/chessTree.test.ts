@@ -1,7 +1,8 @@
 /* eslint-disable */
 import {
   makeChessTree,
-  getUniquePaths,
+  getTreePaths,
+  getTreePathObjects,
   mergeTrees,
   doesTreeReachPosition,
   filterTrapsWithOpenings,
@@ -17,10 +18,13 @@ import {
   magnusSmithTrap,
 } from './chessTraps';
 
+const Bc5 = { move: 'Bc5', teachingPriority: 10 };
+const Kd8 = { move: 'Kd8', teachingPriority: 15 };
+
 const branch_Rf1  = makeChessTree(['Rf1', 'Qxe4+', 'Be2', 'Nf3#'], []);
-const branch_Nxh8 = makeChessTree(['Nxh8', 'Qxh1+', 'Bf1', 'Qe4+', 'Be2', 'Bc5'], []);
+const branch_Nxh8 = makeChessTree(['Nxh8', 'Qxh1+', 'Bf1', 'Qe4+', 'Be2', Bc5], []);
 const branch_g3   = makeChessTree(['g3', 'Qxe5'], []);
-const branch_Bxf7 = makeChessTree(['Bxf7+', 'Kd8'], []);
+const branch_Bxf7 = makeChessTree(['Bxf7+', Kd8], []);
 const branch_Nxf7 = makeChessTree(['Nxf7', 'Qxg2'], [branch_Rf1, branch_Nxh8]);
 
 const complexTree = makeChessTree(
@@ -135,6 +139,7 @@ describe('makeChessTree()', () => {
                                       move: 'Be2',
                                       children: [{
                                         move: 'Bc5',
+                                        teachingPriority: 10,
                                         children: []
                                       }]
                                     }]
@@ -149,6 +154,7 @@ describe('makeChessTree()', () => {
                         move: 'Bxf7+',
                         children: [{
                           move: 'Kd8',
+                          teachingPriority: 15,
                           children: []
                         }]
                       }
@@ -228,15 +234,15 @@ describe('makeChessTree()', () => {
   })
 });
 
-describe('getUniquePaths()', () => {
+describe('getTreePaths()', () => {
   it('works for a tree with no branches', () => {
     const moves = ['e4', 'e5', 'Nf3', 'Nc6'];
     const tree = makeChessTree(moves, []);
-    expect(getUniquePaths(tree)).toEqual([moves]);
+    expect(getTreePaths(tree)).toEqual([moves]);
   });
 
   it('works for a complex tree', () => {
-    expect(getUniquePaths(complexTree)).toEqual([
+    expect(getTreePaths(complexTree)).toEqual([
       [
         'e4', 'e5',
         'Nf3', 'Nc6',
@@ -276,7 +282,71 @@ describe('getUniquePaths()', () => {
   it('works for a tree with just one move', () => {
     const moves = ['e4'];
     const tree = makeChessTree(moves, []);
-    expect(getUniquePaths(tree)).toEqual([moves]);
+    expect(getTreePaths(tree)).toEqual([moves]);
+  });
+});
+
+describe('getTreePathObjects()', () => {
+  it('works for a tree with no branches', () => {
+    const moves = ['e4', 'e5', 'Nf3', 'Nc6'];
+    const tree = makeChessTree(moves, []);
+    expect(getTreePathObjects(tree)).toEqual([{ path: moves, teachingPriority: 0}]);
+  });
+
+  it('works for a complex tree', () => {
+    expect(getTreePathObjects(complexTree)).toEqual([
+      {
+        path: [
+          'e4', 'e5',
+          'Nf3', 'Nc6',
+          'Bc4', 'Nd4',
+          'Nxe5', 'Qg5',
+          'g3', 'Qxe5'
+          ],
+        teachingPriority: 0,
+      },
+      {
+        path: [
+          'e4', 'e5',
+          'Nf3', 'Nc6',
+          'Bc4', 'Nd4',
+          'Nxe5', 'Qg5',
+          'Nxf7', 'Qxg2',
+          'Rf1', 'Qxe4+',
+          'Be2', 'Nf3#'
+        ],
+        teachingPriority: 0,
+      },
+      {
+        path: [
+          'e4', 'e5',
+          'Nf3', 'Nc6',
+          'Bc4', 'Nd4',
+          'Nxe5', 'Qg5',
+          'Nxf7', 'Qxg2',
+          'Nxh8', 'Qxh1+',
+          'Bf1', 'Qe4+',
+          'Be2', 'Bc5',
+        ],
+        teachingPriority: 10,
+      },
+      {
+        path: [
+          'e4', 'e5',
+          'Nf3', 'Nc6',
+          'Bc4', 'Nd4',
+          'Nxe5', 'Qg5',
+          'Bxf7+', 'Kd8',
+        ],
+        teachingPriority: 15,
+      }
+    ]);
+  });
+
+  it('works for a tree with just one move', () => {
+    const moves = ['e4'];
+    const tree = makeChessTree(moves, []);
+    expect(getTreePathObjects(tree)).toStrictEqual([{ path: moves, teachingPriority: 0 }]);
   });
 });
 
@@ -381,8 +451,8 @@ describe('mergeTrees()', () => {
     ]);
     const tree2 = makeChessTree(['d4', 'e5'], []);
     const merged = mergeTrees(tree1, tree2);
-    expect(getUniquePaths(merged).sort()).toEqual(
-      getUniquePaths(
+    expect(getTreePaths(merged).sort()).toEqual(
+      getTreePaths(
         makeChessTree([], [
           makeChessTree(['e4', 'e5'], []),
           makeChessTree(['d4'], [
@@ -401,8 +471,8 @@ describe('mergeTrees()', () => {
       makeChessTree(['d4', 'd5'], []),
     ]);
     const merged = mergeTrees(tree1, tree2);
-    expect(getUniquePaths(merged).sort()).toEqual(
-      getUniquePaths(
+    expect(getTreePaths(merged).sort()).toEqual(
+      getTreePaths(
         makeChessTree([], [
           makeChessTree(['e4', 'e5'], []),
           makeChessTree(['d4'], [

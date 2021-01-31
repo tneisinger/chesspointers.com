@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
-import { getUniquePaths, getPreviewPositionPath } from '../../shared/chessTree';
+import { getTreePaths, getPreviewPositionPath } from '../../shared/chessTree';
 import { Chess, ChessInstance } from 'chess.js';
 import { calcChessBoardSize, BoardSizeUnits } from '../utils';
 import useInterval from 'react-useinterval';
@@ -65,7 +65,7 @@ const ChessTreePreview: React.FC<Props> = ({
   };
 
   const [chess] = useState<ChessInstance>(new Chess());
-  const [paths] = useState<string[][]>(getUniquePaths(chessTree));
+  const [paths] = useState<string[][]>(getTreePaths(chessTree));
   const [boardPosition, setBoardPosition] = useState<string>(chess.fen());
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [currentPathIdx, setCurrentPathIdx] = useState<number>(0);

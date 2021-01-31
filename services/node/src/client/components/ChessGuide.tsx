@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import React, { useState, useEffect, useRef } from 'react';
 import { Chess, ChessInstance, Square, ShortMove } from 'chess.js';
 import { ChessTree, PieceColor, PromotionPiece } from '../../shared/chessTypes';
-import { getUniquePaths } from '../../shared/chessTree';
+import { getTreePaths } from '../../shared/chessTree';
 import {
   areChessPathsEquivalent,
   areChessMovesEquivalent,
@@ -69,7 +69,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 }) => {
   const classes = useStyles({});
 
-  const paths = getUniquePaths(chessTree);
+  const paths = getTreePaths(chessTree);
 
   const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
