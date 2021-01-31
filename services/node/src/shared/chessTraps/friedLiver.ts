@@ -42,14 +42,24 @@ const branch_Ke6 = makeChessTree(
   ]
 )
 
+const Qxe6_checkmate = {
+  move: 'Qxe6#',
+  teachingPriority: 10,
+}
+
 const branch_Kg8 = makeChessTree(
-  [         'Kg8',
-    'Bxd5+', 'Qxd5',
-    'Qxd5+', 'Be6',
-    'Qxe6#',
+  [                  'Kg8',
+    'Bxd5+',         'Qxd5',
+    'Qxd5+',         'Be6',
+     Qxe6_checkmate,
   ],
   []
 );
+
+const Nxh8 = {
+  move: 'Nxh8',
+  teachingPriority: -5,
+}
 
 const branch_Na5 = makeChessTree(
   [          'Na5',
@@ -59,7 +69,7 @@ const branch_Na5 = makeChessTree(
     'Qxa8',  'Bb7',
     'Qxd8+', 'Kxd8',
     'Nxf7+', 'Ke8',
-    'Nxh8',
+     Nxh8,
   ],
   []
 );
@@ -87,10 +97,12 @@ const branch_d5 = makeChessTree(
 
 );
 
+const Bb3 = { move: 'Bb3', teachingPriority: -10 };
+
 const branch_Bc5 = makeChessTree(
   [          'Bc5',
     'Bxf7+', 'Ke7',
-    'Bb3',
+     Bb3,
   ],
   []
 );
