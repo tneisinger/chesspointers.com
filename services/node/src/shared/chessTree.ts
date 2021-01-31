@@ -1,5 +1,5 @@
 import { Chess } from 'chess.js';
-import { ChessTree, ChessOpening, ChessMoveObject } from './chessTypes';
+import { ChessTree, ChessOpening, ChessTreeMove, ChessTreePath } from './chessTypes';
 import { ChessTrap } from './entity/chessTrap';
 import {
   areChessMovesEquivalent,
@@ -11,7 +11,7 @@ import {
 } from './utils';
 
 export const makeChessTree = (
-  moves: (string | ChessMoveObject)[],
+  moves: (string | ChessTreeMove)[],
   childTrees: ChessTree[],
 ): ChessTree => {
   let result: ChessTree = { move: '', children: [] };
@@ -36,13 +36,8 @@ export const makeChessTree = (
   return result;
 };
 
-export type PathObject = {
-  path: string[];
-  teachingPriority: number;
-};
-
 export function getTreePaths(tree: ChessTree): string[][];
-export function getTreePaths(tree: ChessTree, verbose: 'verbose'): PathObject[];
+export function getTreePaths(tree: ChessTree, verbose: 'verbose'): ChessTreePath[];
 export function getTreePaths(tree: ChessTree, verbose?: 'verbose'): any[] {
   const paths = [];
   if (tree.move != '') {

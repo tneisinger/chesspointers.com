@@ -2,7 +2,15 @@ import { Square } from 'chess.js';
 
 export type PieceColor = 'white' | 'black';
 
-export type ChessMoveObject = {
+interface HasTeachingPriority {
+  teachingPriority: number;
+}
+
+export interface ChessTreePath extends HasTeachingPriority {
+  path: string[];
+}
+
+export interface ChessTreeMove extends Partial<HasTeachingPriority> {
   move: string;
   /*
   // Use `isPreviewPosition` to define which point in the tree should be used as the
@@ -18,10 +26,9 @@ export type ChessMoveObject = {
   // tree.
   */
   isPreviewPosition?: boolean;
-  teachingPriority?: number;
-};
+}
 
-export interface ChessTree extends ChessMoveObject {
+export interface ChessTree extends ChessTreeMove {
   children: ChessTree[];
 }
 

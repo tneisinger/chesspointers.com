@@ -3,7 +3,12 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import React, { useState, useEffect, useRef } from 'react';
 import { Chess, ChessInstance, Square, ShortMove } from 'chess.js';
-import { ChessTree, PieceColor, PromotionPiece } from '../../shared/chessTypes';
+import {
+  ChessTree,
+  PieceColor,
+  PromotionPiece,
+  ChessTreePath,
+} from '../../shared/chessTypes';
 import { getTreePaths } from '../../shared/chessTree';
 import {
   areChessPathsEquivalent,
@@ -70,8 +75,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 }) => {
   const classes = useStyles({});
 
-  const pathObjects = getTreePaths(chessTree, 'verbose');
-  const paths = getTreePaths(chessTree);
+  const paths = getTreePaths(chessTree, 'verbose');
 
   const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -143,18 +147,18 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // Initialize 'pathStats' for all paths, setting their 'timesCompleted' values
   // set to zero.
   const makeInitialPathStatsValues = (): PathStats[] => {
-    return pathObjects.reduce((acc: PathStats[], pathObject) => {
+    return paths.reduce((acc: PathStats[], pathObj) => {
       const practicePath: PathStats = {
         mode: 'practice',
-        path: pathObject.path,
+        path: pathObj.path,
         timesCompleted: 0,
         teachingPriority: 0,
       };
       const learnPath: PathStats = {
         mode: 'learn',
-        path: pathObject.path,
+        path: pathObj.path,
         timesCompleted: 0,
-        teachingPriority: pathObject.teachingPriority,
+        teachingPriority: pathObj.teachingPriority,
       };
       return [...acc, practicePath, learnPath];
     }, []);
@@ -189,8 +193,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const getNextMoves = (): string[] => {
     const result: string[] = [];
-    relevantPaths().forEach((path) => {
-      const nextMove = path[playedMoves.length];
+    relevantPaths().forEach((pathObj) => {
+      const nextMove = pathObj.path[playedMoves.length];
       if (nextMove != undefined && !result.includes(nextMove)) {
         result.push(nextMove);
       }
@@ -198,9 +202,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return result;
   };
 
-  const relevantPaths = (): string[][] => {
-    return paths.filter((path) => {
-      return playedMoves.every((move, idx) => areChessMovesEquivalent(move, path[idx]));
+  const relevantPaths = (): ChessTreePath[] => {
+    return paths.filter((pathObj) => {
+      return playedMoves.every((move, idx) =>
+        areChessMovesEquivalent(move, pathObj.path[idx]),
+      );
     });
   };
 
@@ -379,7 +385,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const isAtPathEnd = (): boolean =>
-    paths.some((path) => areChessPathsEquivalent(path, playedMoves));
+    paths.some((pathObj) => areChessPathsEquivalent(pathObj.path, playedMoves));
 
   const getBestNextMoves = (): string[] => {
     // Get the paths that are reachable from the current position forward.
