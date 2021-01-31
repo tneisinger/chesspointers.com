@@ -4,6 +4,7 @@ import { makeChessTree } from '../chessTree';
 const Nbd7 = { move: 'Nbd7', isPreviewPosition: true };
 
 const chessTree = makeChessTree(
+  // prettier-ignore
   [ 'd4',   'd5',
     'c4',   'e6',
     'Nc3',  'Nf6',
@@ -14,7 +15,7 @@ const chessTree = makeChessTree(
     'Qd2',  'Bxd2+',
     'Kxd2', 'Kxd8',
   ],
-  []
+  [],
 );
 
 const trap = new ChessTrap();

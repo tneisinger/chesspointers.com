@@ -2,34 +2,37 @@ import { ChessTrap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const branch_Qxc3 = makeChessTree(
+  // prettier-ignore
   [ 'Qxc3', 'Qc1#' ],
-  []
+  [],
 );
 
 const branch_Nxc3 = makeChessTree(
+  // prettier-ignore
   [ 'Nxc3', 'Qxa1+',
     'Nd1',  'Nxe5',
     'Nxe5', 'Qxe5',
   ],
-  []
+  [],
 );
 
 const branch_Bxb4 = makeChessTree(
+  // prettier-ignore
   [ 'Bxb4', 'Nxb4',
   ],
-  []
+  [],
 );
 
 const branch_Qd2 = makeChessTree(
+  // prettier-ignore
   [ 'Qd2', 'Bxc3' ],
-  [ branch_Qxc3,
-    branch_Nxc3,
-  ]
+  [branch_Qxc3, branch_Nxc3],
 );
 
 const Qb4_check = { move: 'Qb4+', isPreviewPosition: true };
 
 const chessTree = makeChessTree(
+  // prettier-ignore
   [ 'd4',   'e5',
     'dxe5', 'Nc6',
     'Nf3',  'Qe7',
@@ -37,9 +40,7 @@ const chessTree = makeChessTree(
     'Bd2',  'Qxb2',
     'Bc3',  'Bb4',
   ],
-  [ branch_Qd2,
-    branch_Bxb4,
-  ]
+  [branch_Qd2, branch_Bxb4],
 );
 
 const trap = new ChessTrap();
