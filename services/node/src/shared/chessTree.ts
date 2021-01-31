@@ -10,7 +10,7 @@ import {
   numHalfMovesPlayed,
 } from './utils';
 
-type MoveObject = { move: string; isPreviewPosition: boolean };
+type MoveObject = { move: string; isPreviewPosition?: boolean };
 
 export const makeChessTree = (
   moves: (string | MoveObject)[],
