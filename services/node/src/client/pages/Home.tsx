@@ -18,10 +18,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const allTraps = Object.values(allChessTraps);
+
 const HomePage: React.FunctionComponent = () => {
   const classes = useStyles({});
 
-  const [selectedTraps, setSelectedTraps] = useState<ChessTrap[]>(allChessTraps);
+  const [selectedTraps, setSelectedTraps] = useState<ChessTrap[]>(allTraps);
 
   return (
     <Grid item xs={12}>
@@ -31,10 +33,7 @@ const HomePage: React.FunctionComponent = () => {
             <CardHeader className={classes.cardHeader} title='Home Page' />
             <CardContent>
               <p>Welcome!</p>
-              <ChessTrapFilters
-                allTraps={allChessTraps}
-                setSelectedTraps={setSelectedTraps}
-              />
+              <ChessTrapFilters allTraps={allTraps} setSelectedTraps={setSelectedTraps} />
               <div>
                 {selectedTraps.map((trap) => (
                   <p key={trap.shortName}>{trap.shortName}</p>

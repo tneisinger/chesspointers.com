@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import ScrollablePane from './ScrollablePane';
 import ChessTrapsSelector from './ChessTrapsSelector';
-import allChessTraps from '../../shared/chessTraps/index';
+import allChessTraps from '../../shared/chessTraps';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import { PieceColor } from '../../shared/chessTypes';
 
@@ -16,7 +16,7 @@ const SelectTrapsPane: React.FC<Props> = (props) => {
   return (
     <ScrollablePane height={props.height} title='Traps'>
       <ChessTrapsSelector
-        allChessTraps={allChessTraps}
+        allChessTraps={Object.values(allChessTraps)}
         setSelectedTraps={props.setSelectedTraps}
         userColor={props.userColor}
         setUserColor={props.setUserColor}
