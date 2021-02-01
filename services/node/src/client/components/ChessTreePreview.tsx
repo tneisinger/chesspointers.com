@@ -101,6 +101,7 @@ const ChessTreePreview: React.FC<Props> = ({
   const startMoving = () => {
     chess.reset();
     setPlayedMoves([]);
+    setCurrentPathIdx(0);
     setBoardPosition(chess.fen());
   };
 
