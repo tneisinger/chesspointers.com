@@ -1,11 +1,47 @@
 import { ChessTrap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
+const Qd5_check = {
+  move: 'Qd5+',
+  teachingPriority: 900,
+};
+
+const Nxc7 = {
+  move: 'Nxc7',
+  teachingPriority: 800,
+};
+
+const Nxc7_a = {
+  move: 'Nxc7',
+  teachingPriority: 700,
+};
+
+const Kxg7 = {
+  move: 'Kxg7',
+  teachingPriority: -900,
+};
+
 const branch_Rxf7 = makeChessTree(
   // prettier-ignore
   [         'Rxf7',
     'Ne6',  'Qc7',
-    'Nxc7', 'Nxc7',
+    'Nxc7',  Nxc7_a,
+  ],
+  [],
+);
+
+const branch_Kxe6 = makeChessTree(
+  // prettier-ignore
+  [                'Kxe6',
+    Qd5_check,
+  ],
+  [],
+);
+
+const branch_Qc7 = makeChessTree(
+  // prettier-ignore
+  [         'Qc7',
+    'Nxc7',  Nxc7,
   ],
   [],
 );
@@ -13,10 +49,9 @@ const branch_Rxf7 = makeChessTree(
 const branch_Kxf7 = makeChessTree(
   // prettier-ignore
   [         'Kxf7',
-    'Ne6',  'Qc7',
-    'Nxc7', 'Nxc7'
+    'Ne6',
   ],
-  [],
+  [branch_Kxe6, branch_Qc7],
 );
 
 const branch_Nxb3 = makeChessTree(
@@ -24,7 +59,7 @@ const branch_Nxb3 = makeChessTree(
   [         'Nxb3',
     'exf6', 'Nxa1',
     'fxg7', 'Nxc2',
-    'Qxc2', 'Kxg7',
+    'Qxc2',  Kxg7,
   ],
   [],
 );
