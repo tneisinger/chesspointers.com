@@ -28,7 +28,7 @@ import PawnPromoteModal from './PawnPromoteModal';
 
 const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = 250;
-const SHOW_NEXT_MOVE_DELAY = 500;
+const SHOW_NEXT_MOVES_DELAY = 1000;
 const SHOW_DEBUG_BTN = false;
 const BEEPER_FREQUENCY = 73;
 
@@ -88,7 +88,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [pendingMove, setPendingMove] = useState<MoveFromTo | undefined>(undefined);
   const [wrongMoveFlashIdx, setWrongMoveFlashIdx] = useState<number>(0);
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
-  const [isDetached, setIsDetached] = useState<boolean>(false);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
   const [movesPosition, setMovesPosition] = useState<number>(0);
 
@@ -128,15 +127,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
     if (movesPosition < playedMoves.length) {
       // If the new `movesPosition` is not at the end of the `playedMoves` array,
-      // hide any move arrows and declare that the board `isDetached`.
+      // hide all move arrows.
       if (isShowingMoves) scheduleHideMoves({ delay: 200 });
-      setIsDetached(true);
-    } else if (isDetached) {
-      // If `movesPosition` has been set to the end of `playedMoves` and `isDetached` is
-      // currently set to true, then that means that we are coming out of the detached
-      // state. In that case, set `isDetached` to false and schedule to show move arrows.
-      scheduleShowMoves({ delay: 600 });
-      setIsDetached(false);
+    } else {
+      scheduleShowMoves();
     }
   }, [movesPosition]);
 
@@ -211,6 +205,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const handleMove = (from: Square, to: Square) => {
+    if (movesPosition < playedMoves.length) {
+      setMovesPosition(playedMoves.length);
+      return;
+    }
     const moves = game.moves({ verbose: true });
     for (let i = 0, len = moves.length; i < len; i++) { /* eslint-disable-line */
       if (moves[i].flags.indexOf('p') !== -1 && moves[i].from === from) {
@@ -263,7 +261,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
     triggerWrongMoveBoardFlash();
     undoMove();
-    scheduleShowMoves({ delay: 500 });
   };
 
   const undoMove = () => {
@@ -287,10 +284,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         );
     });
     return {
-      free: false,
+      free: movesPosition < playedMoves.length,
       dests,
       showDests: mode === 'practice',
-      color: userPlaysAs,
+      color: movesPosition < playedMoves.length ? 'both' : userPlaysAs,
       events: { after: afterMove },
     };
   };
@@ -325,12 +322,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const reset = () => {
     setPlayedMoves([]);
-    setIsDetached(false);
     setMovesPosition(0);
     setDoesComputerAutoplay(true);
     game.reset();
     updateBoard();
     setIsShowingMoves(false);
+    scheduleShowMoves();
   };
 
   const moveBack = () => {
@@ -350,7 +347,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const scheduleShowMoves = (options: { forceShow?: boolean; delay?: number } = {}) => {
-    const delay = options.delay == undefined ? SHOW_NEXT_MOVE_DELAY : options.delay;
+    const delay = options.delay == undefined ? SHOW_NEXT_MOVES_DELAY : options.delay;
     if (mode === 'learn' || options.forceShow) {
       showMovesTimeout.current = window.setTimeout(() => {
         setIsShowingMoves(true);
@@ -358,7 +355,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   };
 
-  const scheduleHideMoves = (options = { delay: SHOW_NEXT_MOVE_DELAY }) => {
+  const scheduleHideMoves = (options = { delay: SHOW_NEXT_MOVES_DELAY }) => {
     hideMovesTimeout.current = window.setTimeout(() => {
       setIsShowingMoves(false);
     }, options.delay);
@@ -429,17 +426,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     if (isAtPathEnd()) {
       recordPathCompletion();
       setIsModalOpen(true);
-    } else {
-      if (isUsersTurn()) {
-        scheduleShowMoves();
-      } else {
-        doComputerMove();
-      }
     }
-    // In cleanup, clear timeouts
-    return () => {
-      clearTimeouts();
-    };
+    if (!isUsersTurn()) {
+      doComputerMove();
+    }
   }, [playedMoves]);
 
   const getNumPathsCompleted = (): number => {
@@ -454,8 +444,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const toggleGuideMode = () => {
     mode === 'learn' ? setMode('practice') : setMode('learn');
-    reset();
   };
+
+  // Whenever the mode changes, reset the board
+  useEffect(() => {
+    reset();
+  }, [mode]);
 
   const triggerWrongMoveBoardFlash = () => {
     setWrongMoveFlashIdx((idx) => idx + 1);
@@ -510,7 +504,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             nextMoves={getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
             wrongMoveFlashIdx={wrongMoveFlashIdx}
-            isBoardDisabled={isDetached}
           />
         </div>
         <ChessGuideInfo

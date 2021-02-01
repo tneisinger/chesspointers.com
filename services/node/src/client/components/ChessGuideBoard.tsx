@@ -4,7 +4,6 @@ import { PieceColor } from '../../shared/chessTypes';
 import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
 import ColorFlashOverlay from './ColorFlashOverlay';
-import DisablerOverlay from './DisablerOverlay';
 
 enum BrushColor {
   GREEN = 'green',
@@ -41,7 +40,6 @@ interface Props {
   shouldShowNextMoves: boolean;
   check: boolean;
   wrongMoveFlashIdx: number;
-  isBoardDisabled: boolean;
 }
 
 const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
@@ -101,11 +99,6 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
 
   return (
     <div className={classes.chessGuideBoardWrapper}>
-      <DisablerOverlay
-        width={props.size}
-        height={props.size}
-        isDisabling={props.isBoardDisabled}
-      />
       <ColorFlashOverlay
         flashIdx={props.wrongMoveFlashIdx}
         width={props.size}
