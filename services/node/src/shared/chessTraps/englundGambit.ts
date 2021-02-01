@@ -1,9 +1,19 @@
 import { ChessTrap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
+const Qc1_checkmate = {
+  move: 'Qc1#',
+  teachingPriority: 900,
+};
+
+const Qxe5 = {
+  move: 'Qxe5',
+  teachingPriority: -900,
+};
+
 const branch_Qxc3 = makeChessTree(
   // prettier-ignore
-  [ 'Qxc3', 'Qc1#' ],
+  [ 'Qxc3', Qc1_checkmate ],
   [],
 );
 
@@ -11,7 +21,7 @@ const branch_Nxc3 = makeChessTree(
   // prettier-ignore
   [ 'Nxc3', 'Qxa1+',
     'Nd1',  'Nxe5',
-    'Nxe5', 'Qxe5',
+    'Nxe5',  Qxe5,
   ],
   [],
 );
