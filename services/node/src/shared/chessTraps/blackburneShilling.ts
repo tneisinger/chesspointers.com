@@ -2,10 +2,15 @@ import { ChessTree } from '../chessTypes';
 import { ChessTrap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
+const Nf3_checkmate = {
+  move: 'Nf3#',
+  teachingPriority: 80,
+};
+
 const branch_Rf1: ChessTree = makeChessTree(
   // prettier-ignore
   [ 'Rf1', 'Qxe4+',
-    'Be2', 'Nf3#',
+    'Be2',  Nf3_checkmate,
   ],
   [],
 );
@@ -23,14 +28,21 @@ const branch_Nxh8: ChessTree = makeChessTree(
   [],
 );
 
-const branch_g3: ChessTree = makeChessTree(['g3', 'Qxe5'], []);
+const Qxe5 = {
+  move: 'Qxe5',
+  teachingPriority: 100,
+};
+
+const branch_g3: ChessTree = makeChessTree(['g3', Qxe5], []);
+
+const Nxf7 = { move: 'Nxf7', teachingPriority: -100 };
 
 const branch_Bxf7: ChessTree = makeChessTree(
   // prettier-ignore
   [
     'Bxf7+', 'Kd8',
     'Ng4',   'Nh6',
-    'h3',    'Nxf7',
+    'h3',     Nxf7,
   ],
   [],
 );
@@ -46,7 +58,10 @@ const branch_Ng4 = makeChessTree(
   [],
 );
 
-const Qg5 = { move: 'Qg5', isPreviewPosition: true };
+const Qg5 = {
+  move: 'Qg5',
+  isPreviewPosition: true,
+};
 
 const chessTree = makeChessTree(
   // prettier-ignore
