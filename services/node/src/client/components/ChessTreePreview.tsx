@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
 import { ChessTree, PieceColor, ChessTreePath } from '../../shared/chessTypes';
@@ -7,6 +7,8 @@ import { Chess, ChessInstance } from 'chess.js';
 import { calcChessBoardSize, BoardSizeUnits } from '../utils';
 import useInterval from 'react-useinterval';
 import { basicCompare } from '../../shared/utils';
+
+const MIN_MS_BEFORE_FIRST_MOVE = 250;
 
 interface StyleProps {
   allowPointerEvents: boolean;
@@ -98,15 +100,24 @@ const ChessTreePreview: React.FC<Props> = ({
     setBoardPosition(chess.fen());
   };
 
+  const startMovingStartTime = useRef<number>(0);
+
   const startMoving = () => {
+    startMovingStartTime.current = Date.now();
     chess.reset();
     setPlayedMoves([]);
     setCurrentPathIdx(0);
     setBoardPosition(chess.fen());
   };
 
+  const shouldPlayMove = (): boolean =>
+    (playMoves === 'onHover' && isHovered) || playMoves === 'always';
+
+  const hasEnoughTimePassed = (): boolean =>
+    Date.now() - startMovingStartTime.current > MIN_MS_BEFORE_FIRST_MOVE;
+
   useInterval(() => {
-    if ((playMoves === 'onHover' && isHovered) || playMoves === 'always') {
+    if (shouldPlayMove() && hasEnoughTimePassed()) {
       const pathObj = paths[currentPathIdx];
       if (pathObj == undefined) throw new Error('Path undefined!');
       if (playedMoves.length >= pathObj.path.length) {
