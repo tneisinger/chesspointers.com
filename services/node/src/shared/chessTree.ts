@@ -56,8 +56,7 @@ export function getTreePaths(tree: ChessTree, verbose?: 'verbose'): any[] {
       const result = verbose
         ? { path: completePath, teachingPriority: subtree.teachingPriority || 0 }
         : completePath;
-
-      paths.push(result);
+      if (completePath.length > 0) paths.push(result);
     } else {
       subtree.children.forEach((child) => {
         const newPath = subtree.move === '' ? path : [...path, subtree.move];

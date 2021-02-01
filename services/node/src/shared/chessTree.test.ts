@@ -278,6 +278,11 @@ describe('getTreePaths(tree)', () => {
     const tree = makeChessTree(moves, []);
     expect(getTreePaths(tree)).toEqual([moves]);
   });
+
+  it('works for a tree with no moves', () => {
+    const tree = makeChessTree([],[]);
+    expect(getTreePaths(tree).length).toEqual(0);
+  });
 });
 
 describe("getTreePaths(tree, 'verbose')", () => {
@@ -347,6 +352,11 @@ describe("getTreePaths(tree, 'verbose')", () => {
     const tree = makeChessTree(moves, []);
     expect(getTreePaths(tree, 'verbose'))
       .toStrictEqual([{ path: moves, teachingPriority: 0 }]);
+  });
+
+  it('works for a tree with no moves', () => {
+    const tree = makeChessTree([],[]);
+    expect(getTreePaths(tree, 'verbose').length).toEqual(0);
   });
 });
 
