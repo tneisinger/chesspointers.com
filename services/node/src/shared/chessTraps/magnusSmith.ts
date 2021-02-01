@@ -1,12 +1,27 @@
 import { ChessTrap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
+const Qxd8 = {
+  move: 'Qxd8',
+  teachingPriority: 900,
+};
+
+const Qxg4 = {
+  move: 'Qxg4',
+  teachingPriority: -800,
+};
+
+const Bc3 = {
+  move: 'Bc3',
+  teachingPriority: -900,
+};
+
 const branch_dxe5 = makeChessTree(
   // prettier-ignore
   [
              'dxe5',
     'Bxf7+', 'Kxf7',
-    'Qxd8'
+     Qxd8
   ],
   [],
 );
@@ -17,7 +32,7 @@ const branch_Ng4 = makeChessTree(
             'Ng4',
     'e6',   'Bxe6',
     'Bxe6', 'fxe6',
-    'Qxg4'
+     Qxg4
   ],
   [],
 );
@@ -39,7 +54,7 @@ const branch_e6 = makeChessTree(
     'g4',  'Ng7',
     'Ne4', 'Qa5+',
     'Bd2', 'Qxe5',
-    'Bc3',
+     Bc3,
   ],
   [],
 );
