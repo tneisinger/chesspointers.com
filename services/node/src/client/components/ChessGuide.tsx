@@ -321,6 +321,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const reset = () => {
+    clearTimeouts();
     setPlayedMoves([]);
     setMovesPosition(0);
     setDoesComputerAutoplay(true);
