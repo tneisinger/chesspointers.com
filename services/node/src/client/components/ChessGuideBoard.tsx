@@ -4,6 +4,7 @@ import { PieceColor } from '../../shared/chessTypes';
 import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
 import ColorFlashOverlay from './ColorFlashOverlay';
+import CheckmateOverlay from './CheckmateOverlay';
 
 enum BrushColor {
   GREEN = 'green',
@@ -38,7 +39,8 @@ interface Props {
   arePiecesDraggable: boolean;
   nextMoves: string[];
   shouldShowNextMoves: boolean;
-  check: boolean;
+  inCheck: boolean;
+  inCheckmate: boolean;
   wrongMoveFlashIdx: number;
 }
 
@@ -99,6 +101,11 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
 
   return (
     <div className={classes.chessGuideBoardWrapper}>
+      <CheckmateOverlay
+        inCheckmate={props.inCheckmate}
+        width={props.size}
+        height={props.size}
+      />
       <ColorFlashOverlay
         flashIdx={props.wrongMoveFlashIdx}
         width={props.size}
@@ -122,7 +129,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
           check: true,
           lastMove: false,
         }}
-        check={props.check}
+        check={props.inCheck}
       />
     </div>
   );
