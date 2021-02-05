@@ -19,7 +19,7 @@ import {
 } from '../../shared/utils';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
-import Modal from './Modal';
+import PathCompleteModal from './PathCompleteModal';
 import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
 import ChessGuideControls from './ChessGuideControls';
@@ -78,7 +78,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const paths = getTreePaths(chessTree, 'verbose');
 
   const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPathCompleteModalOpen, setIsPathCompleteModalOpen] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
   const [mode, setMode] = useState<GuideMode>(guideMode);
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
@@ -426,7 +426,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   useEffect(() => {
     if (isAtPathEnd()) {
       recordPathCompletion();
-      setIsModalOpen(true);
+      setIsPathCompleteModalOpen(true);
     }
     if (!isUsersTurn()) {
       doComputerMove();
@@ -543,26 +543,16 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         </Button>
       )}
 
-      <Modal
-        isModalOpenOrOpening={isModalOpen}
-        handleClose={() => setIsModalOpen(false)}
-        delayOpenFor={500}
-      >
-        <h3>Path Complete!</h3>
-        <p>
-          {getNumPathsCompleted()} of {paths.length} paths complete
-        </p>
-        <Button
-          variant='contained'
-          color='primary'
-          onClick={() => {
-            reset();
-            setIsModalOpen(false);
-          }}
-        >
-          Reset Game to Complete Next Path
-        </Button>
-      </Modal>
+      <PathCompleteModal
+        isOpenOrOpening={isPathCompleteModalOpen}
+        handleClose={() => setIsPathCompleteModalOpen(false)}
+        numPaths={paths.length}
+        numPathsCompleted={getNumPathsCompleted()}
+        handleResetBtnClick={() => {
+          reset();
+          setIsPathCompleteModalOpen(false);
+        }}
+      />
 
       <PawnPromoteModal
         isOpenOrOpening={isPromoteModalOpen}
