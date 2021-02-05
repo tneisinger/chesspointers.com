@@ -13,9 +13,7 @@ import {
 import { createStyles } from '@material-ui/core/styles';
 import { useAuth0, Auth0ContextInterface } from '@auth0/auth0-react';
 import { routesWithPaths } from '../routes';
-
-const NavLinkMui = (to: string) =>
-  React.forwardRef((props, ref) => <NavLink {...props} ref={ref as any} to={to} />);
+import NavLinkMui from './NavLinkMui';
 
 const drawerWidth = 240;
 
