@@ -548,9 +548,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         handleClose={() => setIsPathCompleteModalOpen(false)}
         numPaths={paths.length}
         numPathsCompleted={getNumPathsCompleted()}
+        currentGuideMode={mode}
         handleResetBtnClick={() => {
           reset();
           setIsPathCompleteModalOpen(false);
+        }}
+        handleSwitchToPracticeModeBtnClick={() => {
+          setIsPathCompleteModalOpen(false);
+          toggleGuideMode();
         }}
       />
 
