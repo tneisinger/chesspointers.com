@@ -205,10 +205,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const handleMove = (from: Square, to: Square) => {
+    // If the user tries to play a move while the board is not positioned at the last of
+    // the `playedMoves`, do not play the user's move. Instead, move the board back to the
+    // last `playedMoves` position.
     if (movesPosition < playedMoves.length) {
       setMovesPosition(playedMoves.length);
       return;
     }
+
     const moves = game.moves({ verbose: true });
     for (let i = 0, len = moves.length; i < len; i++) { /* eslint-disable-line */
       if (moves[i].flags.indexOf('p') !== -1 && moves[i].from === from) {
