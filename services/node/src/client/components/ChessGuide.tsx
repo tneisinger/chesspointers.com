@@ -232,7 +232,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     if (game.move(move)) {
       updateBoard();
       let nextAction: () => void;
-      if (wasLastMoveBad()) {
+      if (wasLastMoveIncorrect()) {
         nextAction = rectifyBadMove;
       } else {
         setIsShowingMoves(false);
@@ -255,7 +255,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setMovesPosition(newPlayedMoves.length);
   };
 
-  const wasLastMoveBad = () => {
+  const wasLastMoveIncorrect = () => {
     return !getNextMoves().includes(getLastMove());
   };
 
