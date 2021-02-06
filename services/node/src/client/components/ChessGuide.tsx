@@ -233,7 +233,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       updateBoard();
       let nextAction: () => void;
       if (wasLastMoveIncorrect()) {
-        nextAction = rectifyBadMove;
+        nextAction = rectifyIncorrectMove;
       } else {
         setIsShowingMoves(false);
         nextAction = handleGoodMove;
@@ -259,7 +259,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return !getNextMoves().includes(getLastMove());
   };
 
-  const rectifyBadMove = () => {
+  const rectifyIncorrectMove = () => {
     if (beeper == undefined) {
       defineBeeper().beep(2);
     } else {
