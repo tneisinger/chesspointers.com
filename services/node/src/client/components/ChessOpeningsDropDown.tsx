@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MutableRefObject } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core';
@@ -14,6 +14,7 @@ const useStyles = makeStyles({
 interface Props {
   selectedOpening: ChessOpening | null;
   onChange: (opening: ChessOpening | null) => void;
+  textFieldRef: MutableRefObject<HTMLInputElement | null>;
 }
 
 const ChessOpeningsDropDown: React.FC<Props> = (props) => {
@@ -23,11 +24,17 @@ const ChessOpeningsDropDown: React.FC<Props> = (props) => {
     <Grid container direction='row' spacing={2}>
       <Grid item>
         <Autocomplete
+          value={props.selectedOpening}
           className={classes.autocomplete}
           options={[null, ...Object.values(ChessOpening)]}
           getOptionLabel={(option) => (option == null ? 'None' : option)}
           renderInput={(params) => (
-            <TextField {...params} label='Chess Opening' variant='outlined' />
+            <TextField
+              {...params}
+              inputRef={props.textFieldRef}
+              label='Chess Opening'
+              variant='outlined'
+            />
           )}
           onChange={(_event: any, newValue) => {
             props.onChange(newValue);

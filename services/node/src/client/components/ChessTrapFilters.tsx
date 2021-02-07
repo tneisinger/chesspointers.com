@@ -1,8 +1,10 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import React, { useState, useEffect, Dispatch, SetStateAction, useRef } from 'react';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import { makeStyles, Theme } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import ClearIcon from '@material-ui/icons/Clear';
 import ColorSwitch from './ColorSwitch';
 import ChessOpeningsDropDown from './ChessOpeningsDropDown';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
@@ -12,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     height: '100%',
   },
-  textContainer: {
+  verticallyCentered: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -39,6 +41,8 @@ const ChessTrapFilters: React.FC<Props> = ({
   const [isColorFilterEnabled, setIsColorFilterEnabled] = useState(false);
   const [selectedOpening, setSelectedOpening] = useState<ChessOpening | null>(null);
 
+  const openingsTextFieldRef = useRef<HTMLInputElement | null>(null);
+
   const filterTraps = () => {
     let filteredTraps = allTraps;
     if (isColorFilterEnabled) {
@@ -52,13 +56,31 @@ const ChessTrapFilters: React.FC<Props> = ({
     setSelectedTraps(filteredTraps);
   };
 
+  const areAnyFiltersEnabled = (): boolean =>
+    isColorFilterEnabled || selectedOpening !== null;
+
+  const clearFilters = () => {
+    setIsColorFilterEnabled(false);
+    setSelectedOpening(null);
+    if (openingsTextFieldRef.current != null) {
+      console.log(openingsTextFieldRef.current.value);
+      openingsTextFieldRef.current.value = '';
+    }
+  };
+
   useEffect(() => {
     filterTraps();
   }, [isColorFilterEnabled, selectedColor, selectedOpening]);
 
   return (
-    <Grid container className={classes.root} direction={alignItems} spacing={3}>
-      <Grid item className={classes.textContainer}>
+    <Grid
+      container
+      className={classes.root}
+      direction={alignItems}
+      spacing={3}
+      justify='space-between'
+    >
+      <Grid item className={classes.verticallyCentered}>
         <Typography variant='h5' className={classes.text}>
           Filter By:
         </Typography>
@@ -75,7 +97,13 @@ const ChessTrapFilters: React.FC<Props> = ({
         <ChessOpeningsDropDown
           selectedOpening={selectedOpening}
           onChange={setSelectedOpening}
+          textFieldRef={openingsTextFieldRef}
         />
+      </Grid>
+      <Grid item className={classes.verticallyCentered}>
+        <IconButton onClick={clearFilters} disabled={!areAnyFiltersEnabled()}>
+          <ClearIcon />
+        </IconButton>
       </Grid>
     </Grid>
   );
