@@ -32,7 +32,7 @@ interface Props {
 const ChessTreePreview: React.FC<Props> = ({
   chessTree,
   orientation,
-  boardSize = calcChessBoardSize(350, 'px'),
+  boardSize = 350,
   boardSizeUnits = 'px',
   msBetweenMoves = 600,
   playMoves = 'onHover',
@@ -136,18 +136,13 @@ const ChessTreePreview: React.FC<Props> = ({
     }
   }, msBetweenMoves);
 
-  const calcBoardSize = (): number => {
-    if (boardSizeUnits === 'px') return boardSize;
-    return calcChessBoardSize(boardSize, boardSizeUnits);
-  };
-
   useEffect(() => {
     if (playMoves === 'onHover') {
       isHovered ? startMoving() : setBoardToPreviewPosition();
     }
   }, [isHovered]);
 
-  const finalBoardSize = calcBoardSize() + 'px';
+  const finalBoardSize = calcChessBoardSize(boardSize, boardSizeUnits) + 'px';
 
   return (
     <div
