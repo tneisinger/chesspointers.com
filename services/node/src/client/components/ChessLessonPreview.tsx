@@ -1,27 +1,60 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import ChessTreePreview from './ChessTreePreview';
-import { ChessTree, PieceColor } from '../../shared/chessTypes';
+import { ChessTrap } from '../../shared/entity/chessTrap';
+import { toDashedLowercase } from '../../shared/utils';
+import { calcChessBoardSize } from '../utils';
+
+const CARD_MARGIN = 16;
+const CARD_CONTENT_PADDING = 24;
+
+const useStyles = makeStyles({
+  card: {
+    display: 'inline-block',
+    margin: CARD_MARGIN + 'px',
+  },
+  cardContent: {
+    padding: CARD_CONTENT_PADDING + 'px',
+  },
+});
 
 interface Props {
-  chessTree: ChessTree;
-  orientation: PieceColor;
-  title: string;
+  chessTrap: ChessTrap;
+  cardWidth: number;
 }
 
 const ChessLessonPreview: React.FC<Props> = (props) => {
+  const classes = useStyles({});
+
+  const rawBoardSize = props.cardWidth - CARD_MARGIN * 2 - CARD_CONTENT_PADDING * 2;
+  const boardSize = calcChessBoardSize(rawBoardSize, 'px');
+
   return (
-    <Grid container direction='column' spacing={2}>
-      <Grid item>
-        <Typography variant='h5' component='h4' align='center'>
-          {props.title}
-        </Typography>
-      </Grid>
-      <Grid item>
-        <ChessTreePreview chessTree={props.chessTree} orientation={props.orientation} />
-      </Grid>
-    </Grid>
+    <Card className={classes.card}>
+      <CardContent className={classes.cardContent}>
+        <NavLink to={`/traps/${toDashedLowercase(props.chessTrap.shortName)}`}>
+          <Grid container direction='column' spacing={2}>
+            <Grid item>
+              <Typography variant='h5' component='h4' align='center'>
+                {props.chessTrap.fullName}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <ChessTreePreview
+                chessTree={props.chessTrap.chessTree}
+                orientation={props.chessTrap.playedByWhite ? 'white' : 'black'}
+                boardSize={boardSize}
+              />
+            </Grid>
+          </Grid>
+        </NavLink>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -1,12 +1,23 @@
 import React, { useEffect } from 'react';
+import { makeStyles } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
-import Grid from '@material-ui/core/Grid';
 import DisplayChessTraps from '../components/DisplayChessTraps';
+
+const ROOT_WIDTH = 1000;
+
+const useStyles = makeStyles({
+  root: {
+    width: ROOT_WIDTH + 'px',
+    margin: '0 auto',
+  },
+});
 
 const ChessTrapsPage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
+
+  const classes = useStyles({});
 
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
 
@@ -25,11 +36,13 @@ const ChessTrapsPage: React.FunctionComponent = () => {
   }
 
   return (
-    <Grid container justify='center'>
-      <Grid item xs={7}>
-        <DisplayChessTraps chessTraps={chessTrapsSlice.traps} />
-      </Grid>
-    </Grid>
+    <div className={classes.root}>
+      <DisplayChessTraps
+        chessTraps={chessTrapsSlice.traps}
+        parentWidth={ROOT_WIDTH}
+        trapsPerRow={2}
+      />
+    </div>
   );
 };
 

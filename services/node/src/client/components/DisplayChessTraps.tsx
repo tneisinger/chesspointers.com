@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
-import { NavLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import ChessLessonPreview from './ChessLessonPreview';
 import { ChessTrap } from '../../shared/entity/chessTrap';
-import { toDashedLowercase } from '../../shared/utils';
 import ChessTrapFilters from '../components/ChessTrapFilters';
 
 const useStyles = makeStyles({
@@ -28,9 +24,11 @@ const useStyles = makeStyles({
 
 interface Props {
   chessTraps: ChessTrap[];
+  parentWidth: number;
+  trapsPerRow: number;
 }
 
-const DisplayChessTraps: React.FC<Props> = ({ chessTraps }) => {
+const DisplayChessTraps: React.FC<Props> = ({ chessTraps, parentWidth, trapsPerRow }) => {
   const classes = useStyles({});
 
   const [visibleTraps, setVisibleTraps] = useState<ChessTrap[]>(chessTraps);
@@ -44,17 +42,11 @@ const DisplayChessTraps: React.FC<Props> = ({ chessTraps }) => {
       </AppBar>
       <div>
         {visibleTraps.map((trap) => (
-          <Card key={trap.shortName} className={classes.card}>
-            <CardContent className={classes.cardContent}>
-              <NavLink to={`/traps/${toDashedLowercase(trap.shortName)}`}>
-                <ChessLessonPreview
-                  chessTree={trap.chessTree}
-                  orientation={trap.playedByWhite ? 'white' : 'black'}
-                  title={trap.fullName}
-                />
-              </NavLink>
-            </CardContent>
-          </Card>
+          <ChessLessonPreview
+            key={trap.shortName}
+            chessTrap={trap}
+            cardWidth={parentWidth / trapsPerRow}
+          />
         ))}
       </div>
     </>
