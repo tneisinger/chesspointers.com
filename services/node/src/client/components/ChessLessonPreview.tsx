@@ -19,14 +19,7 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
         </Typography>
       </Grid>
       <Grid item>
-        <Grid container direction='row' justify='center'>
-          <Grid item>
-            <ChessTreePreview
-              chessTree={props.chessTree}
-              orientation={props.orientation}
-            />
-          </Grid>
-        </Grid>
+        <ChessTreePreview chessTree={props.chessTree} orientation={props.orientation} />
       </Grid>
     </Grid>
   );

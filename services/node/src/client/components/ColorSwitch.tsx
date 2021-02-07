@@ -9,15 +9,28 @@ import { PieceColor } from '../../shared/chessTypes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: '-8px',
+    border: '1px solid rgba(255,255,255,0.25)',
+    borderRadius: '4px',
+    padding: '6px 0',
+    paddingRight: '12px',
   },
   label: {
     marginTop: '10px',
-    color: (props: Props) =>
-      props.isEnabled ? theme.palette.text.primary : theme.palette.text.disabled,
+    color: theme.palette.text.secondary,
+  },
+  selectedLabel: {
+    color: theme.palette.text.primary,
   },
   toggleSwitch: {
     marginTop: '3px',
+  },
+  checkbox: {
+    padding: 0,
+  },
+  checkboxBackground: {
+    background: (props: Props) =>
+      props.isEnabled ? 'radial-gradient(white 55%, transparent 56%)' : 'transparent',
+    margin: '9px',
   },
 }));
 
@@ -37,18 +50,27 @@ const ColorSwitch: React.FC<Props> = (props) => {
       : props.setSelectedColor('black');
   };
 
+  const getLabelClasses = (color: PieceColor): string => {
+    if (props.isEnabled && props.selectedColor === color) {
+      return `${classes.label} ${classes.selectedLabel}`;
+    }
+    return classes.label;
+  };
+
   return (
     <Grid container direction='row' className={classes.root}>
       <Grid item>
-        <Box mr={2}>
+        <div className={classes.checkboxBackground}>
           <Checkbox
+            color='primary'
+            className={classes.checkbox}
             checked={props.isEnabled}
             onChange={() => props.setIsEnabled(!props.isEnabled)}
           />
-        </Box>
+        </div>
       </Grid>
       <Grid item>
-        <Typography className={classes.label}>White</Typography>
+        <Typography className={getLabelClasses('white')}>White</Typography>
       </Grid>
       <Grid item>
         <Switch
@@ -62,7 +84,7 @@ const ColorSwitch: React.FC<Props> = (props) => {
         />
       </Grid>
       <Grid item>
-        <Typography className={classes.label}>Black</Typography>
+        <Typography className={getLabelClasses('black')}>Black</Typography>
       </Grid>
     </Grid>
   );

@@ -46,6 +46,9 @@ const theme = createMuiTheme({
             textDecoration: 'underline',
           },
         },
+        main: {
+          paddingTop: '0!important',
+        },
       },
     },
   },
