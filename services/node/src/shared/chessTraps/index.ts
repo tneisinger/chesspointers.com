@@ -14,6 +14,7 @@ import monticelli from './monticelli';
 import stafford1 from './stafford1';
 import stafford2 from './stafford2';
 import stafford3 from './stafford3';
+import traxler from './traxler';
 
 const allTraps: { [shortName: string]: ChessTrap } = {
   blackburneShilling: blackburneShilling,
@@ -31,6 +32,7 @@ const allTraps: { [shortName: string]: ChessTrap } = {
   stafford1: stafford1,
   stafford2: stafford2,
   stafford3: stafford3,
+  traxler: traxler,
 };
 
 export default allTraps;
