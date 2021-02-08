@@ -358,6 +358,81 @@ describe("getTreePaths(tree, 'verbose')", () => {
     const tree = makeChessTree([],[]);
     expect(getTreePaths(tree, 'verbose').length).toEqual(0);
   });
+
+  it('includes teachingPriority value when teachingPriority not on leaf', () => {
+    const tree = makeChessTree(
+      [ 'e4', { move: 'e5', teachingPriority: 100 }, 'Nf3' ],
+      [],
+    );
+    expect(getTreePaths(tree, 'verbose')).toStrictEqual([{
+      path: ['e4', 'e5', 'Nf3'],
+      teachingPriority: 100
+    }]);
+  });
+
+  it('uses last teachingPriority value of a path', () => {
+    const tree = makeChessTree(
+      [ 'e4',
+        { move: 'e5', teachingPriority: 100 },
+        { move: 'Nf3', teachingPriority: 200 },
+      ],
+      [],
+    );
+    expect(getTreePaths(tree, 'verbose')).toStrictEqual([{
+      path: ['e4', 'e5', 'Nf3'],
+      teachingPriority: 200
+    }]);
+  });
+
+  it('applies upstream teachingPriority value to all downstream paths', () => {
+    const branch_Nf3 = makeChessTree(
+      ['Nf3'],
+      [],
+    );
+    const branch_Nc3 = makeChessTree(
+      ['Nc3'],
+      [],
+    );
+    const tree = makeChessTree(
+      [ 'e4', { move: 'e5', teachingPriority: 100 }],
+      [branch_Nf3, branch_Nc3],
+    );
+    expect(getTreePaths(tree, 'verbose')).toStrictEqual([
+      {
+        path: ['e4', 'e5', 'Nf3'],
+        teachingPriority: 100
+      },
+      {
+        path: ['e4', 'e5', 'Nc3'],
+        teachingPriority: 100,
+      }
+    ]);
+  });
+
+  it('overrides upstream teachingPriority with a downstream teachingPriority', () => {
+    const branch_Nf3 = makeChessTree(
+      ['Nf3'],
+      [],
+    );
+    const branch_Nc3 = makeChessTree(
+      [{ move: 'Nc3', teachingPriority: 200 }],
+      [],
+    );
+    const tree = makeChessTree(
+      [ 'e4', { move: 'e5', teachingPriority: 100 }],
+      [branch_Nf3, branch_Nc3],
+    );
+    expect(getTreePaths(tree, 'verbose')).toStrictEqual([
+      {
+        path: ['e4', 'e5', 'Nf3'],
+        teachingPriority: 100
+      },
+      {
+        path: ['e4', 'e5', 'Nc3'],
+        teachingPriority: 200,
+      }
+    ]);
+  });
 });
 
 describe('mergeTrees()', () => {

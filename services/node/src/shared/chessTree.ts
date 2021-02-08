@@ -43,24 +43,39 @@ export function getTreePaths(tree: ChessTree, verbose?: 'verbose'): any[] {
   if (tree.move != '') {
     tree = { move: '', children: [tree], ...tree };
   }
-  const incompletePaths: { path: string[]; subtree: ChessTree }[] = [
-    { path: [], subtree: tree },
+  type IncompletePath = { path: string[]; teachingPriority: number; subtree: ChessTree };
+  const incompletePaths: IncompletePath[] = [
+    {
+      path: [],
+      teachingPriority: 0,
+      subtree: tree,
+    },
   ];
   while (incompletePaths.length > 0) {
-    const { path, subtree } = incompletePaths.shift();
+    const { path, teachingPriority, subtree } = incompletePaths.shift();
     if (subtree.children.length < 1) {
       const completePath = subtree.move == '' ? path : [...path, subtree.move];
-
-      // If the `verbose` flag was included in the function call, include extra
-      // information with each path
-      const result = verbose
-        ? { path: completePath, teachingPriority: subtree.teachingPriority || 0 }
-        : completePath;
-      if (completePath.length > 0) paths.push(result);
+      if (completePath.length > 0) {
+        // If the `verbose` flag was included in the function call, include extra
+        // information with each path
+        const result = verbose ? { path: completePath, teachingPriority } : completePath;
+        paths.push(result);
+      }
     } else {
       subtree.children.forEach((child) => {
         const newPath = subtree.move === '' ? path : [...path, subtree.move];
-        incompletePaths.push({ path: newPath, subtree: child });
+        incompletePaths.push({
+          path: newPath,
+
+          // If the child doesn't have a teachingPriority value, use the parent's
+          // teachingPriority value.  Otherwise, use the child's teachingPriority value.
+          teachingPriority:
+            child.teachingPriority == undefined
+              ? teachingPriority
+              : child.teachingPriority,
+
+          subtree: child,
+        });
       });
     }
   }
