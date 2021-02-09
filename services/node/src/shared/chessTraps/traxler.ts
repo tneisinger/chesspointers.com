@@ -23,10 +23,11 @@ const branch_Qf3_a = makeChessTree(
   [],
 );
 
+const Ke3 = { move: 'Ke3', teachingPriority: 700 };
+
 const branch_Ke3 = makeChessTree(
   // prettier-ignore
-  [ 'Ke3',  'Qh4',
-  ],
+  [Ke3,  'Qh4'],
   [branch_g3, branch_Qf3_a],
 );
 
@@ -61,10 +62,11 @@ const branch_Qf3_b = makeChessTree(
   [],
 );
 
+const Kf1 = { move: 'Kf1', teachingPriority: 900 };
+
 const branch_Kf1_b = makeChessTree(
   // prettier-ignore
-  [ 'Kf1',  'Qh4',
-  ],
+  [Kf1,  'Qh4'],
   [branch_Qe2, branch_Qf3_b],
 );
 
@@ -90,9 +92,11 @@ const branch_Ke1 = makeChessTree(
   [],
 );
 
+const Kxf2 = { move: 'Kxf2', teachingPriority: 500 };
+
 const branch_Kxf2 = makeChessTree(
   // prettier-ignore
-  [ 'Kxf2', 'Nxe4+',
+  [ Kxf2, 'Nxe4+',
   ],
   [branch_Kf3, branch_Kf1_b, branch_Kg1, branch_Ke3, branch_Ke1],
 );
@@ -132,14 +136,16 @@ const branch_Nxf7 = makeChessTree(
   [branch_Kxf2, branch_Kf1_a],
 );
 
+const Bxf7_check = { move: 'Bxf7+', teachingPriority: -900 };
+
 const branch_Bxf7_check = makeChessTree(
   // prettier-ignore
-  [ 'Bxf7+', 'Ke7',
-    'Bb3',   'Rf8',
-    'O-O',   'Qe8',
-    'Nc3',   'd6',
-    'd3',    'Qg6',
-    'Nf3',   'Bg4',
+  [  Bxf7_check, 'Ke7',
+    'Bb3',       'Rf8',
+    'O-O',       'Qe8',
+    'Nc3',       'd6',
+    'd3',        'Qg6',
+    'Nf3',       'Bg4',
   ],
   [],
 );
