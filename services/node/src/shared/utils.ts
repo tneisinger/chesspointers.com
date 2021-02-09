@@ -138,6 +138,8 @@ export function getFen(opening: ChessOpening): string {
       return 'rnbqkbnr/pppp1ppp/8/4p3/3P4/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 2';
     case ChessOpening.ItalianGame:
       return 'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3';
+    case ChessOpening.KingsPawn:
+      return 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1';
     case ChessOpening.PetrovsDefense:
       return 'rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3';
     case ChessOpening.QueensPawn:

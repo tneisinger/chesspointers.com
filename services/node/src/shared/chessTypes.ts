@@ -49,6 +49,7 @@ export enum ChessOpening {
   CaroKannDefense = 'Caro-Kann Defense',
   EnglundGambit = 'Englund Gambit',
   ItalianGame = 'Italian Game',
+  KingsPawn = "King's Pawn",
   PetrovsDefense = "Petrov's Defense",
   QueensPawn = "Queen's Pawn",
   QueensGambit = "Queen's Gambit",
