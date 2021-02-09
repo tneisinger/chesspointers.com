@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
@@ -17,9 +18,10 @@ const useStyles = makeStyles(() => ({
   mainCard: {
     padding: '32px',
   },
-  cardHeader: {
+  pageTitle: {
     textAlign: 'center',
-    paddingBottom: '0',
+    paddingTop: 0,
+    paddingBottom: '1rem',
     marginBottom: '0',
   },
 }));
@@ -61,36 +63,37 @@ const MergeTrapsPage: React.FunctionComponent = () => {
     return mergeTrees(...selectedTraps.map((t) => t.chessTree));
   };
 
-  const boardSize = calcChessBoardSize(75, 'vh');
+  const boardSize = calcChessBoardSize(70, 'vh');
 
-  const heightOfRightSidePanes = chessGuideWrapperHeight / 2 - 8;
+  const heightOfRightSidePanes = chessGuideWrapperHeight / 2 - 20;
 
   return (
-    <Grid item xs={12}>
-      <Grid container direction='row' justify='center'>
+    <Grid container direction='row' justify='center'>
+      <Grid item>
+        <Typography className={classes.pageTitle} variant='h4' component='h2'>
+          Merge Traps
+        </Typography>
         <Card className={classes.mainCard}>
-          <Grid container direction='row' spacing={4}>
-            <Grid item ref={chessGuideWrapperRef}>
-              <ChessGuide
-                chessTree={mergeSelectedTraps()}
-                userPlaysAs={userColor}
-                boardSizePixels={boardSize}
-              >
-                <SelectTrapsPane
-                  height={heightOfRightSidePanes}
-                  setSelectedTraps={setSelectedTraps}
-                  userColor={userColor}
-                  setUserColor={setUserColor}
-                />
-                <MovesPane
-                  height={heightOfRightSidePanes}
-                  playedMoves={[]}
-                  selectedMoveIdx={null}
-                  changeSelectedMoveIdx={(idx) => void idx}
-                />
-              </ChessGuide>
-            </Grid>
-          </Grid>
+          <div ref={chessGuideWrapperRef}>
+            <ChessGuide
+              chessTree={mergeSelectedTraps()}
+              userPlaysAs={userColor}
+              boardSizePixels={boardSize}
+            >
+              <SelectTrapsPane
+                height={heightOfRightSidePanes}
+                setSelectedTraps={setSelectedTraps}
+                userColor={userColor}
+                setUserColor={setUserColor}
+              />
+              <MovesPane
+                height={heightOfRightSidePanes}
+                playedMoves={[]}
+                selectedMoveIdx={null}
+                changeSelectedMoveIdx={(idx) => void idx}
+              />
+            </ChessGuide>
+          </div>
         </Card>
       </Grid>
     </Grid>
