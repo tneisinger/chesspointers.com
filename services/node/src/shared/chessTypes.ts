@@ -47,7 +47,6 @@ export type MovePair = {
 
 export enum ChessOpening {
   CaroKannDefense = 'Caro-Kann Defense',
-  EnglundGambit = 'Englund Gambit',
   ItalianGame = 'Italian Game',
   KingsPawn = "King's Pawn",
   PetrovsDefense = "Petrov's Defense",
