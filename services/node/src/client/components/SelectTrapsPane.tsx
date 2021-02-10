@@ -70,6 +70,7 @@ const SelectTrapsPane: React.FC<Props> = (props) => {
           setSelectedOpening={setSelectedOpening}
           numSelectedTraps={props.selectedTraps.length}
           deselectAll={() => props.setSelectedTraps([])}
+          selectAll={() => props.setSelectedTraps(listedTraps)}
           openingsTextFieldRef={openingsTextFieldRef}
         />
       }

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -17,12 +17,16 @@ interface StyleProps extends Props {
   appBarHeight: number;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles({
   root: {
-    backgroundColor: theme.palette.background.paper,
     maxWidth: '16rem',
     height: (props: StyleProps) => props.height - props.appBarHeight + 'px',
     marginBottom: (props: StyleProps) => props.appBarHeight + 'px',
+  },
+  appBar: {
+    zIndex: 10,
+    position: 'relative',
+    boxShadow: '0 0 8px 0 rgba(0, 0, 0, 0.3)',
   },
   titleText: {
     textAlign: 'center',
@@ -38,16 +42,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: 'column',
   },
   subheadingContent: {
-    backgroundColor: 'rgba(55, 55, 55, 1)',
-    boxShadow: theme.shadows[5],
-    padding: '8px 12px',
+    boxShadow: '0 0 8px 0 rgba(0, 0, 0, 0.3)',
+    padding: '8px 12px 12px 12px',
+    backgroundColor: 'rgba(72, 72, 72, 1)',
+    zIndex: 0,
   },
   scrollContent: {
     overflowX: 'hidden',
     overflowY: 'overlay' as any,
     flex: 1,
+    backgroundColor: (p: StyleProps) =>
+      p.subheadingComponent == undefined ? 'rgba(72, 72, 72, 1)' : 'rgba(58, 58, 58, 1)',
   },
-}));
+});
 
 const ScrollablePane: React.FC<Props> = (props) => {
   const [appBarHeight, setAppBarHeight] = useState(ROUGH_APP_BAR_HEIGHT);
@@ -78,7 +85,7 @@ const ScrollablePane: React.FC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      <AppBar ref={appBarRef} position='static'>
+      <AppBar className={classes.appBar} ref={appBarRef}>
         <Typography variant='button' className={classes.titleText}>
           {props.title}
         </Typography>
