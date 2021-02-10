@@ -1,17 +1,15 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { makeStyles } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import Switch from '@material-ui/core/Switch';
-import { PieceColor } from '../../shared/chessTypes';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 
 const useStyles = makeStyles((theme) => ({
-  chessTrapsSelectorRoot: {},
   trapsList: {
     padding: '0 16px',
   },
@@ -22,30 +20,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  allChessTraps: ChessTrap[];
+  traps: ChessTrap[];
+  selectedTraps: ChessTrap[];
   setSelectedTraps: Dispatch<SetStateAction<ChessTrap[]>>;
-  userColor: PieceColor;
-  setUserColor: Dispatch<SetStateAction<PieceColor>>;
+  clearFilters: () => void;
 }
 
 const ChessTrapsSelector: React.FunctionComponent<Props> = ({
-  allChessTraps,
+  traps,
+  selectedTraps,
   setSelectedTraps,
-  userColor,
-  setUserColor,
+  clearFilters,
 }) => {
   const classes = useStyles({});
 
-  const [selectedWhiteTraps, setSelectedWhiteTraps] = useState<ChessTrap[]>([]);
-  const [selectedBlackTraps, setSelectedBlackTraps] = useState<ChessTrap[]>([]);
+  const isTrapSelected = (trap: ChessTrap): boolean =>
+    selectedTraps.map((t) => t.shortName).includes(trap.shortName);
 
   const handleTrapSelectChange = (
     trap: ChessTrap,
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const [selectedTraps, setSelectedTraps] = trap.playedByWhite
-      ? [selectedWhiteTraps, setSelectedWhiteTraps]
-      : [selectedBlackTraps, setSelectedBlackTraps];
     if (event.target.checked && !isTrapSelected(trap)) {
       setSelectedTraps([...selectedTraps, trap]);
     } else if (!event.target.checked && isTrapSelected(trap)) {
@@ -53,67 +48,30 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
     }
   };
 
-  const getChessTrapsOfUserColor = (): ChessTrap[] => {
-    return allChessTraps.filter(
-      (t) =>
-        (t.playedByWhite && userColor === 'white') ||
-        (!t.playedByWhite && userColor === 'black'),
+  if (traps.length < 1) {
+    return (
+      <Box
+        display='flex'
+        alignItems='center'
+        alignContent='center'
+        justifyContent='center'
+        flexDirection='column'
+        css={{ height: '80%' }}
+      >
+        <Box mb={1}>
+          <Typography align='center'>No matching traps</Typography>
+        </Box>
+        <Button variant='contained' color='secondary' onClick={clearFilters}>
+          Clear Filters
+        </Button>
+      </Box>
     );
-  };
-
-  const isTrapSelected = (trap: ChessTrap) => {
-    const selectedTraps = trap.playedByWhite ? selectedWhiteTraps : selectedBlackTraps;
-    return selectedTraps.map((t) => t.shortName).includes(trap.shortName);
-  };
-
-  const getSelectedTraps = (): ChessTrap[] => {
-    return userColor === 'white' ? selectedWhiteTraps : selectedBlackTraps;
-  };
-
-  const toggleUserColor = (): void => {
-    if (userColor === 'white') {
-      setUserColor('black');
-      setSelectedTraps(selectedBlackTraps);
-    }
-    if (userColor === 'black') {
-      setUserColor('white');
-      setSelectedTraps(selectedWhiteTraps);
-    }
-  };
-
-  useEffect(() => {
-    setSelectedTraps(getSelectedTraps());
-  }, [selectedWhiteTraps, selectedBlackTraps]);
+  }
 
   return (
-    <div className={classes.chessTrapsSelectorRoot}>
-      <Grid
-        container
-        className={classes.colorSwitchWrapper}
-        component='label'
-        direction='row'
-        justify='center'
-        spacing={1}
-      >
-        <Grid item>
-          <Typography variant='caption'>White</Typography>
-        </Grid>
-        <Grid item>
-          <Switch
-            size='small'
-            checked={userColor === 'black'}
-            onChange={toggleUserColor}
-            name='selectColor'
-            color='default'
-            inputProps={{ 'aria-label': 'Select piece color' }}
-          />
-        </Grid>
-        <Grid item>
-          <Typography variant='caption'>Black</Typography>
-        </Grid>
-      </Grid>
+    <div>
       <List>
-        {getChessTrapsOfUserColor().map((trap) => (
+        {traps.map((trap) => (
           <ListItem dense key={trap.shortName}>
             <FormControlLabel
               label={<Typography variant='caption'>{trap.shortName}</Typography>}
@@ -121,7 +79,7 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
                 <Checkbox
                   name={trap.shortName}
                   size='small'
-                  checked={isTrapSelected(trap)}
+                  checked={selectedTraps.map((t) => t.shortName).includes(trap.shortName)}
                   onChange={(e) => handleTrapSelectChange(trap, e)}
                   color='default'
                 />

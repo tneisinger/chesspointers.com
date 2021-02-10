@@ -9,6 +9,7 @@ const ROUGH_APP_BAR_HEIGHT = 40; // pixels
 interface Props {
   height: number;
   title: string;
+  subheadingComponent?: React.ReactNode;
   autoScrollDownWhenContentAdded?: boolean;
 }
 
@@ -31,9 +32,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid #555',
     borderTop: 'none',
     borderRadius: '0 0 4px 4px',
+    height: '100%',
+    display: 'flex',
+    flexFlow: 'column',
+  },
+  subheadingContent: {
+    backgroundColor: theme.palette.action.hover,
+    padding: '8px',
+  },
+  scrollContent: {
     overflowX: 'hidden',
     overflowY: 'overlay' as any,
-    height: '100%',
+    flex: 1,
   },
 }));
 
@@ -72,8 +82,15 @@ const ScrollablePane: React.FC<Props> = (props) => {
         </Typography>
       </AppBar>
       <Box className={classes.paneContent}>
-        {props.children}
-        <div ref={scrollToBottomDiv}></div>
+        {props.subheadingComponent != undefined && (
+          <>
+            <Box className={classes.subheadingContent}>{props.subheadingComponent}</Box>
+          </>
+        )}
+        <Box className={classes.scrollContent}>
+          {props.children}
+          <div ref={scrollToBottomDiv}></div>
+        </Box>
       </Box>
     </div>
   );

@@ -30,6 +30,7 @@ const MergeTrapsPage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
   const classes = useStyles({});
+
   const [selectedTraps, setSelectedTraps] = useState<ChessTrap[]>([]);
   const [userColor, setUserColor] = useState<PieceColor>('white');
   const [chessGuideWrapperHeight, setChessGuideWrapperHeight] = useState(0);
@@ -38,9 +39,7 @@ const MergeTrapsPage: React.FunctionComponent = () => {
     if (chessGuideWrapper != null) {
       const style = getComputedStyle(chessGuideWrapper, null);
       let height = chessGuideWrapper.clientHeight;
-      console.log(height);
       height -= parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
-      console.log(height);
       setChessGuideWrapperHeight(height);
     }
   }, []);
@@ -82,6 +81,7 @@ const MergeTrapsPage: React.FunctionComponent = () => {
             >
               <SelectTrapsPane
                 height={heightOfRightSidePanes}
+                selectedTraps={selectedTraps}
                 setSelectedTraps={setSelectedTraps}
                 userColor={userColor}
                 setUserColor={setUserColor}

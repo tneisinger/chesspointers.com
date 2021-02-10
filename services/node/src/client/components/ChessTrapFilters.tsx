@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
-import ColorSwitch from './ColorSwitch';
+import ColorSwitchWithCheckbox from './ColorSwitchWithCheckbox';
 import ChessOpeningsDropDown from './ChessOpeningsDropDown';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
 import { filterTrapsWithOpenings } from '../../shared/chessTree';
@@ -63,7 +63,6 @@ const ChessTrapFilters: React.FC<Props> = ({
     setIsColorFilterEnabled(false);
     setSelectedOpening(null);
     if (openingsTextFieldRef.current != null) {
-      console.log(openingsTextFieldRef.current.value);
       openingsTextFieldRef.current.value = '';
     }
   };
@@ -86,7 +85,7 @@ const ChessTrapFilters: React.FC<Props> = ({
         </Typography>
       </Grid>
       <Grid item>
-        <ColorSwitch
+        <ColorSwitchWithCheckbox
           isEnabled={isColorFilterEnabled}
           setIsEnabled={setIsColorFilterEnabled}
           selectedColor={selectedColor}

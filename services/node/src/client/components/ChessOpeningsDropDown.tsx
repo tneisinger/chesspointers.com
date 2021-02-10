@@ -7,37 +7,44 @@ import { ChessOpening } from '../../shared/chessTypes';
 
 const useStyles = makeStyles({
   autocomplete: {
-    minWidth: 225,
+    minWidth: (p: { size: string }) => (p.size === 'medium' ? 225 : 200),
   },
 });
 
 interface Props {
   selectedOpening: ChessOpening | null;
   onChange: (opening: ChessOpening | null) => void;
-  textFieldRef: MutableRefObject<HTMLInputElement | null>;
+  textFieldRef?: MutableRefObject<HTMLInputElement | null>;
+  size?: 'medium' | 'small';
 }
 
-const ChessOpeningsDropDown: React.FC<Props> = (props) => {
-  const classes = useStyles({});
+const ChessOpeningsDropDown: React.FC<Props> = ({
+  selectedOpening,
+  onChange,
+  textFieldRef = undefined,
+  size = 'medium',
+}) => {
+  const classes = useStyles({ size });
 
   return (
     <Grid container direction='row' spacing={2}>
       <Grid item>
         <Autocomplete
-          value={props.selectedOpening}
+          value={selectedOpening}
+          size={size}
           className={classes.autocomplete}
           options={[null, ...Object.values(ChessOpening)]}
           getOptionLabel={(option) => (option == null ? 'None' : option)}
           renderInput={(params) => (
             <TextField
               {...params}
-              inputRef={props.textFieldRef}
+              inputRef={textFieldRef}
               label='Chess Opening'
               variant='outlined'
             />
           )}
           onChange={(_event: any, newValue) => {
-            props.onChange(newValue);
+            onChange(newValue);
           }}
         />
       </Grid>
