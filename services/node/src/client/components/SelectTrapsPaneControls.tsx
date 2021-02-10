@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Checkbox from '@material-ui/core/Checkbox';
+import ToolTip from '@material-ui/core/Tooltip';
 import ColorSwitch from './ColorSwitch';
 import ChessOpeningsDropDown from './ChessOpeningsDropDown';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
@@ -31,13 +32,17 @@ const SelectTrapsPaneControls: React.FC<Props> = (props) => {
       <Grid item>
         <Grid container justify='space-between'>
           <Grid item>
-            <Checkbox
-              color='default'
-              disabled={props.numSelectedTraps < 1}
-              checked={props.numSelectedTraps > 0}
-              className={classes.checkbox}
-              onChange={props.deselectAll}
-            />
+            <ToolTip title='Deselect All' placement='top' arrow>
+              <span>
+                <Checkbox
+                  color='default'
+                  disabled={props.numSelectedTraps < 1}
+                  checked={props.numSelectedTraps > 0}
+                  className={classes.checkbox}
+                  onChange={props.deselectAll}
+                />
+              </span>
+            </ToolTip>
           </Grid>
           <Grid item>
             <ColorSwitch
