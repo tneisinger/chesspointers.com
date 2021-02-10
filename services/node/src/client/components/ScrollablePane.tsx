@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   subheadingContent: {
     backgroundColor: 'rgba(55, 55, 55, 1)',
     boxShadow: theme.shadows[5],
-    padding: '8px',
+    padding: '8px 12px',
   },
   scrollContent: {
     overflowX: 'hidden',

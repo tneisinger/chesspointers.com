@@ -1,14 +1,12 @@
 import React, { Dispatch, SetStateAction, useState, useEffect, useRef } from 'react';
-import Grid from '@material-ui/core/Grid';
 import ScrollablePane from './ScrollablePane';
 import ChessTrapsSelector from './ChessTrapsSelector';
 import allChessTraps from '../../shared/chessTraps';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
-import ColorSwitch from './ColorSwitch';
-import ChessOpeningsDropDown from './ChessOpeningsDropDown';
 import { filterTrapsWithOpenings } from '../../shared/chessTree';
 import { partition } from '../../shared/utils';
+import SelectTrapsPaneControls from './SelectTrapsPaneControls';
 
 interface Props {
   height: number;
@@ -62,27 +60,19 @@ const SelectTrapsPane: React.FC<Props> = (props) => {
 
   return (
     <ScrollablePane
-      subheadingComponent={
-        <Grid container alignItems='center' direction='column' spacing={1}>
-          <Grid item>
-            <ColorSwitch
-              selectedColor={props.userColor}
-              setSelectedColor={props.setUserColor}
-              size='small'
-            />
-          </Grid>
-          <Grid item>
-            <ChessOpeningsDropDown
-              selectedOpening={selectedOpening}
-              onChange={setSelectedOpening}
-              size='small'
-              textFieldRef={openingsTextFieldRef}
-            />
-          </Grid>
-        </Grid>
-      }
-      height={props.height}
       title='Traps'
+      height={props.height}
+      subheadingComponent={
+        <SelectTrapsPaneControls
+          userColor={props.userColor}
+          setUserColor={props.setUserColor}
+          selectedOpening={selectedOpening}
+          setSelectedOpening={setSelectedOpening}
+          numSelectedTraps={props.selectedTraps.length}
+          deselectAll={() => props.setSelectedTraps([])}
+          openingsTextFieldRef={openingsTextFieldRef}
+        />
+      }
     >
       <ChessTrapsSelector
         traps={listedTraps}
