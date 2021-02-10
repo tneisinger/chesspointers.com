@@ -26,7 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   titleText: {
     textAlign: 'center',
-    padding: '1rem',
+    paddingTop: '0.65rem',
+    paddingBottom: '0.5rem',
   },
   paneContent: {
     border: '1px solid #555',
@@ -37,7 +38,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: 'column',
   },
   subheadingContent: {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: 'rgba(55, 55, 55, 1)',
+    boxShadow: theme.shadows[5],
     padding: '8px',
   },
   scrollContent: {
