@@ -19,7 +19,7 @@ export function getArrayDiff<T>(setA: T[], setB: T[]): T[] {
   return setA.filter((a) => !setB.includes(a));
 }
 
-export function partition<T>(array: T[], isValid: (t: T) => boolean): T[][] {
+export function partition<T>(array: T[], isValid: (t: T) => boolean): [T[], T[]] {
   return array.reduce(
     ([pass, fail], elem) => {
       return isValid(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]];
