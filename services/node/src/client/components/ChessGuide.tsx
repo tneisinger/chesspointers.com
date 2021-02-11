@@ -369,7 +369,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const scheduleHideMoves = (options = { delay: SHOW_NEXT_MOVES_DELAY }) => {
     hideMovesTimeout.current = window.setTimeout(() => {
       setIsShowingMoves(false);
-      if (mode === 'learn') setIsBoardDisabled(true);
     }, options.delay);
   };
 
