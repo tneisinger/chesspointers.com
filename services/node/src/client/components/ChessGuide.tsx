@@ -232,11 +232,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     if (game.move(move)) {
       updateBoard();
       let nextAction: () => void;
-      if (wasLastMoveIncorrect()) {
-        nextAction = rectifyIncorrectMove;
-      } else {
+      if (wasLastMoveCorrect()) {
         setIsShowingMoves(false);
         nextAction = handleGoodMove;
+      } else {
+        nextAction = rectifyIncorrectMove;
       }
       checkMoveTimeout.current = window.setTimeout(nextAction, CHECK_MOVE_DELAY);
     }
@@ -255,8 +255,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setMovesPosition(newPlayedMoves.length);
   };
 
-  const wasLastMoveIncorrect = () => {
-    return !getNextMoves().includes(getLastMove());
+  const wasLastMoveCorrect = () => {
+    return getNextMoves().includes(getLastMove());
   };
 
   const rectifyIncorrectMove = () => {
