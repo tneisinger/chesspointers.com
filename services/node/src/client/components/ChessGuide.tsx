@@ -370,22 +370,24 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const doComputerMove = () => {
     const moves = getNextMoves();
-    if (moves.length === 1 && doesComputerAutoplay) {
-      doNextMoveTimeout.current = window.setTimeout(() => {
-        doNextMove(moves[0]);
-      }, COMPUTER_THINK_TIME);
-    } else if (moves.length > 1) {
+    let move: string;
+    if (moves.length < 1) {
+      return;
+    } else if (moves.length === 1 && doesComputerAutoplay) {
+      move = moves[0];
+    } else {
       // If there is more than one move that the computer can play, the computer randomly
       // selects a move from among the moves that are on paths that have been completed
       // the fewest number of the times.
-      const move = randomElem(getBestNextMoves());
-      if (move == undefined) {
+      const randomMove = randomElem(getBestNextMoves());
+      if (randomMove == undefined) {
         throw new Error('No moves returned by getBestNextMoves()');
       }
-      doNextMoveTimeout.current = window.setTimeout(() => {
-        doNextMove(move);
-      }, COMPUTER_THINK_TIME);
+      move = randomMove;
     }
+    doNextMoveTimeout.current = window.setTimeout(() => {
+      doNextMove(move);
+    }, COMPUTER_THINK_TIME);
   };
 
   const isAtPathEnd = (): boolean =>
