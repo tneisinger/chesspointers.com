@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { makeStyles } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -8,16 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import { ChessTrap } from '../../shared/entity/chessTrap';
-
-const useStyles = makeStyles((theme) => ({
-  trapsList: {
-    padding: '0 16px',
-  },
-  colorSwitchWrapper: {
-    padding: '8px 0 0 0',
-    backgroundColor: theme.palette.action.hover,
-  },
-}));
 
 interface Props {
   traps: ChessTrap[];
@@ -32,8 +21,6 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
   setSelectedTraps,
   clearFilters,
 }) => {
-  const classes = useStyles({});
-
   const isTrapSelected = (trap: ChessTrap): boolean =>
     selectedTraps.map((t) => t.shortName).includes(trap.shortName);
 
