@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
 import ColorFlashOverlay from './ColorFlashOverlay';
 import CheckmateOverlay from './CheckmateOverlay';
+import DisablerOverlay from './DisablerOverlay';
 
 enum BrushColor {
   GREEN = 'green',
@@ -31,7 +32,6 @@ interface Props {
   size: string;
   playedMoves: string[];
   boardPosition: string;
-  orientation?: PieceColor;
   isUsersTurn: boolean;
   turnColor: string;
   onMove: (startSquare: Square, endSquare: Square) => void;
@@ -42,6 +42,8 @@ interface Props {
   inCheck: boolean;
   inCheckmate: boolean;
   wrongMoveFlashIdx: number;
+  orientation?: PieceColor;
+  disabled?: boolean;
 }
 
 const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
@@ -101,6 +103,12 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
 
   return (
     <div className={classes.chessGuideBoardWrapper}>
+      <DisablerOverlay
+        width={props.size}
+        height={props.size}
+        isDisabling={Boolean(props.disabled)}
+        disabledCursor='default'
+      />
       <CheckmateOverlay
         inCheckmate={props.inCheckmate}
         width={props.size}

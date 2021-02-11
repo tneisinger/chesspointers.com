@@ -90,6 +90,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
   const [movesPosition, setMovesPosition] = useState<number>(0);
+  const [isBoardDisabled, setIsBoardDisabled] = useState<boolean>(false);
 
   // timeout refs
   const checkMoveTimeout = useRef<number | undefined>(undefined);
@@ -234,6 +235,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       let nextAction: () => void;
       if (wasLastMoveCorrect()) {
         setIsShowingMoves(false);
+        if (mode === 'learn') setIsBoardDisabled(true);
         nextAction = handleGoodMove;
       } else {
         nextAction = rectifyIncorrectMove;
@@ -334,6 +336,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     game.reset();
     updateBoard();
     setIsShowingMoves(false);
+    if (mode === 'learn') setIsBoardDisabled(true);
     scheduleShowMoves();
   };
 
@@ -358,6 +361,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     if (mode === 'learn' || options.forceShow) {
       showMovesTimeout.current = window.setTimeout(() => {
         setIsShowingMoves(true);
+        setIsBoardDisabled(false);
       }, delay);
     }
   };
@@ -365,6 +369,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const scheduleHideMoves = (options = { delay: SHOW_NEXT_MOVES_DELAY }) => {
     hideMovesTimeout.current = window.setTimeout(() => {
       setIsShowingMoves(false);
+      if (mode === 'learn') setIsBoardDisabled(true);
     }, options.delay);
   };
 
@@ -514,6 +519,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             nextMoves={getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
             wrongMoveFlashIdx={wrongMoveFlashIdx}
+            disabled={isBoardDisabled}
           />
         </div>
         <ChessGuideInfo

@@ -3,12 +3,13 @@ import { makeStyles } from '@material-ui/core';
 
 const DEFAULT_Z_INDEX = 20;
 const DEFAULT_OPACITY = 0.3;
-const DEFAULT_COLOR = 'gray';
+const DEFAULT_COLOR = 'transparent';
 
 interface Props {
   width: string;
   height: string;
   isDisabling: boolean;
+  disabledCursor?: string;
   color?: string;
   opacity?: number;
   zIndex?: number;
@@ -24,6 +25,7 @@ const useStyles = makeStyles({
     height: (p: Props) => p.height,
     zIndex: (p: Props) => p.zIndex || DEFAULT_Z_INDEX,
     pointerEvents: (p: Props) => (p.isDisabling ? 'auto' : 'none'),
+    cursor: (p: Props) => (p.disabledCursor == undefined ? 'default' : p.disabledCursor),
     backgroundColor: (p: Props) => {
       const color = p.color || DEFAULT_COLOR;
       return p.isDisabling ? color : 'transparent';
