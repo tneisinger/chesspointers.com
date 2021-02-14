@@ -654,7 +654,6 @@ describe('filterTreesWithOpenings()', () => {
     const openings = [
       ChessOpening.CaroKannDefense,
       ChessOpening.SicilianDefense,
-      ChessOpening.EnglundGambit,
     ];
 
     const filtered = filterTrapsWithOpenings(openings, chessTraps);
