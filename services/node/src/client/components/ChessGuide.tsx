@@ -3,12 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import React, { useState, useEffect, useRef } from 'react';
 import { Chess, ChessInstance, Square, ShortMove } from 'chess.js';
-import {
-  ChessTree,
-  PieceColor,
-  PromotionPiece,
-  ChessTreePath,
-} from '../../shared/chessTypes';
+import { ChessTree, PieceColor, PromotionPiece } from '../../shared/chessTypes';
 import { getTreePaths } from '../../shared/chessTree';
 import {
   areChessPathsEquivalent,
@@ -19,12 +14,13 @@ import {
 } from '../../shared/utils';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
-import PathCompleteModal from './PathCompleteModal';
 import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
 import ChessGuideControls from './ChessGuideControls';
 import { GuideMode } from '../utils/types';
+import PathCompleteModal from './PathCompleteModal';
 import PawnPromoteModal from './PawnPromoteModal';
+import DeadEndModal from './DeadEndModal';
 
 const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = 250;
@@ -80,6 +76,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
   const [isPathCompleteModalOpen, setIsPathCompleteModalOpen] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
+  const [isDeadEndModalOpen, setIsDeadEndModalOpen] = useState(false);
   const [mode, setMode] = useState<GuideMode>(guideMode);
   const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
   const [pathStats, setPathStats] = useState<PathStats[]>([]);
@@ -188,8 +185,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const getNextMoves = (): string[] => {
     const result: string[] = [];
-    relevantPaths().forEach((pathObj) => {
-      const nextMove = pathObj.path[playedMoves.length];
+    getRelevantPaths().forEach((pathStats) => {
+      const nextMove = pathStats.path[playedMoves.length];
       if (nextMove != undefined && !result.includes(nextMove)) {
         result.push(nextMove);
       }
@@ -197,10 +194,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return result;
   };
 
-  const relevantPaths = (): ChessTreePath[] => {
-    return paths.filter((pathObj) => {
-      return playedMoves.every((move, idx) =>
-        areChessMovesEquivalent(move, pathObj.path[idx]),
+  const getRelevantPaths = (specifiedPath?: string[]): PathStats[] => {
+    const path = specifiedPath == undefined ? playedMoves : specifiedPath;
+    return pathStats.filter((p) => {
+      return (
+        p.mode === mode &&
+        path.every((move, idx) => areChessMovesEquivalent(move, p.path[idx]))
       );
     });
   };
@@ -236,7 +235,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       if (wasLastMoveCorrect()) {
         setIsShowingMoves(false);
         if (mode === 'learn') setIsBoardDisabled(true);
-        nextAction = handleGoodMove;
+        nextAction = handleCorrectMove;
       } else {
         nextAction = rectifyIncorrectMove;
       }
@@ -244,8 +243,33 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   };
 
-  const handleGoodMove = () => {
-    addMoveToPlayedMoves();
+  // Return true if the most recently played move only leads to completed paths and there
+  // are uncompleted paths (or paths completed fewer times) available to the user if they
+  // had played a different move. If the `ignoreIfAllPathsHaveBeenCompleted` option is
+  // given, always return false if all the relevant paths have been completed at least
+  // once.
+  const doesLastMoveLeadToDeadEnd = (
+    ignore?: 'ignoreIfAllPathsHaveBeenCompleted',
+  ): boolean => {
+    const pathsWithMove = getRelevantPaths([...playedMoves, getLastMove()]);
+    const pathsWithoutMove = getRelevantPaths();
+    const lowestTimesCompletedWithoutMove = Math.min(
+      ...pathsWithoutMove.map((p) => p.timesCompleted),
+    );
+    if (lowestTimesCompletedWithoutMove > 0 && ignore) return false;
+    const lowestTimesCompletedWithMove = Math.min(
+      ...pathsWithMove.map((p) => p.timesCompleted),
+    );
+    return lowestTimesCompletedWithMove > lowestTimesCompletedWithoutMove;
+  };
+
+  const handleCorrectMove = () => {
+    if (doesLastMoveLeadToDeadEnd('ignoreIfAllPathsHaveBeenCompleted')) {
+      setIsDeadEndModalOpen(true);
+      return;
+    } else {
+      addMoveToPlayedMoves();
+    }
   };
 
   const addMoveToPlayedMoves = (move?: string): void => {
@@ -576,6 +600,19 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         isOpenOrOpening={isPromoteModalOpen}
         color={userPlaysAs}
         handlePieceSelected={onPawnPromoteSelection}
+      />
+
+      <DeadEndModal
+        isOpenOrOpening={isDeadEndModalOpen}
+        handleOptionSelect={(keepMove) => {
+          setIsDeadEndModalOpen(false);
+          if (keepMove) {
+            addMoveToPlayedMoves();
+          } else {
+            undoMove();
+            scheduleShowMoves({ delay: 400 });
+          }
+        }}
       />
 
       {renderExtraControlsForTesting && (
