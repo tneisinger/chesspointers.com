@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Modal from './Modal';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import { GuideMode } from '../utils/types';
 import NavLinkMui from './NavLinkMui';
 
@@ -68,13 +69,25 @@ const PathCompleteModal: React.FC<Props> = ({
         <Typography className={classes.modalMsgText}>
           You completed all the paths in Learn Mode.
         </Typography>
-        <Button
-          variant='contained'
-          color='primary'
-          onClick={handleSwitchToPracticeModeBtnClick}
-        >
-          Test Your Memory in Practice Mode
-        </Button>
+        <Grid container alignItems='center' justify='center' spacing={3}>
+          <Grid item>
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={handleSwitchToPracticeModeBtnClick}
+            >
+              Switch To Practice Mode
+            </Button>
+          </Grid>
+          <Grid item>
+            <Typography>or</Typography>
+          </Grid>
+          <Grid item>
+            <Button variant='contained' color='primary' onClick={handleResetBtnClick}>
+              Reset Board
+            </Button>
+          </Grid>
+        </Grid>
       </Modal>
     );
   } else {
@@ -90,9 +103,21 @@ const PathCompleteModal: React.FC<Props> = ({
         <Typography className={classes.modalMsgText}>
           You completed all the paths in Practice Mode
         </Typography>
-        <Button variant='contained' color='primary' component={NavLinkMui('/traps')}>
-          Learn a New Trap
-        </Button>
+        <Grid container alignItems='center' justify='center' spacing={3}>
+          <Grid item>
+            <Button variant='contained' color='primary' component={NavLinkMui('/traps')}>
+              Learn a New Trap
+            </Button>
+          </Grid>
+          <Grid item>
+            <Typography>or</Typography>
+          </Grid>
+          <Grid item>
+            <Button variant='contained' color='primary' onClick={handleResetBtnClick}>
+              Reset Board
+            </Button>
+          </Grid>
+        </Grid>
       </Modal>
     );
   }
