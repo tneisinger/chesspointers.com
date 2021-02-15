@@ -51,7 +51,7 @@ const PathCompleteModal: React.FC<Props> = ({
           {numPathsCompleted} of {numPaths} paths complete ({currentGuideMode} mode)
         </Typography>
         <Button variant='contained' color='primary' onClick={handleResetBtnClick}>
-          Reset Game to Complete Next Path
+          Reset to Complete Another Path
         </Button>
       </Modal>
     );
