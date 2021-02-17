@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import useDimensions from 'react-use-dimensions';
+import { Theme } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
-import ToolBar from '@material-ui/core/Toolbar';
 import { makeStyles } from '@material-ui/core';
 import ChessLessonPreview from './ChessLessonPreview';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import ChessTrapFilters from '../components/ChessTrapFilters';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   card: {
     display: 'inline-block',
     margin: '16px',
@@ -14,24 +15,20 @@ const useStyles = makeStyles({
   cardContent: {
     padding: '24px',
   },
-  toolbar: {
-    padding: '0.5rem 1rem',
-  },
   filtersBar: {
     opacity: 0.95,
-    position: 'sticky',
-    width: 'inherit',
-    maxWidth: 'inherit',
+    padding: '0.75rem',
+    position: 'fixed',
     left: 0,
     right: 0,
     marginLeft: 'auto',
     marginRight: 'auto',
-    // The `top value has to match the MUI toolbar height. the height of the MUI toolbar
-    // is defined at `theme.mixins.toolbar`. The values below are based on the values in
-    // `theme.mixins.toolbar`.
-    top: 56,
-    '@media (min-width:0px) and (orientation: landscape)': { top: 48 },
-    '@media (min-width:600px)': { top: 64 },
+    top: 'auto',
+    bottom: 0,
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: 240,
+      width: 'calc(100% - 240px)',
+    },
   },
   chessLessonPreviewsContainer: {
     display: 'flex',
@@ -40,7 +37,7 @@ const useStyles = makeStyles({
     marginTop: '12px',
     width: '100%',
   },
-});
+}));
 
 interface Props {
   chessTraps: ChessTrap[];
@@ -51,17 +48,17 @@ interface Props {
 const DisplayChessTraps: React.FC<Props> = (props) => {
   const classes = useStyles(props);
 
+  const [ref, { height }] = useDimensions();
+
   const [visibleTraps, setVisibleTraps] = useState<ChessTrap[]>(props.chessTraps);
 
   return (
     <>
-      <AppBar className={classes.filtersBar} color='default'>
-        <ToolBar className={classes.toolbar}>
-          <ChessTrapFilters
-            allTraps={props.chessTraps}
-            setSelectedTraps={setVisibleTraps}
-          />
-        </ToolBar>
+      <AppBar ref={ref} className={classes.filtersBar} color='default'>
+        <ChessTrapFilters
+          allTraps={props.chessTraps}
+          setSelectedTraps={setVisibleTraps}
+        />
       </AppBar>
       <div className={classes.chessLessonPreviewsContainer}>
         {visibleTraps.map((trap) => (
@@ -72,6 +69,7 @@ const DisplayChessTraps: React.FC<Props> = (props) => {
           />
         ))}
       </div>
+      <div style={{ height }} />
     </>
   );
 };
