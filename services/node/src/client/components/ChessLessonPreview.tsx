@@ -13,6 +13,8 @@ import { calcChessBoardSize } from '../utils';
 const CARD_MARGIN = 16;
 const CARD_CONTENT_PADDING = 24;
 
+const FONT_SIZE_SCALAR = 0.003;
+
 const useStyles = makeStyles({
   card: {
     display: 'inline-block',
@@ -20,6 +22,10 @@ const useStyles = makeStyles({
   },
   cardContent: {
     padding: CARD_CONTENT_PADDING + 'px',
+    paddingTop: '16px',
+  },
+  titleText: {
+    fontSize: (p: Props) => p.cardWidth * FONT_SIZE_SCALAR + 'rem',
   },
 });
 
@@ -29,7 +35,7 @@ interface Props {
 }
 
 const ChessLessonPreview: React.FC<Props> = (props) => {
-  const classes = useStyles({});
+  const classes = useStyles(props);
 
   const rawBoardSize = props.cardWidth - CARD_MARGIN * 2 - CARD_CONTENT_PADDING * 2;
   const boardSize = calcChessBoardSize(rawBoardSize, 'px');
@@ -40,7 +46,7 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
         <NavLink to={`/traps/${toDashedLowercase(props.chessTrap.shortName)}`}>
           <Grid container direction='column' spacing={2}>
             <Grid item>
-              <Typography variant='h5' component='h4' align='center'>
+              <Typography className={classes.titleText} component='h4' align='center'>
                 {props.chessTrap.fullName}
               </Typography>
             </Grid>

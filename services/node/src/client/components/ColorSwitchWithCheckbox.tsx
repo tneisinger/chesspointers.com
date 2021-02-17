@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   checkboxBackground: {
     background: (props: Props) =>
-      props.isEnabled ? 'radial-gradient(white 55%, transparent 56%)' : 'transparent',
+      props.isEnabled ? 'radial-gradient(white 52%, transparent 53%)' : 'transparent',
     margin: '9px',
   },
 }));

@@ -67,7 +67,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     main: {
       flexGrow: 1,
-      padding: theme.spacing(3),
+      width: '100vw',
+      maxWidth: '1200px',
+      margin: '0 auto',
     },
     drawer: {
       [theme.breakpoints.up('sm')]: {
@@ -77,15 +79,16 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     appBar: {
       zIndex: 1400,
-      [theme.breakpoints.up('sm')]: {
-        // width: `calc(100% - ${DRAWER_WIDTH}px)`,
-        // marginLeft: DRAWER_WIDTH,
-      },
     },
     menuButton: {
       marginRight: theme.spacing(2),
       [theme.breakpoints.up('sm')]: {
         display: 'none',
+      },
+    },
+    siteTitleText: {
+      [theme.breakpoints.up('sm')]: {
+        fontSize: '1.25rem',
       },
     },
     toolbar: {
@@ -124,8 +127,8 @@ export const App = (): JSX.Element => {
                 >
                   <MenuIcon />
                 </IconButton>
-                <Typography variant='h6' noWrap>
-                  LearnChessTraps.com
+                <Typography variant='h6' noWrap className={classes.siteTitleText}>
+                  ChessGuide.app
                 </Typography>
               </Toolbar>
             </AppBar>
@@ -162,6 +165,7 @@ export const App = (): JSX.Element => {
               </Hidden>
             </nav>
             <main className={classes.main}>
+              <div className={classes.toolbar} />
               <Switch>{makeRoutes()}</Switch>
             </main>
           </StylesProvider>

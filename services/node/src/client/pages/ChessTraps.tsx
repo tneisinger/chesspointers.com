@@ -1,23 +1,16 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import DisplayChessTraps from '../components/DisplayChessTraps';
+import { useWindowSize } from '../hooks/useWindowSize';
 
-const ROOT_WIDTH = 1000;
-
-const useStyles = makeStyles({
-  root: {
-    width: ROOT_WIDTH + 'px',
-    margin: '0 auto',
-  },
-});
+const MAX_WIDTH = 1200;
 
 const ChessTrapsPage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
 
-  const classes = useStyles({});
+  const { windowWidth } = useWindowSize();
 
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
 
@@ -35,14 +28,18 @@ const ChessTrapsPage: React.FunctionComponent = () => {
     return <p>Loading...</p>;
   }
 
+  const trapsPerRow = windowWidth > 650 ? 2 : 1;
+  const parentWidth = Math.min(MAX_WIDTH, windowWidth);
+
+  console.log('trapsPerRow:', trapsPerRow);
+  console.log('parentWidth:', parentWidth);
+
   return (
-    <div className={classes.root}>
-      <DisplayChessTraps
-        chessTraps={chessTrapsSlice.traps}
-        parentWidth={ROOT_WIDTH}
-        trapsPerRow={2}
-      />
-    </div>
+    <DisplayChessTraps
+      chessTraps={chessTrapsSlice.traps}
+      parentWidth={parentWidth}
+      trapsPerRow={trapsPerRow}
+    />
   );
 };
 
