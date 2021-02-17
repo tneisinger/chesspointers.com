@@ -26,8 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: 'auto',
     bottom: 0,
     [theme.breakpoints.up('sm')]: {
-      marginLeft: 240,
-      width: 'calc(100% - 240px)',
+      marginLeft: theme.sideMenuWidth,
+      width: `calc(100% - ${theme.sideMenuWidth}px)`,
     },
   },
   chessLessonPreviewsContainer: {
