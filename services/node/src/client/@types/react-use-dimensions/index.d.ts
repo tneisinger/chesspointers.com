@@ -1,5 +1,6 @@
 declare module 'react-use-dimensions' {
-  import React, { MutableRefObject } from 'react';
-  function useDimensions(): [React.MutableRefObject<HTMLElement>, ClientRect];
+  import React from 'react';
+  type RefType = MutableRefObject<any> | RefObject<HTMLDivElement>;
+  function useDimensions(): [RefType, ClientRect];
   export default useDimensions;
 }

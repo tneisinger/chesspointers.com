@@ -1,16 +1,34 @@
 import React, { useEffect } from 'react';
+import { Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
+import Typography from '@material-ui/core/Typography';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import DisplayChessTraps from '../components/DisplayChessTraps';
-import { useWindowSize } from '../hooks/useWindowSize';
+import useDimensions from 'react-use-dimensions';
 
-const MAX_WIDTH = 1200;
+const useStyles = makeStyles((theme: Theme) => ({
+  titleText: {
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '3rem',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.75rem',
+    },
+  },
+  chessTrapsRoot: {
+    maxWidth: 'inherit',
+    width: 'inherit',
+  },
+}));
 
 const ChessTrapsPage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
 
-  const { windowWidth } = useWindowSize();
+  const classes = useStyles();
+
+  const [rootDivRef, rootDivDimensions] = useDimensions();
 
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
 
@@ -28,18 +46,19 @@ const ChessTrapsPage: React.FunctionComponent = () => {
     return <p>Loading...</p>;
   }
 
-  const trapsPerRow = windowWidth > 650 ? 2 : 1;
-  const parentWidth = Math.min(MAX_WIDTH, windowWidth);
-
-  console.log('trapsPerRow:', trapsPerRow);
-  console.log('parentWidth:', parentWidth);
+  const trapsPerRow = rootDivDimensions.width > 650 ? 2 : 1;
 
   return (
-    <DisplayChessTraps
-      chessTraps={chessTrapsSlice.traps}
-      parentWidth={parentWidth}
-      trapsPerRow={trapsPerRow}
-    />
+    <div className={classes.chessTrapsRoot} ref={rootDivRef}>
+      <Typography variant='h3' align='center' className={classes.titleText}>
+        Chess Traps
+      </Typography>
+      <DisplayChessTraps
+        chessTraps={chessTrapsSlice.traps}
+        parentWidth={rootDivDimensions.width}
+        trapsPerRow={trapsPerRow}
+      />
+    </div>
   );
 };
 

@@ -70,6 +70,7 @@ const useStyles = makeStyles((theme: Theme) => {
       width: '100vw',
       maxWidth: '1200px',
       margin: '0 auto',
+      paddingTop: '12px',
     },
     drawer: {
       [theme.breakpoints.up('sm')]: {

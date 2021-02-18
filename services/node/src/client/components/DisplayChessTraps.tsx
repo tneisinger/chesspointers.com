@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
-    marginTop: '12px',
     width: '100%',
   },
 }));
@@ -48,13 +47,13 @@ interface Props {
 const DisplayChessTraps: React.FC<Props> = (props) => {
   const classes = useStyles(props);
 
-  const [ref, { height }] = useDimensions();
+  const [filtersBarRef, filtersBarDimensions] = useDimensions();
 
   const [visibleTraps, setVisibleTraps] = useState<ChessTrap[]>(props.chessTraps);
 
   return (
     <>
-      <AppBar ref={ref} className={classes.filtersBar} color='default'>
+      <AppBar ref={filtersBarRef} className={classes.filtersBar} color='default'>
         <ChessTrapFilters
           allTraps={props.chessTraps}
           setSelectedTraps={setVisibleTraps}
@@ -69,7 +68,7 @@ const DisplayChessTraps: React.FC<Props> = (props) => {
           />
         ))}
       </div>
-      <div style={{ height }} />
+      <div style={{ height: filtersBarDimensions.height }} />
     </>
   );
 };
