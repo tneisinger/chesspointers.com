@@ -87,11 +87,6 @@ const ChessTrapFilters: React.FC<Props> = ({
       spacing={3}
       justify='space-between'
     >
-      <Grid item className={classes.verticallyCentered}>
-        <Typography variant='h5' className={classes.text}>
-          Filter By:
-        </Typography>
-      </Grid>
       <Grid item>
         <ColorSwitchWithCheckbox
           isEnabled={isColorFilterEnabled}

@@ -1,7 +1,6 @@
 import React from 'react';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
 import FormControl from '@material-ui/core/FormControl';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
@@ -10,6 +9,11 @@ import { ChessOpening } from '../../shared/chessTypes';
 const useStyles = makeStyles({
   autocomplete: {
     minWidth: (p: { size: string }) => (p.size === 'medium' ? 225 : 200),
+  },
+  inputLabel: {
+    '&.Mui-focused': {
+      color: 'white',
+    },
   },
 });
 
@@ -30,20 +34,25 @@ const ChessOpeningsDropDown: React.FC<Props> = ({
     <Grid container direction='row' spacing={2}>
       <Grid item>
         <FormControl className={classes.autocomplete}>
-          <InputLabel id='chess-openings-dropdown-label'>Opening</InputLabel>
-          <Select
-            labelId='chess-openings-dropdown-label'
+          <InputLabel className={classes.inputLabel} shrink id='chess-openings-dropdown'>
+            Opening
+          </InputLabel>
+          <NativeSelect
+            inputProps={{
+              name: 'Opening',
+              id: 'chess-openings-dropdown',
+            }}
             id='chess-openings-dropdown'
             value={selectedOpening}
             onChange={(e) => onChange(e.target.value as ChessOpening)}
           >
-            <MenuItem value=''>None</MenuItem>
+            <option value=''>None</option>
             {Object.values(ChessOpening).map((opening) => (
-              <MenuItem key={opening} value={opening}>
+              <option key={opening} value={opening}>
                 {opening}
-              </MenuItem>
+              </option>
             ))}
-          </Select>
+          </NativeSelect>
         </FormControl>
       </Grid>
     </Grid>
