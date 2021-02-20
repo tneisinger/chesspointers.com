@@ -7,8 +7,8 @@ export function getUserFullName(user: User): string {
   return `${user.firstName} ${user.lastName}`;
 }
 
-export function assertUnreachable(_x: never): never {
-  throw new Error('This error should never be thrown');
+export function assertUnreachable(x: never): never {
+  throw new Error(`assertUnreachable was reached with value: ${x}`);
 }
 
 export function arraysEqual<T>(a: T[], b: T[]): boolean {
