@@ -11,7 +11,7 @@ import { toDashedLowercase } from '../../shared/utils';
 import { calcChessBoardSize } from '../utils';
 
 const CARD_MARGIN = 16;
-const CARD_CONTENT_PADDING = 24;
+const CARD_CONTENT_PADDING = 16;
 
 const FONT_SIZE_SCALAR = 0.003;
 
@@ -22,10 +22,12 @@ const useStyles = makeStyles({
   },
   cardContent: {
     padding: CARD_CONTENT_PADDING + 'px',
-    paddingTop: '16px',
+    paddingTop: '12px',
+    paddingBottom: '16px!important',
   },
   titleText: {
     fontSize: (p: Props) => p.cardWidth * FONT_SIZE_SCALAR + 'rem',
+    marginBottom: '12px',
   },
 });
 
@@ -44,7 +46,7 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
     <Card className={classes.card}>
       <CardContent className={classes.cardContent}>
         <NavLink to={`/traps/${toDashedLowercase(props.chessTrap.shortName)}`}>
-          <Grid container direction='column' spacing={2}>
+          <Grid container direction='column'>
             <Grid item>
               <Typography className={classes.titleText} component='h4' align='center'>
                 {props.chessTrap.fullName}
