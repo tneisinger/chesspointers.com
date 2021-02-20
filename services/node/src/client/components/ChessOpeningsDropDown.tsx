@@ -1,6 +1,8 @@
-import React, { MutableRefObject } from 'react';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import React from 'react';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { ChessOpening } from '../../shared/chessTypes';
@@ -12,16 +14,14 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  selectedOpening: ChessOpening | null;
-  onChange: (opening: ChessOpening | null) => void;
-  textFieldRef?: MutableRefObject<HTMLInputElement | null>;
+  selectedOpening: ChessOpening | '';
+  onChange: (opening: string) => void;
   size?: 'medium' | 'small';
 }
 
 const ChessOpeningsDropDown: React.FC<Props> = ({
   selectedOpening,
   onChange,
-  textFieldRef = undefined,
   size = 'medium',
 }) => {
   const classes = useStyles({ size });
@@ -29,24 +29,22 @@ const ChessOpeningsDropDown: React.FC<Props> = ({
   return (
     <Grid container direction='row' spacing={2}>
       <Grid item>
-        <Autocomplete
-          value={selectedOpening}
-          size={size}
-          className={classes.autocomplete}
-          options={[null, ...Object.values(ChessOpening)]}
-          getOptionLabel={(option) => (option == null ? 'None' : option)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              inputRef={textFieldRef}
-              label='Chess Opening'
-              variant='outlined'
-            />
-          )}
-          onChange={(_event: any, newValue) => {
-            onChange(newValue);
-          }}
-        />
+        <FormControl className={classes.autocomplete}>
+          <InputLabel id='chess-openings-dropdown-label'>Opening</InputLabel>
+          <Select
+            labelId='chess-openings-dropdown-label'
+            id='chess-openings-dropdown'
+            value={selectedOpening}
+            onChange={(e) => onChange(e.target.value as ChessOpening)}
+          >
+            <MenuItem value=''>None</MenuItem>
+            {Object.values(ChessOpening).map((opening) => (
+              <MenuItem key={opening} value={opening}>
+                {opening}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Grid>
     </Grid>
   );
