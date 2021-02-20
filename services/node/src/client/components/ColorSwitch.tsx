@@ -21,6 +21,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   toggleSwitch: {
     marginTop: (p: Props) => (p.size === 'small' ? 0 : '3px'),
+    marginLeft: '-6px',
+    marginRight: '-6px',
   },
 }));
 
@@ -57,7 +59,7 @@ const ColorSwitch: React.FC<Props> = ({
           variant={size === 'small' ? 'caption' : 'body1'}
           className={getLabelClasses('white')}
         >
-          White
+          W
         </Typography>
       </Grid>
       <Grid item>
@@ -77,7 +79,7 @@ const ColorSwitch: React.FC<Props> = ({
           variant={size === 'small' ? 'caption' : 'body1'}
           className={getLabelClasses('black')}
         >
-          Black
+          B
         </Typography>
       </Grid>
     </Grid>

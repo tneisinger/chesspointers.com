@@ -2,7 +2,6 @@ import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import { makeStyles, Theme } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import ColorSwitchWithCheckbox from './ColorSwitchWithCheckbox';
@@ -84,8 +83,8 @@ const ChessTrapFilters: React.FC<Props> = ({
       container
       className={classes.root}
       direction={alignItems}
-      spacing={3}
-      justify='space-between'
+      spacing={1}
+      justify='space-around'
     >
       <Grid item>
         <ColorSwitchWithCheckbox
