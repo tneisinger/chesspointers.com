@@ -67,8 +67,11 @@ const ChessTrapFilters: React.FC<Props> = ({
     }
   };
 
+  // Whenever any filter option changes...
   useEffect(() => {
     filterTraps();
+    // Scroll to the top of the page
+    window.scrollTo(0, 0);
   }, [isColorFilterEnabled, selectedColor, selectedOpening]);
 
   return (
