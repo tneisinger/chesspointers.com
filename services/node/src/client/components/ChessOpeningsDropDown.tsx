@@ -7,9 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import { ChessOpening } from '../../shared/chessTypes';
 
 const useStyles = makeStyles({
-  autocomplete: {
-    minWidth: (p: { size: string }) => (p.size === 'medium' ? 225 : 200),
-  },
   inputLabel: {
     '&.Mui-focused': {
       color: 'white',
@@ -33,7 +30,7 @@ const ChessOpeningsDropDown: React.FC<Props> = ({
   return (
     <Grid container direction='row' spacing={2}>
       <Grid item>
-        <FormControl className={classes.autocomplete}>
+        <FormControl>
           <InputLabel className={classes.inputLabel} shrink id='chess-openings-dropdown'>
             Opening
           </InputLabel>
