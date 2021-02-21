@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core';
 import ChessLessonPreview from './ChessLessonPreview';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import ChessTrapFilters from '../components/ChessTrapFilters';
+import useInterval from 'react-useinterval';
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -51,6 +52,16 @@ const DisplayChessTraps: React.FC<Props> = (props) => {
 
   const [visibleTraps, setVisibleTraps] = useState<ChessTrap[]>(props.chessTraps);
 
+  const [hoveredTrap, setHoveredTrap] = useState<string | null>(null);
+
+  const [stepper, setStepper] = useState<number>(-1);
+
+  useInterval(() => {
+    if (hoveredTrap != null) {
+      setStepper(stepper + 1);
+    }
+  }, 600);
+
   return (
     <>
       <AppBar ref={filtersBarRef} className={classes.filtersBar} color='default'>
@@ -65,6 +76,17 @@ const DisplayChessTraps: React.FC<Props> = (props) => {
             key={trap.shortName}
             chessTrap={trap}
             cardWidth={props.parentWidth / props.trapsPerRow - 30 * props.trapsPerRow}
+            stepper={hoveredTrap === trap.shortName ? stepper : -1}
+            onHoverChange={(trapName, isHovered) => {
+              if (trapName !== hoveredTrap) {
+                setStepper(-1);
+              }
+              if (isHovered) {
+                setHoveredTrap(trapName);
+              } else {
+                setHoveredTrap(null);
+              }
+            }}
           />
         ))}
       </div>

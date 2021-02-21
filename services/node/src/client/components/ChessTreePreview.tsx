@@ -1,46 +1,28 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { makeStyles } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
 import Chessground from 'react-chessground';
 import { ChessTree, PieceColor, ChessTreePath } from '../../shared/chessTypes';
 import { getTreePaths, getPreviewPositionPath } from '../../shared/chessTree';
 import { Chess, ChessInstance } from 'chess.js';
 import { calcChessBoardSize, BoardSizeUnits } from '../utils';
-import useInterval from 'react-useinterval';
 import { basicCompare } from '../../shared/utils';
-
-const MIN_MS_BEFORE_FIRST_MOVE = 250;
-
-interface StyleProps {
-  allowPointerEvents: boolean;
-}
-
-const useStyles = makeStyles({
-  hoverDiv: {
-    pointerEvents: (props: StyleProps) => (props.allowPointerEvents ? 'auto' : 'none'),
-  },
-});
 
 interface Props {
   chessTree: ChessTree;
   orientation: PieceColor;
+  stepper: number;
+  onHoverChange: (isHovered: boolean) => void;
   boardSize?: number;
   boardSizeUnits?: BoardSizeUnits;
-  msBetweenMoves?: number;
-  playMoves?: 'always' | 'onHover';
 }
 
 const ChessTreePreview: React.FC<Props> = ({
   chessTree,
   orientation,
+  stepper,
+  onHoverChange,
   boardSize = 350,
   boardSizeUnits = 'px',
-  msBetweenMoves = 600,
-  playMoves = 'onHover',
 }) => {
-  const classes = useStyles({
-    allowPointerEvents: playMoves === 'onHover',
-  });
-
   // Try to get the PreviewPosPath from the chessTree. If the chessTree doesn't have a
   // node with isPreviewPosition === true, then just pick a spot somewhere in the middle
   // of the tree.
@@ -73,7 +55,6 @@ const ChessTreePreview: React.FC<Props> = ({
 
   const [chess] = useState<ChessInstance>(new Chess());
   const [boardPosition, setBoardPosition] = useState<string>(chess.fen());
-  const [isHovered, setIsHovered] = useState<boolean>(false);
   const [currentPathIdx, setCurrentPathIdx] = useState<number>(0);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
   const [previewPosPath] = useState<string[]>(getPreviewPosPath());
@@ -85,9 +66,6 @@ const ChessTreePreview: React.FC<Props> = ({
 
   useEffect(() => {
     setBoardToPreviewPosition();
-    if (playMoves === 'always') {
-      startMoving();
-    }
   }, []);
 
   const setBoardToPreviewPosition = () => {
@@ -100,55 +78,47 @@ const ChessTreePreview: React.FC<Props> = ({
     setBoardPosition(chess.fen());
   };
 
-  const startMovingStartTime = useRef<number>(0);
-
-  const startMoving = () => {
-    startMovingStartTime.current = Date.now();
-    chess.reset();
-    setPlayedMoves([]);
-    setCurrentPathIdx(0);
-    setBoardPosition(chess.fen());
+  const playNextMove = () => {
+    const pathObj = paths[currentPathIdx];
+    if (pathObj == undefined) throw new Error('Path undefined!');
+    if (playedMoves.length >= pathObj.path.length) {
+      setCurrentPathIdx((idx) => (idx < paths.length - 1 ? idx + 1 : 0));
+      chess.reset();
+      setBoardPosition(chess.fen());
+      setPlayedMoves([]);
+      return;
+    }
+    const nextMove = pathObj.path[playedMoves.length];
+    if (nextMove != undefined) {
+      chess.move(nextMove);
+      setBoardPosition(chess.fen());
+      setPlayedMoves([...playedMoves, nextMove]);
+    }
   };
 
-  const shouldPlayMove = (): boolean =>
-    (playMoves === 'onHover' && isHovered) || playMoves === 'always';
-
-  const hasEnoughTimePassed = (): boolean =>
-    Date.now() - startMovingStartTime.current > MIN_MS_BEFORE_FIRST_MOVE;
-
-  useInterval(() => {
-    if (shouldPlayMove() && hasEnoughTimePassed()) {
-      const pathObj = paths[currentPathIdx];
-      if (pathObj == undefined) throw new Error('Path undefined!');
-      if (playedMoves.length >= pathObj.path.length) {
-        setCurrentPathIdx((idx) => (idx < paths.length - 1 ? idx + 1 : 0));
-        chess.reset();
-        setBoardPosition(chess.fen());
-        setPlayedMoves([]);
-        return;
-      }
-      const nextMove = pathObj.path[playedMoves.length];
-      if (nextMove != undefined) {
-        chess.move(nextMove);
-        setBoardPosition(chess.fen());
-        setPlayedMoves([...playedMoves, nextMove]);
-      }
-    }
-  }, msBetweenMoves);
+  const resetBoardToStartPos = () => {
+    chess.reset();
+    setBoardPosition(chess.fen());
+    setPlayedMoves([]);
+  };
 
   useEffect(() => {
-    if (playMoves === 'onHover') {
-      isHovered ? startMoving() : setBoardToPreviewPosition();
+    if (stepper < 0) {
+      setBoardToPreviewPosition();
+    } else if (stepper === 0) {
+      resetBoardToStartPos();
+    } else {
+      playNextMove();
     }
-  }, [isHovered]);
+  }, [stepper]);
 
   const finalBoardSize = calcChessBoardSize(boardSize, boardSizeUnits) + 'px';
 
   return (
     <div
-      className={classes.hoverDiv}
-      onMouseEnter={() => (playMoves === 'onHover' ? setIsHovered(true) : void 0)}
-      onMouseLeave={() => (playMoves === 'onHover' ? setIsHovered(false) : void 0)}
+      onTouchStart={() => onHoverChange(true)}
+      onMouseEnter={() => onHoverChange(true)}
+      onMouseLeave={() => onHoverChange(false)}
     >
       <Chessground
         width={finalBoardSize}

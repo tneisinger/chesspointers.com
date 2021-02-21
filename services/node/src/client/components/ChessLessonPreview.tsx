@@ -34,6 +34,8 @@ const useStyles = makeStyles({
 interface Props {
   chessTrap: ChessTrap;
   cardWidth: number;
+  stepper: number;
+  onHoverChange: (trapName: string, isHovered: boolean) => void;
 }
 
 const ChessLessonPreview: React.FC<Props> = (props) => {
@@ -56,6 +58,10 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
               <ChessTreePreview
                 chessTree={props.chessTrap.chessTree}
                 orientation={props.chessTrap.playedByWhite ? 'white' : 'black'}
+                stepper={props.stepper}
+                onHoverChange={(isHovered) =>
+                  props.onHoverChange(props.chessTrap.shortName, isHovered)
+                }
                 boardSize={boardSize}
               />
             </Grid>
