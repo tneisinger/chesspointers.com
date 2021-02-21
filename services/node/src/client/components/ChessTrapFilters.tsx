@@ -12,6 +12,8 @@ import { filterTrapsWithOpenings } from '../../shared/chessTree';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     height: '100%',
+    maxWidth: theme.mainMaxWidth,
+    margin: '0 auto',
   },
   verticallyCentered: {
     display: 'flex',
@@ -84,7 +86,7 @@ const ChessTrapFilters: React.FC<Props> = ({
       className={classes.root}
       direction={alignItems}
       spacing={1}
-      justify='space-around'
+      justify='space-evenly'
     >
       <Grid item>
         <ColorSwitchWithCheckbox

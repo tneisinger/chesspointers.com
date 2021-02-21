@@ -1,6 +1,5 @@
 import { CssBaseline, makeStyles } from '@material-ui/core';
 import {
-  createStyles,
   Theme,
   createMuiTheme,
   ThemeProvider,
@@ -27,6 +26,7 @@ const theme = createMuiTheme({
     type: 'dark',
   },
   sideMenuWidth: 240,
+  mainMaxWidth: 1200,
   overrides: {
     MuiCssBaseline: {
       '@global': {
@@ -59,47 +59,44 @@ const theme = createMuiTheme({
   },
 });
 
-const useStyles = makeStyles((theme: Theme) => {
-  console.log('sideMenuWidth:', theme.sideMenuWidth);
-  return createStyles({
-    root: {
-      display: 'flex',
-    },
-    main: {
-      flexGrow: 1,
-      width: '100vw',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      paddingTop: '12px',
-    },
-    drawer: {
-      [theme.breakpoints.up('sm')]: {
-        width: theme.sideMenuWidth,
-        flexShrink: 0,
-      },
-    },
-    appBar: {
-      zIndex: 1400,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-      [theme.breakpoints.up('sm')]: {
-        display: 'none',
-      },
-    },
-    siteTitleText: {
-      [theme.breakpoints.up('sm')]: {
-        fontSize: '1.25rem',
-      },
-    },
-    toolbar: {
-      ...theme.mixins.toolbar,
-    },
-    drawerPaper: {
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: 'flex',
+  },
+  main: {
+    flexGrow: 1,
+    width: '100vw',
+    maxWidth: theme.mainMaxWidth,
+    margin: '0 auto',
+    paddingTop: '12px',
+  },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
       width: theme.sideMenuWidth,
+      flexShrink: 0,
     },
-  });
-});
+  },
+  appBar: {
+    zIndex: 1400,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
+  siteTitleText: {
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '1.25rem',
+    },
+  },
+  toolbar: {
+    ...theme.mixins.toolbar,
+  },
+  drawerPaper: {
+    width: theme.sideMenuWidth,
+  },
+}));
 
 function AppContent() {
   const classes = useStyles();
