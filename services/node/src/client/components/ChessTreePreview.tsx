@@ -10,7 +10,8 @@ interface Props {
   chessTree: ChessTree;
   orientation: PieceColor;
   stepper: number;
-  onHoverChange: (isHovered: boolean) => void;
+  usePreviewPosition?: boolean;
+  onHoverChange?: (isHovered: boolean) => void;
   boardSize?: number;
   boardSizeUnits?: BoardSizeUnits;
 }
@@ -19,7 +20,8 @@ const ChessTreePreview: React.FC<Props> = ({
   chessTree,
   orientation,
   stepper,
-  onHoverChange,
+  usePreviewPosition = false,
+  onHoverChange = () => void 0,
   boardSize = 350,
   boardSizeUnits = 'px',
 }) => {
@@ -65,7 +67,9 @@ const ChessTreePreview: React.FC<Props> = ({
   );
 
   useEffect(() => {
-    setBoardToPreviewPosition();
+    if (usePreviewPosition) {
+      setBoardToPreviewPosition();
+    }
   }, []);
 
   const setBoardToPreviewPosition = () => {
@@ -104,7 +108,7 @@ const ChessTreePreview: React.FC<Props> = ({
 
   useEffect(() => {
     if (stepper < 0) {
-      setBoardToPreviewPosition();
+      if (usePreviewPosition) setBoardToPreviewPosition();
     } else if (stepper === 0) {
       resetBoardToStartPos();
     } else {

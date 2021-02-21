@@ -46,7 +46,7 @@ const ChessTrapsPage: React.FunctionComponent = () => {
     return <p>Loading...</p>;
   }
 
-  const trapsPerRow = rootDivDimensions.width > 650 ? 2 : 1;
+  const trapsPerRow = 1;
 
   return (
     <div className={classes.chessTrapsRoot} ref={rootDivRef}>

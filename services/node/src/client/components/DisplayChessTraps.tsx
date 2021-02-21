@@ -7,6 +7,8 @@ import ChessLessonPreview from './ChessLessonPreview';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import ChessTrapFilters from '../components/ChessTrapFilters';
 import useInterval from 'react-useinterval';
+import Carousel from 'react-material-ui-carousel';
+import { viewportHeight, viewportWidth } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -37,6 +39,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-evenly',
     width: '100%',
   },
+  chessLessonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  carousel: {
+    maxWidth: '800px',
+    margin: '0 auto',
+    height: '100%',
+  },
 }));
 
 interface Props {
@@ -62,6 +73,16 @@ const DisplayChessTraps: React.FC<Props> = (props) => {
     }
   }, 600);
 
+  const calcCardWidth = (): number => {
+    const vpWidth = viewportWidth();
+    const vpHeight = viewportHeight();
+    if (vpHeight < vpWidth) {
+      return vpHeight - 325;
+    } else {
+      return vpWidth - 100;
+    }
+  };
+
   return (
     <>
       <AppBar ref={filtersBarRef} className={classes.filtersBar} color='default'>
@@ -70,26 +91,36 @@ const DisplayChessTraps: React.FC<Props> = (props) => {
           setSelectedTraps={setVisibleTraps}
         />
       </AppBar>
-      <div className={classes.chessLessonPreviewsContainer}>
+      <Carousel
+        className={classes.carousel}
+        autoPlay={false}
+        navButtonsAlwaysVisible
+        changeOnFirstRender
+        onChange={(idx: number) => {
+          setHoveredTrap(visibleTraps[idx].shortName);
+          setStepper(-1);
+        }}
+      >
         {visibleTraps.map((trap) => (
-          <ChessLessonPreview
-            key={trap.shortName}
-            chessTrap={trap}
-            cardWidth={props.parentWidth / props.trapsPerRow - 30 * props.trapsPerRow}
-            stepper={hoveredTrap === trap.shortName ? stepper : -1}
-            onHoverChange={(trapName, isHovered) => {
-              if (trapName !== hoveredTrap) {
-                setStepper(-1);
-              }
-              if (isHovered) {
-                setHoveredTrap(trapName);
-              } else {
-                setHoveredTrap(null);
-              }
-            }}
-          />
+          <div key={trap.shortName} className={classes.chessLessonContainer}>
+            <ChessLessonPreview
+              chessTrap={trap}
+              cardWidth={calcCardWidth()}
+              stepper={hoveredTrap === trap.shortName ? stepper : -1}
+              onHoverChange={(trapName, isHovered) => {
+                // if (trapName !== hoveredTrap) {
+                  // setStepper(-1);
+                // }
+                // if (isHovered) {
+                  // setHoveredTrap(trapName);
+                // } else {
+                  // setHoveredTrap(null);
+                // }
+              }}
+            />
+          </div>
         ))}
-      </div>
+      </Carousel>
       <div style={{ height: filtersBarDimensions.height }} />
     </>
   );
