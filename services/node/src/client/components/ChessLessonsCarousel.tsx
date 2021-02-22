@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
 });
 
-interface Props {
+interface Props extends React.HTMLProps<HTMLDivElement> {
   chessTraps: ChessTrap[];
   animatedTrap: string | null;
   setAnimatedTrap: (shortName: string) => void;
@@ -40,7 +40,7 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
 
   return (
     <Carousel
-      className={classes.carousel}
+      className={`${props.className} ${classes.carousel}`}
       autoPlay={false}
       navButtonsAlwaysVisible
       changeOnFirstRender
