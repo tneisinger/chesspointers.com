@@ -3,7 +3,6 @@ import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
-import Typography from '@material-ui/core/Typography';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import DisplayChessTraps from '../components/DisplayChessTraps';
 import useDimensions from 'react-use-dimensions';
@@ -20,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   chessTrapsRoot: {
     maxWidth: 'inherit',
     width: 'inherit',
+    height: '100%',
   },
 }));
 
@@ -50,9 +50,6 @@ const ChessTrapsPage: React.FunctionComponent = () => {
 
   return (
     <div className={classes.chessTrapsRoot} ref={rootDivRef}>
-      <Typography variant='h3' align='center' className={classes.titleText}>
-        Chess Traps
-      </Typography>
       <DisplayChessTraps
         chessTraps={chessTrapsSlice.traps}
         parentWidth={rootDivDimensions.width}

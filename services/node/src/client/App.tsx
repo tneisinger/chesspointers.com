@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { CssBaseline, makeStyles } from '@material-ui/core';
 import {
   Theme,
@@ -12,7 +13,6 @@ import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
 import { BrowserRouter, Switch } from 'react-router-dom'; // Pages
 import { SideMenu } from './components/SideMenu';
 import { makeRoutes } from './routes';
@@ -30,6 +30,9 @@ const theme = createMuiTheme({
   overrides: {
     MuiCssBaseline: {
       '@global': {
+        html: {
+          height: '100%',
+        },
         '*': {
           scrollbarWidth: 'thin',
           scrollbarColor: `${SCROLLBAR_FOREGROUND_COLOR} ${SCROLLBAR_BACKGROUND_COLOR}`,
@@ -62,13 +65,14 @@ const theme = createMuiTheme({
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
+    flexDirection: 'column',
+    height: (p: { windowInnerHeight: number }) => p.windowInnerHeight,
   },
   main: {
     flexGrow: 1,
     width: '100vw',
     maxWidth: theme.mainMaxWidth,
     margin: '0 auto',
-    paddingTop: '12px',
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -99,7 +103,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function AppContent() {
-  const classes = useStyles();
+  const [windowInnerHeight, setWindowInnerHeight] = useState<number>(window.innerHeight);
+
+  window.addEventListener('resize', () => {
+    setWindowInnerHeight(window.innerHeight);
+  });
+
+  const classes = useStyles({ windowInnerHeight });
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -110,62 +120,64 @@ function AppContent() {
   const container = window !== undefined ? () => window.document.body : undefined;
 
   return (
-    <div className={classes.root}>
+    <>
       <CssBaseline />
       <StylesProvider injectFirst>
-        <AppBar position='fixed' className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              aria-label='open drawer'
-              edge='start'
-              onClick={handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant='h6' noWrap className={classes.siteTitleText}>
-              ChessGuide.app
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <nav className={classes.drawer}>
-          <Hidden smUp implementation='css'>
-            <Drawer
-              container={container}
-              variant='temporary'
-              anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-              open={mobileOpen}
-              onClose={handleDrawerToggle}
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-              ModalProps={{
-                keepMounted: true,
-              }}
-            >
-              <div className={classes.toolbar} />
-              <SideMenu />
-            </Drawer>
-          </Hidden>
-          <Hidden xsDown implementation='css'>
-            <Drawer
-              variant='permanent'
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-              open
-            >
-              <div className={classes.toolbar} />
-              <SideMenu />
-            </Drawer>
-          </Hidden>
-        </nav>
-        <main className={classes.main}>
+        <div className={classes.root}>
+          <AppBar position='fixed' className={classes.appBar}>
+            <Toolbar>
+              <IconButton
+                aria-label='open drawer'
+                edge='start'
+                onClick={handleDrawerToggle}
+                className={classes.menuButton}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant='h6' noWrap className={classes.siteTitleText}>
+                ChessGuide.app
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <nav className={classes.drawer}>
+            <Hidden smUp implementation='css'>
+              <Drawer
+                container={container}
+                variant='temporary'
+                anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                classes={{
+                  paper: classes.drawerPaper,
+                }}
+                ModalProps={{
+                  keepMounted: true,
+                }}
+              >
+                <div className={classes.toolbar} />
+                <SideMenu />
+              </Drawer>
+            </Hidden>
+            <Hidden xsDown implementation='css'>
+              <Drawer
+                variant='permanent'
+                classes={{
+                  paper: classes.drawerPaper,
+                }}
+                open
+              >
+                <div className={classes.toolbar} />
+                <SideMenu />
+              </Drawer>
+            </Hidden>
+          </nav>
           <div className={classes.toolbar} />
-          <Switch>{makeRoutes()}</Switch>
-        </main>
+          <main className={classes.main}>
+            <Switch>{makeRoutes()}</Switch>
+          </main>
+        </div>
       </StylesProvider>
-    </div>
+    </>
   );
 }
 
