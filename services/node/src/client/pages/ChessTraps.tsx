@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
+import { ChessTrap } from '../../shared/entity/chessTrap';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import DisplayChessTraps from '../components/DisplayChessTraps';
 import useDimensions from 'react-use-dimensions';
+import ChessTrapFiltersBar from '../components/ChessTrapFiltersBar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleText: {
@@ -21,12 +23,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 'inherit',
     height: '100%',
   },
+  displayChessTraps: {
+    height: (p: { filterBarHeight: number }) => `calc(100% - ${p.filterBarHeight}px)`,
+  },
 }));
 
 const ChessTrapsPage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
 
-  const classes = useStyles();
+  const [filtersBarRef, filtersBarDimensions] = useDimensions();
+
+  const [visibleTraps, setVisibleTraps] = useState<ChessTrap[]>([]);
+
+  const classes = useStyles({ filterBarHeight: filtersBarDimensions.height });
 
   const [rootDivRef, rootDivDimensions] = useDimensions();
 
@@ -51,9 +60,16 @@ const ChessTrapsPage: React.FunctionComponent = () => {
   return (
     <div className={classes.chessTrapsRoot} ref={rootDivRef}>
       <DisplayChessTraps
+        className={classes.displayChessTraps}
         chessTraps={chessTrapsSlice.traps}
         parentWidth={rootDivDimensions.width}
         trapsPerRow={trapsPerRow}
+        visibleTraps={visibleTraps}
+      />
+      <ChessTrapFiltersBar
+        allTraps={chessTrapsSlice.traps}
+        setSelectedTraps={setVisibleTraps}
+        filtersBarRef={filtersBarRef}
       />
     </div>
   );
