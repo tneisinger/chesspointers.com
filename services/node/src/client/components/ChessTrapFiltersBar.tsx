@@ -7,7 +7,7 @@ import React, {
   MutableRefObject,
 } from 'react';
 import { ChessTrap } from '../../shared/entity/chessTrap';
-import { makeStyles, Theme } from '@material-ui/core';
+import { makeStyles, Theme, Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -20,7 +20,8 @@ import { filterTrapsWithOpenings } from '../../shared/chessTree';
 const useStyles = makeStyles((theme: Theme) => ({
   contentGridContainer: {
     height: '100%',
-    maxWidth: theme.mainMaxWidth,
+    width: '100vw',
+    maxWidth: 800,
     margin: '0 auto',
   },
   verticallyCentered: {
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   filtersBar: {
     opacity: 0.95,
-    padding: '0.75rem',
+    padding: '8px 4px',
     position: 'fixed',
     left: 0,
     right: 0,
@@ -48,14 +49,12 @@ interface Props {
   allTraps: ChessTrap[];
   setSelectedTraps: Dispatch<SetStateAction<ChessTrap[]>>;
   filtersBarRef: MutableRefObject<any> | RefObject<HTMLDivElement>;
-  alignItems?: 'row' | 'column';
 }
 
 const ChessTrapFiltersBar: React.FC<Props> = ({
   allTraps,
   setSelectedTraps,
   filtersBarRef,
-  alignItems = 'row',
 }) => {
   const classes = useStyles({});
 
@@ -103,33 +102,34 @@ const ChessTrapFiltersBar: React.FC<Props> = ({
 
   return (
     <AppBar ref={filtersBarRef} className={classes.filtersBar} color='default'>
-      <Grid
-        container
-        className={classes.contentGridContainer}
-        direction={alignItems}
-        spacing={1}
-        justify='space-evenly'
-      >
-        <Grid item>
-          <ColorSwitchWithCheckbox
-            isEnabled={isColorFilterEnabled}
-            setIsEnabled={setIsColorFilterEnabled}
-            selectedColor={selectedColor}
-            setSelectedColor={setSelectedColor}
-          />
+      <div className={classes.contentGridContainer}>
+        <Grid container direction='row' alignItems='center' justify='space-evenly'>
+          <Grid item>
+            <Typography variant='h5' component='label'>
+              Filter By:
+            </Typography>
+          </Grid>
+          <Grid item>
+            <ColorSwitchWithCheckbox
+              isEnabled={isColorFilterEnabled}
+              setIsEnabled={setIsColorFilterEnabled}
+              selectedColor={selectedColor}
+              setSelectedColor={setSelectedColor}
+            />
+          </Grid>
+          <Grid item>
+            <ChessOpeningsDropDown
+              selectedOpening={selectedOpening}
+              onChange={handleOpeningsDropdownChange}
+            />
+          </Grid>
+          <Grid item className={classes.verticallyCentered}>
+            <IconButton onClick={clearFilters} disabled={!areAnyFiltersEnabled()}>
+              <ClearIcon />
+            </IconButton>
+          </Grid>
         </Grid>
-        <Grid item>
-          <ChessOpeningsDropDown
-            selectedOpening={selectedOpening}
-            onChange={handleOpeningsDropdownChange}
-          />
-        </Grid>
-        <Grid item className={classes.verticallyCentered}>
-          <IconButton onClick={clearFilters} disabled={!areAnyFiltersEnabled()}>
-            <ClearIcon />
-          </IconButton>
-        </Grid>
-      </Grid>
+      </div>
     </AppBar>
   );
 };

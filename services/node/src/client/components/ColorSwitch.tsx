@@ -59,7 +59,7 @@ const ColorSwitch: React.FC<Props> = ({
           variant={size === 'small' ? 'caption' : 'body1'}
           className={getLabelClasses('white')}
         >
-          W
+          White
         </Typography>
       </Grid>
       <Grid item>
@@ -79,7 +79,7 @@ const ColorSwitch: React.FC<Props> = ({
           variant={size === 'small' ? 'caption' : 'body1'}
           className={getLabelClasses('black')}
         >
-          B
+          Black
         </Typography>
       </Grid>
     </Grid>
