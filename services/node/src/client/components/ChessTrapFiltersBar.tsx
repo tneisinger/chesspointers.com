@@ -18,7 +18,7 @@ import { PieceColor, ChessOpening } from '../../shared/chessTypes';
 import { filterTrapsWithOpenings } from '../../shared/chessTree';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  contentGridContainer: {
     height: '100%',
     maxWidth: theme.mainMaxWidth,
     margin: '0 auto',
@@ -41,10 +41,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 'auto',
     top: 'auto',
     bottom: 0,
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.sideMenuWidth,
-      width: `calc(100% - ${theme.sideMenuWidth}px)`,
-    },
   },
 }));
 
@@ -109,7 +105,7 @@ const ChessTrapFiltersBar: React.FC<Props> = ({
     <AppBar ref={filtersBarRef} className={classes.filtersBar} color='default'>
       <Grid
         container
-        className={classes.root}
+        className={classes.contentGridContainer}
         direction={alignItems}
         spacing={1}
         justify='space-evenly'
