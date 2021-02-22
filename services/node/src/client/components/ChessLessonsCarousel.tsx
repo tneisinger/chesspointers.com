@@ -45,8 +45,11 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
       navButtonsAlwaysVisible
       changeOnFirstRender
       onChange={(idx: number) => {
-        props.setAnimatedTrap(props.chessTraps[idx].shortName);
-        props.setStepperValue(-1);
+        const trap = props.chessTraps[idx];
+        if (trap != undefined) {
+          props.setAnimatedTrap(props.chessTraps[idx].shortName);
+          props.setStepperValue(-1);
+        }
       }}
       fullHeightHover={false}
     >
