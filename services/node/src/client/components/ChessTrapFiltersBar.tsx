@@ -1,11 +1,4 @@
-import React, {
-  RefObject,
-  useState,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  MutableRefObject,
-} from 'react';
+import React, { RefObject, useState, useEffect, MutableRefObject } from 'react';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
@@ -16,6 +9,7 @@ import ColorSwitchWithCheckbox from './ColorSwitchWithCheckbox';
 import ChessOpeningsDropDown from './ChessOpeningsDropDown';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
 import { filterTrapsWithOpenings } from '../../shared/chessTree';
+import NoMatchesModal from './NoMatchesModal';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contentGridContainer: {
@@ -47,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   allTraps: ChessTrap[];
-  setSelectedTraps: Dispatch<SetStateAction<ChessTrap[]>>;
+  setSelectedTraps: (traps: ChessTrap[]) => void;
   filtersBarRef: MutableRefObject<any> | RefObject<HTMLDivElement>;
 }
 
@@ -61,6 +55,7 @@ const ChessTrapFiltersBar: React.FC<Props> = ({
   const [selectedColor, setSelectedColor] = useState<PieceColor>('white');
   const [isColorFilterEnabled, setIsColorFilterEnabled] = useState(false);
   const [selectedOpening, setSelectedOpening] = useState<ChessOpening | ''>('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const filterTraps = () => {
     let filteredTraps = allTraps;
@@ -73,6 +68,9 @@ const ChessTrapFiltersBar: React.FC<Props> = ({
       filteredTraps = filterTrapsWithOpenings([selectedOpening], filteredTraps);
     }
     setSelectedTraps(filteredTraps);
+    if (filteredTraps.length < 1) {
+      setIsModalOpen(true);
+    }
   };
 
   const areAnyFiltersEnabled = (): boolean =>
@@ -130,6 +128,11 @@ const ChessTrapFiltersBar: React.FC<Props> = ({
           </Grid>
         </Grid>
       </div>
+      <NoMatchesModal
+        isModalOpenOrOpening={isModalOpen}
+        clearFilters={clearFilters}
+        closeModal={() => setIsModalOpen(false)}
+      />
     </AppBar>
   );
 };
