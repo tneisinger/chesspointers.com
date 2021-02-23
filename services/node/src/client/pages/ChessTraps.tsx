@@ -33,7 +33,7 @@ const ChessTrapsPage: React.FunctionComponent = () => {
 
   const [filtersBarRef, filtersBarDimensions] = useDimensions();
 
-  const [visibleTraps, setVisibleTraps] = useState<ChessTrap[]>([]);
+  const [filteredTraps, setFilteredTraps] = useState<ChessTrap[]>([]);
 
   const classes = useStyles({ filterBarHeight: filtersBarDimensions.height });
 
@@ -61,14 +61,13 @@ const ChessTrapsPage: React.FunctionComponent = () => {
     <div className={classes.chessTrapsRoot} ref={rootDivRef}>
       <DisplayChessTraps
         className={classes.displayChessTraps}
-        chessTraps={chessTrapsSlice.traps}
         parentWidth={rootDivDimensions.width}
         trapsPerRow={trapsPerRow}
-        visibleTraps={visibleTraps}
+        chessTraps={filteredTraps}
       />
       <ChessTrapFiltersBar
         allTraps={chessTrapsSlice.traps}
-        setSelectedTraps={setVisibleTraps}
+        changeFilteredTraps={setFilteredTraps}
         filtersBarRef={filtersBarRef}
       />
     </div>

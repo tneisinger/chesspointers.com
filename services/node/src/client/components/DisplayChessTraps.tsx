@@ -23,10 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props extends React.HTMLProps<HTMLDivElement> {
-  chessTraps: ChessTrap[];
   parentWidth: number;
   trapsPerRow: number;
-  visibleTraps: ChessTrap[];
+  chessTraps: ChessTrap[];
 }
 
 const DisplayChessTraps: React.FC<Props> = (props) => {
@@ -48,7 +47,7 @@ const DisplayChessTraps: React.FC<Props> = (props) => {
         Chess Traps
       </Typography>
       <ChessLessonCarousel
-        chessTraps={props.visibleTraps}
+        chessTraps={props.chessTraps}
         animatedTrap={animatedTrap}
         setAnimatedTrap={setAnimatedTrap}
         stepperValue={stepperValue}
