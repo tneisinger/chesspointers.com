@@ -16,7 +16,7 @@ interface Props {
   closeModal: () => void;
 }
 
-const ComponentName: React.FC<Props> = (props) => {
+const NoMatchesModal: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const handleClearFiltersBtnClick = () => {
@@ -36,4 +36,4 @@ const ComponentName: React.FC<Props> = (props) => {
   );
 };
 
-export default ComponentName;
+export default NoMatchesModal;
