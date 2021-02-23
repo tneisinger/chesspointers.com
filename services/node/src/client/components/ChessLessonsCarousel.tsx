@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
 import { ChessTrap } from '../../shared/entity/chessTrap';
@@ -10,6 +10,15 @@ const useStyles = makeStyles({
     width: '100vw',
     maxWidth: '800px',
     margin: '0 auto',
+    // Prevent the carouselWrapper div from collapsing when the carousel
+    // doesn't have any items in it.
+    height: (p: { filledCarouselHeight: number | undefined }) => {
+      if (p.filledCarouselHeight != undefined) {
+        return p.filledCarouselHeight;
+      } else {
+        return 'auto';
+      }
+    },
   },
   chessLessonContainer: {
     display: 'flex',
@@ -26,7 +35,25 @@ interface Props extends React.HTMLProps<HTMLDivElement> {
 }
 
 const ChessLessonCarousel: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const [filledCarouselHeight, setFilledCarouselHeight] = useState<number | undefined>(
+    undefined,
+  );
+
+  const classes = useStyles({ filledCarouselHeight });
+
+  // Get the height of the carouselWrapper when it is filled with at least one
+  // item. We use the `filledCarouselHeight` to prevent the carouselWrapper div
+  // from collapsing when the Carousel doesn't have any items in it.
+  // prettier-ignore
+  const carouselWrapperRef = useCallback((node) => {
+    if (
+      filledCarouselHeight == undefined &&
+      node != null &&
+      props.chessTraps.length > 0
+    ) {
+      setFilledCarouselHeight(node.getBoundingClientRect().height);
+    }
+  }, [filledCarouselHeight, props.chessTraps]);
 
   const calcCardWidth = (): number => {
     const vpWidth = viewportWidth();
@@ -38,31 +65,35 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
     }
   };
 
+  const handleCarouselChange = (idx: number) => {
+    if (props.chessTraps.length > 0) {
+      props.setAnimatedTrap(props.chessTraps[idx].shortName);
+      props.setStepperValue(-1);
+    }
+  };
+
   return (
-    <Carousel
-      className={`${props.className} ${classes.carousel}`}
-      autoPlay={false}
-      navButtonsAlwaysVisible
-      changeOnFirstRender
-      onChange={(idx: number) => {
-        const trap = props.chessTraps[idx];
-        if (trap != undefined) {
-          props.setAnimatedTrap(props.chessTraps[idx].shortName);
-          props.setStepperValue(-1);
-        }
-      }}
-      fullHeightHover={false}
-    >
-      {props.chessTraps.map((trap) => (
-        <div key={trap.shortName} className={classes.chessLessonContainer}>
-          <ChessLessonPreview
-            chessTrap={trap}
-            cardWidth={calcCardWidth()}
-            stepper={props.animatedTrap === trap.shortName ? props.stepperValue : -1}
-          />
-        </div>
-      ))}
-    </Carousel>
+    <div className={props.className} ref={carouselWrapperRef}>
+      <Carousel
+        className={classes.carousel}
+        autoPlay={false}
+        navButtonsAlwaysVisible={props.chessTraps.length > 0}
+        navButtonsAlwaysInvisible={props.chessTraps.length < 1}
+        changeOnFirstRender
+        onChange={handleCarouselChange}
+        fullHeightHover={false}
+      >
+        {props.chessTraps.map((trap) => (
+          <div key={trap.shortName} className={classes.chessLessonContainer}>
+            <ChessLessonPreview
+              chessTrap={trap}
+              cardWidth={calcCardWidth()}
+              stepper={props.animatedTrap === trap.shortName ? props.stepperValue : -1}
+            />
+          </div>
+        ))}
+      </Carousel>
+    </div>
   );
 };
 
