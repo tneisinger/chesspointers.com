@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
 import { ChessTrap } from '../../shared/entity/chessTrap';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DisplayChessTraps from '../components/DisplayChessTraps';
 import NoMatchesModal from '../components/NoMatchesModal';
@@ -24,9 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   chessTrapsRoot: {
     maxWidth: 'inherit',
     width: 'inherit',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
     height: (p: { filterBarHeight: number }) => {
       if (shouldDisplayFiltersBar()) {
         return `calc(100% - ${p.filterBarHeight}px)`;
@@ -73,20 +71,32 @@ const ChessTrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => 
 
   return (
     <>
-      <div className={classes.chessTrapsRoot} ref={rootDivRef}>
-        <Typography variant='h3' align='center' className={classes.titleText}>
-          Chess Traps
-        </Typography>
-        <DisplayChessTraps
-          parentWidth={rootDivDimensions.width}
-          trapsPerRow={trapsPerRow}
-          chessTraps={filteredTraps}
-        />
-        <FiltersBarOrModalUI
-          chessTrapFiltersToolkit={chessTrapFiltersToolkit}
-          filtersBarRef={filtersBarRef}
-        />
-      </div>
+      <Grid
+        container
+        direction='column'
+        justify='space-evenly'
+        className={classes.chessTrapsRoot}
+        ref={rootDivRef}
+      >
+        <Grid item>
+          <Typography variant='h3' align='center' className={classes.titleText}>
+            Chess Traps
+          </Typography>
+        </Grid>
+        <Grid item>
+          <DisplayChessTraps
+            parentWidth={rootDivDimensions.width}
+            trapsPerRow={trapsPerRow}
+            chessTraps={filteredTraps}
+          />
+        </Grid>
+        <Grid item>
+          <FiltersBarOrModalUI
+            chessTrapFiltersToolkit={chessTrapFiltersToolkit}
+            filtersBarRef={filtersBarRef}
+          />
+        </Grid>
+      </Grid>
       <NoMatchesModal
         isModalOpenOrOpening={isNoMatchesModalOpen}
         clearFilters={chessTrapFiltersToolkit.clearFilters}
