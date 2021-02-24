@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import React, { useState, useEffect } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import ColorSwitchWithCheckbox from '../components/ColorSwitchWithCheckbox';
@@ -8,20 +8,7 @@ import { PieceColor, ChessOpening } from '../../shared/chessTypes';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import { filterTrapsWithOpenings } from '../../shared/chessTree';
 
-type ReturnValue = {
-  selectedColor: PieceColor;
-  setSelectedColor: Dispatch<SetStateAction<PieceColor>>;
-  isColorFilterEnabled: boolean;
-  setIsColorFilterEnabled: Dispatch<SetStateAction<boolean>>;
-  selectedOpening: ChessOpening | '';
-  setSelectedOpening: Dispatch<SetStateAction<ChessOpening | ''>>;
-  areAnyFiltersEnabled: () => boolean;
-  clearFilters: () => void;
-  ColorSwitch: React.FC;
-  OpeningsDropDown: React.FC;
-  ClearFiltersBtn: React.FC;
-};
-
+// This is paramater that should be passed to the `useChessTrapFilters` hook
 type Args = {
   allTraps: ChessTrap[];
   changeFilteredTraps: (newFilteredTraps: ChessTrap[]) => void;
@@ -29,12 +16,21 @@ type Args = {
   includeCheckboxInColorSwitch?: boolean;
 };
 
+// This is what gets returned by the `useChessTrapFilters` hook
+export type ChessTrapFiltersToolkit = {
+  areAnyFiltersEnabled: () => boolean;
+  clearFilters: () => void;
+  ColorSwitch: React.FC;
+  OpeningsDropDown: React.FC;
+  ClearFiltersBtn: React.FC;
+};
+
 export default function useChessTrapFilters({
   allTraps,
   changeFilteredTraps,
   onFiltersChange,
   includeCheckboxInColorSwitch = true,
-}: Args): ReturnValue {
+}: Args): ChessTrapFiltersToolkit {
   const [selectedColor, setSelectedColor] = useState<PieceColor>('white');
   const [isColorFilterEnabled, setIsColorFilterEnabled] = useState(false);
   const [selectedOpening, setSelectedOpening] = useState<ChessOpening | ''>('');
@@ -111,12 +107,6 @@ export default function useChessTrapFilters({
   }, [isColorFilterEnabled, selectedColor, selectedOpening]);
 
   return {
-    selectedColor,
-    setSelectedColor,
-    isColorFilterEnabled,
-    setIsColorFilterEnabled,
-    selectedOpening,
-    setSelectedOpening,
     areAnyFiltersEnabled,
     clearFilters,
     ColorSwitch,

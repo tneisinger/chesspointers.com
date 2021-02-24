@@ -1,10 +1,8 @@
-import React, { RefObject, useState, MutableRefObject } from 'react';
-import { ChessTrap } from '../../shared/entity/chessTrap';
+import React, { RefObject, MutableRefObject } from 'react';
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
-import NoMatchesModal from './NoMatchesModal';
-import useChessTrapFilters from '../hooks/useChessTrapFilters';
+import { ChessTrapFiltersToolkit } from '../hooks/useChessTrapFilters';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contentGridContainer: {
@@ -35,36 +33,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  allTraps: ChessTrap[];
-  changeFilteredTraps: (traps: ChessTrap[]) => void;
+  chessTrapFiltersToolkit: ChessTrapFiltersToolkit;
   filtersBarRef: MutableRefObject<any> | RefObject<HTMLDivElement>;
 }
 
 const ChessTrapFiltersBar: React.FC<Props> = ({
-  allTraps,
-  changeFilteredTraps,
+  chessTrapFiltersToolkit,
   filtersBarRef,
 }) => {
   const classes = useStyles({});
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  const onFiltersChange = (filteredTraps: ChessTrap[]) => {
-    if (filteredTraps.length < 1) {
-      setIsModalOpen(true);
-    }
-  };
-
-  const {
-    ColorSwitch,
-    OpeningsDropDown,
-    ClearFiltersBtn,
-    clearFilters,
-  } = useChessTrapFilters({
-    allTraps,
-    changeFilteredTraps,
-    onFiltersChange,
-  });
+  const { ColorSwitch, OpeningsDropDown, ClearFiltersBtn } = chessTrapFiltersToolkit;
 
   return (
     <AppBar ref={filtersBarRef} className={classes.filtersBar} color='default'>
@@ -86,11 +65,6 @@ const ChessTrapFiltersBar: React.FC<Props> = ({
           </Grid>
         </Grid>
       </div>
-      <NoMatchesModal
-        isModalOpenOrOpening={isModalOpen}
-        clearFilters={clearFilters}
-        closeModal={() => setIsModalOpen(false)}
-      />
     </AppBar>
   );
 };
