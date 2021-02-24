@@ -3,9 +3,10 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Modal from './Modal';
-import ClearFiltersBtn, { Props as ClearBtnProps } from './ClearFiltersBtn';
+import { ChessTrapFiltersToolkit } from '../hooks/useChessTrapFilters';
 
-interface Props extends ClearBtnProps {
+interface Props {
+  chessTrapFiltersToolkit: ChessTrapFiltersToolkit;
   isModalOpen: boolean;
   handleClose: () => void;
 }
@@ -37,9 +38,6 @@ const ChessTrapFiltersModal: React.FC<Props> = (props) => {
               >
                 OK
               </Button>
-            </Grid>
-            <Grid item>
-              <ClearFiltersBtn {...props} />
             </Grid>
           </Grid>
         </Grid>
