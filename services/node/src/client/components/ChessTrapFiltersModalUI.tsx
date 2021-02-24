@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '8px 4px',
     border: `2px solid ${theme.palette.divider}`,
     borderRadius: '6px',
-    width: '95%',
+    width: '85%',
     margin: '0 auto',
   },
   addFiltersBtn: {
