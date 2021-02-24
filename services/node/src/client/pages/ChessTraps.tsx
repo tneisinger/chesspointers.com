@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
 import { ChessTrap } from '../../shared/entity/chessTrap';
+import Typography from '@material-ui/core/Typography';
 import DisplayChessTraps from '../components/DisplayChessTraps';
 import NoMatchesModal from '../components/NoMatchesModal';
 import useDimensions from 'react-use-dimensions';
-import ChessTrapFiltersBar from '../components/ChessTrapFiltersBar';
 import WithChessTraps from '../components/WithChessTraps';
 import useChessTrapFilters from '../hooks/useChessTrapFilters';
+import FiltersBarOrModalUI, {
+  shouldDisplayFiltersBar,
+} from '../components/FiltersBarOrModalUI';
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleText: {
@@ -21,10 +24,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   chessTrapsRoot: {
     maxWidth: 'inherit',
     width: 'inherit',
-    height: '100%',
-  },
-  displayChessTraps: {
-    height: (p: { filterBarHeight: number }) => `calc(100% - ${p.filterBarHeight}px)`,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: (p: { filterBarHeight: number }) => {
+      if (shouldDisplayFiltersBar()) {
+        return `calc(100% - ${p.filterBarHeight}px)`;
+      } else {
+        return '100%';
+      }
+    },
   },
 }));
 
@@ -63,23 +72,27 @@ const ChessTrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => 
   const trapsPerRow = 1;
 
   return (
-    <div className={classes.chessTrapsRoot} ref={rootDivRef}>
-      <DisplayChessTraps
-        className={classes.displayChessTraps}
-        parentWidth={rootDivDimensions.width}
-        trapsPerRow={trapsPerRow}
-        chessTraps={filteredTraps}
-      />
-      <ChessTrapFiltersBar
-        chessTrapFiltersToolkit={chessTrapFiltersToolkit}
-        filtersBarRef={filtersBarRef}
-      />
+    <>
+      <div className={classes.chessTrapsRoot} ref={rootDivRef}>
+        <Typography variant='h3' align='center' className={classes.titleText}>
+          Chess Traps
+        </Typography>
+        <DisplayChessTraps
+          parentWidth={rootDivDimensions.width}
+          trapsPerRow={trapsPerRow}
+          chessTraps={filteredTraps}
+        />
+        <FiltersBarOrModalUI
+          chessTrapFiltersToolkit={chessTrapFiltersToolkit}
+          filtersBarRef={filtersBarRef}
+        />
+      </div>
       <NoMatchesModal
         isModalOpenOrOpening={isNoMatchesModalOpen}
         clearFilters={chessTrapFiltersToolkit.clearFilters}
         closeModal={() => setIsNoMatchesModalOpen(false)}
       />
-    </div>
+    </>
   );
 };
 

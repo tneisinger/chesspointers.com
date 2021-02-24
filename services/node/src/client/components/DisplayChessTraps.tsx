@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
 import { ChessTrap } from '../../shared/entity/chessTrap';
-import Typography from '@material-ui/core/Typography';
 import useInterval from 'react-useinterval';
 import ChessLessonCarousel from './ChessLessonsCarousel';
 
@@ -42,18 +41,13 @@ const DisplayChessTraps: React.FC<Props> = (props) => {
   }, 700);
 
   return (
-    <div className={`${props.className} ${classes.displayChessTrapsRoot}`}>
-      <Typography variant='h3' align='center' className={classes.titleText}>
-        Chess Traps
-      </Typography>
-      <ChessLessonCarousel
-        chessTraps={props.chessTraps}
-        animatedTrap={animatedTrap}
-        setAnimatedTrap={setAnimatedTrap}
-        stepperValue={stepperValue}
-        setStepperValue={setStepperValue}
-      />
-    </div>
+    <ChessLessonCarousel
+      chessTraps={props.chessTraps}
+      animatedTrap={animatedTrap}
+      setAnimatedTrap={setAnimatedTrap}
+      stepperValue={stepperValue}
+      setStepperValue={setStepperValue}
+    />
   );
 };
 

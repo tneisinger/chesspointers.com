@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface Props {
   chessTrapFiltersToolkit: ChessTrapFiltersToolkit;
   filtersBarRef: MutableRefObject<any> | RefObject<HTMLDivElement>;
 }
@@ -43,7 +43,7 @@ const ChessTrapFiltersBar: React.FC<Props> = ({
 }) => {
   const classes = useStyles({});
 
-  const { ColorSwitch, OpeningsDropDown, ClearFiltersBtn } = chessTrapFiltersToolkit;
+  const { ColorSwitch, OpeningsDropDown, ClearFiltersIconBtn } = chessTrapFiltersToolkit;
 
   return (
     <AppBar ref={filtersBarRef} className={classes.filtersBar} color='default'>
@@ -61,7 +61,7 @@ const ChessTrapFiltersBar: React.FC<Props> = ({
             <OpeningsDropDown />
           </Grid>
           <Grid item className={classes.verticallyCentered}>
-            <ClearFiltersBtn />
+            <ClearFiltersIconBtn />
           </Grid>
         </Grid>
       </div>

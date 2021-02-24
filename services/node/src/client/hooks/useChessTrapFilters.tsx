@@ -18,11 +18,13 @@ type Args = {
 
 // This is what gets returned by the `useChessTrapFilters` hook
 export type ChessTrapFiltersToolkit = {
+  selectedColor: PieceColor | null;
+  selectedOpening: ChessOpening | null;
   areAnyFiltersEnabled: () => boolean;
   clearFilters: () => void;
   ColorSwitch: React.FC;
   OpeningsDropDown: React.FC;
-  ClearFiltersBtn: React.FC;
+  ClearFiltersIconBtn: React.FC;
 };
 
 export default function useChessTrapFilters({
@@ -49,8 +51,9 @@ export default function useChessTrapFilters({
     return filteredTraps;
   };
 
-  const areAnyFiltersEnabled = (): boolean =>
-    isColorFilterEnabled || selectedOpening !== null;
+  const areAnyFiltersEnabled = (): boolean => {
+    return isColorFilterEnabled || selectedOpening !== '';
+  };
 
   const clearFilters = () => {
     setIsColorFilterEnabled(false);
@@ -88,7 +91,7 @@ export default function useChessTrapFilters({
     }
   };
 
-  const ClearFiltersBtn = () => (
+  const ClearFiltersIconBtn = () => (
     <IconButton onClick={clearFilters} disabled={!areAnyFiltersEnabled()}>
       <ClearIcon />
     </IconButton>
@@ -107,10 +110,12 @@ export default function useChessTrapFilters({
   }, [isColorFilterEnabled, selectedColor, selectedOpening]);
 
   return {
+    selectedColor: isColorFilterEnabled ? selectedColor : null,
+    selectedOpening: selectedOpening === '' ? null : selectedOpening,
     areAnyFiltersEnabled,
     clearFilters,
     ColorSwitch,
     OpeningsDropDown,
-    ClearFiltersBtn,
+    ClearFiltersIconBtn,
   };
 }
