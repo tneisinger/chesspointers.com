@@ -1,104 +1,103 @@
 import React, { useState } from 'react';
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core';
-import Modal from './Modal';
+import { makeStyles, Theme } from '@material-ui/core';
+import ChessTrapFiltersModal from './ChessTrapFiltersModal';
 import { ChessTrapFiltersToolkit } from '../hooks/useChessTrapFilters';
 
-const useStyles = makeStyles({
-  modalTitleText: {
-    // padding: '16px',
+const useStyles = makeStyles((theme: Theme) => ({
+  filtersModalUIRoot: {
+    padding: '8px 4px',
+    border: `2px solid ${theme.palette.divider}`,
+    borderRadius: '6px',
+    width: '95%',
+    margin: '0 auto',
   },
-});
+  addFiltersBtn: {
+    margin: '2px auto',
+    display: 'block',
+  },
+  msgText: {
+    fontSize: '0.85rem',
+  },
+}));
 
 export interface Props {
   chessTrapFiltersToolkit: ChessTrapFiltersToolkit;
 }
 
-const ChessTrapFiltersModalUI: React.FC<Props> = ({ chessTrapFiltersToolkit }) => {
+const ChessTrapFiltersModalUI: React.FC<Props> = (props) => {
   const classes = useStyles();
-
-  const {
-    selectedColor,
-    selectedOpening,
-    ColorSwitch,
-    OpeningsDropDown,
-    clearFilters,
-    areAnyFiltersEnabled,
-  } = chessTrapFiltersToolkit;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const ClearFiltersBtn = () => {
-    return (
-      <Button
-        variant='contained'
-        onClick={clearFilters}
-        disabled={!areAnyFiltersEnabled()}
-      >
-        Clear Filters
-      </Button>
-    );
+  const {
+    areAnyFiltersEnabled,
+    selectedColor,
+    selectedOpening,
+  } = props.chessTrapFiltersToolkit;
+
+  const MsgText: React.FC = (props) => (
+    <Typography align='center' className={classes.msgText}>
+      {props.children}
+    </Typography>
+  );
+
+  const makeSelectedColorMsg = (): JSX.Element => {
+    if (selectedColor == null) {
+      throw new Error('selectedColor was unexpectedly null');
+    } else {
+      return <MsgText>Color: {selectedColor}</MsgText>;
+    }
+  };
+
+  const makeSelectedOpeningMsg = (): JSX.Element => {
+    if (selectedOpening == null) {
+      throw new Error('selectedOpening was unexpectedly null');
+    } else {
+      return <MsgText>Opening: {selectedOpening}</MsgText>;
+    }
+  };
+
+  const makeFilteringMsg = (): JSX.Element => {
+    if (!areAnyFiltersEnabled()) {
+      return <MsgText>No active filters</MsgText>;
+    } else if (selectedColor != null && selectedOpening != null) {
+      return (
+        <Grid container justify='space-around'>
+          <Grid item>{makeSelectedColorMsg()}</Grid>
+          <Grid item>{makeSelectedOpeningMsg()}</Grid>
+        </Grid>
+      );
+    } else if (selectedColor != null) {
+      return makeSelectedColorMsg();
+    } else {
+      return makeSelectedOpeningMsg();
+    }
   };
 
   return (
-    <>
-      <Grid container alignItems='center' direction='column' spacing={0}>
+    <div className={classes.filtersModalUIRoot}>
+      <Grid container direction='column' spacing={2}>
+        <Grid item>{makeFilteringMsg()}</Grid>
         <Grid item>
-          <p>
-            selectedColor: {selectedColor} selectedOpening: {selectedOpening}
-          </p>
-        </Grid>
-        <Grid item>
-          <Grid container justify='center' spacing={3}>
-            <Grid item>
-              <Button
-                variant='contained'
-                color='primary'
-                onClick={() => setIsModalOpen(true)}
-              >
-                Filter
-              </Button>
-            </Grid>
-            <Grid item>
-              <ClearFiltersBtn />
-            </Grid>
-          </Grid>
+          <Button
+            variant='contained'
+            color='primary'
+            className={classes.addFiltersBtn}
+            onClick={() => setIsModalOpen(true)}
+          >
+            {areAnyFiltersEnabled() ? 'Edit' : 'Add'} Filters
+          </Button>
         </Grid>
       </Grid>
-      <Modal isModalOpenOrOpening={isModalOpen} handleClose={() => setIsModalOpen(false)}>
-        <Grid container direction='column' alignItems='center' spacing={3}>
-          <Grid item>
-            <Typography variant='h5' component='h4' className={classes.modalTitleText}>
-              Filter By:
-            </Typography>
-          </Grid>
-          <Grid item>
-            <ColorSwitch />
-          </Grid>
-          <Grid item>
-            <OpeningsDropDown />
-          </Grid>
-          <Grid item>
-            <Grid container spacing={3}>
-              <Grid item>
-                <Button
-                  variant='contained'
-                  color='primary'
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  OK
-                </Button>
-              </Grid>
-              <Grid item>
-                <ClearFiltersBtn />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Modal>
-    </>
+      <ChessTrapFiltersModal
+        {...props}
+        isModalOpen={isModalOpen}
+        handleClose={() => setIsModalOpen(false)}
+      />
+    </div>
   );
 };
 
