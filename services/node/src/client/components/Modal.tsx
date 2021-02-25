@@ -13,19 +13,22 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   modalDiv: {
+    position: 'relative',
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: 0,
+    padding: '16px 24px',
+    border: '1px solid #909090',
     borderRadius: 10,
     outline: 'none',
   },
   modalCloseBtn: {
-    float: 'right',
+    position: 'absolute',
+    right: '1px',
+    top: '1px',
     margin: 0,
     padding: 0,
   },
   modalContentDiv: {
-    padding: '0 40px 20px',
     textAlign: 'center',
   },
 }));
