@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core';
@@ -20,12 +20,12 @@ const useStyles = makeStyles({
 
 export interface Props {
   chessTrapFiltersToolkit: ChessTrapFiltersToolkit;
+  isModalOpen: boolean;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const ChessTrapFiltersModalUI: React.FC<Props> = (props) => {
   const classes = useStyles();
-
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   return (
     <div className={classes.filtersModalUIRoot}>
@@ -36,7 +36,7 @@ const ChessTrapFiltersModalUI: React.FC<Props> = (props) => {
               <Button
                 variant='contained'
                 color='primary'
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => props.setIsModalOpen(true)}
               >
                 Filter
               </Button>
@@ -49,8 +49,8 @@ const ChessTrapFiltersModalUI: React.FC<Props> = (props) => {
       </Grid>
       <ChessTrapFiltersModal
         {...props}
-        isModalOpen={isModalOpen}
-        handleClose={() => setIsModalOpen(false)}
+        isModalOpen={props.isModalOpen}
+        handleClose={() => props.setIsModalOpen(false)}
       />
     </div>
   );

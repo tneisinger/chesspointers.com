@@ -50,6 +50,7 @@ const ChessTrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => 
 
   const [filteredTraps, setFilteredTraps] = useState<ChessTrap[]>([]);
   const [isNoMatchesModalOpen, setIsNoMatchesModalOpen] = useState<boolean>(false);
+  const [isFiltersModalOpen, setIsFiltersModalOpen] = useState<boolean>(false);
 
   const classes = useStyles({ filterBarHeight: filtersBarDimensions.height });
 
@@ -86,6 +87,7 @@ const ChessTrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => 
         <Grid item>
           <DisplayChessTraps
             parentWidth={rootDivDimensions.width}
+            allowAnimation={!isFiltersModalOpen}
             trapsPerRow={trapsPerRow}
             chessTraps={filteredTraps}
           />
@@ -94,6 +96,8 @@ const ChessTrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => 
           <FiltersBarOrModalUI
             chessTrapFiltersToolkit={chessTrapFiltersToolkit}
             filtersBarRef={filtersBarRef}
+            isModalOpen={isFiltersModalOpen}
+            setIsModalOpen={setIsFiltersModalOpen}
           />
         </Grid>
       </Grid>
