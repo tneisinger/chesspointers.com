@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../redux/store';
-import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
+import { ChessTrap } from '../../shared/entity/chessTrap';
 import ChessGuide from '../components/ChessGuide';
 import MovesPane from '../components/MovesPane';
+import WithChessTraps from '../components/WithChessTraps';
 import NotFoundPage from '../pages/NotFound';
 import { toDashedLowercase } from '../../shared/utils';
 import { calcChessBoardSize } from '../utils';
@@ -30,12 +29,20 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ChessTrapPage: React.FunctionComponent = () => {
-  const boardSizePixels = calcChessBoardSize(70, 'vh');
+  return (
+    <WithChessTraps
+      renderWithChessTraps={(chessTraps) => (
+        <ChessTrapPageContent chessTraps={chessTraps} />
+      )}
+    />
+  );
+};
 
-  const [containerHeight, setContainerHeight] = useState<number>(boardSizePixels);
-  const dispatch = useDispatch();
-  const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
+const ChessTrapPageContent: React.FC<{ chessTraps: ChessTrap[] }> = ({ chessTraps }) => {
+  const boardSizePixels = calcChessBoardSize(70, 'vh');
   const classes = useStyles({});
+  const { trapName } = useParams<{ trapName: string }>();
+  const [containerHeight, setContainerHeight] = useState<number>(boardSizePixels);
 
   const gridContainerRef = useCallback((card) => {
     if (card != null) {
@@ -43,26 +50,8 @@ const ChessTrapPage: React.FunctionComponent = () => {
     }
   }, []);
 
-  const { trapName } = useParams<{ trapName: string }>();
-
-  useEffect(() => {
-    if (chessTrapsSlice.requestStatus === 'NO_REQUEST_YET') {
-      dispatch(getChessTrapsThunk());
-    }
-  }, []);
-
-  if (chessTrapsSlice.requestStatus === 'ERROR') {
-    return <p>An error occurred: {chessTrapsSlice.error}</p>;
-  }
-
-  if (chessTrapsSlice.requestStatus !== 'LOADED') {
-    return <p>Loading...</p>;
-  }
-
   // Find the trap with a name that matches the trapName param
-  const trap = chessTrapsSlice.traps.find(
-    (t) => toDashedLowercase(t.shortName) === trapName,
-  );
+  const trap = chessTraps.find((t) => toDashedLowercase(t.shortName) === trapName);
 
   // If `trap` is undefined, that means that the trapName param didn't match the name of
   // any of the traps in the db. In that case, treat it as not found.
