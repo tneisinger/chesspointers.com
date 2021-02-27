@@ -47,6 +47,7 @@ interface Props {
   anchorSide: 'right' | 'left';
   isMobileDrawerOpen: boolean;
   handleDrawerToggle: () => void;
+  closeDrawer: () => void;
 }
 
 export const SideMenu: React.FC<Props> = (props) => {
@@ -71,7 +72,7 @@ export const SideMenu: React.FC<Props> = (props) => {
           }}
         >
           <div className={classes.toolbar} />
-          <SideMenuList />
+          <SideMenuList {...props} />
         </Drawer>
       </Hidden>
       <Hidden xsDown implementation='css'>
@@ -83,14 +84,14 @@ export const SideMenu: React.FC<Props> = (props) => {
           open
         >
           <div className={classes.toolbar} />
-          <SideMenuList />
+          <SideMenuList {...props} />
         </Drawer>
       </Hidden>
     </nav>
   );
 };
 
-const SideMenuList: React.FC = () => {
+const SideMenuList: React.FC<Props> = ({ closeDrawer }) => {
   const classes = useStyles();
   const location = useLocation();
 
@@ -106,7 +107,7 @@ const SideMenuList: React.FC = () => {
               }
               button
               alignItems='center'
-              component={NavLinkMui(route.path)}
+              component={NavLinkMui(route.path, closeDrawer)}
             >
               <ListItemText className={classes.listItemText} primary={route.pageName} />
             </ListItem>

@@ -140,6 +140,7 @@ function AppContent() {
             anchorSide={theme.direction === 'rtl' ? 'right' : 'left'}
             isMobileDrawerOpen={isMobileDrawerOpen}
             handleDrawerToggle={handleDrawerToggle}
+            closeDrawer={() => setIsMobileDrawerOpen(false)}
           />
           <div className={classes.toolbarAboveMain} />
           <main className={classes.main}>
