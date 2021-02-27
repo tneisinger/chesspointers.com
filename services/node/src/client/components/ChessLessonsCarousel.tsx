@@ -82,6 +82,12 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
         changeOnFirstRender
         onChange={handleCarouselChange}
         fullHeightHover={false}
+        indicatorContainerProps={{
+          className: '',
+          style: {
+            marginTop: '0px',
+          },
+        }}
       >
         {props.chessTraps.map((trap) => (
           <div key={trap.shortName} className={classes.chessLessonContainer}>
