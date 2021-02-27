@@ -25,7 +25,7 @@ const theme = createMuiTheme({
   palette: {
     type: 'dark',
   },
-  sideMenuWidth: 240,
+  sideMenuWidth: 220,
   mainMaxWidth: 1200,
   overrides: {
     MuiCssBaseline: {

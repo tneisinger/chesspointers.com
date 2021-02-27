@@ -1,9 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import { OverridableComponent } from '@material-ui/core/OverridableComponent';
-import { SvgIconTypeMap } from '@material-ui/core/SvgIcon/SvgIcon';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import LockIcon from '@material-ui/icons/Lock';
-import MergeTypeIcon from '@material-ui/icons/MergeType';
 import { Route } from 'react-router-dom';
 import HomePage from './pages/Home';
 import ChessTrapsPage from './pages/ChessTraps';
@@ -19,8 +14,7 @@ interface RouteInfo {
   path?: string;
   isPathExact: boolean;
   isPrivate: boolean;
-  sideMenuIcon?: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
-  sideMenuLink?: string;
+  isInSideMenu: boolean;
 }
 
 interface RouteInfoWithPath extends RouteInfo {
@@ -34,6 +28,7 @@ export const routes: RouteInfo[] = [
     path: '/',
     isPathExact: true,
     isPrivate: false,
+    isInSideMenu: false,
   },
   {
     pageName: 'Chess Traps',
@@ -41,13 +36,14 @@ export const routes: RouteInfo[] = [
     path: '/traps',
     isPathExact: true,
     isPrivate: false,
-    sideMenuIcon: ThumbUpIcon,
+    isInSideMenu: true,
   },
   {
     component: ChessTrapPage,
     path: '/traps/:trapName',
     isPathExact: true,
     isPrivate: false,
+    isInSideMenu: false,
   },
   {
     pageName: 'Merge Traps',
@@ -55,7 +51,7 @@ export const routes: RouteInfo[] = [
     path: '/merge-traps',
     isPathExact: true,
     isPrivate: false,
-    sideMenuIcon: MergeTypeIcon,
+    isInSideMenu: true,
   },
   {
     pageName: 'Private Page',
@@ -63,12 +59,13 @@ export const routes: RouteInfo[] = [
     path: '/private-page',
     isPathExact: false,
     isPrivate: true,
-    sideMenuIcon: LockIcon,
+    isInSideMenu: false,
   },
   {
     component: NotFoundPage,
     isPathExact: false,
     isPrivate: false,
+    isInSideMenu: false,
   },
 ];
 
