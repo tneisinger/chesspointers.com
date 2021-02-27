@@ -111,7 +111,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   drawerPaper: {
-    width: theme.sideMenuWidth,
+    padding: '0 12px',
+    [theme.breakpoints.up('sm')]: {
+      width: theme.sideMenuWidth,
+    },
   },
 }));
 
