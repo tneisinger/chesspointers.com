@@ -88,12 +88,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    position: 'absolute',
+    left: '16px',
     [theme.breakpoints.up('sm')]: {
       display: 'none',
     },
   },
   siteTitleText: {
+    margin: '0 auto',
     [theme.breakpoints.up('sm')]: {
       fontSize: '1.25rem',
     },
