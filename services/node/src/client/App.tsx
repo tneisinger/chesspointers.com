@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { CssBaseline, makeStyles } from '@material-ui/core';
 import {
   Theme,
@@ -55,6 +56,11 @@ const theme = createMuiTheme({
             textDecoration: 'underline',
           },
         },
+        'header a': {
+          '&:visited': {
+            color: 'white',
+          },
+        },
       },
     },
   },
@@ -88,6 +94,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   siteTitleText: {
     margin: '0 auto',
+    color: 'white',
     [theme.breakpoints.up('sm')]: {
       fontSize: '1.25rem',
     },
@@ -132,7 +139,7 @@ function AppContent() {
                 <MenuIcon />
               </IconButton>
               <Typography variant='h6' noWrap className={classes.siteTitleText}>
-                ChessGuide.app
+                <Link to={'/'}>ChessGuide.app</Link>
               </Typography>
             </Toolbar>
           </AppBar>
