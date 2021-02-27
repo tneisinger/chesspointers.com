@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
 import List from '@material-ui/core/List';
@@ -30,6 +31,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   toolbar: {
     ...theme.mixins.toolbar,
+  },
+  currentLocationLink: {
+    backgroundColor: theme.palette.action.selected,
+    '&:hover': {
+      backgroundColor: theme.palette.action.selected,
+    },
+  },
+  linksList: {
+    paddingTop: 0,
   },
 }));
 
@@ -82,13 +92,18 @@ export const SideMenu: React.FC<Props> = (props) => {
 
 const SideMenuList: React.FC = () => {
   const classes = useStyles();
+  const location = useLocation();
+
   return (
-    <List>
+    <List className={classes.linksList}>
       {routesWithPaths().map((route, idx) => {
         if (route.isInSideMenu) {
           return (
             <ListItem
               key={route.path + idx}
+              className={
+                location.pathname === route.path ? classes.currentLocationLink : ''
+              }
               button
               alignItems='center'
               component={NavLinkMui(route.path)}
