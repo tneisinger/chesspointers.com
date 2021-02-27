@@ -82,6 +82,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   appBar: {
     zIndex: 1400,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.sideMenuWidth,
+      left: 0,
+    },
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -96,6 +100,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   toolbar: {
     ...theme.mixins.toolbar,
+  },
+  toolbarAboveMain: {
+    ...theme.mixins.toolbar,
+    [theme.breakpoints.up('sm')]: {
+      height: 0,
+      minHeight: 0,
+    },
   },
   drawerPaper: {
     width: theme.sideMenuWidth,
@@ -171,7 +182,7 @@ function AppContent() {
               </Drawer>
             </Hidden>
           </nav>
-          <div className={classes.toolbar} />
+          <div className={classes.toolbarAboveMain} />
           <main className={classes.main}>
             <Switch>{makeRoutes()}</Switch>
           </main>
