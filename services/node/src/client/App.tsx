@@ -8,8 +8,6 @@ import {
 } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
@@ -74,12 +72,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: theme.mainMaxWidth,
     margin: '0 auto',
   },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: theme.sideMenuWidth,
-      flexShrink: 0,
-    },
-  },
   appBar: {
     zIndex: 1400,
     [theme.breakpoints.up('sm')]: {
@@ -100,20 +92,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1.25rem',
     },
   },
-  toolbar: {
-    ...theme.mixins.toolbar,
-  },
   toolbarAboveMain: {
     ...theme.mixins.toolbar,
     [theme.breakpoints.up('sm')]: {
       height: 0,
       minHeight: 0,
-    },
-  },
-  drawerPaper: {
-    padding: '0 12px',
-    [theme.breakpoints.up('sm')]: {
-      width: theme.sideMenuWidth,
     },
   },
 }));
@@ -127,13 +110,11 @@ function AppContent() {
 
   const classes = useStyles({ windowInnerHeight });
 
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    setIsMobileDrawerOpen(!isMobileDrawerOpen);
   };
-
-  const container = window !== undefined ? () => window.document.body : undefined;
 
   return (
     <>
@@ -155,38 +136,11 @@ function AppContent() {
               </Typography>
             </Toolbar>
           </AppBar>
-          <nav className={classes.drawer}>
-            <Hidden smUp implementation='css'>
-              <Drawer
-                container={container}
-                variant='temporary'
-                anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                open={mobileOpen}
-                onClose={handleDrawerToggle}
-                classes={{
-                  paper: classes.drawerPaper,
-                }}
-                ModalProps={{
-                  keepMounted: true,
-                }}
-              >
-                <div className={classes.toolbar} />
-                <SideMenu />
-              </Drawer>
-            </Hidden>
-            <Hidden xsDown implementation='css'>
-              <Drawer
-                variant='permanent'
-                classes={{
-                  paper: classes.drawerPaper,
-                }}
-                open
-              >
-                <div className={classes.toolbar} />
-                <SideMenu />
-              </Drawer>
-            </Hidden>
-          </nav>
+          <SideMenu
+            anchorSide={theme.direction === 'rtl' ? 'right' : 'left'}
+            isMobileDrawerOpen={isMobileDrawerOpen}
+            handleDrawerToggle={handleDrawerToggle}
+          />
           <div className={classes.toolbarAboveMain} />
           <main className={classes.main}>
             <Switch>{makeRoutes()}</Switch>
