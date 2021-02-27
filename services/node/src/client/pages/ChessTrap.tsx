@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { Theme } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
@@ -12,7 +13,7 @@ import NotFoundPage from '../pages/NotFound';
 import { toDashedLowercase } from '../../shared/utils';
 import { calcChessBoardSize } from '../utils';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   mainCard: {
     padding: '32px',
   },
@@ -25,6 +26,12 @@ const useStyles = makeStyles(() => ({
     paddingTop: 0,
     paddingBottom: '1rem',
     marginBottom: '0',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '3rem',
+    },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.6rem',
+    },
   },
 }));
 
