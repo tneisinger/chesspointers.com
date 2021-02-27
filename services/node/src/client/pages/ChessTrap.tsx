@@ -12,6 +12,7 @@ import WithChessTraps from '../components/WithChessTraps';
 import NotFoundPage from '../pages/NotFound';
 import { toDashedLowercase } from '../../shared/utils';
 import { calcChessBoardSize } from '../utils';
+import { useWindowSize } from '../hooks/useWindowSize';
 
 const useStyles = makeStyles((theme: Theme) => ({
   mainCard: {
@@ -46,9 +47,11 @@ const ChessTrapPage: React.FunctionComponent = () => {
 };
 
 const ChessTrapPageContent: React.FC<{ chessTraps: ChessTrap[] }> = ({ chessTraps }) => {
-  const boardSizePixels = calcChessBoardSize(70, 'vh');
   const classes = useStyles({});
+  const { windowWidth } = useWindowSize();
   const { trapName } = useParams<{ trapName: string }>();
+
+  const boardSizePixels = calcChessBoardSize(70, 'vh');
   const [containerHeight, setContainerHeight] = useState<number>(boardSizePixels);
 
   const gridContainerRef = useCallback((card) => {
@@ -80,12 +83,14 @@ const ChessTrapPageContent: React.FC<{ chessTraps: ChessTrap[] }> = ({ chessTrap
                 userPlaysAs={trap.playedByWhite ? 'white' : 'black'}
                 boardSizePixels={boardSizePixels}
               >
-                <MovesPane
-                  height={containerHeight}
-                  playedMoves={[]}
-                  selectedMoveIdx={null}
-                  changeSelectedMoveIdx={(idx) => void idx}
-                />
+                {windowWidth > 1000 && (
+                  <MovesPane
+                    height={containerHeight}
+                    playedMoves={[]}
+                    selectedMoveIdx={null}
+                    changeSelectedMoveIdx={(idx) => void idx}
+                  />
+                )}
               </ChessGuide>
             </Grid>
           </Grid>
