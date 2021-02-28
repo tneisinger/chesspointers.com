@@ -50,7 +50,7 @@ const ChessGuideControls: React.FC<Props> = ({
         />
       </Grid>
       <Grid item>
-        <Grid container spacing={2}>
+        <Grid container spacing={3}>
           <Grid item>
             <Button variant='contained' color='primary' onClick={onResetBtnClick}>
               Reset

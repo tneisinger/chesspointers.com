@@ -27,13 +27,17 @@ const CHECK_MOVE_DELAY = 250;
 const SHOW_NEXT_MOVES_DELAY = 1000;
 const SHOW_DEBUG_BTN = false;
 const BEEPER_FREQUENCY = 73;
+const BOARD_BORDER_WIDTH = '13px';
 
 const useStyles = makeStyles((theme) => ({
   boardBorderDiv: {
     display: 'inline-block',
-    padding: '13px',
+    padding: BOARD_BORDER_WIDTH,
     backgroundColor: theme.palette.background.default,
     borderRadius: '5px',
+  },
+  childrenContainer: {
+    paddingTop: BOARD_BORDER_WIDTH,
   },
 }));
 
@@ -558,7 +562,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         />
       </Grid>
       <Grid item>
-        <Grid container direction='column' spacing={2}>
+        <Grid
+          container
+          className={classes.childrenContainer}
+          direction='column'
+          spacing={2}
+        >
           {childrenWithProps &&
             childrenWithProps.map((child, idx) => (
               <Grid key={`ChessGuide child ${idx}`} item>

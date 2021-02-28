@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
@@ -14,13 +14,6 @@ import { calcChessBoardSize } from '../utils';
 import { useWindowSize } from '../hooks/useWindowSize';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  mainCard: {
-    padding: '32px',
-  },
-  gridItem: {
-    paddingTop: '0px!important',
-    paddingBottom: '0px!important',
-  },
   trapName: {
     textAlign: 'center',
     paddingTop: 0,
@@ -32,6 +25,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       fontSize: '1.6rem',
     },
+  },
+  chessTrapRoot: {
+    height: '100%',
+    width: 'inherit',
+    maxWidth: 'inherit',
   },
 }));
 
@@ -57,14 +55,6 @@ const ChessTrapPageContent: React.FC<{ chessTraps: ChessTrap[] }> = ({ chessTrap
     boardSizePixels = calcChessBoardSize(95, 'vw');
   }
 
-  const [containerHeight, setContainerHeight] = useState<number>(boardSizePixels);
-
-  const gridContainerRef = useCallback((card) => {
-    if (card != null) {
-      setContainerHeight(card.clientHeight);
-    }
-  }, []);
-
   // Find the trap with a name that matches the trapName param
   const trap = chessTraps.find((t) => toDashedLowercase(t.shortName) === trapName);
 
@@ -75,13 +65,21 @@ const ChessTrapPageContent: React.FC<{ chessTraps: ChessTrap[] }> = ({ chessTrap
   }
 
   return (
-    <Grid container direction='row' justify='center'>
-      <Grid item className={classes.gridItem}>
+    <Grid
+      container
+      className={classes.chessTrapRoot}
+      direction='column'
+      alignItems='center'
+      justify='center'
+    >
+      <Grid item>
         <Typography className={classes.trapName} variant='h4' component='h2'>
           {trap.fullName}
         </Typography>
-        <Grid container ref={gridContainerRef} direction='row' spacing={2}>
-          <Grid item className={classes.gridItem}>
+      </Grid>
+      <Grid item>
+        <Grid container direction='row' spacing={2}>
+          <Grid item>
             <ChessGuide
               chessTree={trap.chessTree}
               userPlaysAs={trap.playedByWhite ? 'white' : 'black'}
@@ -89,7 +87,7 @@ const ChessTrapPageContent: React.FC<{ chessTraps: ChessTrap[] }> = ({ chessTrap
             >
               {windowWidth > 1000 && (
                 <MovesPane
-                  height={containerHeight}
+                  height={boardSizePixels}
                   playedMoves={[]}
                   selectedMoveIdx={null}
                   changeSelectedMoveIdx={(idx) => void idx}
