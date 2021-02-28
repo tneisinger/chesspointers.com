@@ -1,7 +1,7 @@
 import React, { ForwardRefExoticComponent, RefAttributes } from 'react';
 import { Link } from 'react-router-dom';
 
-const NavLinkMui = (
+const LinkMui = (
   to: string,
   onClick: () => void = () => void 0,
 ): ForwardRefExoticComponent<RefAttributes<unknown>> =>
@@ -11,4 +11,4 @@ const NavLinkMui = (
     </span>
   ));
 
-export default NavLinkMui;
+export default LinkMui;

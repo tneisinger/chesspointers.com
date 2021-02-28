@@ -5,7 +5,7 @@ import Modal from './Modal';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { GuideMode } from '../utils/types';
-import NavLinkMui from './NavLinkMui';
+import LinkMui from './LinkMui';
 
 const useStyles = makeStyles({
   modalTitleText: {
@@ -105,7 +105,7 @@ const PathCompleteModal: React.FC<Props> = ({
         </Typography>
         <Grid container alignItems='center' justify='center' spacing={3}>
           <Grid item>
-            <Button variant='contained' color='primary' component={NavLinkMui('/traps')}>
+            <Button variant='contained' color='primary' component={LinkMui('/traps')}>
               Learn a New Trap
             </Button>
           </Grid>

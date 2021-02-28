@@ -8,7 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import { routesWithPaths } from '../routes';
-import NavLinkMui from './NavLinkMui';
+import LinkMui from './LinkMui';
 
 const useStyles = makeStyles((theme: Theme) => ({
   listItemText: {
@@ -107,7 +107,7 @@ const SideMenuList: React.FC<Props> = ({ closeDrawer }) => {
               }
               button
               alignItems='center'
-              component={NavLinkMui(route.path, closeDrawer)}
+              component={LinkMui(route.path, closeDrawer)}
             >
               <ListItemText className={classes.listItemText} primary={route.pageName} />
             </ListItem>
