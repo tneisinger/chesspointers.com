@@ -29,8 +29,9 @@ const theme = createMuiTheme({
   overrides: {
     MuiCssBaseline: {
       '@global': {
-        html: {
+        'html, body': {
           height: '100%',
+          overflow: 'hidden',
         },
         '*': {
           scrollbarWidth: 'thin',
@@ -67,7 +68,7 @@ const theme = createMuiTheme({
 });
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  appRoot: {
     display: 'flex',
     flexDirection: 'column',
     height: (p: { windowInnerHeight: number }) => p.windowInnerHeight,
@@ -127,7 +128,7 @@ function AppContent() {
     <>
       <CssBaseline />
       <StylesProvider injectFirst>
-        <div className={classes.root}>
+        <div className={classes.appRoot}>
           <AppBar position='fixed' className={classes.appBar}>
             <Toolbar>
               <IconButton

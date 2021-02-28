@@ -6,6 +6,9 @@ import Box from '@material-ui/core/Box';
 
 const ROUGH_APP_BAR_HEIGHT = 40; // pixels
 
+// Prevent the `scrollToBottom()` function from doing anything for this many ms
+const SCROLL_TO_BOTTOM_DELAY = 5000;
+
 interface Props {
   height: number;
   title: string;
@@ -64,6 +67,24 @@ const ScrollablePane: React.FC<Props> = (props) => {
     appBarHeight,
   });
 
+  // When the ChessGround board renders for the first time, it seems to temporarily create
+  // some undetectable elements that are very large, causing the scrollable width and
+  // height of ui to be very large.  Because of this, if `scrollToBottom()` is run while
+  // ChessGround is setting up, the browser will scroll far down unnecessarily. To avoid
+  // this, we prevent `scrollToBottom()` from doing anything until after
+  const [allowScrollToBottom, setAllowScrollToBottom] = useState(false);
+  const scrollToBottomTimeout = useRef<number | undefined>(
+    window.setTimeout(() => setAllowScrollToBottom(true), SCROLL_TO_BOTTOM_DELAY),
+  );
+
+  const scrollToBottom = () => {
+    if (!allowScrollToBottom) return;
+    const div = scrollToBottomDiv.current;
+    if (div) {
+      div.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const appBarRef = useCallback((appBar) => {
     if (appBar != null) setAppBarHeight(appBar.clientHeight);
   }, []);
@@ -71,16 +92,10 @@ const ScrollablePane: React.FC<Props> = (props) => {
   // Get a reference to the div at the bottom of the scrollable content
   const scrollToBottomDiv = useRef<HTMLDivElement | null>(null);
 
-  const scrollToBottom = () => {
-    const div = scrollToBottomDiv.current;
-    if (div) {
-      div.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   // Every time this component rerenders, make sure that we scroll to the bottom
   useEffect(() => {
     if (props.autoScrollDownWhenContentAdded) scrollToBottom();
+    return () => window.clearTimeout(scrollToBottomTimeout.current);
   });
 
   return (
