@@ -40,9 +40,6 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   chessTree: ChessTree;
   boardSizePixels: number;
-  // if 'alwaysAutoplay' set to true, always autoplay the computer's moves, even when the
-  // step forward button is clicked.
-  alwaysAutoplay?: boolean;
   userPlaysAs?: PieceColor;
   guideMode?: GuideMode;
   renderExtraControlsForTesting?: boolean;
@@ -63,7 +60,6 @@ type MoveFromTo = {
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
   boardSizePixels,
-  alwaysAutoplay = false,
   userPlaysAs = 'white',
   guideMode = 'learn',
   renderExtraControlsForTesting = false,
@@ -78,7 +74,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
   const [isDeadEndModalOpen, setIsDeadEndModalOpen] = useState(false);
   const [mode, setMode] = useState<GuideMode>(guideMode);
-  const [doesComputerAutoplay, setDoesComputerAutoplay] = useState<boolean>(true);
   const [pathStats, setPathStats] = useState<PathStats[]>([]);
   const [game] = useState<ChessInstance>(new Chess());
   const [fen, setFen] = useState(game.fen());
@@ -356,7 +351,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     clearTimeouts();
     setPlayedMoves([]);
     setMovesPosition(0);
-    setDoesComputerAutoplay(true);
     game.reset();
     updateBoard();
     setIsShowingMoves(false);
@@ -401,7 +395,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     let move: string;
     if (moves.length < 1) {
       return;
-    } else if (moves.length === 1 && doesComputerAutoplay) {
+    } else if (moves.length === 1) {
       move = moves[0];
     } else {
       // If there is more than one move that the computer can play, the computer randomly
