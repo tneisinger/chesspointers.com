@@ -132,7 +132,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   // Initialize 'pathStats' for all paths, setting their 'timesCompleted' values
-  // set to zero.
+  // to zero.
   const makeInitialPathStatsValues = (): PathStats[] => {
     return paths.reduce((acc: PathStats[], pathObj) => {
       const practicePath: PathStats = {
@@ -151,7 +151,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }, []);
   };
 
-  // Use this function to set the fen variable, which will update the board position.
+  // Use this function to set the `fen` value, which will update the board position.
   const updateBoard = () => setFen(game.fen());
 
   const getNextMoveGames = (): ChessInstance[] => {
