@@ -46,13 +46,13 @@ const PathCompleteModal: React.FC<Props> = ({
         delayOpenFor={500}
       >
         <Typography variant='h4' className={classes.modalTitleText}>
-          Great Job!
+          Good!
         </Typography>
         <Typography className={classes.modalMsgText}>
-          {numPathsCompleted} of {numPaths} paths complete ({currentGuideMode} mode)
+          {numPathsCompleted} of {numPaths} paths completed
         </Typography>
         <Button variant='contained' color='primary' onClick={handleResetBtnClick}>
-          Reset to Complete Another Path
+          Reset
         </Button>
       </Modal>
     );
@@ -64,10 +64,10 @@ const PathCompleteModal: React.FC<Props> = ({
         delayOpenFor={500}
       >
         <Typography variant='h4' className={classes.modalTitleText}>
-          Great Job!
+          Great!
         </Typography>
         <Typography className={classes.modalMsgText}>
-          You completed all the paths in Learn Mode.
+          You completed all the paths.
         </Typography>
         <Grid container alignItems='center' justify='center' spacing={3}>
           <Grid item>
@@ -76,15 +76,12 @@ const PathCompleteModal: React.FC<Props> = ({
               color='primary'
               onClick={handleSwitchToPracticeModeBtnClick}
             >
-              Switch To Practice Mode
+              Go To Practice Mode
             </Button>
           </Grid>
           <Grid item>
-            <Typography>or</Typography>
-          </Grid>
-          <Grid item>
             <Button variant='contained' color='primary' onClick={handleResetBtnClick}>
-              Reset Board
+              Reset
             </Button>
           </Grid>
         </Grid>
@@ -98,10 +95,10 @@ const PathCompleteModal: React.FC<Props> = ({
         delayOpenFor={500}
       >
         <Typography variant='h4' className={classes.modalTitleText}>
-          Great Job!
+          Awesome!
         </Typography>
         <Typography className={classes.modalMsgText}>
-          You completed all the paths in Practice Mode
+          You completed all the paths.
         </Typography>
         <Grid container alignItems='center' justify='center' spacing={3}>
           <Grid item>
@@ -110,11 +107,8 @@ const PathCompleteModal: React.FC<Props> = ({
             </Button>
           </Grid>
           <Grid item>
-            <Typography>or</Typography>
-          </Grid>
-          <Grid item>
             <Button variant='contained' color='primary' onClick={handleResetBtnClick}>
-              Reset Board
+              Reset
             </Button>
           </Grid>
         </Grid>

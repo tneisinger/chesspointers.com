@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     backgroundColor: theme.palette.background.default,
     boxShadow: theme.shadows[5],
-    padding: '24px',
+    padding: '24px 32px',
     paddingTop: 0,
     borderRadius: 10,
     outline: 'none',
