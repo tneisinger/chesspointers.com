@@ -6,7 +6,7 @@ import { GuideMode } from '../utils/types';
 
 const useStyles = makeStyles(() => ({
   gridContainer: {
-    padding: '0 8px',
+    padding: 0,
   },
 }));
 
@@ -40,18 +40,18 @@ const ChessGuideInfo: React.FunctionComponent<Props> = ({
       container
       className={classes.gridContainer}
       direction='row'
-      justify='space-between'
+      justify='space-around'
     >
-      <Grid item>
-        <Typography variant='caption'>
-          Paths completed: {numPathsCompleted}/{numPaths}
-        </Typography>
-      </Grid>
       <Grid item>
         <Typography variant='caption'>{makeScoreString()}</Typography>
       </Grid>
       <Grid item>
-        <Typography variant='caption'>Current mode: {currentGuideMode}</Typography>
+        <Typography variant='caption'>
+          Paths Complete: {numPathsCompleted}/{numPaths}
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Typography variant='caption'>Mode: {currentGuideMode}</Typography>
       </Grid>
     </Grid>
   );

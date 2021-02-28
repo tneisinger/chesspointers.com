@@ -40,11 +40,6 @@ const ChessGuideControls: React.FC<Props> = ({
   return (
     <Grid className={classes.root} container direction='row' justify='space-evenly'>
       <Grid item>
-        <Button variant='contained' color='primary' onClick={onResetBtnClick}>
-          Reset Board
-        </Button>
-      </Grid>
-      <Grid item>
         <ChessNavBtns
           areBackBtnsEnabled={areBackBtnsEnabled}
           areForwardBtnsEnabled={areForwardBtnsEnabled}
@@ -55,9 +50,18 @@ const ChessGuideControls: React.FC<Props> = ({
         />
       </Grid>
       <Grid item>
-        <Button variant='contained' color='primary' onClick={onModeSwitchBtnClick}>
-          Switch to {currentMode === 'learn' ? 'practice' : 'learn'} mode
-        </Button>
+        <Grid container spacing={2}>
+          <Grid item>
+            <Button variant='contained' color='primary' onClick={onResetBtnClick}>
+              Reset
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button variant='contained' color='primary' onClick={onModeSwitchBtnClick}>
+              Switch to {currentMode === 'learn' ? 'practice' : 'learn'} mode
+            </Button>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
