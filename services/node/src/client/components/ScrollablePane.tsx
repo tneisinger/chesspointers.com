@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -20,7 +20,7 @@ interface StyleProps extends Props {
   appBarHeight: number;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     maxWidth: '16rem',
     height: (props: StyleProps) => props.height - props.appBarHeight + 'px',
@@ -55,9 +55,11 @@ const useStyles = makeStyles({
     overflowY: 'overlay' as any,
     flex: 1,
     backgroundColor: (p: StyleProps) =>
-      p.subheadingComponent == undefined ? 'rgba(72, 72, 72, 1)' : 'rgba(58, 58, 58, 1)',
+      p.subheadingComponent == undefined
+        ? theme.palette.background.paper
+        : 'rgba(58, 58, 58, 1)',
   },
-});
+}));
 
 const ScrollablePane: React.FC<Props> = (props) => {
   const [appBarHeight, setAppBarHeight] = useState(ROUGH_APP_BAR_HEIGHT);
