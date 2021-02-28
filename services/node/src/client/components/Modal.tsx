@@ -14,10 +14,10 @@ const useStyles = makeStyles((theme) => ({
   },
   modalDiv: {
     position: 'relative',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
     boxShadow: theme.shadows[5],
-    padding: '16px 24px',
-    border: '1px solid #909090',
+    padding: '24px',
+    paddingTop: 0,
     borderRadius: 10,
     outline: 'none',
   },
