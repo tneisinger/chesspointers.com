@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 
 const NavLinkMui = (
   to: string,
-  closeDrawer: () => void,
+  onClick: () => void = () => void 0,
 ): ForwardRefExoticComponent<RefAttributes<unknown>> =>
   React.forwardRef((props, ref) => (
-    <span onClick={closeDrawer}>
+    <span onClick={onClick}>
       <Link {...props} ref={ref as any} to={to} />
     </span>
   ));
