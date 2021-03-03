@@ -92,6 +92,7 @@ const config: Configuration = {
     overlay: IS_DEV,
     open: IS_DEV,
     openPage: `http://localhost:${SERVER_PORT}`,
+    allowedHosts: ['chesspointers.com', 'localhost'],
   },
   plugins,
   externals: {

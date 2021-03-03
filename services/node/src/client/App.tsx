@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '0 auto',
     color: 'white',
     [theme.breakpoints.up('sm')]: {
-      fontSize: '1.25rem',
+      fontSize: '1.2rem',
     },
   },
   toolbarAboveMain: {
@@ -146,7 +146,7 @@ function AppContent() {
               </IconButton>
               <Typography variant='h6' noWrap className={classes.siteTitleText}>
                 <span onClick={() => setIsMobileDrawerOpen(false)}>
-                  <Link to={'/'}>ChessGuide.app</Link>
+                  <Link to={'/'}>ChessPointers.com</Link>
                 </span>
               </Typography>
             </Toolbar>
