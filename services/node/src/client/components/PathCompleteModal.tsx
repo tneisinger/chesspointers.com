@@ -79,11 +79,6 @@ const PathCompleteModal: React.FC<Props> = ({
               Go To Practice Mode
             </Button>
           </Grid>
-          <Grid item>
-            <Button variant='contained' color='primary' onClick={handleResetBtnClick}>
-              Reset
-            </Button>
-          </Grid>
         </Grid>
       </Modal>
     );
@@ -104,11 +99,6 @@ const PathCompleteModal: React.FC<Props> = ({
           <Grid item>
             <Button variant='contained' color='primary' component={LinkMui('/traps')}>
               Learn a New Trap
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button variant='contained' color='primary' onClick={handleResetBtnClick}>
-              Reset
             </Button>
           </Grid>
         </Grid>
