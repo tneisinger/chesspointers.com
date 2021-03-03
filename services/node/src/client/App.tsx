@@ -33,6 +33,11 @@ const theme = createMuiTheme({
           height: '100%',
           overflow: 'hidden',
         },
+        '@media (hover: none)': {
+          'a:hover': {
+            textDecoration: 'none !important',
+          },
+        },
         '*': {
           scrollbarWidth: 'thin',
           scrollbarColor: `${SCROLLBAR_FOREGROUND_COLOR} ${SCROLLBAR_BACKGROUND_COLOR}`,
