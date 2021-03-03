@@ -140,7 +140,9 @@ function AppContent() {
                 <MenuIcon />
               </IconButton>
               <Typography variant='h6' noWrap className={classes.siteTitleText}>
-                <Link to={'/'}>ChessGuide.app</Link>
+                <span onClick={() => setIsMobileDrawerOpen(false)}>
+                  <Link to={'/'}>ChessGuide.app</Link>
+                </span>
               </Typography>
             </Toolbar>
           </AppBar>
