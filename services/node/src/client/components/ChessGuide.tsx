@@ -28,6 +28,7 @@ const SHOW_NEXT_MOVES_DELAY = 1000;
 const SHOW_DEBUG_BTN = false;
 const BEEPER_FREQUENCY = 73;
 const BOARD_BORDER_WIDTH = '13px';
+const SWITCH_TO_PRACTICE_MODE_DELAY = 300;
 
 const useStyles = makeStyles((theme) => ({
   boardBorderDiv: {
@@ -95,6 +96,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const hideMovesTimeout = useRef<number | undefined>(undefined);
   const doNextMoveTimeout = useRef<number | undefined>(undefined);
   const updateBoardTimeout = useRef<number | undefined>(undefined);
+  const switchToPracticeModeTimeout = useRef<number | undefined>(undefined);
 
   const clearTimeouts = () => {
     const allTimeoutRefs = [
@@ -104,6 +106,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       hideMovesTimeout,
       doNextMoveTimeout,
       updateBoardTimeout,
+      switchToPracticeModeTimeout,
     ];
     allTimeoutRefs.forEach((ref) => window.clearTimeout(ref.current));
   };
@@ -595,7 +598,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         }}
         handleSwitchToPracticeModeBtnClick={() => {
           setIsPathCompleteModalOpen(false);
-          toggleGuideMode();
+
+          // Delay the switch to practice mode until after the modal has finished closing,
+          // otherwise the content inside the modal will change just before it closes.
+          switchToPracticeModeTimeout.current = window.setTimeout(
+            () => setMode('practice'),
+            SWITCH_TO_PRACTICE_MODE_DELAY,
+          );
         }}
       />
 
