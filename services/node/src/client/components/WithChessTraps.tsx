@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
+import Spinner from './Spinner';
 
 interface Props {
   renderWithChessTraps: (chessTraps: ChessTrap[]) => JSX.Element;
@@ -24,7 +25,7 @@ const WithChessTraps: React.FC<Props> = (props) => {
   }
 
   if (chessTrapsSlice.requestStatus !== 'LOADED') {
-    return <p>Loading...</p>;
+    return <Spinner />;
   }
 
   return props.renderWithChessTraps(chessTrapsSlice.traps);
