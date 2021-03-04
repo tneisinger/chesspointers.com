@@ -76,7 +76,7 @@ const PathCompleteModal: React.FC<Props> = ({
               color='primary'
               onClick={handleSwitchToPracticeModeBtnClick}
             >
-              Go To Practice Mode
+              Switch To Practice Mode
             </Button>
           </Grid>
         </Grid>
