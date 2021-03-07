@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
-import { ChessTrap } from '../../shared/entity/chessTrap';
-import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
+import { Trap } from '../../shared/entity/chessTrap';
+import { getTrapsThunk } from '../redux/chessTrapsSlice';
 import Spinner from './Spinner';
 
 interface Props {
-  renderWithTraps: (chessTraps: ChessTrap[]) => JSX.Element;
+  renderWithTraps: (chessTraps: Trap[]) => JSX.Element;
 }
 
 const WithTraps: React.FC<Props> = (props) => {
@@ -16,7 +16,7 @@ const WithTraps: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (chessTrapsSlice.requestStatus === 'NO_REQUEST_YET') {
-      dispatch(getChessTrapsThunk());
+      dispatch(getTrapsThunk());
     }
   }, []);
 

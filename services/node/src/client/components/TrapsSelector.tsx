@@ -6,26 +6,26 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import { ChessTrap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/chessTrap';
 
 interface Props {
-  traps: ChessTrap[];
-  selectedTraps: ChessTrap[];
-  setSelectedTraps: Dispatch<SetStateAction<ChessTrap[]>>;
+  traps: Trap[];
+  selectedTraps: Trap[];
+  setSelectedTraps: Dispatch<SetStateAction<Trap[]>>;
   clearFilters: () => void;
 }
 
-const ChessTrapsSelector: React.FunctionComponent<Props> = ({
+const TrapsSelector: React.FunctionComponent<Props> = ({
   traps,
   selectedTraps,
   setSelectedTraps,
   clearFilters,
 }) => {
-  const isTrapSelected = (trap: ChessTrap): boolean =>
+  const isTrapSelected = (trap: Trap): boolean =>
     selectedTraps.map((t) => t.shortName).includes(trap.shortName);
 
   const handleTrapSelectChange = (
-    trap: ChessTrap,
+    trap: Trap,
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (event.target.checked && !isTrapSelected(trap)) {
@@ -79,4 +79,4 @@ const ChessTrapsSelector: React.FunctionComponent<Props> = ({
   );
 };
 
-export default ChessTrapsSelector;
+export default TrapsSelector;

@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
-import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
+import { getTrapsThunk } from '../redux/chessTrapsSlice';
 
-const RequireChessTraps: React.FC = (props) => {
+const RequireTraps: React.FC = (props) => {
   const dispatch = useDispatch();
 
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
 
   useEffect(() => {
     if (chessTrapsSlice.requestStatus === 'NO_REQUEST_YET') {
-      dispatch(getChessTrapsThunk());
+      dispatch(getTrapsThunk());
     }
   }, []);
 
@@ -32,4 +32,4 @@ const RequireChessTraps: React.FC = (props) => {
   return <>{childrenWithSlice}</>;
 };
 
-export default RequireChessTraps;
+export default RequireTraps;

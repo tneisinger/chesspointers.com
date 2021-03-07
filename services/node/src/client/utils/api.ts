@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { ChessTrap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/chessTrap';
 
-export async function fetchChessTraps(): Promise<ChessTrap[]> {
+export async function fetchTraps(): Promise<Trap[]> {
   const result = await axios.get(`/api/traps`);
-  return result.data as ChessTrap[];
+  return result.data as Trap[];
 }
 
-export async function fetchChessTrap(trapId: string): Promise<ChessTrap> {
+export async function fetchTrap(trapId: string): Promise<Trap> {
   const result = await axios.get(`/api/traps/${trapId}`);
-  return result.data as ChessTrap;
+  return result.data as Trap;
 }

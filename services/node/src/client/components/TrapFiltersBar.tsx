@@ -2,7 +2,7 @@ import React, { RefObject, MutableRefObject } from 'react';
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
-import { ChessTrapFiltersToolkit } from '../hooks/useChessTrapFilters';
+import { TrapFiltersToolkit } from '../hooks/useTrapFilters';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contentGridContainer: {
@@ -33,14 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  chessTrapFiltersToolkit: ChessTrapFiltersToolkit;
+  chessTrapFiltersToolkit: TrapFiltersToolkit;
   filtersBarRef: MutableRefObject<any> | RefObject<HTMLDivElement>;
 }
 
-const ChessTrapFiltersBar: React.FC<Props> = ({
-  chessTrapFiltersToolkit,
-  filtersBarRef,
-}) => {
+const TrapFiltersBar: React.FC<Props> = ({ chessTrapFiltersToolkit, filtersBarRef }) => {
   const classes = useStyles({});
 
   const { ColorSwitch, OpeningsDropDown, ClearFiltersIconBtn } = chessTrapFiltersToolkit;
@@ -69,4 +66,4 @@ const ChessTrapFiltersBar: React.FC<Props> = ({
   );
 };
 
-export default ChessTrapFiltersBar;
+export default TrapFiltersBar;

@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const Qxd1 = {
@@ -54,7 +54,7 @@ const chessTree = makeChessTree(
   [branch_d3, branch_d4],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'Stafford Trap #2';
 trap.shortName = 'Stafford 2';
 trap.playedByWhite = false;

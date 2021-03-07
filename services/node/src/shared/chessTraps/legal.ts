@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const Nxe5 = { move: 'Nxe5', isPreviewPosition: true };
@@ -17,7 +17,7 @@ const chessTree = makeChessTree(
   [],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Legal Trap';
 trap.shortName = 'Legal';
 trap.playedByWhite = true;

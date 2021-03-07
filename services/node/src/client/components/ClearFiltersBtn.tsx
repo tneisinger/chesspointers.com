@@ -1,9 +1,9 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import { ChessTrapFiltersToolkit } from '../hooks/useChessTrapFilters';
+import { TrapFiltersToolkit } from '../hooks/useTrapFilters';
 
 export interface Props {
-  chessTrapFiltersToolkit: ChessTrapFiltersToolkit;
+  chessTrapFiltersToolkit: TrapFiltersToolkit;
 }
 
 const ClearFiltersBtn: React.FC<Props> = ({ chessTrapFiltersToolkit }) => {

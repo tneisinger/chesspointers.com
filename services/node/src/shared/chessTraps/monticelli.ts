@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const Qxh7_checkmate = {
@@ -59,7 +59,7 @@ const chessTree = makeChessTree(
   [branch_Ne4, branch_Nxe2, branch_Qxg5],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Monticelli Trap';
 trap.shortName = 'Monticelli';
 trap.playedByWhite = true;

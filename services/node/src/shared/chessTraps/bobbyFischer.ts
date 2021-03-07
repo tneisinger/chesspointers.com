@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const Qd5_check = {
@@ -89,7 +89,7 @@ const chessTree = makeChessTree(
   [branch_Ne8, branch_Nxb3],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Bobby Fischer Trap';
 trap.shortName = 'Bobby Fischer';
 trap.playedByWhite = true;

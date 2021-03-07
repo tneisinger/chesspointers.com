@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
-import { ChessTrap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/chessTrap';
 import ChessLessonPreview from './ChessLessonPreview';
 import { viewportHeight, viewportWidth } from '../utils';
 
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 });
 
 interface Props extends React.HTMLProps<HTMLDivElement> {
-  chessTraps: ChessTrap[];
+  chessTraps: Trap[];
   animatedTrap: string | null;
   setAnimatedTrap: (shortName: string) => void;
   stepperValue: number;

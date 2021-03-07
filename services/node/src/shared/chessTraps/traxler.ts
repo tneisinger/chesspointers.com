@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const branch_g3 = makeChessTree(
@@ -160,7 +160,7 @@ const chessTree = makeChessTree(
   [branch_Nxf7, branch_Bxf7_check],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Traxler Counter Attack';
 trap.shortName = 'Traxler';
 trap.playedByWhite = false;

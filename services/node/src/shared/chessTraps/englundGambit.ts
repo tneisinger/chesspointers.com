@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const Qc1_checkmate = {
@@ -53,7 +53,7 @@ const chessTree = makeChessTree(
   [branch_Qd2, branch_Bxb4],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Englund Gambit Trap';
 trap.shortName = 'Englund Gambit';
 trap.playedByWhite = false;

@@ -5,11 +5,11 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
-import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
+import { getTrapsThunk } from '../redux/chessTrapsSlice';
 import ChessGuide from '../components/ChessGuide';
 import SelectTrapsPane from '../components/SelectTrapsPane';
 import MovesPane from '../components/MovesPane';
-import { ChessTrap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/chessTrap';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { mergeTrees } from '../../shared/chessTree';
 import { calcChessBoardSize } from '../utils';
@@ -31,7 +31,7 @@ const MergeTrapsPage: React.FunctionComponent = () => {
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
   const classes = useStyles({});
 
-  const [selectedTraps, setSelectedTraps] = useState<ChessTrap[]>([]);
+  const [selectedTraps, setSelectedTraps] = useState<Trap[]>([]);
   const [userColor, setUserColor] = useState<PieceColor>('white');
   const [chessGuideWrapperHeight, setChessGuideWrapperHeight] = useState(0);
 
@@ -46,7 +46,7 @@ const MergeTrapsPage: React.FunctionComponent = () => {
 
   useEffect(() => {
     if (chessTrapsSlice.requestStatus === 'NO_REQUEST_YET') {
-      dispatch(getChessTrapsThunk());
+      dispatch(getTrapsThunk());
     }
   }, []);
 

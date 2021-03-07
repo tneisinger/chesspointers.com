@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const branch_Nd4 = makeChessTree(
@@ -116,7 +116,7 @@ const chessTree = makeChessTree(
   [branch_d5, branch_Bc5],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Fried Liver Attack';
 trap.shortName = 'Fried Liver';
 trap.playedByWhite = true;

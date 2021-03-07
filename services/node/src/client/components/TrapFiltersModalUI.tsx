@@ -2,8 +2,8 @@ import React, { Dispatch, SetStateAction } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core';
-import ChessTrapFiltersModal from './ChessTrapFiltersModal';
-import { ChessTrapFiltersToolkit } from '../hooks/useChessTrapFilters';
+import TrapFiltersModal from './TrapFiltersModal';
+import { TrapFiltersToolkit } from '../hooks/useTrapFilters';
 import ClearFiltersBtn from './ClearFiltersBtn';
 
 const useStyles = makeStyles({
@@ -19,12 +19,12 @@ const useStyles = makeStyles({
 });
 
 export interface Props {
-  chessTrapFiltersToolkit: ChessTrapFiltersToolkit;
+  chessTrapFiltersToolkit: TrapFiltersToolkit;
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const ChessTrapFiltersModalUI: React.FC<Props> = (props) => {
+const TrapFiltersModalUI: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
@@ -47,7 +47,7 @@ const ChessTrapFiltersModalUI: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
       </Grid>
-      <ChessTrapFiltersModal
+      <TrapFiltersModal
         {...props}
         isModalOpen={props.isModalOpen}
         handleClose={() => props.setIsModalOpen(false)}
@@ -56,4 +56,4 @@ const ChessTrapFiltersModalUI: React.FC<Props> = (props) => {
   );
 };
 
-export default ChessTrapFiltersModalUI;
+export default TrapFiltersModalUI;

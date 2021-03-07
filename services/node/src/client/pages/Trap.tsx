@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { ChessTrap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/chessTrap';
 import ChessGuide from '../components/ChessGuide';
 import MovesPane from '../components/MovesPane';
 import WithTraps from '../components/WithTraps';
@@ -33,15 +33,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ChessTrapPage: React.FunctionComponent = () => {
+const TrapPage: React.FunctionComponent = () => {
   return (
     <WithTraps
-      renderWithTraps={(chessTraps) => <ChessTrapPageContent chessTraps={chessTraps} />}
+      renderWithTraps={(chessTraps) => <TrapPageContent chessTraps={chessTraps} />}
     />
   );
 };
 
-const ChessTrapPageContent: React.FC<{ chessTraps: ChessTrap[] }> = ({ chessTraps }) => {
+const TrapPageContent: React.FC<{ chessTraps: Trap[] }> = ({ chessTraps }) => {
   const classes = useStyles({});
   const { windowWidth, windowHeight } = useWindowSize();
   const { trapName } = useParams<{ trapName: string }>();
@@ -99,4 +99,4 @@ const ChessTrapPageContent: React.FC<{ chessTraps: ChessTrap[] }> = ({ chessTrap
   );
 };
 
-export default ChessTrapPage;
+export default TrapPage;

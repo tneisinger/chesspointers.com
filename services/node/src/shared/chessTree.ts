@@ -1,6 +1,6 @@
 import { Chess } from 'chess.js';
 import { ChessTree, ChessOpening, ChessTreeMove, ChessTreePath } from './chessTypes';
-import { ChessTrap } from './entity/chessTrap';
+import { Trap } from './entity/chessTrap';
 import {
   areChessMovesEquivalent,
   areChessPathsEquivalent,
@@ -68,7 +68,7 @@ export function getTreePaths(tree: ChessTree, verbose?: 'verbose'): any[] {
           path: newPath,
 
           // If the child doesn't have a teachingPriority value, use the parent's
-          // teachingPriority value.  Otherwise, use the child's teachingPriority value.
+          // teachingPriority value. Otherwise, use the child's teachingPriority value.
           teachingPriority:
             child.teachingPriority == undefined
               ? teachingPriority
@@ -289,10 +289,7 @@ export function doesTreeReachFen(fen: string, chessTree: ChessTree): boolean {
   return false;
 }
 
-export function filterTrapsWithOpenings(
-  openings: ChessOpening[],
-  traps: ChessTrap[],
-): ChessTrap[] {
+export function filterTrapsWithOpenings(openings: ChessOpening[], traps: Trap[]): Trap[] {
   const fens = openings.map((opening) => getFen(opening));
   return traps.filter((trap) =>
     fens.some((fen) => doesTreeReachFen(fen, trap.chessTree)),
@@ -304,6 +301,6 @@ export function isPathInTree(path: string[], tree: ChessTree): boolean {
   return paths.some((treePath) => arraysEqual(treePath.slice(0, path.length), path));
 }
 
-export function filterTrapsWithPath(path: string[], traps: ChessTrap[]): ChessTrap[] {
+export function filterTrapsWithPath(path: string[], traps: Trap[]): Trap[] {
   return traps.filter((trap) => isPathInTree(path, trap.chessTree));
 }

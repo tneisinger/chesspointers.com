@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ChessTreePreview from './ChessTreePreview';
-import { ChessTrap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/chessTrap';
 import { toDashedLowercase } from '../../shared/utils';
 import { calcChessBoardSize } from '../utils';
 
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  chessTrap: ChessTrap;
+  chessTrap: Trap;
   cardWidth: number;
   stepper: number;
   onHoverChange?: (trapName: string, isHovered: boolean) => void;

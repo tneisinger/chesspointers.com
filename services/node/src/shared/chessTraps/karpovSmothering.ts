@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const Nd6_checkmate = { move: 'Nd6#', isPreviewPosition: true };
@@ -16,7 +16,7 @@ const chessTree = makeChessTree(
   [],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Karpov Smothering Trap';
 trap.shortName = 'Karpov Smothering';
 trap.playedByWhite = true;

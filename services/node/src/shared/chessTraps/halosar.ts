@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const Nxc7_checkmate = {
@@ -88,7 +88,7 @@ const chessTree = makeChessTree(
   [branch_Qb4, branch_Qg4],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Halosar Trap';
 trap.shortName = 'Halosar';
 trap.playedByWhite = true;

@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const Qxd8 = {
@@ -84,7 +84,7 @@ const chessTree = makeChessTree(
   [branch_dxe5, branch_Ng4, branch_Nh5],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Magnus Smith Trap';
 trap.shortName = 'Magnus Smith';
 trap.playedByWhite = true;

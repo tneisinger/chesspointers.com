@@ -4,7 +4,7 @@ import { createConnection, Repository } from 'typeorm';
 import { pagesRouter } from './routes/pages-router';
 import { staticsRouter } from './routes/statics-router';
 import { chessTrapApiRouter } from './routes/chess-traps-api-router';
-import { ChessTrap } from '../shared/entity/chessTrap';
+import { Trap } from '../shared/entity/chessTrap';
 import allTraps from '../shared/chessTraps/index';
 import * as config from './config';
 
@@ -18,10 +18,8 @@ console.log(`*******************************************`);
 createConnection()
   .then(async (connection) => {
     // Get all the chessTraps that are saved in the db
-    const chessTrapsRepository: Repository<ChessTrap> = connection.getRepository(
-      ChessTrap,
-    );
-    const chessTraps: ChessTrap[] = await chessTrapsRepository.find();
+    const chessTrapsRepository: Repository<Trap> = connection.getRepository(Trap);
+    const chessTraps: Trap[] = await chessTrapsRepository.find();
 
     // Insert any chessTraps that are not yet saved in the db
     const namesOfTrapsInDB = chessTraps.map((trap) => trap.shortName);

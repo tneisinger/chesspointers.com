@@ -1,4 +1,4 @@
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const Qxd1 = {
@@ -43,7 +43,7 @@ const chessTree = makeChessTree(
   [branch_Ke2, branch_Kxf2],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Lasker Trap';
 trap.shortName = 'Lasker';
 trap.playedByWhite = false;

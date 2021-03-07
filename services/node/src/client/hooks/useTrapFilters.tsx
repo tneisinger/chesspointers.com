@@ -5,19 +5,19 @@ import ColorSwitchWithCheckbox from '../components/ColorSwitchWithCheckbox';
 import BaseColorSwitch from '../components/ColorSwitch';
 import ChessOpeningsDropDown from '../components/ChessOpeningsDropDown';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
-import { ChessTrap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/chessTrap';
 import { filterTrapsWithOpenings } from '../../shared/chessTree';
 
-// This is paramater that should be passed to the `useChessTrapFilters` hook
+// This is paramater that should be passed to the `useTrapFilters` hook
 type Args = {
-  allTraps: ChessTrap[];
-  changeFilteredTraps: (newFilteredTraps: ChessTrap[]) => void;
-  onFiltersChange: (filteredTraps: ChessTrap[]) => void;
+  allTraps: Trap[];
+  changeFilteredTraps: (newFilteredTraps: Trap[]) => void;
+  onFiltersChange: (filteredTraps: Trap[]) => void;
   includeCheckboxInColorSwitch?: boolean;
 };
 
-// This is what gets returned by the `useChessTrapFilters` hook
-export type ChessTrapFiltersToolkit = {
+// This is what gets returned by the `useTrapFilters` hook
+export type TrapFiltersToolkit = {
   selectedColor: PieceColor | null;
   selectedOpening: ChessOpening | null;
   areAnyFiltersEnabled: () => boolean;
@@ -27,17 +27,17 @@ export type ChessTrapFiltersToolkit = {
   ClearFiltersIconBtn: React.FC;
 };
 
-export default function useChessTrapFilters({
+export default function useTrapFilters({
   allTraps,
   changeFilteredTraps,
   onFiltersChange,
   includeCheckboxInColorSwitch = true,
-}: Args): ChessTrapFiltersToolkit {
+}: Args): TrapFiltersToolkit {
   const [selectedColor, setSelectedColor] = useState<PieceColor>('white');
   const [isColorFilterEnabled, setIsColorFilterEnabled] = useState(false);
   const [selectedOpening, setSelectedOpening] = useState<ChessOpening | ''>('');
 
-  const filterTraps = (): ChessTrap[] => {
+  const filterTraps = (): Trap[] => {
     let filteredTraps = allTraps;
     if (isColorFilterEnabled) {
       filteredTraps = filteredTraps.filter(

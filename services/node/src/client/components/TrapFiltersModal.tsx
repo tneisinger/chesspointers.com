@@ -3,15 +3,15 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Modal from './Modal';
-import { ChessTrapFiltersToolkit } from '../hooks/useChessTrapFilters';
+import { TrapFiltersToolkit } from '../hooks/useTrapFilters';
 
 interface Props {
-  chessTrapFiltersToolkit: ChessTrapFiltersToolkit;
+  chessTrapFiltersToolkit: TrapFiltersToolkit;
   isModalOpen: boolean;
   handleClose: () => void;
 }
 
-const ChessTrapFiltersModal: React.FC<Props> = (props) => {
+const TrapFiltersModal: React.FC<Props> = (props) => {
   const { ColorSwitch, OpeningsDropDown } = props.chessTrapFiltersToolkit;
 
   return (
@@ -46,4 +46,4 @@ const ChessTrapFiltersModal: React.FC<Props> = (props) => {
   );
 };
 
-export default ChessTrapFiltersModal;
+export default TrapFiltersModal;

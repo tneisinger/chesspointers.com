@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
-import { ChessTrap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/chessTrap';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DisplayTraps from '../components/DisplayTraps';
 import NoMatchesModal from '../components/NoMatchesModal';
 import useDimensions from 'react-use-dimensions';
 import WithTraps from '../components/WithTraps';
-import useChessTrapFilters from '../hooks/useChessTrapFilters';
+import useTrapFilters from '../hooks/useTrapFilters';
 import FiltersBarOrModalUI, {
   shouldDisplayFiltersBar,
 } from '../components/FiltersBarOrModalUI';
@@ -43,10 +43,10 @@ const TrapsPage: React.FunctionComponent = () => {
   );
 };
 
-const TrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => {
+const TrapsPageContent: React.FC<{ chessTraps: Trap[] }> = (props) => {
   const [filtersBarRef, filtersBarDimensions] = useDimensions();
 
-  const [filteredTraps, setFilteredTraps] = useState<ChessTrap[]>([]);
+  const [filteredTraps, setFilteredTraps] = useState<Trap[]>([]);
   const [isNoMatchesModalOpen, setIsNoMatchesModalOpen] = useState<boolean>(false);
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState<boolean>(false);
 
@@ -54,13 +54,13 @@ const TrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => {
 
   const [rootDivRef, rootDivDimensions] = useDimensions();
 
-  const onFiltersChange = (filteredTraps: ChessTrap[]) => {
+  const onFiltersChange = (filteredTraps: Trap[]) => {
     if (filteredTraps.length < 1) {
       setIsNoMatchesModalOpen(true);
     }
   };
 
-  const chessTrapFiltersToolkit = useChessTrapFilters({
+  const chessTrapFiltersToolkit = useTrapFilters({
     allTraps: props.chessTraps,
     changeFilteredTraps: setFilteredTraps,
     onFiltersChange,

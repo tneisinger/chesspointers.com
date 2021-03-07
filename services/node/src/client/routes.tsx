@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Route } from 'react-router-dom';
 import HomePage from './pages/Home';
 import TrapsPage from './pages/Traps';
-import ChessTrapPage from './pages/ChessTrap';
+import TrapPage from './pages/Trap';
 import MergeTrapsPage from './pages/MergeTraps';
 import NotFoundPage from './pages/NotFound';
 import PrivatePage from './pages/Private';
@@ -39,7 +39,7 @@ export const routes: RouteInfo[] = [
     isInSideMenu: true,
   },
   {
-    component: ChessTrapPage,
+    component: TrapPage,
     path: '/traps/:trapName',
     isPathExact: true,
     isPrivate: false,

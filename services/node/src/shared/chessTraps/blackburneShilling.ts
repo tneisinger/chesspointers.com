@@ -1,5 +1,5 @@
 import { ChessTree } from '../chessTypes';
-import { ChessTrap } from '../entity/chessTrap';
+import { Trap } from '../entity/chessTrap';
 import { makeChessTree } from '../chessTree';
 
 const Nf3_checkmate = {
@@ -73,7 +73,7 @@ const chessTree = makeChessTree(
   [branch_g3, branch_Nxf7, branch_Bxf7, branch_Ng4],
 );
 
-const trap = new ChessTrap();
+const trap = new Trap();
 trap.fullName = 'The Blackburne-Shilling Trap';
 trap.shortName = 'Blackburne-Shilling';
 trap.playedByWhite = false;

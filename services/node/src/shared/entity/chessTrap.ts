@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeor
 import { ChessTree } from '../chessTypes';
 
 @Entity({ name: 'chess_traps' })
-export class ChessTrap {
+export class Trap {
   @PrimaryGeneratedColumn()
   id: number;
 

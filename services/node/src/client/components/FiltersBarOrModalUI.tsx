@@ -1,11 +1,9 @@
 import React from 'react';
 import { viewportWidth } from '../utils';
-import ChessTrapFiltersModalUI, {
+import TrapFiltersModalUI, {
   Props as ModalUIProps,
-} from '../components/ChessTrapFiltersModalUI';
-import ChessTrapFiltersBar, {
-  Props as FiltersBarProps,
-} from '../components/ChessTrapFiltersBar';
+} from '../components/TrapFiltersModalUI';
+import TrapFiltersBar, { Props as FiltersBarProps } from '../components/TrapFiltersBar';
 
 const BREAKPOINT = 800;
 
@@ -17,9 +15,9 @@ type Props = FiltersBarProps & ModalUIProps;
 
 const FiltersBarOrModalUI: React.FC<Props> = (props) => {
   if (shouldDisplayFiltersBar()) {
-    return <ChessTrapFiltersBar {...props} />;
+    return <TrapFiltersBar {...props} />;
   } else {
-    return <ChessTrapFiltersModalUI {...props} />;
+    return <TrapFiltersModalUI {...props} />;
   }
 };
 
