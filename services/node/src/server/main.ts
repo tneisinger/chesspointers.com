@@ -32,7 +32,7 @@ createConnection()
     });
 
     // Get all the openings that are saved in the db
-    const openingsRepository: Repository<Opening> = connection.getRepository(Trap);
+    const openingsRepository: Repository<Opening> = connection.getRepository(Opening);
     const openings: Opening[] = await openingsRepository.find();
 
     // Insert any openings that are not yet saved in the db
