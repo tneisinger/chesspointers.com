@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ChessTrapsPage: React.FunctionComponent = () => {
+const TrapsPage: React.FunctionComponent = () => {
   return (
     <WithChessTraps
       renderWithChessTraps={(chessTraps) => (
@@ -81,7 +81,7 @@ const ChessTrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => 
       >
         <Grid item>
           <Typography variant='h3' align='center' className={classes.titleText}>
-            Chess Traps
+            Traps
           </Typography>
         </Grid>
         <Grid item>
@@ -110,4 +110,4 @@ const ChessTrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => 
   );
 };
 
-export default ChessTrapsPage;
+export default TrapsPage;

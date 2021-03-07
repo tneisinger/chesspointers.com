@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Route } from 'react-router-dom';
 import HomePage from './pages/Home';
-import ChessTrapsPage from './pages/ChessTraps';
+import TrapsPage from './pages/Traps';
 import ChessTrapPage from './pages/ChessTrap';
 import MergeTrapsPage from './pages/MergeTraps';
 import NotFoundPage from './pages/NotFound';
@@ -31,8 +31,8 @@ export const routes: RouteInfo[] = [
     isInSideMenu: false,
   },
   {
-    pageName: 'Chess Traps',
-    component: ChessTrapsPage,
+    pageName: 'Traps',
+    component: TrapsPage,
     path: '/traps',
     isPathExact: true,
     isPrivate: false,
