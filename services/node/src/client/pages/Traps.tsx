@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import DisplayChessTraps from '../components/DisplayChessTraps';
+import DisplayTraps from '../components/DisplayTraps';
 import NoMatchesModal from '../components/NoMatchesModal';
 import useDimensions from 'react-use-dimensions';
 import WithChessTraps from '../components/WithChessTraps';
@@ -85,7 +85,7 @@ const ChessTrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => 
           </Typography>
         </Grid>
         <Grid item>
-          <DisplayChessTraps
+          <DisplayTraps
             parentWidth={rootDivDimensions.width}
             allowAnimation={!isFiltersModalOpen}
             trapsPerRow={trapsPerRow}

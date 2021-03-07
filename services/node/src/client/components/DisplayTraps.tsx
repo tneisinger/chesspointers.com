@@ -10,7 +10,7 @@ interface Props extends React.HTMLProps<HTMLDivElement> {
   chessTraps: ChessTrap[];
 }
 
-const DisplayChessTraps: React.FC<Props> = (props) => {
+const DisplayTraps: React.FC<Props> = (props) => {
   const [animatedTrap, setAnimatedTrap] = useState<string | null>(null);
 
   const [stepperValue, setStepperValue] = useState<number>(-1);
@@ -38,4 +38,4 @@ const DisplayChessTraps: React.FC<Props> = (props) => {
   );
 };
 
-export default DisplayChessTraps;
+export default DisplayTraps;
