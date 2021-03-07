@@ -6,6 +6,8 @@ import { staticsRouter } from './routes/statics-router';
 import { trapApiRouter } from './routes/chess-traps-api-router';
 import { Trap } from '../shared/entity/trap';
 import allTraps from '../shared/traps/index';
+import { Opening } from '../shared/entity/opening';
+import allOpenings from '../shared/openings';
 import * as config from './config';
 
 console.log(`*******************************************`);
@@ -26,6 +28,18 @@ createConnection()
     Object.values(allTraps).forEach((trap) => {
       if (!namesOfTrapsInDB.includes(trap.shortName)) {
         trapsRepository.save(trap);
+      }
+    });
+
+    // Get all the openings that are saved in the db
+    const openingsRepository: Repository<Opening> = connection.getRepository(Trap);
+    const openings: Opening[] = await openingsRepository.find();
+
+    // Insert any openings that are not yet saved in the db
+    const namesOfOpeningsInDB = openings.map((opening) => opening.shortName);
+    Object.values(allOpenings).forEach((opening) => {
+      if (!namesOfOpeningsInDB.includes(opening.shortName)) {
+        openingsRepository.save(opening);
       }
     });
 
