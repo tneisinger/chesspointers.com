@@ -1,11 +1,6 @@
-import { User } from './entity/user';
 import { ShortMove } from 'chess.js';
 import { Trap } from './entity/trap';
 import { ChessOpening, FenParts } from './chessTypes';
-
-export function getUserFullName(user: User): string {
-  return `${user.firstName} ${user.lastName}`;
-}
 
 export function assertUnreachable(x: never): never {
   throw new Error(`assertUnreachable was reached with value: ${x}`);
