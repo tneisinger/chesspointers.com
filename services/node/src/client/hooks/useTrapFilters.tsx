@@ -5,7 +5,7 @@ import ColorSwitchWithCheckbox from '../components/ColorSwitchWithCheckbox';
 import BaseColorSwitch from '../components/ColorSwitch';
 import ChessOpeningsDropDown from '../components/ChessOpeningsDropDown';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
-import { Trap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/trap';
 import { filterTrapsWithOpenings } from '../../shared/chessTree';
 
 // This is paramater that should be passed to the `useTrapFilters` hook

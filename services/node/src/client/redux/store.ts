@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { chessTrapsSlice } from './chessTrapsSlice';
+import { trapsSlice } from './trapsSlice';
 
 const store = configureStore({
   reducer: {
-    chessTrapsSlice: chessTrapsSlice.reducer,
+    trapsSlice: trapsSlice.reducer,
   },
 });
 

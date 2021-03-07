@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { Trap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/trap';
 import { fetchTraps } from '../utils/api';
 import { RequestStatus } from '../types/general';
 import AppThunk from './appThunk';
@@ -16,8 +16,8 @@ const initialState: TrapsState = {
   requestStatus: 'NO_REQUEST_YET',
 };
 
-export const chessTrapsSlice = createSlice({
-  name: 'chessTraps',
+export const trapsSlice = createSlice({
+  name: 'traps',
   initialState,
   reducers: {
     getTrapsStart(state) {
@@ -36,7 +36,7 @@ export const chessTrapsSlice = createSlice({
   },
 });
 
-const { getTrapsStart, getTrapsSuccess, getTrapsFailed } = chessTrapsSlice.actions;
+const { getTrapsStart, getTrapsSuccess, getTrapsFailed } = trapsSlice.actions;
 
 export function getTrapsThunk(): AppThunk {
   return async (dispatch) => {

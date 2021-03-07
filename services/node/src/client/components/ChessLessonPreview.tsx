@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ChessTreePreview from './ChessTreePreview';
-import { Trap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/trap';
 import { toDashedLowercase } from '../../shared/utils';
 import { calcChessBoardSize } from '../utils';
 
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  chessTrap: Trap;
+  trap: Trap;
   cardWidth: number;
   stepper: number;
   onHoverChange?: (trapName: string, isHovered: boolean) => void;
@@ -47,21 +47,21 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
   return (
     <Card className={classes.card}>
       <CardContent className={classes.cardContent}>
-        <NavLink to={`/traps/${toDashedLowercase(props.chessTrap.shortName)}`}>
+        <NavLink to={`/traps/${toDashedLowercase(props.trap.shortName)}`}>
           <Grid container direction='column'>
             <Grid item>
               <Typography className={classes.titleText} component='h4' align='center'>
-                {props.chessTrap.fullName}
+                {props.trap.fullName}
               </Typography>
             </Grid>
             <Grid item>
               <ChessTreePreview
-                chessTree={props.chessTrap.chessTree}
-                orientation={props.chessTrap.playedByWhite ? 'white' : 'black'}
+                chessTree={props.trap.chessTree}
+                orientation={props.trap.playedByWhite ? 'white' : 'black'}
                 stepper={props.stepper}
                 onHoverChange={(isHovered) => {
                   if (props.onHoverChange != undefined) {
-                    props.onHoverChange(props.chessTrap.shortName, isHovered);
+                    props.onHoverChange(props.trap.shortName, isHovered);
                   }
                 }}
                 boardSize={boardSize}

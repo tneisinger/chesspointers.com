@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction, useState, useEffect, useRef } from 'react';
 import ScrollablePane from './ScrollablePane';
 import TrapsSelector from './TrapsSelector';
-import allTraps from '../../shared/chessTraps';
-import { Trap } from '../../shared/entity/chessTrap';
+import allTraps from '../../shared/traps';
+import { Trap } from '../../shared/entity/trap';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
 import { filterTrapsWithOpenings } from '../../shared/chessTree';
 import { partition } from '../../shared/utils';

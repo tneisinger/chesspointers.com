@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
-import { Trap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/trap';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DisplayTraps from '../components/DisplayTraps';
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1.75rem',
     },
   },
-  chessTrapsRoot: {
+  trapsRoot: {
     maxWidth: 'inherit',
     width: 'inherit',
     height: (p: { filterBarHeight: number }) => {
@@ -38,12 +38,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 const TrapsPage: React.FunctionComponent = () => {
   return (
     <WithTraps
-      renderWithTraps={(chessTraps) => <TrapsPageContent chessTraps={chessTraps} />}
+      renderWithTraps={(traps) => <TrapsPageContent traps={traps} />}
     />
   );
 };
 
-const TrapsPageContent: React.FC<{ chessTraps: Trap[] }> = (props) => {
+const TrapsPageContent: React.FC<{ traps: Trap[] }> = (props) => {
   const [filtersBarRef, filtersBarDimensions] = useDimensions();
 
   const [filteredTraps, setFilteredTraps] = useState<Trap[]>([]);
@@ -60,8 +60,8 @@ const TrapsPageContent: React.FC<{ chessTraps: Trap[] }> = (props) => {
     }
   };
 
-  const chessTrapFiltersToolkit = useTrapFilters({
-    allTraps: props.chessTraps,
+  const trapFiltersToolkit = useTrapFilters({
+    allTraps: props.traps,
     changeFilteredTraps: setFilteredTraps,
     onFiltersChange,
   });
@@ -74,7 +74,7 @@ const TrapsPageContent: React.FC<{ chessTraps: Trap[] }> = (props) => {
         container
         direction='column'
         justify='space-evenly'
-        className={classes.chessTrapsRoot}
+        className={classes.trapsRoot}
         ref={rootDivRef}
       >
         <Grid item>
@@ -87,12 +87,12 @@ const TrapsPageContent: React.FC<{ chessTraps: Trap[] }> = (props) => {
             parentWidth={rootDivDimensions.width}
             allowAnimation={!isFiltersModalOpen}
             trapsPerRow={trapsPerRow}
-            chessTraps={filteredTraps}
+            traps={filteredTraps}
           />
         </Grid>
         <Grid item>
           <FiltersBarOrModalUI
-            chessTrapFiltersToolkit={chessTrapFiltersToolkit}
+            trapFiltersToolkit={trapFiltersToolkit}
             filtersBarRef={filtersBarRef}
             isModalOpen={isFiltersModalOpen}
             setIsModalOpen={setIsFiltersModalOpen}
@@ -101,7 +101,7 @@ const TrapsPageContent: React.FC<{ chessTraps: Trap[] }> = (props) => {
       </Grid>
       <NoMatchesModal
         isModalOpenOrOpening={isNoMatchesModalOpen}
-        clearFilters={chessTrapFiltersToolkit.clearFilters}
+        clearFilters={trapFiltersToolkit.clearFilters}
         closeModal={() => setIsNoMatchesModalOpen(false)}
       />
     </>

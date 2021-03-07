@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { Trap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/trap';
 import ChessGuide from '../components/ChessGuide';
 import MovesPane from '../components/MovesPane';
 import WithTraps from '../components/WithTraps';
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1.6rem',
     },
   },
-  chessTrapRoot: {
+  trapRoot: {
     height: '100%',
     width: 'inherit',
     maxWidth: 'inherit',
@@ -36,12 +36,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 const TrapPage: React.FunctionComponent = () => {
   return (
     <WithTraps
-      renderWithTraps={(chessTraps) => <TrapPageContent chessTraps={chessTraps} />}
+      renderWithTraps={(traps) => <TrapPageContent traps={traps} />}
     />
   );
 };
 
-const TrapPageContent: React.FC<{ chessTraps: Trap[] }> = ({ chessTraps }) => {
+const TrapPageContent: React.FC<{ traps: Trap[] }> = ({ traps }) => {
   const classes = useStyles({});
   const { windowWidth, windowHeight } = useWindowSize();
   const { trapName } = useParams<{ trapName: string }>();
@@ -54,7 +54,7 @@ const TrapPageContent: React.FC<{ chessTraps: Trap[] }> = ({ chessTraps }) => {
   }
 
   // Find the trap with a name that matches the trapName param
-  const trap = chessTraps.find((t) => toDashedLowercase(t.shortName) === trapName);
+  const trap = traps.find((t) => toDashedLowercase(t.shortName) === trapName);
 
   // If `trap` is undefined, that means that the trapName param didn't match the name of
   // any of the traps in the db. In that case, treat it as not found.
@@ -65,7 +65,7 @@ const TrapPageContent: React.FC<{ chessTraps: Trap[] }> = ({ chessTraps }) => {
   return (
     <Grid
       container
-      className={classes.chessTrapRoot}
+      className={classes.trapRoot}
       direction='column'
       alignItems='center'
       justify='center'

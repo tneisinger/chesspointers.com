@@ -1,4 +1,4 @@
-import { Trap } from '../entity/chessTrap';
+import { Trap } from '../entity/trap';
 import { makeChessTree } from '../chessTree';
 
 const Qd5_check = {

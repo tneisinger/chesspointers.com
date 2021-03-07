@@ -5,11 +5,11 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
-import { getTrapsThunk } from '../redux/chessTrapsSlice';
+import { getTrapsThunk } from '../redux/trapsSlice';
 import ChessGuide from '../components/ChessGuide';
 import SelectTrapsPane from '../components/SelectTrapsPane';
 import MovesPane from '../components/MovesPane';
-import { Trap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/trap';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { mergeTrees } from '../../shared/chessTree';
 import { calcChessBoardSize } from '../utils';
@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
 
 const MergeTrapsPage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
-  const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
+  const trapsSlice = useSelector((state: RootState) => state.trapsSlice);
   const classes = useStyles({});
 
   const [selectedTraps, setSelectedTraps] = useState<Trap[]>([]);
@@ -45,16 +45,16 @@ const MergeTrapsPage: React.FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    if (chessTrapsSlice.requestStatus === 'NO_REQUEST_YET') {
+    if (trapsSlice.requestStatus === 'NO_REQUEST_YET') {
       dispatch(getTrapsThunk());
     }
   }, []);
 
-  if (chessTrapsSlice.requestStatus === 'ERROR') {
-    return <p>An error occurred: {chessTrapsSlice.error}</p>;
+  if (trapsSlice.requestStatus === 'ERROR') {
+    return <p>An error occurred: {trapsSlice.error}</p>;
   }
 
-  if (chessTrapsSlice.requestStatus !== 'LOADED') {
+  if (trapsSlice.requestStatus !== 'LOADED') {
     return <p>Loading...</p>;
   }
 

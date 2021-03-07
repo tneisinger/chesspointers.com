@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Trap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/trap';
 
 export async function fetchTraps(): Promise<Trap[]> {
   const result = await axios.get(`/api/traps`);

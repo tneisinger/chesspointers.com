@@ -1,14 +1,14 @@
 import bodyParser from 'body-parser';
 import { Router } from 'express';
 import { Repository } from 'typeorm';
-import { Trap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/trap';
 
-export function chessTrapApiRouter(chessTrapRepository: Repository<Trap>): Router {
+export function trapApiRouter(trapRepository: Repository<Trap>): Router {
   const router = Router();
   router.use(bodyParser.json());
 
   router.get('/api/traps', async (_req, res) => {
-    const traps: Trap[] = await chessTrapRepository.find({
+    const traps: Trap[] = await trapRepository.find({
       order: {
         shortName: 'ASC',
       },
@@ -18,7 +18,7 @@ export function chessTrapApiRouter(chessTrapRepository: Repository<Trap>): Route
 
   router.get('/api/traps/:trapId', async (req, res) => {
     const trapId = parseInt(req.params.trapId);
-    const trap: Trap = await chessTrapRepository.findOne(trapId);
+    const trap: Trap = await trapRepository.findOne(trapId);
     res.json(trap);
   });
 

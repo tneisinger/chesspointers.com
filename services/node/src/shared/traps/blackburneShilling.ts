@@ -1,5 +1,5 @@
 import { ChessTree } from '../chessTypes';
-import { Trap } from '../entity/chessTrap';
+import { Trap } from '../entity/trap';
 import { makeChessTree } from '../chessTree';
 
 const Nf3_checkmate = {

@@ -19,7 +19,7 @@ const useStyles = makeStyles({
 });
 
 export interface Props {
-  chessTrapFiltersToolkit: TrapFiltersToolkit;
+  trapFiltersToolkit: TrapFiltersToolkit;
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }

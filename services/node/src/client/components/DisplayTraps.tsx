@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trap } from '../../shared/entity/chessTrap';
+import { Trap } from '../../shared/entity/trap';
 import useInterval from 'react-useinterval';
 import ChessLessonCarousel from './ChessLessonsCarousel';
 
@@ -7,7 +7,7 @@ interface Props extends React.HTMLProps<HTMLDivElement> {
   parentWidth: number;
   trapsPerRow: number;
   allowAnimation: boolean;
-  chessTraps: Trap[];
+  traps: Trap[];
 }
 
 const DisplayTraps: React.FC<Props> = (props) => {
@@ -29,7 +29,7 @@ const DisplayTraps: React.FC<Props> = (props) => {
 
   return (
     <ChessLessonCarousel
-      chessTraps={props.chessTraps}
+      traps={props.traps}
       animatedTrap={animatedTrap}
       setAnimatedTrap={setAnimatedTrap}
       stepperValue={stepperValue}

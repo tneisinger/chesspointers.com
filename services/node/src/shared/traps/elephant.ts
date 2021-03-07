@@ -1,4 +1,4 @@
-import { Trap } from '../entity/chessTrap';
+import { Trap } from '../entity/trap';
 import { makeChessTree } from '../chessTree';
 
 const Nbd7 = { move: 'Nbd7', isPreviewPosition: true };

@@ -6,13 +6,13 @@ import Modal from './Modal';
 import { TrapFiltersToolkit } from '../hooks/useTrapFilters';
 
 interface Props {
-  chessTrapFiltersToolkit: TrapFiltersToolkit;
+  trapFiltersToolkit: TrapFiltersToolkit;
   isModalOpen: boolean;
   handleClose: () => void;
 }
 
 const TrapFiltersModal: React.FC<Props> = (props) => {
-  const { ColorSwitch, OpeningsDropDown } = props.chessTrapFiltersToolkit;
+  const { ColorSwitch, OpeningsDropDown } = props.trapFiltersToolkit;
 
   return (
     <Modal isModalOpenOrOpening={props.isModalOpen} handleClose={props.handleClose}>

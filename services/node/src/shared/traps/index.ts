@@ -1,4 +1,4 @@
-import { Trap } from '../entity/chessTrap';
+import { Trap } from '../entity/trap';
 import blackburneShilling from './blackburneShilling';
 import bobbyFischer from './bobbyFischer';
 import elephant from './elephant';

@@ -1,6 +1,6 @@
 import { Chess } from 'chess.js';
 import { ChessTree, ChessOpening, ChessTreeMove, ChessTreePath } from './chessTypes';
-import { Trap } from './entity/chessTrap';
+import { Trap } from './entity/trap';
 import {
   areChessMovesEquivalent,
   areChessPathsEquivalent,

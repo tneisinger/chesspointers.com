@@ -1,4 +1,4 @@
-import { Trap } from '../entity/chessTrap';
+import { Trap } from '../entity/trap';
 import { makeChessTree } from '../chessTree';
 
 const Nd6_checkmate = { move: 'Nd6#', isPreviewPosition: true };
