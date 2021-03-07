@@ -9,14 +9,18 @@
     <link rel="icon" href="/assets/favicon.ico"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
     <style>
-      .loader {
+      :root {
+        --spinnerSize: 80px;
+      }
+      .spinnerParent {
         position: fixed;
         top: 50%;
         left: 50%;
-        width: 60px;
-        height: 60px;
-        margin-top: -30px;
-        margin-left: -30px;
+        transform: translate(-50%, -50%);
+      }
+      .spinner {
+        width: var(--spinnerSize);
+        height: var(--spinnerSize);
         border: 8px solid #f3f3f3; /* Light grey */
         border-top: 8px solid #3498db; /* Blue */
         border-radius: 50%;
@@ -31,7 +35,9 @@
     <body>
         <div class="container">
             <div id="app">
-              <div class='loader'></div>
+              <div class='spinnerParent'>
+                <div class='spinner'></div>
+              </div>
             </div>
         </div>
     <% if(process.env.NODE_ENV === 'production') { %>
