@@ -6,10 +6,10 @@ import { getChessTrapsThunk } from '../redux/chessTrapsSlice';
 import Spinner from './Spinner';
 
 interface Props {
-  renderWithChessTraps: (chessTraps: ChessTrap[]) => JSX.Element;
+  renderWithTraps: (chessTraps: ChessTrap[]) => JSX.Element;
 }
 
-const WithChessTraps: React.FC<Props> = (props) => {
+const WithTraps: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
 
   const chessTrapsSlice = useSelector((state: RootState) => state.chessTrapsSlice);
@@ -28,7 +28,7 @@ const WithChessTraps: React.FC<Props> = (props) => {
     return <Spinner />;
   }
 
-  return props.renderWithChessTraps(chessTrapsSlice.traps);
+  return props.renderWithTraps(chessTrapsSlice.traps);
 };
 
-export default WithChessTraps;
+export default WithTraps;

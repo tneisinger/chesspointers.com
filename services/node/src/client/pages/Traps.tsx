@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import DisplayTraps from '../components/DisplayTraps';
 import NoMatchesModal from '../components/NoMatchesModal';
 import useDimensions from 'react-use-dimensions';
-import WithChessTraps from '../components/WithChessTraps';
+import WithTraps from '../components/WithTraps';
 import useChessTrapFilters from '../hooks/useChessTrapFilters';
 import FiltersBarOrModalUI, {
   shouldDisplayFiltersBar,
@@ -37,15 +37,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const TrapsPage: React.FunctionComponent = () => {
   return (
-    <WithChessTraps
-      renderWithChessTraps={(chessTraps) => (
-        <ChessTrapsPageContent chessTraps={chessTraps} />
-      )}
+    <WithTraps
+      renderWithTraps={(chessTraps) => <TrapsPageContent chessTraps={chessTraps} />}
     />
   );
 };
 
-const ChessTrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => {
+const TrapsPageContent: React.FC<{ chessTraps: ChessTrap[] }> = (props) => {
   const [filtersBarRef, filtersBarDimensions] = useDimensions();
 
   const [filteredTraps, setFilteredTraps] = useState<ChessTrap[]>([]);

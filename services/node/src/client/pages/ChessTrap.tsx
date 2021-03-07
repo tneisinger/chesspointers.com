@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { ChessTrap } from '../../shared/entity/chessTrap';
 import ChessGuide from '../components/ChessGuide';
 import MovesPane from '../components/MovesPane';
-import WithChessTraps from '../components/WithChessTraps';
+import WithTraps from '../components/WithTraps';
 import NotFoundPage from '../pages/NotFound';
 import { toDashedLowercase } from '../../shared/utils';
 import { calcChessBoardSize } from '../utils';
@@ -35,10 +35,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const ChessTrapPage: React.FunctionComponent = () => {
   return (
-    <WithChessTraps
-      renderWithChessTraps={(chessTraps) => (
-        <ChessTrapPageContent chessTraps={chessTraps} />
-      )}
+    <WithTraps
+      renderWithTraps={(chessTraps) => <ChessTrapPageContent chessTraps={chessTraps} />}
     />
   );
 };
