@@ -61,8 +61,6 @@ const TrapsPageContent: React.FC<TrapsSlice> = (props) => {
     onFiltersChange,
   });
 
-  const trapsPerRow = 1;
-
   return (
     <>
       <Grid
@@ -81,7 +79,6 @@ const TrapsPageContent: React.FC<TrapsSlice> = (props) => {
           <DisplayTraps
             parentWidth={rootDivDimensions.width}
             allowAnimation={!isFiltersModalOpen}
-            trapsPerRow={trapsPerRow}
             traps={filteredTraps}
           />
         </Grid>

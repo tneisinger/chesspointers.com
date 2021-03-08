@@ -5,7 +5,6 @@ import ChessLessonCarousel from './ChessLessonsCarousel';
 
 interface Props extends React.HTMLProps<HTMLDivElement> {
   parentWidth: number;
-  trapsPerRow: number;
   allowAnimation: boolean;
   traps: Trap[];
 }

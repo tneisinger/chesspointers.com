@@ -4,6 +4,7 @@ import { createConnection, Repository } from 'typeorm';
 import { pagesRouter } from './routes/pages-router';
 import { staticsRouter } from './routes/statics-router';
 import { trapApiRouter } from './routes/chess-traps-api-router';
+import { openingApiRouter } from './routes/chess-openings-api-router';
 import { Trap } from '../shared/entity/trap';
 import allTraps from '../shared/traps/index';
 import { Opening } from '../shared/entity/opening';
@@ -49,6 +50,7 @@ createConnection()
 
     app.use('/assets', express.static(path.join(process.cwd(), 'assets')));
     app.use(trapApiRouter(trapsRepository));
+    app.use(openingApiRouter(openingsRepository));
     app.use(staticsRouter());
     app.use(pagesRouter());
 
