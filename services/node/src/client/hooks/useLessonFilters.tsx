@@ -8,16 +8,16 @@ import { PieceColor, ChessOpening } from '../../shared/chessTypes';
 import { Trap } from '../../shared/entity/trap';
 import { filterTrapsWithOpenings } from '../../shared/chessTree';
 
-// This is paramater that should be passed to the `useTrapFilters` hook
+// This is paramater that should be passed to the `useLessonFilters` hook
 type Args = {
-  allTraps: Trap[];
-  changeFilteredTraps: (newFilteredTraps: Trap[]) => void;
-  onFiltersChange: (filteredTraps: Trap[]) => void;
+  allLessons: Trap[];
+  changeFilteredLessons: (newFilteredLessons: Trap[]) => void;
+  onFiltersChange: (filteredLessons: Trap[]) => void;
   includeCheckboxInColorSwitch?: boolean;
 };
 
-// This is what gets returned by the `useTrapFilters` hook
-export type TrapFiltersToolkit = {
+// This is what gets returned by the `useLessonFilters` hook
+export type FiltersToolkit = {
   selectedColor: PieceColor | null;
   selectedOpening: ChessOpening | null;
   areAnyFiltersEnabled: () => boolean;
@@ -27,28 +27,28 @@ export type TrapFiltersToolkit = {
   ClearFiltersIconBtn: React.FC;
 };
 
-export default function useTrapFilters({
-  allTraps,
-  changeFilteredTraps,
+export default function useLessonFilters({
+  allLessons,
+  changeFilteredLessons,
   onFiltersChange,
   includeCheckboxInColorSwitch = true,
-}: Args): TrapFiltersToolkit {
+}: Args): FiltersToolkit {
   const [selectedColor, setSelectedColor] = useState<PieceColor>('white');
   const [isColorFilterEnabled, setIsColorFilterEnabled] = useState(false);
   const [selectedOpening, setSelectedOpening] = useState<ChessOpening | ''>('');
 
-  const filterTraps = (): Trap[] => {
-    let filteredTraps = allTraps;
+  const filterLessons = (): Trap[] => {
+    let filteredLessons = allLessons;
     if (isColorFilterEnabled) {
-      filteredTraps = filteredTraps.filter(
+      filteredLessons = filteredLessons.filter(
         (trap) => trap.playedByWhite === (selectedColor === 'white'),
       );
     }
     if (selectedOpening !== '') {
-      filteredTraps = filterTrapsWithOpenings([selectedOpening], filteredTraps);
+      filteredLessons = filterTrapsWithOpenings([selectedOpening], filteredLessons);
     }
-    changeFilteredTraps(filteredTraps);
-    return filteredTraps;
+    changeFilteredLessons(filteredLessons);
+    return filteredLessons;
   };
 
   const areAnyFiltersEnabled = (): boolean => {
@@ -106,7 +106,7 @@ export default function useTrapFilters({
 
   // Whenever any filter option changes...
   useEffect(() => {
-    onFiltersChange(filterTraps());
+    onFiltersChange(filterLessons());
   }, [isColorFilterEnabled, selectedColor, selectedOpening]);
 
   return {

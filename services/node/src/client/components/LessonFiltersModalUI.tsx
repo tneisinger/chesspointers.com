@@ -2,8 +2,8 @@ import React, { Dispatch, SetStateAction } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core';
-import TrapFiltersModal from './TrapFiltersModal';
-import { TrapFiltersToolkit } from '../hooks/useTrapFilters';
+import LessonFiltersModal from './LessonFiltersModal';
+import { FiltersToolkit } from '../hooks/useLessonFilters';
 import ClearFiltersBtn from './ClearFiltersBtn';
 
 const useStyles = makeStyles({
@@ -19,12 +19,12 @@ const useStyles = makeStyles({
 });
 
 export interface Props {
-  trapFiltersToolkit: TrapFiltersToolkit;
+  filtersToolkit: FiltersToolkit;
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const TrapFiltersModalUI: React.FC<Props> = (props) => {
+const LessonFiltersModalUI: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
@@ -47,7 +47,7 @@ const TrapFiltersModalUI: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
       </Grid>
-      <TrapFiltersModal
+      <LessonFiltersModal
         {...props}
         isModalOpen={props.isModalOpen}
         handleClose={() => props.setIsModalOpen(false)}
@@ -56,4 +56,4 @@ const TrapFiltersModalUI: React.FC<Props> = (props) => {
   );
 };
 
-export default TrapFiltersModalUI;
+export default LessonFiltersModalUI;

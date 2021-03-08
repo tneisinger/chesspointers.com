@@ -1,13 +1,13 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import { TrapFiltersToolkit } from '../hooks/useTrapFilters';
+import { FiltersToolkit } from '../hooks/useLessonFilters';
 
 export interface Props {
-  trapFiltersToolkit: TrapFiltersToolkit;
+  filtersToolkit: FiltersToolkit;
 }
 
-const ClearFiltersBtn: React.FC<Props> = ({ trapFiltersToolkit }) => {
-  const { clearFilters, areAnyFiltersEnabled } = trapFiltersToolkit;
+const ClearFiltersBtn: React.FC<Props> = ({ filtersToolkit }) => {
+  const { clearFilters, areAnyFiltersEnabled } = filtersToolkit;
   return (
     <Button variant='contained' onClick={clearFilters} disabled={!areAnyFiltersEnabled()}>
       Clear Filters

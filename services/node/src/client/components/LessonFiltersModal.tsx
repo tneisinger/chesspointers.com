@@ -3,16 +3,16 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Modal from './Modal';
-import { TrapFiltersToolkit } from '../hooks/useTrapFilters';
+import { FiltersToolkit } from '../hooks/useLessonFilters';
 
 interface Props {
-  trapFiltersToolkit: TrapFiltersToolkit;
+  filtersToolkit: FiltersToolkit;
   isModalOpen: boolean;
   handleClose: () => void;
 }
 
-const TrapFiltersModal: React.FC<Props> = (props) => {
-  const { ColorSwitch, OpeningsDropDown } = props.trapFiltersToolkit;
+const LessonFiltersModal: React.FC<Props> = (props) => {
+  const { ColorSwitch, OpeningsDropDown } = props.filtersToolkit;
 
   return (
     <Modal isModalOpenOrOpening={props.isModalOpen} handleClose={props.handleClose}>
@@ -46,4 +46,4 @@ const TrapFiltersModal: React.FC<Props> = (props) => {
   );
 };
 
-export default TrapFiltersModal;
+export default LessonFiltersModal;

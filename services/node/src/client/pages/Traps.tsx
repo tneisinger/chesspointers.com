@@ -9,7 +9,7 @@ import NoMatchesModal from '../components/NoMatchesModal';
 import useDimensions from 'react-use-dimensions';
 import { getTrapsThunk } from '../redux/trapsSlice';
 import { RootState } from '../redux/store';
-import useTrapFilters from '../hooks/useTrapFilters';
+import useLessonFilters from '../hooks/useLessonFilters';
 import WithReduxSlice from '../components/WithReduxSlice';
 import { TrapsSlice } from '../redux/trapsSlice';
 import FiltersBarOrModalUI, {
@@ -55,9 +55,9 @@ const TrapsPageContent: React.FC<TrapsSlice> = (props) => {
     }
   };
 
-  const trapFiltersToolkit = useTrapFilters({
-    allTraps: props.traps,
-    changeFilteredTraps: setFilteredTraps,
+  const filtersToolkit = useLessonFilters({
+    allLessons: props.traps,
+    changeFilteredLessons: setFilteredTraps,
     onFiltersChange,
   });
 
@@ -87,7 +87,7 @@ const TrapsPageContent: React.FC<TrapsSlice> = (props) => {
         </Grid>
         <Grid item>
           <FiltersBarOrModalUI
-            trapFiltersToolkit={trapFiltersToolkit}
+            filtersToolkit={filtersToolkit}
             filtersBarRef={filtersBarRef}
             isModalOpen={isFiltersModalOpen}
             setIsModalOpen={setIsFiltersModalOpen}
@@ -96,7 +96,7 @@ const TrapsPageContent: React.FC<TrapsSlice> = (props) => {
       </Grid>
       <NoMatchesModal
         isModalOpenOrOpening={isNoMatchesModalOpen}
-        clearFilters={trapFiltersToolkit.clearFilters}
+        clearFilters={filtersToolkit.clearFilters}
         closeModal={() => setIsNoMatchesModalOpen(false)}
       />
     </>

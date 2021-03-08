@@ -2,7 +2,7 @@ import React, { RefObject, MutableRefObject } from 'react';
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
-import { TrapFiltersToolkit } from '../hooks/useTrapFilters';
+import { FiltersToolkit } from '../hooks/useLessonFilters';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contentGridContainer: {
@@ -33,14 +33,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  trapFiltersToolkit: TrapFiltersToolkit;
+  filtersToolkit: FiltersToolkit;
   filtersBarRef: MutableRefObject<any> | RefObject<HTMLDivElement>;
 }
 
-const TrapFiltersBar: React.FC<Props> = ({ trapFiltersToolkit, filtersBarRef }) => {
+const LessonFiltersBar: React.FC<Props> = ({ filtersToolkit, filtersBarRef }) => {
   const classes = useStyles({});
 
-  const { ColorSwitch, OpeningsDropDown, ClearFiltersIconBtn } = trapFiltersToolkit;
+  const { ColorSwitch, OpeningsDropDown, ClearFiltersIconBtn } = filtersToolkit;
 
   return (
     <AppBar ref={filtersBarRef} className={classes.filtersBar} color='default'>
@@ -66,4 +66,4 @@ const TrapFiltersBar: React.FC<Props> = ({ trapFiltersToolkit, filtersBarRef }) 
   );
 };
 
-export default TrapFiltersBar;
+export default LessonFiltersBar;
