@@ -7,8 +7,11 @@ import Typography from '@material-ui/core/Typography';
 import DisplayTraps from '../components/DisplayTraps';
 import NoMatchesModal from '../components/NoMatchesModal';
 import useDimensions from 'react-use-dimensions';
-import WithTraps from '../components/WithTraps';
+import { getTrapsThunk } from '../redux/trapsSlice';
+import { RootState } from '../redux/store';
 import useTrapFilters from '../hooks/useTrapFilters';
+import WithReduxSlice from '../components/WithReduxSlice';
+import { TrapsSlice } from '../redux/trapsSlice';
 import FiltersBarOrModalUI, {
   shouldDisplayFiltersBar,
 } from '../components/FiltersBarOrModalUI';
@@ -35,15 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TrapsPage: React.FunctionComponent = () => {
-  return (
-    <WithTraps
-      renderWithTraps={(traps) => <TrapsPageContent traps={traps} />}
-    />
-  );
-};
-
-const TrapsPageContent: React.FC<{ traps: Trap[] }> = (props) => {
+const TrapsPageContent: React.FC<TrapsSlice> = (props) => {
   const [filtersBarRef, filtersBarDimensions] = useDimensions();
 
   const [filteredTraps, setFilteredTraps] = useState<Trap[]>([]);
@@ -105,6 +100,16 @@ const TrapsPageContent: React.FC<{ traps: Trap[] }> = (props) => {
         closeModal={() => setIsNoMatchesModalOpen(false)}
       />
     </>
+  );
+};
+
+const TrapsPage: React.FC = () => {
+  return (
+    <WithReduxSlice
+      WrappedComponent={TrapsPageContent}
+      reduxThunk={getTrapsThunk}
+      reduxSelector={(state: RootState) => state.trapsSlice}
+    />
   );
 };
 

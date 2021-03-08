@@ -1,16 +1,14 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Trap } from '../../shared/entity/trap';
 import { fetchTraps } from '../utils/api';
-import { RequestStatus } from '../types/general';
 import AppThunk from './appThunk';
+import { SliceState } from './types';
 
-export interface TrapsState {
+export interface TrapsSlice extends SliceState {
   traps: Trap[];
-  error: string | null;
-  requestStatus: RequestStatus;
 }
 
-const initialState: TrapsState = {
+const initialState: TrapsSlice = {
   traps: [],
   error: null,
   requestStatus: 'NO_REQUEST_YET',
