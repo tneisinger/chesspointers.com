@@ -1,5 +1,5 @@
 import { ShortMove } from 'chess.js';
-import { Trap } from './entity/trap';
+import { Lesson } from './entity/lesson';
 import { ChessOpening, FenParts } from './chessTypes';
 
 export function assertUnreachable(x: never): never {
@@ -115,14 +115,14 @@ export function sameMoves(move1: ShortMove, move2: ShortMove): boolean {
   return move1.from === move2.from && move1.to === move2.to;
 }
 
-function compareTrapsByName(trap1: Trap, trap2: Trap): number {
-  if (trap1.shortName < trap2.shortName) return -1;
-  if (trap1.shortName > trap2.shortName) return 1;
+function compareLessonsByName(lesson1: Lesson, lesson2: Lesson): number {
+  if (lesson1.shortName < lesson2.shortName) return -1;
+  if (lesson1.shortName > lesson2.shortName) return 1;
   return 0;
 }
 
-export function sortTrapsByName(traps: Trap[]): void {
-  traps.sort(compareTrapsByName);
+export function sortLessonsByName(lessons: Lesson[]): void {
+  lessons.sort(compareLessonsByName);
 }
 
 export function getFen(opening: ChessOpening): string {

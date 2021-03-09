@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { Opening } from '../../shared/entity/opening';
+import { Lesson } from '../../shared/entity/lesson';
 import { fetchOpenings } from '../utils/api';
 import AppThunk from './appThunk';
 import { SliceState } from './types';
 
 export interface OpeningsSlice extends SliceState {
-  openings: Opening[];
+  openings: Lesson[];
 }
 
 const initialState: OpeningsSlice = {
@@ -15,13 +15,13 @@ const initialState: OpeningsSlice = {
 };
 
 export const openingsSlice = createSlice({
-  name: 'traps',
+  name: 'openings',
   initialState,
   reducers: {
     getOpeningsStart(state) {
       state.requestStatus = 'LOADING';
     },
-    getOpeningsSuccess(state, action: PayloadAction<Opening[]>) {
+    getOpeningsSuccess(state, action: PayloadAction<Lesson[]>) {
       state.openings = action.payload;
       state.error = null;
       state.requestStatus = 'LOADED';
@@ -40,8 +40,8 @@ export function getOpeningsThunk(): AppThunk {
   return async (dispatch) => {
     dispatch(getOpeningsStart());
     try {
-      const traps = await fetchOpenings();
-      dispatch(getOpeningsSuccess(traps));
+      const openings = await fetchOpenings();
+      dispatch(getOpeningsSuccess(openings));
     } catch (err) {
       dispatch(getOpeningsFailed(err.toString()));
     }

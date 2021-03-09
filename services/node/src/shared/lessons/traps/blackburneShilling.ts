@@ -1,6 +1,6 @@
-import { ChessTree } from '../chessTypes';
-import { Trap } from '../entity/trap';
-import { makeChessTree } from '../chessTree';
+import { ChessTree } from '../../chessTypes';
+import { Lesson, LessonType } from '../../entity/lesson';
+import { makeChessTree } from '../../chessTree';
 
 const Nf3_checkmate = {
   move: 'Nf3#',
@@ -73,10 +73,11 @@ const chessTree = makeChessTree(
   [branch_g3, branch_Nxf7, branch_Bxf7, branch_Ng4],
 );
 
-const trap = new Trap();
-trap.fullName = 'The Blackburne-Shilling Trap';
-trap.shortName = 'Blackburne-Shilling';
-trap.playedByWhite = false;
-trap.chessTree = chessTree;
+const lesson = new Lesson();
+lesson.lessonType = LessonType.TRAP;
+lesson.fullName = 'The Blackburne-Shilling Trap';
+lesson.shortName = 'Blackburne-Shilling';
+lesson.playedByWhite = false;
+lesson.chessTree = chessTree;
 
-export default trap;
+export default lesson;

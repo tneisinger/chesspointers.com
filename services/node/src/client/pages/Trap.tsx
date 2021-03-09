@@ -4,10 +4,12 @@ import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { Trap } from '../../shared/entity/trap';
 import ChessGuide from '../components/ChessGuide';
 import MovesPane from '../components/MovesPane';
-import WithTraps from '../components/WithTraps';
+import WithReduxSlice from '../components/WithReduxSlice';
+import { getTrapsThunk } from '../redux/trapsSlice';
+import { RootState } from '../redux/store';
+import { TrapsSlice } from '../redux/trapsSlice';
 import NotFoundPage from '../pages/NotFound';
 import { toDashedLowercase } from '../../shared/utils';
 import { calcChessBoardSize } from '../utils';
@@ -35,13 +37,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const TrapPage: React.FunctionComponent = () => {
   return (
-    <WithTraps
-      renderWithTraps={(traps) => <TrapPageContent traps={traps} />}
+    <WithReduxSlice
+      WrappedComponent={TrapPageContent}
+      reduxThunk={getTrapsThunk}
+      reduxSelector={(state: RootState) => state.trapsSlice}
     />
   );
 };
 
-const TrapPageContent: React.FC<{ traps: Trap[] }> = ({ traps }) => {
+const TrapPageContent: React.FC<TrapsSlice> = ({ traps }) => {
   const classes = useStyles({});
   const { windowWidth, windowHeight } = useWindowSize();
   const { trapName } = useParams<{ trapName: string }>();

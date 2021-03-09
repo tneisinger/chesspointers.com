@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
-import { Trap } from '../../shared/entity/trap';
+import { Lesson } from '../../shared/entity/lesson';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import DisplayTraps from '../components/DisplayTraps';
+import DisplayLessons from '../components/DisplayLessons';
 import NoMatchesModal from '../components/NoMatchesModal';
 import useDimensions from 'react-use-dimensions';
 import { getTrapsThunk } from '../redux/trapsSlice';
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const TrapsPageContent: React.FC<TrapsSlice> = (props) => {
   const [filtersBarRef, filtersBarDimensions] = useDimensions();
 
-  const [filteredTraps, setFilteredTraps] = useState<Trap[]>([]);
+  const [filteredTraps, setFilteredTraps] = useState<Lesson[]>([]);
   const [isNoMatchesModalOpen, setIsNoMatchesModalOpen] = useState<boolean>(false);
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState<boolean>(false);
 
@@ -49,14 +49,14 @@ const TrapsPageContent: React.FC<TrapsSlice> = (props) => {
 
   const [rootDivRef, rootDivDimensions] = useDimensions();
 
-  const onFiltersChange = (filteredTraps: Trap[]) => {
-    if (filteredTraps.length < 1) {
+  const onFiltersChange = (currentFilteredTraps: Lesson[]) => {
+    if (currentFilteredTraps.length < 1) {
       setIsNoMatchesModalOpen(true);
     }
   };
 
   const filtersToolkit = useLessonFilters({
-    allLessons: props.traps,
+    unfilteredLessons: props.traps,
     changeFilteredLessons: setFilteredTraps,
     onFiltersChange,
   });
@@ -76,10 +76,10 @@ const TrapsPageContent: React.FC<TrapsSlice> = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <DisplayTraps
+          <DisplayLessons
             parentWidth={rootDivDimensions.width}
             allowAnimation={!isFiltersModalOpen}
-            traps={filteredTraps}
+            lessons={filteredTraps}
           />
         </Grid>
         <Grid item>

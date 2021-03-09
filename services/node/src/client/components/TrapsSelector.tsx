@@ -6,12 +6,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Trap } from '../../shared/entity/trap';
+import { Lesson } from '../../shared/entity/lesson';
 
 interface Props {
-  traps: Trap[];
-  selectedTraps: Trap[];
-  setSelectedTraps: Dispatch<SetStateAction<Trap[]>>;
+  traps: Lesson[];
+  selectedTraps: Lesson[];
+  setSelectedTraps: Dispatch<SetStateAction<Lesson[]>>;
   clearFilters: () => void;
 }
 
@@ -21,11 +21,11 @@ const TrapsSelector: React.FunctionComponent<Props> = ({
   setSelectedTraps,
   clearFilters,
 }) => {
-  const isTrapSelected = (trap: Trap): boolean =>
+  const isTrapSelected = (trap: Lesson): boolean =>
     selectedTraps.map((t) => t.shortName).includes(trap.shortName);
 
   const handleTrapSelectChange = (
-    trap: Trap,
+    trap: Lesson,
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (event.target.checked && !isTrapSelected(trap)) {

@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ChessTreePreview from './ChessTreePreview';
-import { Trap } from '../../shared/entity/trap';
+import { Lesson } from '../../shared/entity/lesson';
 import { toDashedLowercase } from '../../shared/utils';
 import { calcChessBoardSize } from '../utils';
 
@@ -32,10 +32,10 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  trap: Trap;
+  lesson: Lesson;
   cardWidth: number;
   stepper: number;
-  onHoverChange?: (trapName: string, isHovered: boolean) => void;
+  onHoverChange?: (lessonName: string, isHovered: boolean) => void;
 }
 
 const ChessLessonPreview: React.FC<Props> = (props) => {
@@ -44,24 +44,31 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
   const rawBoardSize = props.cardWidth - CARD_MARGIN * 2 - CARD_CONTENT_PADDING * 2;
   const boardSize = calcChessBoardSize(rawBoardSize, 'px');
 
+  // Build the link path for the provided lesson. For example, if the lesson is the
+  // elephant trap, return '/traps/elephant'. If the lesson is the Vienna opening, return
+  // '/openings/vienna'.
+  const lessonLinkAddress = `/${props.lesson.lessonType}s/${toDashedLowercase(
+    props.lesson.shortName,
+  )}`;
+
   return (
     <Card className={classes.card}>
       <CardContent className={classes.cardContent}>
-        <NavLink to={`/traps/${toDashedLowercase(props.trap.shortName)}`}>
+        <NavLink to={lessonLinkAddress}>
           <Grid container direction='column'>
             <Grid item>
               <Typography className={classes.titleText} component='h4' align='center'>
-                {props.trap.fullName}
+                {props.lesson.fullName}
               </Typography>
             </Grid>
             <Grid item>
               <ChessTreePreview
-                chessTree={props.trap.chessTree}
-                orientation={props.trap.playedByWhite ? 'white' : 'black'}
+                chessTree={props.lesson.chessTree}
+                orientation={props.lesson.playedByWhite ? 'white' : 'black'}
                 stepper={props.stepper}
                 onHoverChange={(isHovered) => {
                   if (props.onHoverChange != undefined) {
-                    props.onHoverChange(props.trap.shortName, isHovered);
+                    props.onHoverChange(props.lesson.shortName, isHovered);
                   }
                 }}
                 boardSize={boardSize}

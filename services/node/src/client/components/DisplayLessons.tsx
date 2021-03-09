@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Trap } from '../../shared/entity/trap';
+import { Lesson } from '../../shared/entity/lesson';
 import useInterval from 'react-useinterval';
 import ChessLessonCarousel from './ChessLessonsCarousel';
 
 interface Props extends React.HTMLProps<HTMLDivElement> {
   parentWidth: number;
   allowAnimation: boolean;
-  traps: Trap[];
+  lessons: Lesson[];
 }
 
-const DisplayTraps: React.FC<Props> = (props) => {
-  const [animatedTrap, setAnimatedTrap] = useState<string | null>(null);
+const DisplayLessons: React.FC<Props> = (props) => {
+  const [animatedLesson, setAnimatedLesson] = useState<string | null>(null);
 
   const [stepperValue, setStepperValue] = useState<number>(-1);
 
   useInterval(() => {
-    if (animatedTrap != null && props.allowAnimation) {
+    if (animatedLesson != null && props.allowAnimation) {
       setStepperValue(stepperValue + 1);
     }
   }, 700);
@@ -28,13 +28,13 @@ const DisplayTraps: React.FC<Props> = (props) => {
 
   return (
     <ChessLessonCarousel
-      traps={props.traps}
-      animatedTrap={animatedTrap}
-      setAnimatedTrap={setAnimatedTrap}
+      lessons={props.lessons}
+      animatedLesson={animatedLesson}
+      setAnimatedLesson={setAnimatedLesson}
       stepperValue={stepperValue}
       setStepperValue={setStepperValue}
     />
   );
 };
 
-export default DisplayTraps;
+export default DisplayLessons;

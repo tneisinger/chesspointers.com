@@ -4,12 +4,12 @@ import {
   getTreePaths,
   mergeTrees,
   doesTreeReachPosition,
-  filterTrapsWithOpenings,
+  filterLessonsWithOpenings,
   isPathInTree,
-  filterTrapsWithPath,
+  filterLessonsWithPath,
 } from './chessTree';
 import { ChessOpening, ChessTreePath } from './chessTypes';
-import traps from './traps';
+import allTraps from './lessons/traps';
 import { basicCompare } from './utils';
 
 const Bc5 = { move: 'Bc5', teachingPriority: 10 };
@@ -575,80 +575,84 @@ describe('doesTreeReachPosition()', () => {
     'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3';
 
   it('returns true with italian game fen and the legal trap tree', () => {
-    expect(doesTreeReachPosition(italianGameFen, traps.legal.chessTree)).toBe(true);
+    expect(doesTreeReachPosition(italianGameFen, allTraps.legal.chessTree)).toBe(true);
   });
 
   it('returns false with italian game fen and the englund gambit trap tree', () => {
     expect(
-      doesTreeReachPosition(italianGameFen, traps.englundGambit.chessTree)
+      doesTreeReachPosition(italianGameFen, allTraps.englundGambit.chessTree)
     ).toBe(false);
   });
 });
 
 describe('filterTreesWithOpenings()', () => {
   it('returns [] when given no traps and no openings', () => {
-    expect(filterTrapsWithOpenings([], [])).toEqual([]);
+    expect(filterLessonsWithOpenings([], [])).toEqual([]);
   });
 
   it('returns [] when no traps match one opening', () => {
     const traps = [
-      traps.magnusSmith,
-      traps.lasker,
-      traps.englundGambit,
+      allTraps.magnusSmith,
+      allTraps.lasker,
+      allTraps.englundGambit,
     ];
-    expect(filterTrapsWithOpenings([ChessOpening.ItalianGame], traps)).toEqual([]);
+    expect(filterLessonsWithOpenings([ChessOpening.ItalianGame], traps)).toEqual([]);
   });
 
   it('returns correct trap when one trap matches one opening', () => {
     const traps = [
-      traps.magnusSmith,
-      traps.legal,
-      traps.englundGambit,
-      traps.elephant,
+      allTraps.magnusSmith,
+      allTraps.legal,
+      allTraps.englundGambit,
+      allTraps.elephant,
     ];
-    expect(filterTrapsWithOpenings([ChessOpening.QueensGambit], traps))
-      .toStrictEqual([traps.elephant]);
+    expect(filterLessonsWithOpenings([ChessOpening.QueensGambit], traps))
+      .toStrictEqual([allTraps.elephant]);
   });
 
   it('returns correct two traps when two traps match one opening', () => {
     const traps = [
-      traps.magnusSmith,
-      traps.lasker,
-      traps.legal,
-      traps.englundGambit,
-      traps.elephant,
+      allTraps.magnusSmith,
+      allTraps.lasker,
+      allTraps.legal,
+      allTraps.englundGambit,
+      allTraps.elephant,
     ];
 
-    const filtered = filterTrapsWithOpenings([ChessOpening.QueensGambit], traps);
+    const filtered = filterLessonsWithOpenings([ChessOpening.QueensGambit], traps);
     expect(filtered.map((t) => t.shortName).sort()).toEqual(
-      [traps.elephant, traps.lasker].map((t) => t.shortName).sort()
+      [allTraps.elephant, allTraps.lasker].map((t) => t.shortName).sort()
     );
   });
 
   it('returns correct three traps when three traps match two openings', () => {
     const traps = [
-      traps.magnusSmith,
-      traps.lasker,
-      traps.legal,
-      traps.englundGambit,
-      traps.elephant,
+      allTraps.magnusSmith,
+      allTraps.lasker,
+      allTraps.legal,
+      allTraps.englundGambit,
+      allTraps.elephant,
     ];
 
-    const filtered = filterTrapsWithOpenings(
+    const filtered = filterLessonsWithOpenings(
       [ChessOpening.QueensGambit, ChessOpening.SicilianDefense],
       traps
     );
     expect(filtered.map((t) => t.shortName).sort()).toEqual(
-      [traps.elephant, traps.lasker, traps.magnusSmith].map((t) => t.shortName).sort()
+      [
+        allTraps.elephant,
+        allTraps.lasker,
+        allTraps.magnusSmith
+      ].map((t) => t.shortName).sort()
     );
   });
 
   it('returns correct trap from many when one of many openings match', () => {
     const traps = [
-      traps.magnusSmith,
-      traps.lasker,
-      traps.legal,
-      traps.elephant,
+      allTraps.magnusSmith,
+      allTraps.lasker,
+      allTraps.legal,
+      allTraps.elephant,
     ];
 
     const openings = [
@@ -656,44 +660,44 @@ describe('filterTreesWithOpenings()', () => {
       ChessOpening.SicilianDefense,
     ];
 
-    const filtered = filterTrapsWithOpenings(openings, traps);
+    const filtered = filterLessonsWithOpenings(openings, traps);
     expect(filtered.map((t) => t.shortName).sort()).toEqual(
-      [traps.magnusSmith].map((t) => t.shortName).sort()
+      [allTraps.magnusSmith].map((t) => t.shortName).sort()
     );
   });
 });
 
 describe('isPathInTree()', () => {
   it('returns false if the path is not in tree', () => {
-    expect(isPathInTree(['e4', 'e5'], traps.magnusSmith.chessTree)).toBe(false);
+    expect(isPathInTree(['e4', 'e5'], allTraps.magnusSmith.chessTree)).toBe(false);
   });
 
   it('returns true if the path is in the tree', () => {
-    expect(isPathInTree(['e4', 'e5'], traps.legal.chessTree)).toBe(true);
+    expect(isPathInTree(['e4', 'e5'], allTraps.legal.chessTree)).toBe(true);
   });
 });
 
 describe('filterTrapsWithPath()', () => {
   const traps = [
-    traps.legal,
-    traps.englundGambit,
-    traps.elephant,
-    traps.lasker,
-    traps.magnusSmith,
+    allTraps.legal,
+    allTraps.englundGambit,
+    allTraps.elephant,
+    allTraps.lasker,
+    allTraps.magnusSmith,
   ];
 
   it('returns no traps if path does not match any of the traps', () => {
-    expect(filterTrapsWithPath(['a4', 'a5'], traps)).toEqual([]);
+    expect(filterLessonsWithPath(['a4', 'a5'], traps)).toEqual([]);
   });
 
   it('returns correct trap if path matches one of the traps', () => {
-    expect(filterTrapsWithPath(['d4', 'e5'], traps))
-      .toStrictEqual([traps.englundGambit]);
+    expect(filterLessonsWithPath(['d4', 'e5'], traps))
+      .toStrictEqual([allTraps.englundGambit]);
   });
 
   it('returns multiple correct traps if path matches multiple of the traps', () => {
-    const filtered = filterTrapsWithPath(['d4', 'd5'], traps)
+    const filtered = filterLessonsWithPath(['d4', 'd5'], traps)
     expect(filtered.map((t) => t.shortName).sort())
-      .toEqual([traps.lasker, traps.elephant].map((t) => t.shortName).sort());
+      .toEqual([allTraps.lasker, allTraps.elephant].map((t) => t.shortName).sort());
   });
 });

@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { Trap } from '../../shared/entity/trap';
+import { Lesson } from '../../shared/entity/lesson';
 import { fetchTraps } from '../utils/api';
 import AppThunk from './appThunk';
 import { SliceState } from './types';
 
 export interface TrapsSlice extends SliceState {
-  traps: Trap[];
+  traps: Lesson[];
 }
 
 const initialState: TrapsSlice = {
@@ -21,7 +21,7 @@ export const trapsSlice = createSlice({
     getTrapsStart(state) {
       state.requestStatus = 'LOADING';
     },
-    getTrapsSuccess(state, action: PayloadAction<Trap[]>) {
+    getTrapsSuccess(state, action: PayloadAction<Lesson[]>) {
       state.traps = action.payload;
       state.error = null;
       state.requestStatus = 'LOADED';

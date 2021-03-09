@@ -1,5 +1,5 @@
-import { Trap } from '../entity/trap';
-import { makeChessTree } from '../chessTree';
+import { Lesson, LessonType } from '../../entity/lesson';
+import { makeChessTree } from '../../chessTree';
 
 const Qc1_checkmate = {
   move: 'Qc1#',
@@ -53,10 +53,11 @@ const chessTree = makeChessTree(
   [branch_Qd2, branch_Bxb4],
 );
 
-const trap = new Trap();
-trap.fullName = 'The Englund Gambit Trap';
-trap.shortName = 'Englund Gambit';
-trap.playedByWhite = false;
-trap.chessTree = chessTree;
+const lesson = new Lesson();
+lesson.lessonType = LessonType.TRAP;
+lesson.fullName = 'The Englund Gambit Trap';
+lesson.shortName = 'Englund Gambit';
+lesson.playedByWhite = false;
+lesson.chessTree = chessTree;
 
-export default trap;
+export default lesson;

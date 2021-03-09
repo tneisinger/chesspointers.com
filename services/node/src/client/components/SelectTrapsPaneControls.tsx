@@ -22,8 +22,8 @@ const useStyles = makeStyles({
 interface Props {
   userColor: PieceColor;
   setUserColor: Dispatch<SetStateAction<PieceColor>>;
-  selectedOpening: ChessOpening | null;
-  setSelectedOpening: Dispatch<SetStateAction<ChessOpening | null>>;
+  selectedOpening: ChessOpening | '';
+  changeSelectedOpening: (opening: string) => void;
   numSelectedTraps: number;
   deselectAll: () => void;
   selectAll: () => void;
@@ -70,9 +70,8 @@ const SelectTrapsPaneControls: React.FC<Props> = (props) => {
           <Box>
             <ChessOpeningsDropDown
               selectedOpening={props.selectedOpening}
-              onChange={props.setSelectedOpening}
+              onChange={props.changeSelectedOpening}
               size='small'
-              textFieldRef={props.openingsTextFieldRef}
             />
           </Box>
         </Box>

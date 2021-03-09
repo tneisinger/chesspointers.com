@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
-import { getTrapsThunk } from '../redux/trapsSlice';
+import { getTrapsThunk, TrapsSlice } from '../redux/trapsSlice';
 import ChessGuide from '../components/ChessGuide';
 import SelectTrapsPane from '../components/SelectTrapsPane';
 import MovesPane from '../components/MovesPane';
-import { Trap } from '../../shared/entity/trap';
+import WithReduxSlice from '../components/WithReduxSlice';
+import { Lesson } from '../../shared/entity/lesson';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { mergeTrees } from '../../shared/chessTree';
 import { calcChessBoardSize } from '../utils';
@@ -26,12 +26,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MergeTrapsPage: React.FunctionComponent = () => {
-  const dispatch = useDispatch();
-  const trapsSlice = useSelector((state: RootState) => state.trapsSlice);
+const MergeTrapsPageContent: React.FC<TrapsSlice> = (props) => {
   const classes = useStyles({});
 
-  const [selectedTraps, setSelectedTraps] = useState<Trap[]>([]);
+  const [selectedTraps, setSelectedTraps] = useState<Lesson[]>([]);
   const [userColor, setUserColor] = useState<PieceColor>('white');
   const [chessGuideWrapperHeight, setChessGuideWrapperHeight] = useState(0);
 
@@ -43,20 +41,6 @@ const MergeTrapsPage: React.FunctionComponent = () => {
       setChessGuideWrapperHeight(height);
     }
   }, []);
-
-  useEffect(() => {
-    if (trapsSlice.requestStatus === 'NO_REQUEST_YET') {
-      dispatch(getTrapsThunk());
-    }
-  }, []);
-
-  if (trapsSlice.requestStatus === 'ERROR') {
-    return <p>An error occurred: {trapsSlice.error}</p>;
-  }
-
-  if (trapsSlice.requestStatus !== 'LOADED') {
-    return <p>Loading...</p>;
-  }
 
   const mergeSelectedTraps = (): ChessTree => {
     return mergeTrees(...selectedTraps.map((t) => t.chessTree));
@@ -99,5 +83,13 @@ const MergeTrapsPage: React.FunctionComponent = () => {
     </Grid>
   );
 };
+
+const MergeTrapsPage: React.FunctionComponent = () => (
+  <WithReduxSlice
+    WrappedComponent={MergeTrapsPageContent}
+    reduxThunk={getTrapsThunk}
+    reduxSelector={(state: RootState) => state.trapsSlice}
+  />
+);
 
 export default MergeTrapsPage;

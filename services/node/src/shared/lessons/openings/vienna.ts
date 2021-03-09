@@ -1,5 +1,5 @@
-import { Opening } from '../entity/opening';
-import { makeChessTree } from '../chessTree';
+import { Lesson, LessonType } from '../../entity/lesson';
+import { makeChessTree } from '../../chessTree';
 
 const Nc3 = { move: 'Nc3', isPreviewPosition: true };
 
@@ -36,9 +36,11 @@ const chessTree = makeChessTree(
   [branch_Nc6, branch_Nf6, branch_Bc5],
 );
 
-const trap = new Opening();
-trap.fullName = 'The Vienna Game';
-trap.shortName = 'Vienna';
-trap.chessTree = chessTree;
+const lesson = new Lesson();
+lesson.lessonType = LessonType.OPENING;
+lesson.fullName = 'The Vienna Game';
+lesson.shortName = 'Vienna';
+lesson.playedByWhite = true;
+lesson.chessTree = chessTree;
 
-export default trap;
+export default lesson;

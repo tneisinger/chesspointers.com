@@ -1,10 +1,22 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 import { ChessTree } from '../chessTypes';
 
-@Entity({ name: 'chess_traps' })
-export class Trap {
+export enum LessonType {
+  TRAP = 'trap',
+  OPENING = 'opening',
+}
+
+@Entity({ name: 'chess_lessons' })
+export class Lesson {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({
+    name: 'lesson_type',
+    type: 'enum',
+    enum: LessonType,
+  })
+  lessonType: LessonType;
 
   @Column({
     type: 'varchar',

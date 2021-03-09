@@ -1,6 +1,4 @@
 import { Square } from 'chess.js';
-import { Trap } from './entity/trap';
-import { Opening } from './entity/opening';
 
 export type PieceColor = 'white' | 'black';
 
@@ -73,5 +71,3 @@ export enum PromotionPiece {
   Rook = 'r',
   Queen = 'q',
 }
-
-export type Lesson = Trap | Opening;

@@ -3,11 +3,9 @@ import path from 'path';
 import { createConnection, Repository } from 'typeorm';
 import { pagesRouter } from './routes/pages-router';
 import { staticsRouter } from './routes/statics-router';
-import { makeApiResourceRouter } from './routes/make-api-resource-router';
-import { Trap } from '../shared/entity/trap';
-import allTraps from '../shared/traps/index';
-import { Opening } from '../shared/entity/opening';
-import allOpenings from '../shared/openings';
+import { makeLessonsApiRouter } from './routes/lessons-api-router';
+import { Lesson } from '../shared/entity/lesson';
+import allLessons from '../shared/lessons';
 import * as config from './config';
 
 console.log(`*******************************************`);
@@ -19,27 +17,15 @@ console.log(`*******************************************`);
 // Establish a connection to the database
 createConnection()
   .then(async (connection) => {
-    // Get all the traps that are saved in the db
-    const trapsRepository: Repository<Trap> = connection.getRepository(Trap);
-    const traps: Trap[] = await trapsRepository.find();
+    // Get all the chess lessons that are saved in the db
+    const lessonsRepository: Repository<Lesson> = connection.getRepository(Lesson);
+    const lessons: Lesson[] = await lessonsRepository.find();
 
-    // Insert any traps that are not yet saved in the db
-    const namesOfTrapsInDB = traps.map((trap) => trap.shortName);
-    Object.values(allTraps).forEach((trap) => {
-      if (!namesOfTrapsInDB.includes(trap.shortName)) {
-        trapsRepository.save(trap);
-      }
-    });
-
-    // Get all the openings that are saved in the db
-    const openingsRepository: Repository<Opening> = connection.getRepository(Opening);
-    const openings: Opening[] = await openingsRepository.find();
-
-    // Insert any openings that are not yet saved in the db
-    const namesOfOpeningsInDB = openings.map((opening) => opening.shortName);
-    Object.values(allOpenings).forEach((opening) => {
-      if (!namesOfOpeningsInDB.includes(opening.shortName)) {
-        openingsRepository.save(opening);
+    // Insert any lessons that are not yet in the db
+    const namesOfLessonsInDB = lessons.map((lesson) => lesson.shortName);
+    Object.values(allLessons).forEach((lesson) => {
+      if (!namesOfLessonsInDB.includes(lesson.shortName)) {
+        lessonsRepository.save(lesson);
       }
     });
 
@@ -48,21 +34,7 @@ createConnection()
     app.set('view engine', 'ejs');
     app.use('/assets', express.static(path.join(process.cwd(), 'assets')));
 
-    // Setup routers for traps and openings resources
-    [
-      [trapsRepository, 'traps'],
-      [openingsRepository, 'openings'],
-    ].forEach(<T>([repository, resourceName]: [Repository<T>, string]) => {
-      const resourceRouter = makeApiResourceRouter(repository, resourceName, {
-        typeormFindAllArg: {
-          order: {
-            shortName: 'ASC',
-          },
-        },
-      });
-      app.use(resourceRouter);
-    });
-
+    app.use(makeLessonsApiRouter(lessonsRepository));
     app.use(staticsRouter());
     app.use(pagesRouter());
 

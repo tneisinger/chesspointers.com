@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
-import { Trap } from '../../shared/entity/trap';
+import { Lesson } from '../../shared/entity/lesson';
 import ChessLessonPreview from './ChessLessonPreview';
 import { viewportHeight, viewportWidth } from '../utils';
 
@@ -27,9 +27,9 @@ const useStyles = makeStyles({
 });
 
 interface Props extends React.HTMLProps<HTMLDivElement> {
-  traps: Trap[];
-  animatedTrap: string | null;
-  setAnimatedTrap: (shortName: string) => void;
+  lessons: Lesson[];
+  animatedLesson: string | null;
+  setAnimatedLesson: (shortName: string) => void;
   stepperValue: number;
   setStepperValue: (newValue: number) => void;
 }
@@ -49,11 +49,11 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
     if (
       filledCarouselHeight == undefined &&
       node != null &&
-      props.traps.length > 0
+      props.lessons.length > 0
     ) {
       setFilledCarouselHeight(node.getBoundingClientRect().height);
     }
-  }, [filledCarouselHeight, props.traps]);
+  }, [filledCarouselHeight, props.lessons]);
 
   const calcCardWidth = (): number => {
     const vpWidth = viewportWidth();
@@ -66,8 +66,8 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
   };
 
   const handleCarouselChange = (idx: number) => {
-    if (props.traps.length > 0) {
-      props.setAnimatedTrap(props.traps[idx].shortName);
+    if (props.lessons.length > 0) {
+      props.setAnimatedLesson(props.lessons[idx].shortName);
       props.setStepperValue(-1);
     }
   };
@@ -77,8 +77,8 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
       <Carousel
         className={classes.carousel}
         autoPlay={false}
-        navButtonsAlwaysVisible={props.traps.length > 0}
-        navButtonsAlwaysInvisible={props.traps.length < 1}
+        navButtonsAlwaysVisible={props.lessons.length > 0}
+        navButtonsAlwaysInvisible={props.lessons.length < 1}
         changeOnFirstRender
         onChange={handleCarouselChange}
         fullHeightHover={false}
@@ -89,12 +89,14 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
           },
         }}
       >
-        {props.traps.map((trap) => (
-          <div key={trap.shortName} className={classes.chessLessonContainer}>
+        {props.lessons.map((lesson) => (
+          <div key={lesson.shortName} className={classes.chessLessonContainer}>
             <ChessLessonPreview
-              trap={trap}
+              lesson={lesson}
               cardWidth={calcCardWidth()}
-              stepper={props.animatedTrap === trap.shortName ? props.stepperValue : -1}
+              stepper={
+                props.animatedLesson === lesson.shortName ? props.stepperValue : -1
+              }
             />
           </div>
         ))}

@@ -5,14 +5,14 @@ import ColorSwitchWithCheckbox from '../components/ColorSwitchWithCheckbox';
 import BaseColorSwitch from '../components/ColorSwitch';
 import ChessOpeningsDropDown from '../components/ChessOpeningsDropDown';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
-import { Trap } from '../../shared/entity/trap';
-import { filterTrapsWithOpenings } from '../../shared/chessTree';
+import { Lesson } from '../../shared/entity/lesson';
+import { filterLessonsWithOpenings } from '../../shared/chessTree';
 
 // This is paramater that should be passed to the `useLessonFilters` hook
 type Args = {
-  allLessons: Trap[];
-  changeFilteredLessons: (newFilteredLessons: Trap[]) => void;
-  onFiltersChange: (filteredLessons: Trap[]) => void;
+  unfilteredLessons: Lesson[];
+  changeFilteredLessons: (newFilteredLessons: Lesson[]) => void;
+  onFiltersChange: (filteredLessons: Lesson[]) => void;
   includeCheckboxInColorSwitch?: boolean;
 };
 
@@ -28,7 +28,7 @@ export type FiltersToolkit = {
 };
 
 export default function useLessonFilters({
-  allLessons,
+  unfilteredLessons,
   changeFilteredLessons,
   onFiltersChange,
   includeCheckboxInColorSwitch = true,
@@ -37,15 +37,15 @@ export default function useLessonFilters({
   const [isColorFilterEnabled, setIsColorFilterEnabled] = useState(false);
   const [selectedOpening, setSelectedOpening] = useState<ChessOpening | ''>('');
 
-  const filterLessons = (): Trap[] => {
-    let filteredLessons = allLessons;
+  const filterLessons = (): Lesson[] => {
+    let filteredLessons = unfilteredLessons;
     if (isColorFilterEnabled) {
       filteredLessons = filteredLessons.filter(
-        (trap) => trap.playedByWhite === (selectedColor === 'white'),
+        (lesson) => lesson.playedByWhite === (selectedColor === 'white'),
       );
     }
     if (selectedOpening !== '') {
-      filteredLessons = filterTrapsWithOpenings([selectedOpening], filteredLessons);
+      filteredLessons = filterLessonsWithOpenings([selectedOpening], filteredLessons);
     }
     changeFilteredLessons(filteredLessons);
     return filteredLessons;

@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
-import { Opening } from '../../shared/entity/opening';
+import { Lesson } from '../../shared/entity/lesson';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import DisplayTraps from '../components/DisplayTraps';
+import DisplayLessons from '../components/DisplayLessons';
 import useDimensions from 'react-use-dimensions';
 import { getOpeningsThunk } from '../redux/openingsSlice';
 import { RootState } from '../redux/store';
 import WithReduxSlice from '../components/WithReduxSlice';
 import { OpeningsSlice } from '../redux/openingsSlice';
+import useLessonFilters from '../hooks/useLessonFilters';
+import NoMatchesModal from '../components/NoMatchesModal';
+import FiltersBarOrModalUI, {
+  shouldDisplayFiltersBar,
+} from '../components/FiltersBarOrModalUI';
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleText: {
@@ -23,14 +28,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   trapsRoot: {
     maxWidth: 'inherit',
     width: 'inherit',
-    height: '100%',
+    height: (p: { filterBarHeight: number }) => {
+      if (shouldDisplayFiltersBar()) {
+        return `calc(100% - ${p.filterBarHeight}px)`;
+      } else {
+        return '100%';
+      }
+    },
   },
 }));
 
 const OpeningsPageContent: React.FC<OpeningsSlice> = (props) => {
-  const classes = useStyles();
-
   const [rootDivRef, rootDivDimensions] = useDimensions();
+  const [filtersBarRef, filtersBarDimensions] = useDimensions();
+
+  const [filteredOpenings, setFilteredOpenings] = useState<Lesson[]>([]);
+  const [isNoMatchesModalOpen, setIsNoMatchesModalOpen] = useState<boolean>(false);
+  const [isFiltersModalOpen, setIsFiltersModalOpen] = useState<boolean>(false);
+
+  const onFiltersChange = (currentFilteredOpenings: Lesson[]) => {
+    if (currentFilteredOpenings.length < 1) {
+      setIsNoMatchesModalOpen(true);
+    }
+  };
+
+  const filtersToolkit = useLessonFilters({
+    unfilteredLessons: props.openings,
+    changeFilteredLessons: setFilteredOpenings,
+    onFiltersChange,
+  });
+
+  const classes = useStyles({ filterBarHeight: filtersBarDimensions.height });
 
   return (
     <>
@@ -47,11 +75,26 @@ const OpeningsPageContent: React.FC<OpeningsSlice> = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          {props.openings.map((opening) => (
-            <p key={opening.shortName}>{opening.shortName}</p>
-          ))}
+          <DisplayLessons
+            parentWidth={rootDivDimensions.width}
+            allowAnimation={true}
+            lessons={filteredOpenings}
+          />
+        </Grid>
+        <Grid item>
+          <FiltersBarOrModalUI
+            filtersToolkit={filtersToolkit}
+            filtersBarRef={filtersBarRef}
+            isModalOpen={isFiltersModalOpen}
+            setIsModalOpen={setIsFiltersModalOpen}
+          />
         </Grid>
       </Grid>
+      <NoMatchesModal
+        isModalOpenOrOpening={isNoMatchesModalOpen}
+        clearFilters={filtersToolkit.clearFilters}
+        closeModal={() => setIsNoMatchesModalOpen(false)}
+      />
     </>
   );
 };

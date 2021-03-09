@@ -1,6 +1,6 @@
 import { Chess } from 'chess.js';
 import { ChessTree, ChessOpening, ChessTreeMove, ChessTreePath } from './chessTypes';
-import { Trap } from './entity/trap';
+import { Lesson } from './entity/lesson';
 import {
   areChessMovesEquivalent,
   areChessPathsEquivalent,
@@ -289,10 +289,13 @@ export function doesTreeReachFen(fen: string, chessTree: ChessTree): boolean {
   return false;
 }
 
-export function filterTrapsWithOpenings(openings: ChessOpening[], traps: Trap[]): Trap[] {
+export function filterLessonsWithOpenings(
+  openings: ChessOpening[],
+  lessons: Lesson[],
+): Lesson[] {
   const fens = openings.map((opening) => getFen(opening));
-  return traps.filter((trap) =>
-    fens.some((fen) => doesTreeReachFen(fen, trap.chessTree)),
+  return lessons.filter((lesson) =>
+    fens.some((fen) => doesTreeReachFen(fen, lesson.chessTree)),
   );
 }
 
@@ -301,6 +304,6 @@ export function isPathInTree(path: string[], tree: ChessTree): boolean {
   return paths.some((treePath) => arraysEqual(treePath.slice(0, path.length), path));
 }
 
-export function filterTrapsWithPath(path: string[], traps: Trap[]): Trap[] {
-  return traps.filter((trap) => isPathInTree(path, trap.chessTree));
+export function filterLessonsWithPath(path: string[], lessons: Lesson[]): Lesson[] {
+  return lessons.filter((lesson) => isPathInTree(path, lesson.chessTree));
 }

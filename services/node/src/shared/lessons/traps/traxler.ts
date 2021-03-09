@@ -1,5 +1,5 @@
-import { Trap } from '../entity/trap';
-import { makeChessTree } from '../chessTree';
+import { Lesson, LessonType } from '../../entity/lesson';
+import { makeChessTree } from '../../chessTree';
 
 const branch_g3 = makeChessTree(
   // prettier-ignore
@@ -160,10 +160,11 @@ const chessTree = makeChessTree(
   [branch_Nxf7, branch_Bxf7_check],
 );
 
-const trap = new Trap();
-trap.fullName = 'The Traxler Counter Attack';
-trap.shortName = 'Traxler';
-trap.playedByWhite = false;
-trap.chessTree = chessTree;
+const lesson = new Lesson();
+lesson.lessonType = LessonType.TRAP;
+lesson.fullName = 'The Traxler Counter Attack';
+lesson.shortName = 'Traxler';
+lesson.playedByWhite = false;
+lesson.chessTree = chessTree;
 
-export default trap;
+export default lesson;

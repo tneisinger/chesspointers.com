@@ -1,4 +1,4 @@
-import { Trap } from '../entity/trap';
+import { Lesson } from '../../entity/lesson';
 import blackburneShilling from './blackburneShilling';
 import bobbyFischer from './bobbyFischer';
 import elephant from './elephant';
@@ -16,7 +16,7 @@ import stafford2 from './stafford2';
 import stafford3 from './stafford3';
 import traxler from './traxler';
 
-const allTraps: { [shortName: string]: Trap } = {
+const allTraps: { [shortName: string]: Lesson } = {
   blackburneShilling: blackburneShilling,
   bobbyFischer: bobbyFischer,
   elephant: elephant,
