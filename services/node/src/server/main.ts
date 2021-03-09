@@ -3,8 +3,7 @@ import path from 'path';
 import { createConnection, Repository } from 'typeorm';
 import { pagesRouter } from './routes/pages-router';
 import { staticsRouter } from './routes/statics-router';
-import { trapApiRouter } from './routes/chess-traps-api-router';
-import { openingApiRouter } from './routes/chess-openings-api-router';
+import { makeApiResourceRouter } from './routes/make-api-resource-router';
 import { Trap } from '../shared/entity/trap';
 import allTraps from '../shared/traps/index';
 import { Opening } from '../shared/entity/opening';
@@ -47,10 +46,23 @@ createConnection()
     // Setup the express server
     const app = express();
     app.set('view engine', 'ejs');
-
     app.use('/assets', express.static(path.join(process.cwd(), 'assets')));
-    app.use(trapApiRouter(trapsRepository));
-    app.use(openingApiRouter(openingsRepository));
+
+    // Setup routers for traps and openings resources
+    [
+      [trapsRepository, 'traps'],
+      [openingsRepository, 'openings'],
+    ].forEach(<T>([repository, resourceName]: [Repository<T>, string]) => {
+      const resourceRouter = makeApiResourceRouter(repository, resourceName, {
+        typeormFindAllArg: {
+          order: {
+            shortName: 'ASC',
+          },
+        },
+      });
+      app.use(resourceRouter);
+    });
+
     app.use(staticsRouter());
     app.use(pagesRouter());
 
