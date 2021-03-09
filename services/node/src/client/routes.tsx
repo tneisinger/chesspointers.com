@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 import HomePage from './pages/Home';
 import TrapsPage from './pages/Traps';
 import OpeningsPage from './pages/Openings';
+import OpeningPage from './pages/Opening';
 import TrapPage from './pages/Trap';
 import MergeTrapsPage from './pages/MergeTraps';
 import NotFoundPage from './pages/NotFound';
@@ -38,6 +39,13 @@ export const routes: RouteInfo[] = [
     isPathExact: true,
     isPrivate: false,
     isInSideMenu: true,
+  },
+  {
+    component: OpeningPage,
+    path: '/openings/:openingName',
+    isPathExact: true,
+    isPrivate: false,
+    isInSideMenu: false,
   },
   {
     pageName: 'Traps',
