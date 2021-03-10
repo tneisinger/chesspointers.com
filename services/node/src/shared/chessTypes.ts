@@ -2,7 +2,7 @@ import { Square } from 'chess.js';
 
 export type PieceColor = 'white' | 'black';
 
-interface HasTeachingPriority {
+export interface HasTeachingPriority {
   teachingPriority: number;
 }
 

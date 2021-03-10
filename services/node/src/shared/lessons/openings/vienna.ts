@@ -24,24 +24,6 @@ const mv6_b_Bg4 = makeChessTree(
   [],
 );
 
-const mv6_w_d4 = makeChessTree(
-  // prettier-ignore
-  [ 'd4',    'dxe5',
-    'Qe2',   'Bb4',
-    'Qxe5+', 'Qe7',
-    'Bxf4',
-  ],
-  [],
-);
-
-const mv6_w_Qe2 = makeChessTree(
-  // prettier-ignore
-  [ 'Qe2', 'dxe5',
-    'Qxe5+',
-  ],
-  [],
-);
-
 const mv6_w_bxc3 = makeChessTree(
   // prettier-ignore
   [ 'bxc3', 'Be7',
@@ -109,6 +91,7 @@ const mv3_b_Nc6 = makeChessTree(
     'Nf3',
   ],
   [],
+  { teachingPriority: 800 },
 );
 
 const mv3_b_exf4 = makeChessTree(
@@ -116,8 +99,13 @@ const mv3_b_exf4 = makeChessTree(
   [        'exf4',
     'e5',  'Ng8',
     'Nf3', 'd6',
+    'd4',    'dxe5',
+    'Qe2',   'Bb4',
+    'Qxe5+', 'Qe7',
+    'Bxf4',
   ],
-  [mv6_w_d4, mv6_w_Qe2],
+  [],
+  { teachingPriority: 900 },
 );
 
 const mv3_b_d6 = makeChessTree(
@@ -128,6 +116,7 @@ const mv3_b_d6 = makeChessTree(
     'd3',
   ],
   [],
+  { teachingPriority: 700 },
 );
 
 const mv3_b_d5 = makeChessTree(
@@ -137,6 +126,7 @@ const mv3_b_d5 = makeChessTree(
     'Qf3',
   ],
   [mv5_b_Nxc3, mv5_b_f5, mv5_b_Nc6],
+  { teachingPriority: 600 },
 );
 
 const mv3_b_Bc5 = makeChessTree(
@@ -161,12 +151,6 @@ const mv3_b_Nf6 = makeChessTree(
   [mv6_b_Ng4, mv6_b_Bg4],
 );
 
-const mv3_w_f4 = makeChessTree(
-  // prettier-ignore
-  ['f4'],
-  [mv3_b_exf4, mv3_b_Nc6, mv3_b_d6, mv3_b_d5],
-);
-
 const mv2_b_Nc6 = makeChessTree(
   // prettier-ignore
   [        'Nc6',
@@ -178,8 +162,9 @@ const mv2_b_Nc6 = makeChessTree(
 const mv2_b_Nf6 = makeChessTree(
   // prettier-ignore
   [         'Nf6',
+    'f4',
   ],
-  [mv3_w_f4],
+  [mv3_b_exf4, mv3_b_Nc6, mv3_b_d6, mv3_b_d5],
 );
 
 const chessTree = makeChessTree(

@@ -1,5 +1,11 @@
 import { Chess } from 'chess.js';
-import { ChessTree, ChessOpening, ChessTreeMove, ChessTreePath } from './chessTypes';
+import {
+  ChessTree,
+  ChessOpening,
+  ChessTreeMove,
+  ChessTreePath,
+  HasTeachingPriority,
+} from './chessTypes';
 import { Lesson } from './entity/lesson';
 import {
   areChessMovesEquivalent,
@@ -10,9 +16,12 @@ import {
   numHalfMovesPlayed,
 } from './utils';
 
+type MakeChessTreeOptions = Partial<HasTeachingPriority>;
+
 export const makeChessTree = (
   moves: (string | ChessTreeMove)[],
   childTrees: ChessTree[],
+  options?: MakeChessTreeOptions,
 ): ChessTree => {
   let result: ChessTree = { move: '', children: [] };
   if (moves.length < 1) return { move: '', children: childTrees };
@@ -33,6 +42,9 @@ export const makeChessTree = (
     }
     result = newResult;
   });
+  if (options != undefined && options.teachingPriority != undefined) {
+    result.teachingPriority = options.teachingPriority;
+  }
   return result;
 };
 
