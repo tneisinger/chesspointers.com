@@ -55,7 +55,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
       const game = new Chess();
       [...props.playedMoves, move].forEach((m) => {
         if (!game.move(m)) {
-          throw new Error(`invalid move: ${m}`);
+          throw new Error(`invalid move: ${m}, moves: ${props.playedMoves}`);
         }
       });
       games.push(game);
