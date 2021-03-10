@@ -15,11 +15,13 @@ const useStyles = makeStyles((theme) => ({
   modalDiv: {
     position: 'relative',
     backgroundColor: theme.palette.background.default,
+    border: '2px solid #909090',
     boxShadow: theme.shadows[5],
     padding: '24px 32px',
     paddingTop: 0,
     borderRadius: 10,
     outline: 'none',
+    maxWidth: (p: { maxWidth: string }) => (p.maxWidth ? p.maxWidth : 'none'),
   },
   modalCloseBtn: {
     position: 'absolute',
@@ -38,6 +40,7 @@ interface Props {
   handleClose: () => void;
   delayOpenFor?: number;
   includeCloseBtn?: boolean;
+  maxWidth?: string;
 }
 
 const MyModal: React.FunctionComponent<Props> = ({
@@ -45,9 +48,10 @@ const MyModal: React.FunctionComponent<Props> = ({
   handleClose,
   delayOpenFor,
   children,
+  maxWidth = 'none',
   includeCloseBtn = true,
 }) => {
-  const classes = useStyles({});
+  const classes = useStyles({ maxWidth });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

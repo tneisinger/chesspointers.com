@@ -16,6 +16,7 @@ interface Props {
   isOpenOrOpening: boolean;
   handleOptionSelect: (keepMove: boolean) => void;
   delayOpenFor?: number;
+  maxWidth?: string;
 }
 
 const DeadEndModal: React.FC<Props> = (props) => {
@@ -32,19 +33,23 @@ const DeadEndModal: React.FC<Props> = (props) => {
         <Typography variant='h4'>Dead End!</Typography>
         <Box m={2}>
           <Typography>
-            You have completed all the paths that include that move.
+            You have completed all the paths that include that move. Do you want to
+            continue anyway?
           </Typography>
-          <Typography>Do you want to continue anyway?</Typography>
         </Box>
-        <Grid container justify='center' spacing={3}>
+        <Grid container justify='space-between' spacing={3}>
           <Grid item>
-            <Button variant='contained' onClick={() => props.handleOptionSelect(true)}>
-              Continue
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={() => props.handleOptionSelect(false)}
+            >
+              Undo Move
             </Button>
           </Grid>
           <Grid item>
-            <Button variant='contained' onClick={() => props.handleOptionSelect(false)}>
-              Undo Move
+            <Button variant='contained' onClick={() => props.handleOptionSelect(true)}>
+              Continue
             </Button>
           </Grid>
         </Grid>

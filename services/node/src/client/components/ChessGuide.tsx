@@ -616,6 +616,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
       <DeadEndModal
         isOpenOrOpening={isDeadEndModalOpen}
+        maxWidth='375px'
         handleOptionSelect={(keepMove) => {
           setIsDeadEndModalOpen(false);
           if (keepMove) {
