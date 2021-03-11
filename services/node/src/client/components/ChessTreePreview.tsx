@@ -40,6 +40,7 @@ const ChessTreePreview: React.FC<Props> = ({
   // to select a preview position instead. Just pick a spot somewhere in the middle of the
   // tree.
   const calcPreviewPosPath = (): string[] => {
+    const paths = getTreePaths(chessTree, 'verbose');
     const shortestPathObj = paths.reduce(
       (oldPathObj, currentPathObj) => {
         if (currentPathObj.path.length < oldPathObj.path.length) {
