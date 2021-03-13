@@ -166,3 +166,7 @@ export function getFenParts(fen: string): FenParts {
     fullMoveNumber: Number(fullMoveNum),
   };
 }
+
+export function capitalizeFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
