@@ -21,6 +21,7 @@ import { GuideMode } from '../utils/types';
 import PathCompleteModal from './PathCompleteModal';
 import PawnPromoteModal from './PawnPromoteModal';
 import DeadEndModal from './DeadEndModal';
+import { LessonType } from '../../shared/entity/lesson';
 
 const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = 250;
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   chessTree: ChessTree;
+  lessonType: LessonType;
   boardSizePixels: number;
   userPlaysAs?: PieceColor;
   guideMode?: GuideMode;
@@ -64,6 +66,7 @@ type MoveFromTo = {
 
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
+  lessonType,
   boardSizePixels,
   userPlaysAs = 'white',
   guideMode = 'learn',
@@ -587,6 +590,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       )}
 
       <PathCompleteModal
+        lessonType={lessonType}
         isOpenOrOpening={isPathCompleteModalOpen}
         handleClose={() => setIsPathCompleteModalOpen(false)}
         numPaths={paths.length}

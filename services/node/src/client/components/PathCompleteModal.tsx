@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { GuideMode } from '../utils/types';
 import LinkMui from './LinkMui';
+import { LessonType } from '../../shared/entity/lesson';
+import { capitalizeFirstLetter } from '../../shared/utils';
 
 const useStyles = makeStyles({
   modalTitleText: {
@@ -18,6 +20,7 @@ const useStyles = makeStyles({
 });
 
 interface Props {
+  lessonType: LessonType;
   isOpenOrOpening: boolean;
   currentGuideMode: GuideMode;
   numPaths: number;
@@ -28,6 +31,7 @@ interface Props {
 }
 
 const PathCompleteModal: React.FC<Props> = ({
+  lessonType,
   isOpenOrOpening,
   currentGuideMode,
   numPaths,
@@ -37,6 +41,15 @@ const PathCompleteModal: React.FC<Props> = ({
   handleSwitchToPracticeModeBtnClick,
 }) => {
   const classes = useStyles({});
+
+  const LearnNewBtn = () => {
+    const link = LinkMui(`/${lessonType}s`);
+    return (
+      <Button variant='contained' color='primary' component={link}>
+        Learn a New {capitalizeFirstLetter(lessonType)}
+      </Button>
+    );
+  };
 
   if (numPathsCompleted < numPaths) {
     return (
@@ -97,9 +110,7 @@ const PathCompleteModal: React.FC<Props> = ({
         </Typography>
         <Grid container alignItems='center' justify='center' spacing={3}>
           <Grid item>
-            <Button variant='contained' color='primary' component={LinkMui('/traps')}>
-              Learn a New Trap
-            </Button>
+            <LearnNewBtn />
           </Grid>
         </Grid>
       </Modal>

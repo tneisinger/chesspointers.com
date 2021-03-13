@@ -84,6 +84,7 @@ const TrapPageContent: React.FC<TrapsSlice> = ({ traps }) => {
           <Grid item>
             <ChessGuide
               chessTree={trap.chessTree}
+              lessonType={trap.lessonType}
               userPlaysAs={trap.playedByWhite ? 'white' : 'black'}
               boardSizePixels={boardSizePixels}
             >

@@ -13,6 +13,7 @@ import { Lesson } from '../../shared/entity/lesson';
 import { ChessTree, PieceColor } from '../../shared/chessTypes';
 import { mergeTrees } from '../../shared/chessTree';
 import { calcChessBoardSize } from '../utils';
+import { LessonType } from '../../shared/entity/lesson';
 
 const useStyles = makeStyles(() => ({
   mainCard: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MergeTrapsPageContent: React.FC<TrapsSlice> = (props) => {
+const MergeTrapsPageContent: React.FC<TrapsSlice> = () => {
   const classes = useStyles({});
 
   const [selectedTraps, setSelectedTraps] = useState<Lesson[]>([]);
@@ -60,6 +61,7 @@ const MergeTrapsPageContent: React.FC<TrapsSlice> = (props) => {
           <div ref={chessGuideWrapperRef}>
             <ChessGuide
               chessTree={mergeSelectedTraps()}
+              lessonType={LessonType.TRAP}
               userPlaysAs={userColor}
               boardSizePixels={boardSize}
             >

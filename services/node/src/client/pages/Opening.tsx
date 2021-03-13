@@ -84,6 +84,7 @@ const OpeningPageContent: React.FC<OpeningsSlice> = ({ openings }) => {
           <Grid item>
             <ChessGuide
               chessTree={opening.chessTree}
+              lessonType={opening.lessonType}
               userPlaysAs={opening.playedByWhite ? 'white' : 'black'}
               boardSizePixels={boardSizePixels}
             >
