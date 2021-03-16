@@ -141,14 +141,30 @@ const mv3_b_Bc5 = makeChessTree(
   [],
 );
 
-const mv3_b_Nf6 = makeChessTree(
+const mv4_b_Na5 = makeChessTree(
   // prettier-ignore
-  [         'Nf6',
-    'd3',   'Bc5',
+  [         'Na5',
+    'Bb3',   'Nxb3',
+    'axb3',
+  ],
+  [],
+);
+
+const mv4_b_Bc5 = makeChessTree(
+  // prettier-ignore
+  [         'Bc5',
     'f4',   'd6',
     'Nf3',
   ],
   [mv6_b_Ng4, mv6_b_Bg4],
+);
+
+const mv3_b_Nf6 = makeChessTree(
+  // prettier-ignore
+  [         'Nf6',
+    'd3',
+  ],
+  [mv4_b_Bc5, mv4_b_Na5],
 );
 
 const mv2_b_Nc6 = makeChessTree(
