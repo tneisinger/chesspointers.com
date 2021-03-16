@@ -7,6 +7,7 @@ import { makeLessonsApiRouter } from './routes/lessons-api-router';
 import { Lesson } from '../shared/entity/lesson';
 import allLessons from '../shared/lessons';
 import * as config from './config';
+import { validateChessTree } from '../shared/chessTree';
 
 console.log(`*******************************************`);
 console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
@@ -25,6 +26,9 @@ createConnection()
     const namesOfLessonsInDB = lessons.map((lesson) => lesson.shortName);
     Object.values(allLessons).forEach((lesson) => {
       if (!namesOfLessonsInDB.includes(lesson.shortName)) {
+        // If a lesson is not in the db, check if it has a valid ChessTree.
+        // If the ChessTree is valid, insert the lesson into the db.
+        validateChessTree(lesson.chessTree);
         lessonsRepository.save(lesson);
       }
     });

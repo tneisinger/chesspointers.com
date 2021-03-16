@@ -98,11 +98,13 @@ export const validateChessTree = (tree: ChessTree): void => {
   const lines = getTreeLines(tree);
   lines.forEach((line) => {
     const game = new Chess();
-    line.forEach((move) => {
+    line.forEach((move, idx) => {
       if (move === '') {
         throw new Error('Empty move strings are only allowed at the root of ChessTrees');
       }
-      if (!game.move(move)) throw new Error(`Invalid move: ${move}`);
+      if (!game.move(move)) {
+        throw new Error(`invalid move: ${move}, moves: ${line.slice(0, idx)}`);
+      }
     });
   });
 };
