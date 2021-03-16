@@ -5,12 +5,12 @@ import ManifestPlugin from 'webpack-manifest-plugin';
 import { SERVER_PORT, IS_DEV, WEBPACK_PORT } from './src/server/config';
 
 // Make .env environment variables available in process.env in client code
-const dotenv = require('dotenv').config({path: __dirname + '/src/client/.env'});
+const dotenv = require('dotenv').config({ path: __dirname + '/src/client/.env' });
 const plugins = [
   new ManifestPlugin(),
   new DefinePlugin({
-    "process.env": JSON.stringify(dotenv.parsed)
-  })
+    'process.env': JSON.stringify(dotenv.parsed),
+  }),
 ];
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
@@ -19,9 +19,7 @@ const targets = IS_DEV ? { chrome: '79', firefox: '72' } : '> 0.25%, not dead';
 const config: Configuration = {
   mode: IS_DEV ? 'development' : 'production',
   devtool: IS_DEV ? 'inline-source-map' : false,
-  entry: [
-    './src/client/client',
-  ],
+  entry: ['./src/client/client'],
   output: {
     path: path.join(__dirname, 'dist', 'statics'),
     filename: `[name]-[hash:8]-bundle.js`,
@@ -58,7 +56,11 @@ const config: Configuration = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [['@babel/env', { modules: false, targets }], '@babel/react', '@babel/typescript'],
+            presets: [
+              ['@babel/env', { modules: false, targets }],
+              '@babel/react',
+              '@babel/typescript',
+            ],
             plugins: [
               '@babel/proposal-numeric-separator',
               '@babel/plugin-transform-runtime',
@@ -71,11 +73,15 @@ const config: Configuration = {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: ["file-loader"]
+        test: /\.svg$/,
+        use: ['url-loader'],
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: ['file-loader'],
       },
       // Below added to fix import of chess.js (Needed for jest to work with chess.js)
       {
@@ -83,7 +89,7 @@ const config: Configuration = {
         parser: {
           amd: false,
         },
-      }
+      },
     ],
   },
   devServer: {
