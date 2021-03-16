@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Chessground from 'react-chessground';
-import { ChessTree, PieceColor, ChessTreePath } from '../../shared/chessTypes';
-import { getTreePaths, getPreviewPositionPath } from '../../shared/chessTree';
+import { ChessTree, PieceColor, ChessTreeLine } from '../../shared/chessTypes';
+import { getTreeLines, getPreviewPositionLine } from '../../shared/chessTree';
 import { Chess, ChessInstance } from 'chess.js';
 import { calcChessBoardSize, BoardSizeUnits } from '../utils';
 import { basicCompare } from '../../shared/utils';
@@ -25,44 +25,44 @@ const ChessTreePreview: React.FC<Props> = ({
   boardSize = 350,
   boardSizeUnits = 'px',
 }) => {
-  // Try to get the PreviewPosPath from the chessTree. If the chessTree doesn't have a
+  // Try to get the PreviewPosLine from the chessTree. If the chessTree doesn't have a
   // node with isPreviewPosition === true, then just pick a spot somewhere in the middle
   // of the tree.
-  const getPreviewPosPath = (): string[] => {
-    const previewPosPath = getPreviewPositionPath(chessTree);
-    if (previewPosPath != null) {
-      return previewPosPath;
+  const getPreviewPosLine = (): string[] => {
+    const previewPosLine = getPreviewPositionLine(chessTree);
+    if (previewPosLine != null) {
+      return previewPosLine;
     }
-    return calcPreviewPosPath();
+    return calcPreviewPosLine();
   };
 
   // If the ChessTree does not have a node with 'isPreviewPosition' set, use this function
   // to select a preview position instead. Just pick a spot somewhere in the middle of the
   // tree.
-  const calcPreviewPosPath = (): string[] => {
-    const paths = getTreePaths(chessTree, 'verbose');
-    const shortestPathObj = paths.reduce(
-      (oldPathObj, currentPathObj) => {
-        if (currentPathObj.path.length < oldPathObj.path.length) {
-          return currentPathObj;
+  const calcPreviewPosLine = (): string[] => {
+    const lines = getTreeLines(chessTree, 'verbose');
+    const shortestLineObj = lines.reduce(
+      (oldLineObj, currentLineObj) => {
+        if (currentLineObj.line.length < oldLineObj.line.length) {
+          return currentLineObj;
         } else {
-          return oldPathObj;
+          return oldLineObj;
         }
       },
-      { path: { length: Infinity } },
-    ) as ChessTreePath;
+      { line: { length: Infinity } },
+    ) as ChessTreeLine;
 
-    const endIdx = Math.floor(shortestPathObj.path.length * 0.75);
-    return shortestPathObj.path.slice(0, endIdx);
+    const endIdx = Math.floor(shortestLineObj.line.length * 0.75);
+    return shortestLineObj.line.slice(0, endIdx);
   };
 
   const [chess] = useState<ChessInstance>(new Chess());
   const [boardPosition, setBoardPosition] = useState<string>(chess.fen());
-  const [currentPathIdx, setCurrentPathIdx] = useState<number>(0);
+  const [currentLineIdx, setCurrentLineIdx] = useState<number>(0);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
-  const [previewPosPath] = useState<string[]>(getPreviewPosPath());
-  const [paths] = useState<ChessTreePath[]>(
-    getTreePaths(chessTree, 'verbose').sort((p1, p2) =>
+  const [previewPosLine] = useState<string[]>(getPreviewPosLine());
+  const [lines] = useState<ChessTreeLine[]>(
+    getTreeLines(chessTree, 'verbose').sort((p1, p2) =>
       basicCompare(p1.teachingPriority, p2.teachingPriority, { descending: true }),
     ),
   );
@@ -75,25 +75,25 @@ const ChessTreePreview: React.FC<Props> = ({
 
   const setBoardToPreviewPosition = () => {
     chess.reset();
-    previewPosPath.forEach((move) => {
+    previewPosLine.forEach((move) => {
       if (!chess.move(move)) {
-        throw new Error(`Invalid move ${move} in previewPosPath`);
+        throw new Error(`Invalid move ${move} in previewPosLine`);
       }
     });
     setBoardPosition(chess.fen());
   };
 
   const playNextMove = () => {
-    const pathObj = paths[currentPathIdx];
-    if (pathObj == undefined) throw new Error('Path undefined!');
-    if (playedMoves.length >= pathObj.path.length) {
-      setCurrentPathIdx((idx) => (idx < paths.length - 1 ? idx + 1 : 0));
+    const lineObj = lines[currentLineIdx];
+    if (lineObj == undefined) throw new Error('Line undefined!');
+    if (playedMoves.length >= lineObj.line.length) {
+      setCurrentLineIdx((idx) => (idx < lines.length - 1 ? idx + 1 : 0));
       chess.reset();
       setBoardPosition(chess.fen());
       setPlayedMoves([]);
       return;
     }
-    const nextMove = pathObj.path[playedMoves.length];
+    const nextMove = lineObj.line[playedMoves.length];
     if (nextMove != undefined) {
       chess.move(nextMove);
       setBoardPosition(chess.fen());

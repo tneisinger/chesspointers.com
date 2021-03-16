@@ -23,19 +23,19 @@ interface Props {
   lessonType: LessonType;
   isOpenOrOpening: boolean;
   currentGuideMode: GuideMode;
-  numPaths: number;
-  numPathsCompleted: number;
+  numLines: number;
+  numLinesCompleted: number;
   handleClose: () => void;
   handleResetBtnClick: () => void;
   handleSwitchToPracticeModeBtnClick: () => void;
 }
 
-const PathCompleteModal: React.FC<Props> = ({
+const LineCompleteModal: React.FC<Props> = ({
   lessonType,
   isOpenOrOpening,
   currentGuideMode,
-  numPaths,
-  numPathsCompleted,
+  numLines,
+  numLinesCompleted,
   handleClose,
   handleResetBtnClick,
   handleSwitchToPracticeModeBtnClick,
@@ -51,7 +51,7 @@ const PathCompleteModal: React.FC<Props> = ({
     );
   };
 
-  if (numPathsCompleted < numPaths) {
+  if (numLinesCompleted < numLines) {
     return (
       <Modal
         isModalOpenOrOpening={isOpenOrOpening}
@@ -62,7 +62,7 @@ const PathCompleteModal: React.FC<Props> = ({
           Good!
         </Typography>
         <Typography className={classes.modalMsgText}>
-          {numPathsCompleted} of {numPaths} paths completed
+          {numLinesCompleted} of {numLines} lines completed
         </Typography>
         <Button variant='contained' color='primary' onClick={handleResetBtnClick}>
           Reset
@@ -80,7 +80,7 @@ const PathCompleteModal: React.FC<Props> = ({
           Great!
         </Typography>
         <Typography className={classes.modalMsgText}>
-          You completed all the paths.
+          You completed all the lines.
         </Typography>
         <Grid container alignItems='center' justify='center' spacing={3}>
           <Grid item>
@@ -106,7 +106,7 @@ const PathCompleteModal: React.FC<Props> = ({
           Awesome!
         </Typography>
         <Typography className={classes.modalMsgText}>
-          You completed all the paths.
+          You completed all the lines.
         </Typography>
         <Grid container alignItems='center' justify='center' spacing={3}>
           <Grid item>
@@ -118,4 +118,4 @@ const PathCompleteModal: React.FC<Props> = ({
   }
 };
 
-export default PathCompleteModal;
+export default LineCompleteModal;

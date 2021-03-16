@@ -33,7 +33,7 @@ const DeadEndModal: React.FC<Props> = (props) => {
         <Typography variant='h4'>Dead End!</Typography>
         <Box m={2}>
           <Typography>
-            You have completed all the paths that include that move. Do you want to
+            You have completed all the lines that include that move. Do you want to
             continue anyway?
           </Typography>
         </Box>

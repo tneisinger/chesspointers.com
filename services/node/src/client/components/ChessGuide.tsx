@@ -4,9 +4,9 @@ import Button from '@material-ui/core/Button';
 import React, { useState, useEffect, useRef } from 'react';
 import { Chess, ChessInstance, Square, ShortMove } from 'chess.js';
 import { ChessTree, PieceColor, PromotionPiece } from '../../shared/chessTypes';
-import { getTreePaths } from '../../shared/chessTree';
+import { getTreeLines } from '../../shared/chessTree';
 import {
-  areChessPathsEquivalent,
+  areChessLinesEquivalent,
   areChessMovesEquivalent,
   partition,
   randomElem,
@@ -18,7 +18,7 @@ import ChessGuideBoard from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
 import ChessGuideControls from './ChessGuideControls';
 import { GuideMode } from '../utils/types';
-import PathCompleteModal from './PathCompleteModal';
+import LineCompleteModal from './LineCompleteModal';
 import PawnPromoteModal from './PawnPromoteModal';
 import DeadEndModal from './DeadEndModal';
 import { LessonType } from '../../shared/entity/lesson';
@@ -52,9 +52,9 @@ interface Props {
   renderExtraControlsForTesting?: boolean;
 }
 
-type PathStats = {
+type LineStats = {
   mode: GuideMode;
-  path: string[];
+  line: string[];
   timesCompleted: number;
   teachingPriority: number;
 };
@@ -75,14 +75,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 }) => {
   const classes = useStyles({});
 
-  const paths = getTreePaths(chessTree, 'verbose');
+  const lines = getTreeLines(chessTree, 'verbose');
 
   const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
-  const [isPathCompleteModalOpen, setIsPathCompleteModalOpen] = useState(false);
+  const [isLineCompleteModalOpen, setIsLineCompleteModalOpen] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
   const [isDeadEndModalOpen, setIsDeadEndModalOpen] = useState(false);
   const [mode, setMode] = useState<GuideMode>(guideMode);
-  const [pathStats, setPathStats] = useState<PathStats[]>([]);
+  const [lineStats, setLineStats] = useState<LineStats[]>([]);
   const [game] = useState<ChessInstance>(new Chess());
   const [fen, setFen] = useState(game.fen());
   const [pendingMove, setPendingMove] = useState<MoveFromTo | undefined>(undefined);
@@ -141,23 +141,23 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return game.turn() === userPlaysAs.charAt(0);
   };
 
-  // Initialize 'pathStats' for all paths, setting their 'timesCompleted' values
+  // Initialize 'lineStats' for all lines, setting their 'timesCompleted' values
   // to zero.
-  const makeInitialPathStatsValues = (): PathStats[] => {
-    return paths.reduce((acc: PathStats[], pathObj) => {
-      const practicePath: PathStats = {
+  const makeInitialLineStatsValues = (): LineStats[] => {
+    return lines.reduce((acc: LineStats[], lineObj) => {
+      const practiceLine: LineStats = {
         mode: 'practice',
-        path: pathObj.path,
+        line: lineObj.line,
         timesCompleted: 0,
         teachingPriority: 0,
       };
-      const learnPath: PathStats = {
+      const learnLine: LineStats = {
         mode: 'learn',
-        path: pathObj.path,
+        line: lineObj.line,
         timesCompleted: 0,
-        teachingPriority: pathObj.teachingPriority,
+        teachingPriority: lineObj.teachingPriority,
       };
-      return [...acc, practicePath, learnPath];
+      return [...acc, practiceLine, learnLine];
     }, []);
   };
 
@@ -180,18 +180,18 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   useEffect(() => {
     reset();
-    setPathStats(makeInitialPathStatsValues());
+    setLineStats(makeInitialLineStatsValues());
   }, []);
 
   useEffect(() => {
     reset();
-    setPathStats(makeInitialPathStatsValues());
+    setLineStats(makeInitialLineStatsValues());
   }, [chessTree, userPlaysAs]);
 
   const getNextMoves = (): string[] => {
     const result: string[] = [];
-    getRelevantPaths().forEach((pathStats) => {
-      const nextMove = pathStats.path[playedMoves.length];
+    getRelevantLines().forEach((lineStats) => {
+      const nextMove = lineStats.line[playedMoves.length];
       if (nextMove != undefined && !result.includes(nextMove)) {
         result.push(nextMove);
       }
@@ -199,12 +199,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return result;
   };
 
-  const getRelevantPaths = (specifiedPath?: string[]): PathStats[] => {
-    const path = specifiedPath == undefined ? playedMoves : specifiedPath;
-    return pathStats.filter((p) => {
+  const getRelevantLines = (specifiedLine?: string[]): LineStats[] => {
+    const line = specifiedLine == undefined ? playedMoves : specifiedLine;
+    return lineStats.filter((p) => {
       return (
         p.mode === mode &&
-        path.every((move, idx) => areChessMovesEquivalent(move, p.path[idx]))
+        line.every((move, idx) => areChessMovesEquivalent(move, p.line[idx]))
       );
     });
   };
@@ -248,28 +248,28 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   };
 
-  // Return true if the most recently played move only leads to completed paths and there
-  // are uncompleted paths (or paths completed fewer times) available to the user if they
-  // had played a different move. If the `ignoreIfAllPathsHaveBeenCompleted` option is
-  // given, always return false if all the relevant paths have been completed at least
+  // Return true if the most recently played move only leads to completed lines and there
+  // are uncompleted lines (or lines completed fewer times) available to the user if they
+  // had played a different move. If the `ignoreIfAllLinesHaveBeenCompleted` option is
+  // given, always return false if all the relevant lines have been completed at least
   // once.
   const doesLastMoveLeadToDeadEnd = (
-    ignore?: 'ignoreIfAllPathsHaveBeenCompleted',
+    ignore?: 'ignoreIfAllLinesHaveBeenCompleted',
   ): boolean => {
-    const pathsWithMove = getRelevantPaths([...playedMoves, getLastMove()]);
-    const pathsWithoutMove = getRelevantPaths();
+    const linesWithMove = getRelevantLines([...playedMoves, getLastMove()]);
+    const linesWithoutMove = getRelevantLines();
     const lowestTimesCompletedWithoutMove = Math.min(
-      ...pathsWithoutMove.map((p) => p.timesCompleted),
+      ...linesWithoutMove.map((p) => p.timesCompleted),
     );
     if (lowestTimesCompletedWithoutMove > 0 && ignore) return false;
     const lowestTimesCompletedWithMove = Math.min(
-      ...pathsWithMove.map((p) => p.timesCompleted),
+      ...linesWithMove.map((p) => p.timesCompleted),
     );
     return lowestTimesCompletedWithMove > lowestTimesCompletedWithoutMove;
   };
 
   const handleCorrectMove = () => {
-    if (doesLastMoveLeadToDeadEnd('ignoreIfAllPathsHaveBeenCompleted')) {
+    if (doesLastMoveLeadToDeadEnd('ignoreIfAllLinesHaveBeenCompleted')) {
       setIsDeadEndModalOpen(true);
       return;
     } else {
@@ -409,7 +409,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       move = moves[0];
     } else {
       // If there is more than one move that the computer can play, the computer randomly
-      // selects a move from among the moves that are on paths that have been completed
+      // selects a move from among the moves that are on lines that have been completed
       // the fewest number of the times.
       const randomMove = randomElem(getBestNextMoves());
       if (randomMove == undefined) {
@@ -422,59 +422,59 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }, COMPUTER_THINK_TIME);
   };
 
-  const isAtPathEnd = (): boolean =>
-    paths.some((pathObj) => areChessPathsEquivalent(pathObj.path, playedMoves));
+  const isAtLineEnd = (): boolean =>
+    lines.some((lineObj) => areChessLinesEquivalent(lineObj.line, playedMoves));
 
   const getBestNextMoves = (): string[] => {
-    // Get the paths that are reachable from the current position forward.
-    const relevantPaths = pathStats.filter((p) => {
+    // Get the lines that are reachable from the current position forward.
+    const relevantLines = lineStats.filter((p) => {
       return (
         p.mode == mode &&
-        playedMoves.every((move, idx) => areChessMovesEquivalent(move, p.path[idx]))
+        playedMoves.every((move, idx) => areChessMovesEquivalent(move, p.line[idx]))
       );
     });
-    const lowestTimesCompleted = Math.min(...relevantPaths.map((p) => p.timesCompleted));
-    const leastCompletedPaths = relevantPaths.filter(
+    const lowestTimesCompleted = Math.min(...relevantLines.map((p) => p.timesCompleted));
+    const leastCompletedLines = relevantLines.filter(
       (p) => p.timesCompleted === lowestTimesCompleted,
     );
     const highestTeachingPriority = Math.max(
-      ...leastCompletedPaths.map((p) => p.teachingPriority),
+      ...leastCompletedLines.map((p) => p.teachingPriority),
     );
-    const bestPaths = leastCompletedPaths.filter(
+    const bestLines = leastCompletedLines.filter(
       (p) => p.teachingPriority === highestTeachingPriority,
     );
-    return bestPaths.map((p) => p.path[playedMoves.length]);
+    return bestLines.map((p) => p.line[playedMoves.length]);
   };
 
-  const recordPathCompletion = () => {
-    const [matchingPaths, nonMatchingPaths] = partition(
-      pathStats,
-      (p) => areChessPathsEquivalent(p.path, playedMoves) && p.mode === mode,
+  const recordLineCompletion = () => {
+    const [matchingLines, nonMatchingLines] = partition(
+      lineStats,
+      (p) => areChessLinesEquivalent(p.line, playedMoves) && p.mode === mode,
     );
-    if (matchingPaths.length !== 1) {
-      throw new Error(`Unexpected number of matchingPaths: ${matchingPaths.length}`);
+    if (matchingLines.length !== 1) {
+      throw new Error(`Unexpected number of matchingLines: ${matchingLines.length}`);
     } else {
-      const updatedPathStats: PathStats = {
-        ...matchingPaths[0],
-        timesCompleted: matchingPaths[0].timesCompleted + 1,
+      const updatedLineStats: LineStats = {
+        ...matchingLines[0],
+        timesCompleted: matchingLines[0].timesCompleted + 1,
       };
-      setPathStats([...nonMatchingPaths, updatedPathStats]);
+      setLineStats([...nonMatchingLines, updatedLineStats]);
     }
   };
 
   // Whenever `playedMoves` changes
   useEffect(() => {
-    if (isAtPathEnd()) {
-      recordPathCompletion();
-      setIsPathCompleteModalOpen(true);
+    if (isAtLineEnd()) {
+      recordLineCompletion();
+      setIsLineCompleteModalOpen(true);
     }
     if (!isUsersTurn()) {
       doComputerMove();
     }
   }, [playedMoves]);
 
-  const getNumPathsCompleted = (): number => {
-    return pathStats.reduce((acc: number, p) => {
+  const getNumLinesCompleted = (): number => {
+    return lineStats.reduce((acc: number, p) => {
       if (p.mode === mode && p.timesCompleted > 0) {
         return acc + 1;
       } else {
@@ -550,8 +550,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           />
         </div>
         <ChessGuideInfo
-          numPaths={paths.length}
-          numPathsCompleted={getNumPathsCompleted()}
+          numLines={lines.length}
+          numLinesCompleted={getNumLinesCompleted()}
           currentGuideMode={mode}
           score={getScoreFromFen(game.fen())}
         />
@@ -589,19 +589,19 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         </Button>
       )}
 
-      <PathCompleteModal
+      <LineCompleteModal
         lessonType={lessonType}
-        isOpenOrOpening={isPathCompleteModalOpen}
-        handleClose={() => setIsPathCompleteModalOpen(false)}
-        numPaths={paths.length}
-        numPathsCompleted={getNumPathsCompleted()}
+        isOpenOrOpening={isLineCompleteModalOpen}
+        handleClose={() => setIsLineCompleteModalOpen(false)}
+        numLines={lines.length}
+        numLinesCompleted={getNumLinesCompleted()}
         currentGuideMode={mode}
         handleResetBtnClick={() => {
           reset();
-          setIsPathCompleteModalOpen(false);
+          setIsLineCompleteModalOpen(false);
         }}
         handleSwitchToPracticeModeBtnClick={() => {
-          setIsPathCompleteModalOpen(false);
+          setIsLineCompleteModalOpen(false);
 
           // Delay the switch to practice mode until after the modal has finished closing,
           // otherwise the content inside the modal will change just before it closes.

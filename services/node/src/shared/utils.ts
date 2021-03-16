@@ -53,10 +53,10 @@ export function basicCompare<T>(
   return 0;
 }
 
-export function areChessPathsEquivalent(path1: string[], path2: string[]): boolean {
+export function areChessLinesEquivalent(line1: string[], line2: string[]): boolean {
   return (
-    path1.length == path2.length &&
-    path1.every((move, idx) => areChessMovesEquivalent(move, path2[idx]))
+    line1.length == line2.length &&
+    line1.every((move, idx) => areChessMovesEquivalent(move, line2[idx]))
   );
 }
 

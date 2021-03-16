@@ -1,14 +1,14 @@
 /* eslint-disable */
 import {
   makeChessTree,
-  getTreePaths,
+  getTreeLines,
   mergeTrees,
   doesTreeReachPosition,
   filterLessonsWithOpenings,
-  isPathInTree,
-  filterLessonsWithPath,
+  isLineInTree,
+  filterLessonsWithLine,
 } from './chessTree';
-import { ChessOpening, ChessTreePath } from './chessTypes';
+import { ChessOpening, ChessTreeLine } from './chessTypes';
 import allTraps from './lessons/traps';
 import { basicCompare } from './utils';
 
@@ -228,15 +228,15 @@ describe('makeChessTree()', () => {
   })
 });
 
-describe('getTreePaths(tree)', () => {
+describe('getTreeLines(tree)', () => {
   it('works for a tree with no branches', () => {
     const moves = ['e4', 'e5', 'Nf3', 'Nc6'];
     const tree = makeChessTree(moves, []);
-    expect(getTreePaths(tree)).toEqual([moves]);
+    expect(getTreeLines(tree)).toEqual([moves]);
   });
 
   it('works for a complex tree', () => {
-    expect(getTreePaths(complexTree).sort()).toEqual([
+    expect(getTreeLines(complexTree).sort()).toEqual([
       [
         'e4', 'e5',
         'Nf3', 'Nc6',
@@ -276,29 +276,29 @@ describe('getTreePaths(tree)', () => {
   it('works for a tree with just one move', () => {
     const moves = ['e4'];
     const tree = makeChessTree(moves, []);
-    expect(getTreePaths(tree)).toEqual([moves]);
+    expect(getTreeLines(tree)).toEqual([moves]);
   });
 
   it('works for a tree with no moves', () => {
     const tree = makeChessTree([],[]);
-    expect(getTreePaths(tree).length).toEqual(0);
+    expect(getTreeLines(tree).length).toEqual(0);
   });
 });
 
-describe("getTreePaths(tree, 'verbose')", () => {
+describe("getTreeLines(tree, 'verbose')", () => {
   it('works for a tree with no branches', () => {
     const moves = ['e4', 'e5', 'Nf3', 'Nc6'];
     const tree = makeChessTree(moves, []);
-    expect(getTreePaths(tree, 'verbose'))
-      .toEqual([{ path: moves, teachingPriority: 0}]);
+    expect(getTreeLines(tree, 'verbose'))
+      .toEqual([{ line: moves, teachingPriority: 0}]);
   });
 
   it('works for a complex tree', () => {
-    const received = getTreePaths(complexTree, 'verbose') as ChessTreePath[];
-    received.sort((p1, p2) => basicCompare(p1.path, p2.path));
+    const received = getTreeLines(complexTree, 'verbose') as ChessTreeLine[];
+    received.sort((p1, p2) => basicCompare(p1.line, p2.line));
     const expected = [
       {
-        path: [
+        line: [
           'e4', 'e5',
           'Nf3', 'Nc6',
           'Bc4', 'Nd4',
@@ -308,7 +308,7 @@ describe("getTreePaths(tree, 'verbose')", () => {
         teachingPriority: 0,
       },
       {
-        path: [
+        line: [
           'e4', 'e5',
           'Nf3', 'Nc6',
           'Bc4', 'Nd4',
@@ -320,7 +320,7 @@ describe("getTreePaths(tree, 'verbose')", () => {
         teachingPriority: 0,
       },
       {
-        path: [
+        line: [
           'e4', 'e5',
           'Nf3', 'Nc6',
           'Bc4', 'Nd4',
@@ -333,7 +333,7 @@ describe("getTreePaths(tree, 'verbose')", () => {
         teachingPriority: 10,
       },
       {
-        path: [
+        line: [
           'e4', 'e5',
           'Nf3', 'Nc6',
           'Bc4', 'Nd4',
@@ -342,7 +342,7 @@ describe("getTreePaths(tree, 'verbose')", () => {
         ],
         teachingPriority: 15,
       }
-    ].sort((p1, p2) => basicCompare(p1.path, p2.path));
+    ].sort((p1, p2) => basicCompare(p1.line, p2.line));
 
     expect(received).toStrictEqual(expected);
   });
@@ -350,13 +350,13 @@ describe("getTreePaths(tree, 'verbose')", () => {
   it('works for a tree with just one move', () => {
     const moves = ['e4'];
     const tree = makeChessTree(moves, []);
-    expect(getTreePaths(tree, 'verbose'))
-      .toStrictEqual([{ path: moves, teachingPriority: 0 }]);
+    expect(getTreeLines(tree, 'verbose'))
+      .toStrictEqual([{ line: moves, teachingPriority: 0 }]);
   });
 
   it('works for a tree with no moves', () => {
     const tree = makeChessTree([],[]);
-    expect(getTreePaths(tree, 'verbose').length).toEqual(0);
+    expect(getTreeLines(tree, 'verbose').length).toEqual(0);
   });
 
   it('includes teachingPriority value when teachingPriority not on leaf', () => {
@@ -364,13 +364,13 @@ describe("getTreePaths(tree, 'verbose')", () => {
       [ 'e4', { move: 'e5', teachingPriority: 100 }, 'Nf3' ],
       [],
     );
-    expect(getTreePaths(tree, 'verbose')).toStrictEqual([{
-      path: ['e4', 'e5', 'Nf3'],
+    expect(getTreeLines(tree, 'verbose')).toStrictEqual([{
+      line: ['e4', 'e5', 'Nf3'],
       teachingPriority: 100
     }]);
   });
 
-  it('uses last teachingPriority value of a path', () => {
+  it('uses last teachingPriority value of a line', () => {
     const tree = makeChessTree(
       [ 'e4',
         { move: 'e5', teachingPriority: 100 },
@@ -378,13 +378,13 @@ describe("getTreePaths(tree, 'verbose')", () => {
       ],
       [],
     );
-    expect(getTreePaths(tree, 'verbose')).toStrictEqual([{
-      path: ['e4', 'e5', 'Nf3'],
+    expect(getTreeLines(tree, 'verbose')).toStrictEqual([{
+      line: ['e4', 'e5', 'Nf3'],
       teachingPriority: 200
     }]);
   });
 
-  it('applies upstream teachingPriority value to all downstream paths', () => {
+  it('applies upstream teachingPriority value to all downstream lines', () => {
     const branch_Nf3 = makeChessTree(
       ['Nf3'],
       [],
@@ -397,13 +397,13 @@ describe("getTreePaths(tree, 'verbose')", () => {
       [ 'e4', { move: 'e5', teachingPriority: 100 }],
       [branch_Nf3, branch_Nc3],
     );
-    expect(getTreePaths(tree, 'verbose')).toStrictEqual([
+    expect(getTreeLines(tree, 'verbose')).toStrictEqual([
       {
-        path: ['e4', 'e5', 'Nf3'],
+        line: ['e4', 'e5', 'Nf3'],
         teachingPriority: 100
       },
       {
-        path: ['e4', 'e5', 'Nc3'],
+        line: ['e4', 'e5', 'Nc3'],
         teachingPriority: 100,
       }
     ]);
@@ -422,13 +422,13 @@ describe("getTreePaths(tree, 'verbose')", () => {
       [ 'e4', { move: 'e5', teachingPriority: 100 }],
       [branch_Nf3, branch_Nc3],
     );
-    expect(getTreePaths(tree, 'verbose')).toStrictEqual([
+    expect(getTreeLines(tree, 'verbose')).toStrictEqual([
       {
-        path: ['e4', 'e5', 'Nf3'],
+        line: ['e4', 'e5', 'Nf3'],
         teachingPriority: 100
       },
       {
-        path: ['e4', 'e5', 'Nc3'],
+        line: ['e4', 'e5', 'Nc3'],
         teachingPriority: 200,
       }
     ]);
@@ -536,8 +536,8 @@ describe('mergeTrees()', () => {
     ]);
     const tree2 = makeChessTree(['d4', 'e5'], []);
     const merged = mergeTrees(tree1, tree2);
-    expect(getTreePaths(merged).sort()).toEqual(
-      getTreePaths(
+    expect(getTreeLines(merged).sort()).toEqual(
+      getTreeLines(
         makeChessTree([], [
           makeChessTree(['e4', 'e5'], []),
           makeChessTree(['d4'], [
@@ -556,8 +556,8 @@ describe('mergeTrees()', () => {
       makeChessTree(['d4', 'd5'], []),
     ]);
     const merged = mergeTrees(tree1, tree2);
-    expect(getTreePaths(merged).sort()).toEqual(
-      getTreePaths(
+    expect(getTreeLines(merged).sort()).toEqual(
+      getTreeLines(
         makeChessTree([], [
           makeChessTree(['e4', 'e5'], []),
           makeChessTree(['d4'], [
@@ -667,17 +667,17 @@ describe('filterTreesWithOpenings()', () => {
   });
 });
 
-describe('isPathInTree()', () => {
-  it('returns false if the path is not in tree', () => {
-    expect(isPathInTree(['e4', 'e5'], allTraps.magnusSmith.chessTree)).toBe(false);
+describe('isLineInTree()', () => {
+  it('returns false if the line is not in tree', () => {
+    expect(isLineInTree(['e4', 'e5'], allTraps.magnusSmith.chessTree)).toBe(false);
   });
 
-  it('returns true if the path is in the tree', () => {
-    expect(isPathInTree(['e4', 'e5'], allTraps.legal.chessTree)).toBe(true);
+  it('returns true if the line is in the tree', () => {
+    expect(isLineInTree(['e4', 'e5'], allTraps.legal.chessTree)).toBe(true);
   });
 });
 
-describe('filterTrapsWithPath()', () => {
+describe('filterTrapsWithLine()', () => {
   const traps = [
     allTraps.legal,
     allTraps.englundGambit,
@@ -686,17 +686,17 @@ describe('filterTrapsWithPath()', () => {
     allTraps.magnusSmith,
   ];
 
-  it('returns no traps if path does not match any of the traps', () => {
-    expect(filterLessonsWithPath(['a4', 'a5'], traps)).toEqual([]);
+  it('returns no traps if line does not match any of the traps', () => {
+    expect(filterLessonsWithLine(['a4', 'a5'], traps)).toEqual([]);
   });
 
-  it('returns correct trap if path matches one of the traps', () => {
-    expect(filterLessonsWithPath(['d4', 'e5'], traps))
+  it('returns correct trap if line matches one of the traps', () => {
+    expect(filterLessonsWithLine(['d4', 'e5'], traps))
       .toStrictEqual([allTraps.englundGambit]);
   });
 
-  it('returns multiple correct traps if path matches multiple of the traps', () => {
-    const filtered = filterLessonsWithPath(['d4', 'd5'], traps)
+  it('returns multiple correct traps if line matches multiple of the traps', () => {
+    const filtered = filterLessonsWithLine(['d4', 'd5'], traps)
     expect(filtered.map((t) => t.shortName).sort())
       .toEqual([allTraps.lasker, allTraps.elephant].map((t) => t.shortName).sort());
   });

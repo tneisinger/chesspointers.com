@@ -6,8 +6,8 @@ export interface HasTeachingPriority {
   teachingPriority: number;
 }
 
-export interface ChessTreePath extends HasTeachingPriority {
-  path: string[];
+export interface ChessTreeLine extends HasTeachingPriority {
+  line: string[];
 }
 
 export interface ChessTreeMove extends Partial<HasTeachingPriority> {

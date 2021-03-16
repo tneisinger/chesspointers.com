@@ -11,15 +11,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  numPaths: number;
-  numPathsCompleted: number;
+  numLines: number;
+  numLinesCompleted: number;
   currentGuideMode: GuideMode;
   score: number;
 }
 
 const ChessGuideInfo: React.FunctionComponent<Props> = ({
-  numPaths,
-  numPathsCompleted,
+  numLines,
+  numLinesCompleted,
   currentGuideMode,
   score,
 }) => {
@@ -47,7 +47,7 @@ const ChessGuideInfo: React.FunctionComponent<Props> = ({
       </Grid>
       <Grid item>
         <Typography variant='caption'>
-          Paths Complete: {numPathsCompleted}/{numPaths}
+          Lines Complete: {numLinesCompleted}/{numLines}
         </Typography>
       </Grid>
       <Grid item>

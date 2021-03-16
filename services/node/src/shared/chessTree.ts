@@ -3,13 +3,13 @@ import {
   ChessTree,
   ChessOpening,
   ChessTreeMove,
-  ChessTreePath,
+  ChessTreeLine,
   HasTeachingPriority,
 } from './chessTypes';
 import { Lesson } from './entity/lesson';
 import {
   areChessMovesEquivalent,
-  areChessPathsEquivalent,
+  areChessLinesEquivalent,
   arraysEqual,
   getFen,
   idxOfFirstPairThat,
@@ -48,36 +48,36 @@ export const makeChessTree = (
   return result;
 };
 
-export function getTreePaths(tree: ChessTree): string[][];
-export function getTreePaths(tree: ChessTree, verbose: 'verbose'): ChessTreePath[];
-export function getTreePaths(tree: ChessTree, verbose?: 'verbose'): any[] {
-  const paths = [];
+export function getTreeLines(tree: ChessTree): string[][];
+export function getTreeLines(tree: ChessTree, verbose: 'verbose'): ChessTreeLine[];
+export function getTreeLines(tree: ChessTree, verbose?: 'verbose'): any[] {
+  const lines = [];
   if (tree.move != '') {
     tree = { move: '', children: [tree], ...tree };
   }
-  type IncompletePath = { path: string[]; teachingPriority: number; subtree: ChessTree };
-  const incompletePaths: IncompletePath[] = [
+  type IncompleteLine = { line: string[]; teachingPriority: number; subtree: ChessTree };
+  const incompleteLines: IncompleteLine[] = [
     {
-      path: [],
+      line: [],
       teachingPriority: 0,
       subtree: tree,
     },
   ];
-  while (incompletePaths.length > 0) {
-    const { path, teachingPriority, subtree } = incompletePaths.shift();
+  while (incompleteLines.length > 0) {
+    const { line, teachingPriority, subtree } = incompleteLines.shift();
     if (subtree.children.length < 1) {
-      const completePath = subtree.move == '' ? path : [...path, subtree.move];
-      if (completePath.length > 0) {
+      const completeLine = subtree.move == '' ? line : [...line, subtree.move];
+      if (completeLine.length > 0) {
         // If the `verbose` flag was included in the function call, include extra
-        // information with each path
-        const result = verbose ? { path: completePath, teachingPriority } : completePath;
-        paths.push(result);
+        // information with each line
+        const result = verbose ? { line: completeLine, teachingPriority } : completeLine;
+        lines.push(result);
       }
     } else {
       subtree.children.forEach((child) => {
-        const newPath = subtree.move === '' ? path : [...path, subtree.move];
-        incompletePaths.push({
-          path: newPath,
+        const newLine = subtree.move === '' ? line : [...line, subtree.move];
+        incompleteLines.push({
+          line: newLine,
 
           // If the child doesn't have a teachingPriority value, use the parent's
           // teachingPriority value. Otherwise, use the child's teachingPriority value.
@@ -91,14 +91,14 @@ export function getTreePaths(tree: ChessTree, verbose?: 'verbose'): any[] {
       });
     }
   }
-  return paths;
+  return lines;
 }
 
 export const validateChessTree = (tree: ChessTree): void => {
-  const paths = getTreePaths(tree);
-  paths.forEach((path) => {
+  const lines = getTreeLines(tree);
+  lines.forEach((line) => {
     const game = new Chess();
-    path.forEach((move) => {
+    line.forEach((move) => {
       if (move === '') {
         throw new Error('Empty move strings are only allowed at the root of ChessTrees');
       }
@@ -107,10 +107,10 @@ export const validateChessTree = (tree: ChessTree): void => {
   });
 };
 
-function getSubtreeAtPath(path: string[], tree: ChessTree): ChessTree {
-  if (path.length === 0) return tree;
+function getSubtreeAtLine(line: string[], tree: ChessTree): ChessTree {
+  if (line.length === 0) return tree;
   if (tree.move === '') {
-    const move = path[0];
+    const move = line[0];
     const childrenWithNextMove = tree.children.filter((child) =>
       areChessMovesEquivalent(child.move, move),
     );
@@ -119,55 +119,55 @@ function getSubtreeAtPath(path: string[], tree: ChessTree): ChessTree {
     } else if (childrenWithNextMove.length < 1) {
       throw new Error(`Move ${move} not found`);
     } else {
-      return getSubtreeAtPath(path, childrenWithNextMove[0]);
+      return getSubtreeAtLine(line, childrenWithNextMove[0]);
     }
   } else {
-    if (areChessMovesEquivalent(path[0], tree.move)) {
-      return getSubtreeAtPath(path.slice(1), { move: '', children: tree.children });
+    if (areChessMovesEquivalent(line[0], tree.move)) {
+      return getSubtreeAtLine(line.slice(1), { move: '', children: tree.children });
     } else {
-      throw new Error(`Move ${path[0]} did not match next tree move ${tree.move}`);
+      throw new Error(`Move ${line[0]} did not match next tree move ${tree.move}`);
     }
   }
 }
 
 export function mergeTrees(...trees: ChessTree[]): ChessTree {
-  // Put all the paths of all the trees into one list
-  const paths: string[][] = [];
+  // Put all the lines of all the trees into one list
+  const lines: string[][] = [];
   trees.forEach((tree) => {
-    getTreePaths(tree).forEach((path) => paths.push(path));
+    getTreeLines(tree).forEach((line) => lines.push(line));
   });
 
-  // If there are no paths, just return an empty tree
-  if (paths.length <= 0) {
+  // If there are no lines, just return an empty tree
+  if (lines.length <= 0) {
     return { move: '', children: [] };
   }
 
   const result = { move: '', children: [] };
-  const lengthOfLongestPath = Math.max(...paths.map((path) => path.length));
+  const lengthOfLongestLine = Math.max(...lines.map((line) => line.length));
 
   // Each iteration of this for-loop represents one step deeper into what will
   // be the resulting ChessTree. Upon each step down, add all the nodes that should
   // exist at that level before going further down into the tree. (Breadth first)
-  for (let idx = 0; idx < lengthOfLongestPath; idx++) {
-    const pathsToAdd: string[][] = [];
+  for (let idx = 0; idx < lengthOfLongestLine; idx++) {
+    const linesToAdd: string[][] = [];
 
-    paths.forEach((path) => {
-      const pathSoFar = path.slice(0, idx + 1);
-      // if the current path has a move at this depth and if this 'pathSoFar' hasn't
-      // already been added to the list of 'pathsToAdd', push it onto 'pathsToAdd'.
+    lines.forEach((line) => {
+      const lineSoFar = line.slice(0, idx + 1);
+      // if the current line has a move at this depth and if this 'lineSoFar' hasn't
+      // already been added to the list of 'linesToAdd', push it onto 'linesToAdd'.
       if (
-        path[idx] != undefined &&
-        !pathsToAdd.some((p) => areChessPathsEquivalent(p, pathSoFar))
+        line[idx] != undefined &&
+        !linesToAdd.some((p) => areChessLinesEquivalent(p, lineSoFar))
       ) {
-        pathsToAdd.push(pathSoFar);
+        linesToAdd.push(lineSoFar);
       }
     });
-    pathsToAdd.forEach((path) => {
-      const pathBeforeMove = path.slice(0, -1);
-      const move = path[path.length - 1];
+    linesToAdd.forEach((line) => {
+      const lineBeforeMove = line.slice(0, -1);
+      const move = line[line.length - 1];
 
       // Attach a new node to the result tree
-      getSubtreeAtPath(pathBeforeMove, result).children.push({ move, children: [] });
+      getSubtreeAtLine(lineBeforeMove, result).children.push({ move, children: [] });
     });
   }
 
@@ -181,11 +181,11 @@ export function mergeTrees(...trees: ChessTree[]): ChessTree {
   return result;
 }
 
-export function getPreviewPositionPath(tree: ChessTree): string[] | null {
+export function getPreviewPositionLine(tree: ChessTree): string[] | null {
   if (tree.isPreviewPosition) {
     return tree.move === '' ? [] : [tree.move];
   }
-  const paths = getTreePaths(tree);
+  const lines = getTreeLines(tree);
 
   // Standardize tree so that first move is definitely the empty string.
   if (tree.move === '') {
@@ -194,12 +194,12 @@ export function getPreviewPositionPath(tree: ChessTree): string[] | null {
     tree = { move: '', children: [tree] };
   }
 
-  for (let i = 0; i < paths.length; i++) {
+  for (let i = 0; i < lines.length; i++) {
     let currentTree = tree;
     const result: string[] = [];
-    const path = paths[i];
-    for (let j = 0; j < path.length; j++) {
-      const move = path[j];
+    const line = lines[i];
+    for (let j = 0; j < line.length; j++) {
+      const move = line[j];
       result.push(move);
       currentTree = currentTree.children.find((child) => child.move === move);
       if (currentTree == undefined) {
@@ -221,12 +221,12 @@ export function doesTreeReachPosition(fen: string, tree: ChessTree): boolean {
   // We don't care about the halfmove clock or the fullmove number, so drop those
   fen = dropClockAndMoveNum(fen);
   const chess = new Chess();
-  const paths = getTreePaths(tree);
-  for (let i = 0; i < paths.length; i++) {
+  const lines = getTreeLines(tree);
+  for (let i = 0; i < lines.length; i++) {
     chess.reset();
-    const path = paths[i];
-    for (let j = 0; j < path.length; j++) {
-      const move = path[j];
+    const line = lines[i];
+    for (let j = 0; j < line.length; j++) {
+      const move = line[j];
       if (!chess.move(move)) throw new Error(`Invalid move: ${move}`);
       if (dropClockAndMoveNum(chess.fen()) === fen) return true;
     }
@@ -311,11 +311,11 @@ export function filterLessonsWithOpenings(
   );
 }
 
-export function isPathInTree(path: string[], tree: ChessTree): boolean {
-  const paths = getTreePaths(tree);
-  return paths.some((treePath) => arraysEqual(treePath.slice(0, path.length), path));
+export function isLineInTree(line: string[], tree: ChessTree): boolean {
+  const lines = getTreeLines(tree);
+  return lines.some((treeLine) => arraysEqual(treeLine.slice(0, line.length), line));
 }
 
-export function filterLessonsWithPath(path: string[], lessons: Lesson[]): Lesson[] {
-  return lessons.filter((lesson) => isPathInTree(path, lesson.chessTree));
+export function filterLessonsWithLine(line: string[], lessons: Lesson[]): Lesson[] {
+  return lessons.filter((lesson) => isLineInTree(line, lesson.chessTree));
 }
