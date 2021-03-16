@@ -366,6 +366,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setIsShowingMoves(false);
     if (mode === 'learn') setIsBoardDisabled(true);
     scheduleShowMoves();
+    setIsBoardDisabled(false);
   };
 
   const moveBack = () => {
