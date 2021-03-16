@@ -16,16 +16,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('lg')]: {
       width: theme.sideMenuWidth,
       flexShrink: 0,
     },
   },
   drawerPaper: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('lg')]: {
       width: theme.sideMenuWidth,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('lg')]: {
       minWidth: 160,
     },
   },
@@ -57,7 +57,7 @@ export const SideMenu: React.FC<Props> = (props) => {
 
   return (
     <nav className={classes.drawer}>
-      <Hidden smUp implementation='css'>
+      <Hidden lgUp implementation='css'>
         <Drawer
           container={container}
           variant='temporary'
@@ -75,7 +75,7 @@ export const SideMenu: React.FC<Props> = (props) => {
           <SideMenuList {...props} />
         </Drawer>
       </Hidden>
-      <Hidden xsDown implementation='css'>
+      <Hidden mdDown implementation='css'>
         <Drawer
           variant='permanent'
           classes={{

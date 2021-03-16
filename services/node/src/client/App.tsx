@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   appBar: {
     zIndex: 1400,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('lg')]: {
       width: theme.sideMenuWidth,
       left: 0,
     },
@@ -94,20 +94,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuButton: {
     position: 'absolute',
     left: '16px',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('lg')]: {
       display: 'none',
     },
   },
   siteTitleText: {
     margin: '0 auto',
     color: 'white',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('lg')]: {
       fontSize: '1.2rem',
     },
   },
   toolbarAboveMain: {
     ...theme.mixins.toolbar,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('lg')]: {
       height: 0,
       minHeight: 0,
     },

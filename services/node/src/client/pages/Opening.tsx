@@ -88,7 +88,7 @@ const OpeningPageContent: React.FC<OpeningsSlice> = ({ openings }) => {
               userPlaysAs={opening.playedByWhite ? 'white' : 'black'}
               boardSizePixels={boardSizePixels}
             >
-              {windowWidth > 1000 && (
+              {windowWidth > 1280 && (
                 <MovesPane
                   height={boardSizePixels}
                   playedMoves={[]}
