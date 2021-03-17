@@ -6,6 +6,7 @@ import Chessground from 'react-chessground';
 import ColorFlashOverlay from './ColorFlashOverlay';
 import CheckmateOverlay from './CheckmateOverlay';
 import DisablerOverlay from './DisablerOverlay';
+import { convertShortMoveToMove } from '../../shared/utils';
 
 enum BrushColor {
   GREEN = 'green',
@@ -42,6 +43,7 @@ interface Props {
   inCheck: boolean;
   inCheckmate: boolean;
   wrongMoveFlashIdx: number;
+  doesMoveLeadToDeadEnd: (move: string) => boolean;
   orientation?: PieceColor;
   disabled?: boolean;
 }
@@ -78,11 +80,12 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
     const result: ChessboardArrow[] = [];
     const nextMoves = getNextShortMoves();
     if (nextMoves.length > 0) {
-      nextMoves.forEach(({ from, to }) => {
+      nextMoves.forEach((shortMove) => {
+        const move = convertShortMoveToMove(props.playedMoves, shortMove);
         result.push({
-          orig: from,
-          dest: to,
-          brush: BrushColor.GREEN,
+          orig: shortMove.from,
+          dest: shortMove.to,
+          brush: props.doesMoveLeadToDeadEnd(move) ? BrushColor.YELLOW : BrushColor.GREEN,
         });
       });
     }

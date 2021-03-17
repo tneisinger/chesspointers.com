@@ -248,15 +248,15 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   };
 
-  // Return true if the most recently played move only leads to completed lines and there
-  // are uncompleted lines (or lines completed fewer times) available to the user if they
-  // had played a different move. If the `ignoreIfAllLinesHaveBeenCompleted` option is
-  // given, always return false if all the relevant lines have been completed at least
-  // once.
-  const doesLastMoveLeadToDeadEnd = (
+  // Return true if the given move only leads to completed lines and there are uncompleted
+  // lines (or lines completed fewer times) available to the user if they had played a
+  // different move. If the `ignoreIfAllLinesHaveBeenCompleted` option is given, always
+  // return false if all the relevant lines have been completed at least once.
+  const doesMoveLeadToDeadEnd = (
+    move: string,
     ignore?: 'ignoreIfAllLinesHaveBeenCompleted',
   ): boolean => {
-    const linesWithMove = getRelevantLines([...playedMoves, getLastMove()]);
+    const linesWithMove = getRelevantLines([...playedMoves, move]);
     const linesWithoutMove = getRelevantLines();
     const lowestTimesCompletedWithoutMove = Math.min(
       ...linesWithoutMove.map((p) => p.timesCompleted),
@@ -269,7 +269,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const handleCorrectMove = () => {
-    if (doesLastMoveLeadToDeadEnd('ignoreIfAllLinesHaveBeenCompleted')) {
+    if (doesMoveLeadToDeadEnd(getLastMove(), 'ignoreIfAllLinesHaveBeenCompleted')) {
       setIsDeadEndModalOpen(true);
       return;
     } else {
@@ -547,6 +547,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             nextMoves={getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
             wrongMoveFlashIdx={wrongMoveFlashIdx}
+            doesMoveLeadToDeadEnd={doesMoveLeadToDeadEnd}
             disabled={isBoardDisabled}
           />
         </div>
