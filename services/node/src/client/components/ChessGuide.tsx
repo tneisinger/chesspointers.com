@@ -91,6 +91,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
   const [movesPosition, setMovesPosition] = useState<number>(0);
   const [isBoardDisabled, setIsBoardDisabled] = useState<boolean>(false);
+  const [didPcPlayLastMove, setDidPcPlayLastMove] = useState<boolean>(true);
 
   // timeout refs
   const checkMoveTimeout = useRef<number | undefined>(undefined);
@@ -133,7 +134,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       // hide all move arrows.
       if (isShowingMoves) scheduleHideMoves({ delay: 200 });
     } else {
-      scheduleShowMoves();
+      // If the computer played the last move, we need to delay showing moves to wait for
+      // the board animation to complete. If the user played the move, we don't need to
+      // wait as long.
+      if (didPcPlayLastMove) {
+        scheduleShowMoves();
+      } else {
+        scheduleShowMoves({ delay: 100 });
+      }
     }
   }, [movesPosition]);
 
@@ -310,6 +318,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return history[history.length - 1];
   };
 
+  const getMovableColor = (): PieceColor | 'both' => {
+    // If the user is looking at past moves, allow them to move all pieces.
+    if (movesPosition < playedMoves.length) {
+      return 'both';
+    }
+    return game.turn() === 'w' ? 'white' : 'black';
+  };
+
   const calcMovable = () => {
     const dests = new Map();
     game.SQUARES.forEach((s) => {
@@ -324,7 +340,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       free: movesPosition < playedMoves.length,
       dests,
       showDests: mode === 'practice',
-      color: movesPosition < playedMoves.length ? 'both' : userPlaysAs,
+      color: getMovableColor(),
       events: { after: afterMove },
     };
   };
@@ -469,8 +485,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       recordLineCompletion();
       setIsLineCompleteModalOpen(true);
     }
-    if (!isUsersTurn()) {
+    if (!isUsersTurn() && getNextMoves().length < 2) {
       doComputerMove();
+      setDidPcPlayLastMove(true);
+    } else {
+      setDidPcPlayLastMove(false);
     }
   }, [playedMoves]);
 
