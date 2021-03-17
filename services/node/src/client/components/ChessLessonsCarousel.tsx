@@ -8,7 +8,7 @@ import { viewportHeight, viewportWidth } from '../utils';
 const useStyles = makeStyles({
   carousel: {
     width: '100vw',
-    maxWidth: '800px',
+    maxWidth: '1000px',
     margin: '0 auto',
     // Prevent the carouselWrapper div from collapsing when the carousel
     // doesn't have any items in it.
