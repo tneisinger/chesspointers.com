@@ -383,6 +383,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     if (mode === 'learn') setIsBoardDisabled(true);
     scheduleShowMoves();
     setIsBoardDisabled(false);
+    setDidPcPlayLastMove(true);
   };
 
   const moveBack = () => {
@@ -401,9 +402,17 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setMovesPosition(0);
   };
 
+  const pcHasMultipleMoveOptions = (): boolean => {
+    return !isUsersTurn() && getNextMoves().length > 1;
+  };
+
+  const shouldShowMoves = (): boolean => {
+    return mode === 'learn' || pcHasMultipleMoveOptions();
+  };
+
   const scheduleShowMoves = (options: { forceShow?: boolean; delay?: number } = {}) => {
     const delay = options.delay == undefined ? SHOW_NEXT_MOVES_DELAY : options.delay;
-    if (mode === 'learn' || options.forceShow) {
+    if (shouldShowMoves() || options.forceShow) {
       showMovesTimeout.current = window.setTimeout(() => {
         setIsShowingMoves(true);
         setIsBoardDisabled(false);
