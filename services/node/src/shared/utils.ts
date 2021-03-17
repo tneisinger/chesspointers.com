@@ -1,4 +1,4 @@
-import { ShortMove } from 'chess.js';
+import { Chess, ShortMove } from 'chess.js';
 import { Lesson } from './entity/lesson';
 import { ChessOpening, FenParts } from './chessTypes';
 
@@ -165,6 +165,23 @@ export function getFenParts(fen: string): FenParts {
     halfMoveClock: Number(halfClock),
     fullMoveNumber: Number(fullMoveNum),
   };
+}
+
+export function convertShortMoveToMove(
+  precedingMoves: string[],
+  shortMove: ShortMove,
+): string {
+  const chess = new Chess();
+  precedingMoves.forEach((move, idx) => {
+    if (!chess.move(move)) {
+      throw new Error(`invalid move: ${move}, moves: ${precedingMoves.slice(0, idx)}`);
+    }
+  });
+  if (!chess.move(shortMove)) {
+    throw new Error(`invalid move: ${shortMove}, moves: ${precedingMoves}`);
+  }
+  const history = chess.history();
+  return history[history.length - 1];
 }
 
 export function capitalizeFirstLetter(str: string): string {
