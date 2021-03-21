@@ -265,31 +265,22 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   };
 
-  // Return true if the given move only leads to completed lines and there are uncompleted
-  // lines (or lines completed fewer times) available to the user if they had played a
-  // different move. If the `ignoreIfAllLinesHaveBeenCompleted` option is given, always
-  // return false if all the relevant lines have been completed at least once.
-  const doesMoveLeadToDeadEnd = (
-    move: string,
-    ignore?: 'ignoreIfAllLinesHaveBeenCompleted',
-  ): boolean => {
+  // Return true if the given move only leads to completed lines.
+  const doesMoveLeadToDeadEnd = (move: string): boolean => {
     const linesWithMove = getRelevantLines([...playedMoves, move]);
-    const linesWithoutMove = getRelevantLines();
-    const lowestTimesCompletedWithoutMove = Math.min(
-      ...linesWithoutMove.map((p) => p.timesCompleted),
-    );
-    if (lowestTimesCompletedWithoutMove > 0 && ignore) return false;
     const lowestTimesCompletedWithMove = Math.min(
       ...linesWithMove.map((p) => p.timesCompleted),
     );
-    return lowestTimesCompletedWithMove > lowestTimesCompletedWithoutMove;
+    return lowestTimesCompletedWithMove > 0;
   };
 
+  const shouldShowDeadEndModal = (): boolean =>
+    allowDeadEndModal &&
+    getNextMoves().length > 1 &&
+    doesMoveLeadToDeadEnd(getLastMove());
+
   const handleCorrectMove = () => {
-    if (
-      allowDeadEndModal &&
-      doesMoveLeadToDeadEnd(getLastMove(), 'ignoreIfAllLinesHaveBeenCompleted')
-    ) {
+    if (shouldShowDeadEndModal()) {
       setIsDeadEndModalOpen(true);
       return;
     } else {
