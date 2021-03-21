@@ -30,6 +30,7 @@ const SHOW_DEBUG_BTN = false;
 const BEEPER_FREQUENCY = 73;
 const BOARD_BORDER_WIDTH = '13px';
 const SWITCH_TO_PRACTICE_MODE_DELAY = 300;
+const LCL_STOR_KEY_ALLOW_DEAD_END_MODAL = 'allowDeadEndModal';
 
 const useStyles = makeStyles((theme) => ({
   boardBorderDiv: {
@@ -81,6 +82,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [isLineCompleteModalOpen, setIsLineCompleteModalOpen] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
   const [isDeadEndModalOpen, setIsDeadEndModalOpen] = useState(false);
+  const [allowDeadEndModal, setAllowDeadEndModal] = useState<boolean>(() => {
+    const localStorageVal = localStorage.getItem(LCL_STOR_KEY_ALLOW_DEAD_END_MODAL);
+    return localStorageVal ? JSON.parse(localStorageVal) : true;
+  });
   const [mode, setMode] = useState<GuideMode>(guideMode);
   const [lineStats, setLineStats] = useState<LineStats[]>([]);
   const [game] = useState<ChessInstance>(new Chess());
@@ -119,6 +124,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   useEffect(() => {
     return clearTimeouts;
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(LCL_STOR_KEY_ALLOW_DEAD_END_MODAL, String(allowDeadEndModal));
+  }, [allowDeadEndModal]);
 
   // Whenever `movesPosition` changes...
   useEffect(() => {
@@ -277,7 +286,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const handleCorrectMove = () => {
-    if (doesMoveLeadToDeadEnd(getLastMove(), 'ignoreIfAllLinesHaveBeenCompleted')) {
+    if (
+      allowDeadEndModal &&
+      doesMoveLeadToDeadEnd(getLastMove(), 'ignoreIfAllLinesHaveBeenCompleted')
+    ) {
       setIsDeadEndModalOpen(true);
       return;
     } else {
@@ -651,6 +663,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       <DeadEndModal
         isOpenOrOpening={isDeadEndModalOpen}
         maxWidth='375px'
+        showAgain={allowDeadEndModal}
+        setShowAgain={setAllowDeadEndModal}
         handleOptionSelect={(keepMove) => {
           setIsDeadEndModalOpen(false);
           if (keepMove) {
