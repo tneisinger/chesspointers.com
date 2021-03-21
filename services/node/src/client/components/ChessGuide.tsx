@@ -11,6 +11,7 @@ import {
   partition,
   randomElem,
   getScoreFromFen,
+  convertMovesToShortMoves,
 } from '../../shared/utils';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
@@ -97,6 +98,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [movesPosition, setMovesPosition] = useState<number>(0);
   const [isBoardDisabled, setIsBoardDisabled] = useState<boolean>(false);
   const [didPcPlayLastMove, setDidPcPlayLastMove] = useState<boolean>(true);
+  const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
 
   // timeout refs
   const checkMoveTimeout = useRef<number | undefined>(undefined);
@@ -131,6 +133,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   // Whenever `movesPosition` changes...
   useEffect(() => {
+    updateLastMoveSquares();
     // Reset the board to the specified position
     game.reset();
     for (let i = 0; i < movesPosition; i++) {
@@ -387,6 +390,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     scheduleShowMoves();
     setIsBoardDisabled(false);
     setDidPcPlayLastMove(true);
+    setLastMoveSquares([]);
   };
 
   const moveBack = () => {
@@ -555,6 +559,22 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     attemptMove(from, to, promotionPiece);
   };
 
+  // Set the `lastMoveSquares` that should be highlighted as the last played move
+  const updateLastMoveSquares = (): void => {
+    if (playedMoves.length < 1 || movesPosition < 1) {
+      setLastMoveSquares([]);
+      return;
+    }
+    let idx = movesPosition;
+    if (movesPosition >= playedMoves.length) {
+      idx = playedMoves.length - 1;
+    } else if (movesPosition < playedMoves.length) {
+      idx = movesPosition - 1;
+    }
+    const { from, to } = convertMovesToShortMoves(playedMoves)[idx];
+    setLastMoveSquares([from, to]);
+  };
+
   const debug = () => {
     console.log('You pressed the debug button');
   };
@@ -579,6 +599,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             shouldShowNextMoves={isShowingMoves}
             wrongMoveFlashIdx={wrongMoveFlashIdx}
             doesMoveLeadToDeadEnd={doesMoveLeadToDeadEnd}
+            lastMoveSquares={lastMoveSquares}
             disabled={isBoardDisabled}
           />
         </div>

@@ -44,6 +44,7 @@ interface Props {
   inCheckmate: boolean;
   wrongMoveFlashIdx: number;
   doesMoveLeadToDeadEnd: (move: string) => boolean;
+  lastMoveSquares: string[];
   orientation?: PieceColor;
   disabled?: boolean;
 }
@@ -128,6 +129,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
           String(drawable.visible) /* rerender when `props.drawable.visible` changes */
         }
         width={props.size}
+        lastMove={props.lastMoveSquares}
         height={props.size}
         turnColor={props.turnColor}
         fen={props.boardPosition}
@@ -138,7 +140,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
         resizable={true}
         highlight={{
           check: true,
-          lastMove: false,
+          lastMove: true,
         }}
         check={props.inCheck}
       />
