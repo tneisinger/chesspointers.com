@@ -184,6 +184,16 @@ export function convertShortMoveToMove(
   return history[history.length - 1];
 }
 
+export function convertMovesToShortMoves(moves: string[]): ShortMove[] {
+  const chess = new Chess();
+  moves.forEach((move, idx) => {
+    if (!chess.move(move)) {
+      throw new Error(`invalid move: ${move}, moves: ${moves.slice(0, idx)}`);
+    }
+  });
+  return chess.history({ verbose: true });
+}
+
 export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
