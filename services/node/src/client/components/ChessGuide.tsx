@@ -561,17 +561,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   // Set the `lastMoveSquares` that should be highlighted as the last played move
   const updateLastMoveSquares = (): void => {
-    if (playedMoves.length < 1 || movesPosition < 1) {
+    const moveIdx = getSelectedMoveIdx();
+    if (playedMoves.length < 1 || moveIdx == null) {
       setLastMoveSquares([]);
       return;
     }
-    let idx = movesPosition;
-    if (movesPosition >= playedMoves.length) {
-      idx = playedMoves.length - 1;
-    } else if (movesPosition < playedMoves.length) {
-      idx = movesPosition - 1;
-    }
-    const { from, to } = convertMovesToShortMoves(playedMoves)[idx];
+    const { from, to } = convertMovesToShortMoves(playedMoves)[moveIdx];
     setLastMoveSquares([from, to]);
   };
 
