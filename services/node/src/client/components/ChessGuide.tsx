@@ -4,11 +4,7 @@ import Button from '@material-ui/core/Button';
 import React, { useState, useEffect, useRef } from 'react';
 import { Chess, ChessInstance, Square, ShortMove } from 'chess.js';
 import { ChessTree, PieceColor, PromotionPiece } from '../../shared/chessTypes';
-import { getTreeLines } from '../../shared/chessTree';
 import {
-  areChessLinesEquivalent,
-  areChessMovesEquivalent,
-  partition,
   randomElem,
   getScoreFromFen,
   convertMovesToShortMoves,
@@ -23,6 +19,7 @@ import LineCompleteModal from './LineCompleteModal';
 import PawnPromoteModal from './PawnPromoteModal';
 import DeadEndModal from './DeadEndModal';
 import { LessonType } from '../../shared/entity/lesson';
+import { useLineStats } from '../hooks/useLineStats';
 
 const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = 250;
@@ -54,13 +51,6 @@ interface Props {
   renderExtraControlsForTesting?: boolean;
 }
 
-type LineStats = {
-  mode: GuideMode;
-  line: string[];
-  timesCompleted: number;
-  teachingPriority: number;
-};
-
 type MoveFromTo = {
   from: Square;
   to: Square;
@@ -77,8 +67,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 }) => {
   const classes = useStyles({});
 
-  const lines = getTreeLines(chessTree, 'verbose');
-
   const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
   const [isLineCompleteModalOpen, setIsLineCompleteModalOpen] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
@@ -88,7 +76,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return localStorageVal ? JSON.parse(localStorageVal) : true;
   });
   const [mode, setMode] = useState<GuideMode>(guideMode);
-  const [lineStats, setLineStats] = useState<LineStats[]>([]);
   const [game] = useState<ChessInstance>(new Chess());
   const [fen, setFen] = useState(game.fen());
   const [pendingMove, setPendingMove] = useState<MoveFromTo | undefined>(undefined);
@@ -99,6 +86,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [isBoardDisabled, setIsBoardDisabled] = useState<boolean>(false);
   const [didPcPlayLastMove, setDidPcPlayLastMove] = useState<boolean>(true);
   const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
+
+  const lineStatsToolkit = useLineStats(chessTree, playedMoves, mode);
 
   // timeout refs
   const checkMoveTimeout = useRef<number | undefined>(undefined);
@@ -162,26 +151,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return game.turn() === userPlaysAs.charAt(0);
   };
 
-  // Initialize 'lineStats' for all lines, setting their 'timesCompleted' values
-  // to zero.
-  const makeInitialLineStatsValues = (): LineStats[] => {
-    return lines.reduce((acc: LineStats[], lineObj) => {
-      const practiceLine: LineStats = {
-        mode: 'practice',
-        line: lineObj.line,
-        timesCompleted: 0,
-        teachingPriority: 0,
-      };
-      const learnLine: LineStats = {
-        mode: 'learn',
-        line: lineObj.line,
-        timesCompleted: 0,
-        teachingPriority: lineObj.teachingPriority,
-      };
-      return [...acc, practiceLine, learnLine];
-    }, []);
-  };
-
   // Use this function to set the `fen` value, which will update the board position.
   const updateBoard = () => setFen(game.fen());
 
@@ -201,33 +170,23 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   useEffect(() => {
     reset();
-    setLineStats(makeInitialLineStatsValues());
+    lineStatsToolkit.resetValues();
   }, []);
 
   useEffect(() => {
     reset();
-    setLineStats(makeInitialLineStatsValues());
+    lineStatsToolkit.resetValues();
   }, [chessTree, userPlaysAs]);
 
   const getNextMoves = (): string[] => {
     const result: string[] = [];
-    getRelevantLines().forEach((lineStats) => {
+    lineStatsToolkit.getRelevantLines().forEach((lineStats) => {
       const nextMove = lineStats.line[playedMoves.length];
       if (nextMove != undefined && !result.includes(nextMove)) {
         result.push(nextMove);
       }
     });
     return result;
-  };
-
-  const getRelevantLines = (specifiedLine?: string[]): LineStats[] => {
-    const line = specifiedLine == undefined ? playedMoves : specifiedLine;
-    return lineStats.filter((p) => {
-      return (
-        p.mode === mode &&
-        line.every((move, idx) => areChessMovesEquivalent(move, p.line[idx]))
-      );
-    });
   };
 
   const handleMove = (from: Square, to: Square) => {
@@ -269,19 +228,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   };
 
-  // Return true if the given move only leads to completed lines.
-  const doesMoveLeadToDeadEnd = (move: string): boolean => {
-    const linesWithMove = getRelevantLines([...playedMoves, move]);
-    const lowestTimesCompletedWithMove = Math.min(
-      ...linesWithMove.map((p) => p.timesCompleted),
-    );
-    return lowestTimesCompletedWithMove > 0;
-  };
-
   const shouldShowDeadEndModal = (): boolean =>
     allowDeadEndModal &&
     getNextMoves().length > 1 &&
-    doesMoveLeadToDeadEnd(getLastMove());
+    lineStatsToolkit.doesMoveLeadToDeadEnd(getLastMove());
 
   const handleCorrectMove = () => {
     if (shouldShowDeadEndModal()) {
@@ -445,7 +395,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       // If there is more than one move that the computer can play, the computer randomly
       // selects a move from among the moves that are on lines that have been completed
       // the fewest number of the times.
-      const randomMove = randomElem(getBestNextMoves());
+      const randomMove = randomElem(lineStatsToolkit.getBestNextMoves());
       if (randomMove == undefined) {
         throw new Error('No moves returned by getBestNextMoves()');
       }
@@ -456,50 +406,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }, COMPUTER_THINK_TIME);
   };
 
-  const isAtLineEnd = (): boolean =>
-    lines.some((lineObj) => areChessLinesEquivalent(lineObj.line, playedMoves));
-
-  const getBestNextMoves = (): string[] => {
-    // Get the lines that are reachable from the current position forward.
-    const relevantLines = lineStats.filter((p) => {
-      return (
-        p.mode == mode &&
-        playedMoves.every((move, idx) => areChessMovesEquivalent(move, p.line[idx]))
-      );
-    });
-    const lowestTimesCompleted = Math.min(...relevantLines.map((p) => p.timesCompleted));
-    const leastCompletedLines = relevantLines.filter(
-      (p) => p.timesCompleted === lowestTimesCompleted,
-    );
-    const highestTeachingPriority = Math.max(
-      ...leastCompletedLines.map((p) => p.teachingPriority),
-    );
-    const bestLines = leastCompletedLines.filter(
-      (p) => p.teachingPriority === highestTeachingPriority,
-    );
-    return bestLines.map((p) => p.line[playedMoves.length]);
-  };
-
-  const recordLineCompletion = () => {
-    const [matchingLines, nonMatchingLines] = partition(
-      lineStats,
-      (p) => areChessLinesEquivalent(p.line, playedMoves) && p.mode === mode,
-    );
-    if (matchingLines.length !== 1) {
-      throw new Error(`Unexpected number of matchingLines: ${matchingLines.length}`);
-    } else {
-      const updatedLineStats: LineStats = {
-        ...matchingLines[0],
-        timesCompleted: matchingLines[0].timesCompleted + 1,
-      };
-      setLineStats([...nonMatchingLines, updatedLineStats]);
-    }
-  };
-
   // Whenever `playedMoves` changes
   useEffect(() => {
-    if (isAtLineEnd()) {
-      recordLineCompletion();
+    if (lineStatsToolkit.atLineEnd()) {
+      lineStatsToolkit.recordLineCompletion();
       setIsLineCompleteModalOpen(true);
     }
     if (!isUsersTurn() && getNextMoves().length < 2) {
@@ -509,16 +419,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       setDidPcPlayLastMove(false);
     }
   }, [playedMoves]);
-
-  const getNumLinesCompleted = (): number => {
-    return lineStats.reduce((acc: number, p) => {
-      if (p.mode === mode && p.timesCompleted > 0) {
-        return acc + 1;
-      } else {
-        return acc;
-      }
-    }, 0);
-  };
 
   const toggleGuideMode = () => {
     mode === 'learn' ? setMode('practice') : setMode('learn');
@@ -594,14 +494,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             nextMoves={getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
             wrongMoveFlashIdx={wrongMoveFlashIdx}
-            doesMoveLeadToDeadEnd={doesMoveLeadToDeadEnd}
+            doesMoveLeadToDeadEnd={lineStatsToolkit.doesMoveLeadToDeadEnd}
             lastMoveSquares={lastMoveSquares}
             disabled={isBoardDisabled}
           />
         </div>
         <ChessGuideInfo
-          numLines={lines.length}
-          numLinesCompleted={getNumLinesCompleted()}
+          numLines={lineStatsToolkit.numLines()}
+          numLinesCompleted={lineStatsToolkit.numLinesCompleted()}
           currentGuideMode={mode}
           score={getScoreFromFen(game.fen())}
         />
@@ -643,8 +543,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         lessonType={lessonType}
         isOpenOrOpening={isLineCompleteModalOpen}
         handleClose={() => setIsLineCompleteModalOpen(false)}
-        numLines={lines.length}
-        numLinesCompleted={getNumLinesCompleted()}
+        numLines={lineStatsToolkit.numLines()}
+        numLinesCompleted={lineStatsToolkit.numLinesCompleted()}
         currentGuideMode={mode}
         handleResetBtnClick={() => {
           reset();
