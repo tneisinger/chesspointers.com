@@ -51,11 +51,6 @@ interface Props {
   renderExtraControlsForTesting?: boolean;
 }
 
-type MoveFromTo = {
-  from: Square;
-  to: Square;
-};
-
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
   lessonType,
@@ -78,7 +73,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [mode, setMode] = useState<GuideMode>(guideMode);
   const [game] = useState<ChessInstance>(new Chess());
   const [fen, setFen] = useState(game.fen());
-  const [pendingMove, setPendingMove] = useState<MoveFromTo | undefined>(undefined);
+  const [pendingMove, setPendingMove] = useState<ShortMove | undefined>(undefined);
   const [wrongMoveFlashIdx, setWrongMoveFlashIdx] = useState<number>(0);
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
