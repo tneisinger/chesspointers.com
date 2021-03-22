@@ -127,6 +127,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return clearTimeouts;
   }, []);
 
+  // Update localStorage whenever the allowDeadEndModal value changes.
   useEffect(() => {
     localStorage.setItem(LCL_STOR_KEY_ALLOW_DEAD_END_MODAL, String(allowDeadEndModal));
   }, [allowDeadEndModal]);
