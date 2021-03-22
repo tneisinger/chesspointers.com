@@ -433,16 +433,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return movesPosition - 1;
   };
 
-  const changeSelectedMoveIdx = (idx: number) => {
-    setMovesPosition(idx + 1);
-  };
-
   const childrenWithProps = React.Children.map(props.children, (child) => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, {
         playedMoves,
         selectedMoveIdx: getSelectedMoveIdx(),
-        changeSelectedMoveIdx,
+        changeSelectedMoveIdx: (idx: number) => setMovesPosition(idx + 1),
       });
     }
     return child;
