@@ -8,6 +8,8 @@ import CheckmateOverlay from './CheckmateOverlay';
 import DisablerOverlay from './DisablerOverlay';
 import { convertShortMoveToMove } from '../../shared/utils';
 
+export const BOARD_ANIMATION_DURATION = 300;
+
 enum BrushColor {
   GREEN = 'green',
   RED = 'red',
@@ -153,6 +155,10 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
         onMove={props.onMove}
         movable={props.movable}
         resizable={true}
+        animation={{
+          enabled: true,
+          duration: BOARD_ANIMATION_DURATION,
+        }}
         highlight={{
           check: true,
           lastMove: true,

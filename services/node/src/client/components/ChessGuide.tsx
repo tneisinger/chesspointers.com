@@ -11,7 +11,7 @@ import {
 } from '../../shared/utils';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
-import ChessGuideBoard from './ChessGuideBoard';
+import ChessGuideBoard, { BOARD_ANIMATION_DURATION } from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
 import ChessGuideControls from './ChessGuideControls';
 import { GuideMode } from '../utils/types';
@@ -22,8 +22,8 @@ import { LessonType } from '../../shared/entity/lesson';
 import { useLineStats } from '../hooks/useLineStats';
 
 const COMPUTER_THINK_TIME = 250;
-const CHECK_MOVE_DELAY = 250;
-const SHOW_NEXT_MOVES_DELAY = 1000;
+const CHECK_MOVE_DELAY = BOARD_ANIMATION_DURATION + 50;
+const SHOW_NEXT_MOVES_DELAY = BOARD_ANIMATION_DURATION + 800;
 const SHOW_DEBUG_BTN = false;
 const BEEPER_FREQUENCY = 73;
 const BOARD_BORDER_WIDTH = '13px';
