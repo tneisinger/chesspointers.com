@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { GuideMode } from '../utils/types';
+import { capitalizeFirstLetter } from '../../shared/utils';
 
 const useStyles = makeStyles(() => ({
   gridContainer: {
@@ -51,7 +52,9 @@ const ChessGuideInfo: React.FunctionComponent<Props> = ({
         </Typography>
       </Grid>
       <Grid item>
-        <Typography variant='caption'>Mode: {currentGuideMode}</Typography>
+        <Typography variant='caption'>
+          {capitalizeFirstLetter(currentGuideMode)} Mode
+        </Typography>
       </Grid>
     </Grid>
   );
