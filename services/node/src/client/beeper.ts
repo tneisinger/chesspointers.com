@@ -20,8 +20,8 @@ class Beeper {
     this.audioContext = new window.AudioContext();
   }
 
-  resume(): void {
-    this.audioContext.resume();
+  resume(): Promise<void> {
+    return this.audioContext.resume();
   }
 
   play(): void {

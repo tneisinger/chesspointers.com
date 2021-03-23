@@ -45,6 +45,7 @@ interface Props {
   wrongMoveFlashIdx: number;
   doesMoveLeadToDeadEnd: (move: string) => boolean;
   lastMoveSquares: string[];
+  onMouseDown?: () => void;
   orientation?: PieceColor;
   disabled?: boolean;
 }
@@ -106,7 +107,10 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
   const drawable = makeDrawableProp();
 
   return (
-    <div className={classes.chessGuideBoardWrapper}>
+    <div
+      className={classes.chessGuideBoardWrapper}
+      onMouseDown={props.onMouseDown ? props.onMouseDown : () => Function.prototype()}
+    >
       <DisablerOverlay
         width={props.size}
         height={props.size}

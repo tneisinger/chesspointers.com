@@ -293,7 +293,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       dests,
       showDests: mode === 'practice',
       color: getMovableColor(),
-      events: { after: afterMove },
     };
   };
 
@@ -303,11 +302,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return newBeeper;
   };
 
-  const afterMove = (): void => {
+  const prepareBeeper = (): void => {
     if (beeper == undefined) {
       defineBeeper();
-    } else {
-      beeper.resume();
     }
   };
 
@@ -488,6 +485,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             doesMoveLeadToDeadEnd={lineStatsToolkit.doesMoveLeadToDeadEnd}
             lastMoveSquares={lastMoveSquares}
             disabled={isBoardDisabled}
+            onMouseDown={prepareBeeper}
           />
         </div>
         <ChessGuideInfo
