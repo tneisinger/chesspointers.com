@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Chess, ChessInstance, ShortMove, Square } from 'chess.js';
 import { PieceColor } from '../../shared/chessTypes';
 import { makeStyles } from '@material-ui/core';
@@ -23,6 +23,14 @@ const useStyles = makeStyles({
   },
 });
 
+interface DrawableProp {
+  enabled: boolean;
+  visible: boolean;
+  eraseOnClick: boolean;
+  defaultSnapToValidMove: boolean;
+  autoShapes: ChessboardArrow[];
+}
+
 interface ChessboardArrow {
   orig: string;
   dest: string;
@@ -43,6 +51,7 @@ interface Props {
   inCheck: boolean;
   inCheckmate: boolean;
   wrongMoveFlashIdx: number;
+  updateDrawableIdx: number;
   doesMoveLeadToDeadEnd: (move: string) => boolean;
   lastMoveSquares: string[];
   onMouseDown?: () => void;
@@ -104,7 +113,11 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
     };
   };
 
-  const drawable = makeDrawableProp();
+  const [drawableProp, setDrawableProp] = useState<DrawableProp>(makeDrawableProp());
+
+  useEffect(() => {
+    setDrawableProp(makeDrawableProp());
+  }, [props.updateDrawableIdx]);
 
   return (
     <div
@@ -129,16 +142,14 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
         color='red'
       />
       <Chessground
-        key={
-          String(drawable.visible) /* rerender when `props.drawable.visible` changes */
-        }
+        key={String(drawableProp.visible) /* rerender when `drawable.visible` changes */}
         width={props.size}
         lastMove={props.lastMoveSquares}
         height={props.size}
         turnColor={props.turnColor}
         fen={props.boardPosition}
         orientation={props.orientation}
-        drawable={makeDrawableProp()}
+        drawable={drawableProp as any}
         onMove={props.onMove}
         movable={props.movable}
         resizable={true}

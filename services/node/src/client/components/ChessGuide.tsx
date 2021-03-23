@@ -82,6 +82,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [didPcPlayLastMove, setDidPcPlayLastMove] = useState<boolean>(true);
   const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
 
+  // Increment this value to trigger a rebuild of the ChessGuideBoard drawable prop.
+  // The drawable prop is what puts the move arrows on the screen. We only want to
+  // trigger redraws at certain times, otherwise the animation of piece movements will
+  // get interrupted.
+  const [updateDrawableIdx, setUpdateDrawableIdx] = useState<number>(0);
+
   const lineStatsToolkit = useLineStats(chessTree, playedMoves, mode);
 
   // timeout refs
@@ -118,6 +124,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   // Whenever `movesPosition` changes...
   useEffect(() => {
+    setIsShowingMoves(false);
+    triggerBoardDrawableUpdate();
     updateLastMoveSquares();
     // Reset the board to the specified position
     game.reset();
@@ -360,12 +368,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     return mode === 'learn' || thereAreMultipleMoveOptions();
   };
 
-  const scheduleShowMoves = (options: { forceShow?: boolean; delay?: number } = {}) => {
+  const scheduleShowMoves = (options: { delay?: number } = {}) => {
+    window.clearTimeout(showMovesTimeout.current);
     const delay = options.delay == undefined ? SHOW_NEXT_MOVES_DELAY : options.delay;
-    if (shouldShowMoves() || options.forceShow) {
+    if (shouldShowMoves()) {
       showMovesTimeout.current = window.setTimeout(() => {
         setIsShowingMoves(true);
         setIsBoardDisabled(false);
+        triggerBoardDrawableUpdate();
       }, delay);
     }
   };
@@ -373,6 +383,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const scheduleHideMoves = (options = { delay: SHOW_NEXT_MOVES_DELAY }) => {
     hideMovesTimeout.current = window.setTimeout(() => {
       setIsShowingMoves(false);
+      triggerBoardDrawableUpdate();
     }, options.delay);
   };
 
@@ -419,6 +430,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // Whenever the mode changes, reset the board
   useEffect(() => {
     reset();
+    triggerBoardDrawableUpdate();
   }, [mode]);
 
   const triggerWrongMoveBoardFlash = () => {
@@ -459,6 +471,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setLastMoveSquares([from, to]);
   };
 
+  const triggerBoardDrawableUpdate = () => {
+    setUpdateDrawableIdx((idx) => idx + 1);
+  };
+
   const debug = () => {
     console.log('You pressed the debug button');
   };
@@ -486,6 +502,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             lastMoveSquares={lastMoveSquares}
             disabled={isBoardDisabled}
             onMouseDown={prepareBeeper}
+            updateDrawableIdx={updateDrawableIdx}
           />
         </div>
         <ChessGuideInfo
