@@ -352,12 +352,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setMovesPosition(0);
   };
 
-  const pcHasMultipleMoveOptions = (): boolean => {
-    return !isUsersTurn() && getNextMoves().length > 1;
+  const thereAreMultipleMoveOptions = (): boolean => {
+    return getNextMoves().length > 1;
   };
 
   const shouldShowMoves = (): boolean => {
-    return mode === 'learn' || pcHasMultipleMoveOptions();
+    return mode === 'learn' || thereAreMultipleMoveOptions();
   };
 
   const scheduleShowMoves = (options: { forceShow?: boolean; delay?: number } = {}) => {
