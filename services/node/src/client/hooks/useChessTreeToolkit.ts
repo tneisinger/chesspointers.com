@@ -20,6 +20,7 @@ type ChessTreeToolkit = {
   resetValues: () => void;
   recordLineCompletion: () => void;
   getRelevantLines: (specifiedLine?: string[]) => LineStats[];
+  getNextMoves: () => string[];
   numLines: () => number;
   numLinesCompleted: () => number;
   atLineEnd: () => boolean;
@@ -101,6 +102,17 @@ export function useChessTreeToolkit(
   const atLineEnd = (): boolean =>
     lines.some((lineObj) => areChessLinesEquivalent(lineObj.line, playedMoves));
 
+  const getNextMoves = (): string[] => {
+    const result: string[] = [];
+    getRelevantLines().forEach((lineStats) => {
+      const nextMove = lineStats.line[playedMoves.length];
+      if (nextMove != undefined && !result.includes(nextMove)) {
+        result.push(nextMove);
+      }
+    });
+    return result;
+  };
+
   const getBestNextMoves = (): string[] => {
     // Get the lines that are reachable from the current position forward.
     const relevantLines = getRelevantLines();
@@ -131,6 +143,7 @@ export function useChessTreeToolkit(
     resetValues,
     recordLineCompletion,
     getRelevantLines,
+    getNextMoves,
     numLines: () => lines.length,
     numLinesCompleted,
     atLineEnd,

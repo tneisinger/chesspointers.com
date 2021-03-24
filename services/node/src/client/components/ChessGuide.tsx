@@ -19,7 +19,7 @@ import LineCompleteModal from './LineCompleteModal';
 import PawnPromoteModal from './PawnPromoteModal';
 import DeadEndModal from './DeadEndModal';
 import { LessonType } from '../../shared/entity/lesson';
-import { useLineStats } from '../hooks/useLineStats';
+import { useChessTreeToolkit } from '../hooks/useChessTreeToolkit';
 
 const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = BOARD_ANIMATION_DURATION + 50;
@@ -88,7 +88,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // get interrupted.
   const [updateDrawableIdx, setUpdateDrawableIdx] = useState<number>(0);
 
-  const lineStatsToolkit = useLineStats(chessTree, playedMoves, mode);
+  const chessTreeToolkit = useChessTreeToolkit(chessTree, playedMoves, mode);
 
   // timeout refs
   const checkMoveTimeout = useRef<number | undefined>(undefined);
@@ -161,7 +161,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const getNextMoveGames = (): ChessInstance[] => {
     const games: ChessInstance[] = [];
-    getNextMoves().forEach((move) => {
+    chessTreeToolkit.getNextMoves().forEach((move) => {
       const game = new Chess();
       [...playedMoves, move].forEach((m) => {
         if (!game.move(m)) {
@@ -175,24 +175,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   useEffect(() => {
     reset();
-    lineStatsToolkit.resetValues();
+    chessTreeToolkit.resetValues();
   }, []);
 
   useEffect(() => {
     reset();
-    lineStatsToolkit.resetValues();
+    chessTreeToolkit.resetValues();
   }, [chessTree, userPlaysAs]);
-
-  const getNextMoves = (): string[] => {
-    const result: string[] = [];
-    lineStatsToolkit.getRelevantLines().forEach((lineStats) => {
-      const nextMove = lineStats.line[playedMoves.length];
-      if (nextMove != undefined && !result.includes(nextMove)) {
-        result.push(nextMove);
-      }
-    });
-    return result;
-  };
 
   const handleMove = (from: Square, to: Square) => {
     // If the user tries to play a move while the board is not positioned at the last of
@@ -235,8 +224,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const shouldShowDeadEndModal = (): boolean =>
     allowDeadEndModal &&
-    getNextMoves().length > 1 &&
-    lineStatsToolkit.doesMoveLeadToDeadEnd(getLastMove());
+    chessTreeToolkit.getNextMoves().length > 1 &&
+    chessTreeToolkit.doesMoveLeadToDeadEnd(getLastMove());
 
   const handleCorrectMove = () => {
     if (shouldShowDeadEndModal()) {
@@ -257,7 +246,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const wasLastMoveCorrect = () => {
-    return getNextMoves().includes(getLastMove());
+    return chessTreeToolkit.getNextMoves().includes(getLastMove());
   };
 
   const rectifyIncorrectMove = () => {
@@ -372,7 +361,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const thereAreMultipleMoveOptions = (): boolean => {
-    return getNextMoves().length > 1;
+    return chessTreeToolkit.getNextMoves().length > 1;
   };
 
   const shouldShowMoves = (): boolean => {
@@ -399,7 +388,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const doComputerMove = () => {
-    const moves = getNextMoves();
+    const moves = chessTreeToolkit.getNextMoves();
     let move: string;
     if (moves.length < 1) {
       return;
@@ -409,7 +398,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       // If there is more than one move that the computer can play, the computer randomly
       // selects a move from among the moves that are on lines that have been completed
       // the fewest number of the times.
-      const randomMove = randomElem(lineStatsToolkit.getBestNextMoves());
+      const randomMove = randomElem(chessTreeToolkit.getBestNextMoves());
       if (randomMove == undefined) {
         throw new Error('No moves returned by getBestNextMoves()');
       }
@@ -422,11 +411,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   // Whenever `playedMoves` changes
   useEffect(() => {
-    if (lineStatsToolkit.atLineEnd()) {
-      lineStatsToolkit.recordLineCompletion();
+    if (chessTreeToolkit.atLineEnd()) {
+      chessTreeToolkit.recordLineCompletion();
       setIsLineCompleteModalOpen(true);
     }
-    if (!isUsersTurn() && getNextMoves().length < 2) {
+    if (!isUsersTurn() && chessTreeToolkit.getNextMoves().length < 2) {
       doComputerMove();
       setDidPcPlayLastMove(true);
     } else {
@@ -505,11 +494,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             turnColor={turnColor()}
             onMove={handleMove}
             movable={calcMovable()}
-            arePiecesDraggable={getNextMoves().length > 0}
-            nextMoves={getNextMoves()}
+            arePiecesDraggable={chessTreeToolkit.getNextMoves().length > 0}
+            nextMoves={chessTreeToolkit.getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
             wrongMoveFlashIdx={wrongMoveFlashIdx}
-            doesMoveLeadToDeadEnd={lineStatsToolkit.doesMoveLeadToDeadEnd}
+            doesMoveLeadToDeadEnd={chessTreeToolkit.doesMoveLeadToDeadEnd}
             lastMoveSquares={lastMoveSquares}
             disabled={isBoardDisabled}
             onMouseDown={prepareBeeper}
@@ -517,8 +506,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           />
         </div>
         <ChessGuideInfo
-          numLines={lineStatsToolkit.numLines()}
-          numLinesCompleted={lineStatsToolkit.numLinesCompleted()}
+          numLines={chessTreeToolkit.numLines()}
+          numLinesCompleted={chessTreeToolkit.numLinesCompleted()}
           currentGuideMode={mode}
           score={getScoreFromFen(game.fen())}
         />
@@ -560,8 +549,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         lessonType={lessonType}
         isOpenOrOpening={isLineCompleteModalOpen}
         handleClose={() => setIsLineCompleteModalOpen(false)}
-        numLines={lineStatsToolkit.numLines()}
-        numLinesCompleted={lineStatsToolkit.numLinesCompleted()}
+        numLines={chessTreeToolkit.numLines()}
+        numLinesCompleted={chessTreeToolkit.numLinesCompleted()}
         currentGuideMode={mode}
         handleResetBtnClick={() => {
           reset();
