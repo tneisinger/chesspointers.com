@@ -299,16 +299,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     };
   };
 
-  const turnColor = () => {
-    return game.turn() === 'w' ? 'white' : 'black';
-  };
+  const turnColor = () => (game.turn() === 'w' ? 'white' : 'black');
 
   const doNextMove = (move: string) => {
     if (game.move(move)) {
       updateBoard();
       addToPlayedMovesTimeout.current = window.setTimeout(
         () => addMoveToPlayedMoves(move),
-        350,
+        200,
       );
     }
   };
