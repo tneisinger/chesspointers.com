@@ -159,20 +159,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // Use this function to set the `fen` value, which will update the board position.
   const updateBoard = () => setFen(game.fen());
 
-  const getNextMoveGames = (): ChessInstance[] => {
-    const games: ChessInstance[] = [];
-    chessTreeToolkit.getNextMoves().forEach((move) => {
-      const game = new Chess();
-      [...playedMoves, move].forEach((m) => {
-        if (!game.move(m)) {
-          throw new Error(`invalid move: ${m}, moves: ${playedMoves}`);
-        }
-      });
-      games.push(game);
-    });
-    return games;
-  };
-
   useEffect(() => {
     reset();
     chessTreeToolkit.resetValues();
@@ -591,7 +577,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       />
 
       {renderExtraControlsForTesting && (
-        <ChessMoveSelector nextMoveGames={getNextMoveGames()} handleSubmit={handleMove} />
+        <ChessMoveSelector
+          nextMoveGames={chessTreeToolkit.getNextMoveGames()}
+          handleSubmit={handleMove}
+        />
       )}
     </Grid>
   );

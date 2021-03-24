@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { GuideMode } from '../utils/types';
 import { getTreeLines } from '../../shared/chessTree';
+import { Chess, ChessInstance } from 'chess.js';
 import { ChessTree } from '../../shared/chessTypes';
 import {
   areChessLinesEquivalent,
@@ -21,6 +22,7 @@ type ChessTreeToolkit = {
   recordLineCompletion: () => void;
   getRelevantLines: (specifiedLine?: string[]) => LineStats[];
   getNextMoves: () => string[];
+  getNextMoveGames: () => ChessInstance[];
   numLines: () => number;
   numLinesCompleted: () => number;
   atLineEnd: () => boolean;
@@ -138,12 +140,27 @@ export function useChessTreeToolkit(
     return lowestTimesCompletedWithMove > 0;
   };
 
+  const getNextMoveGames = (): ChessInstance[] => {
+    const games: ChessInstance[] = [];
+    getNextMoves().forEach((move) => {
+      const game = new Chess();
+      [...playedMoves, move].forEach((m) => {
+        if (!game.move(m)) {
+          throw new Error(`invalid move: ${m}, moves: ${playedMoves}`);
+        }
+      });
+      games.push(game);
+    });
+    return games;
+  };
+
   return {
     lineStats,
     resetValues,
     recordLineCompletion,
     getRelevantLines,
     getNextMoves,
+    getNextMoveGames,
     numLines: () => lines.length,
     numLinesCompleted,
     atLineEnd,
