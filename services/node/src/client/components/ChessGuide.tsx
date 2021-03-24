@@ -471,16 +471,13 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         <div className={classes.boardBorderDiv}>
           <ChessGuideBoard
             size={boardSizePixels + 'px'}
-            playedMoves={playedMoves}
             boardPosition={fen}
             orientation={userPlaysAs}
-            isUsersTurn={isUsersTurn()}
             inCheck={game.in_check()}
             inCheckmate={game.in_checkmate()}
             turnColor={turnColor()}
             onMove={handleMove}
             movable={calcMovable()}
-            arePiecesDraggable={chessTreeToolkit.getNextMoves().length > 0}
             shouldShowNextMoves={isShowingMoves}
             wrongMoveFlashIdx={wrongMoveFlashIdx}
             doesMoveLeadToDeadEnd={chessTreeToolkit.doesMoveLeadToDeadEnd}

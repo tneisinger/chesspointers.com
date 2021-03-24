@@ -7,6 +7,7 @@ import {
   areChessLinesEquivalent,
   areChessMovesEquivalent,
   partition,
+  convertShortMoveToMove,
 } from '../../shared/utils';
 
 export type LineStats = {
@@ -28,7 +29,7 @@ type ChessTreeToolkit = {
   numLinesCompleted: () => number;
   atLineEnd: () => boolean;
   getBestNextMoves: () => string[];
-  doesMoveLeadToDeadEnd: (move: string) => boolean;
+  doesMoveLeadToDeadEnd: (move: string | ShortMove) => boolean;
 };
 
 export function useChessTreeToolkit(
@@ -133,7 +134,13 @@ export function useChessTreeToolkit(
   };
 
   // Return true if the given move only leads to completed lines.
-  const doesMoveLeadToDeadEnd = (move: string): boolean => {
+  const doesMoveLeadToDeadEnd = (moveOrShortMove: string | ShortMove): boolean => {
+    let move: string;
+    if (typeof moveOrShortMove === 'string') {
+      move = moveOrShortMove;
+    } else {
+      move = convertShortMoveToMove(playedMoves, moveOrShortMove);
+    }
     const linesWithMove = getRelevantLines([...playedMoves, move]);
     const lowestTimesCompletedWithMove = Math.min(
       ...linesWithMove.map((p) => p.timesCompleted),

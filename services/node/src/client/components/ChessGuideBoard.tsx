@@ -6,7 +6,6 @@ import Chessground from 'react-chessground';
 import ColorFlashOverlay from './ColorFlashOverlay';
 import CheckmateOverlay from './CheckmateOverlay';
 import DisablerOverlay from './DisablerOverlay';
-import { convertShortMoveToMove } from '../../shared/utils';
 
 export const BOARD_ANIMATION_DURATION = 200;
 
@@ -41,20 +40,17 @@ interface ChessboardArrow {
 
 interface Props {
   size: string;
-  playedMoves: string[];
   boardPosition: string;
-  isUsersTurn: boolean;
   turnColor: string;
   onMove: (startSquare: Square, endSquare: Square) => void;
   movable: Record<string, unknown>;
-  arePiecesDraggable: boolean;
   getNextShortMoves: () => ShortMove[];
   shouldShowNextMoves: boolean;
   inCheck: boolean;
   inCheckmate: boolean;
   wrongMoveFlashIdx: number;
   updateDrawableIdx: number;
-  doesMoveLeadToDeadEnd: (move: string) => boolean;
+  doesMoveLeadToDeadEnd: (move: string | ShortMove) => boolean;
   lastMoveSquares: string[];
   onMouseDown?: () => void;
   orientation?: PieceColor;
@@ -67,14 +63,15 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
   const makeChessboardArrows = (): ChessboardArrow[] => {
     if (!props.shouldShowNextMoves) return [];
     const result: ChessboardArrow[] = [];
-    const nextMoves = props.getNextShortMoves();
-    if (nextMoves.length > 0) {
-      nextMoves.forEach((shortMove) => {
-        const move = convertShortMoveToMove(props.playedMoves, shortMove);
+    const nextShortMoves = props.getNextShortMoves();
+    if (nextShortMoves.length > 0) {
+      nextShortMoves.forEach((shortMove) => {
         result.push({
           orig: shortMove.from,
           dest: shortMove.to,
-          brush: props.doesMoveLeadToDeadEnd(move) ? BrushColor.YELLOW : BrushColor.GREEN,
+          brush: props.doesMoveLeadToDeadEnd(shortMove)
+            ? BrushColor.YELLOW
+            : BrushColor.GREEN,
         });
       });
     }
