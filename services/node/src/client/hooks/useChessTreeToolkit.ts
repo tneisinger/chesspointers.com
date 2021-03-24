@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { GuideMode } from '../utils/types';
 import { getTreeLines } from '../../shared/chessTree';
-import { Chess, ChessInstance } from 'chess.js';
+import { Chess, ChessInstance, ShortMove } from 'chess.js';
 import { ChessTree } from '../../shared/chessTypes';
 import {
   areChessLinesEquivalent,
@@ -22,6 +22,7 @@ type ChessTreeToolkit = {
   recordLineCompletion: () => void;
   getRelevantLines: (specifiedLine?: string[]) => LineStats[];
   getNextMoves: () => string[];
+  getNextShortMoves: () => ShortMove[];
   getNextMoveGames: () => ChessInstance[];
   numLines: () => number;
   numLinesCompleted: () => number;
@@ -154,12 +155,25 @@ export function useChessTreeToolkit(
     return games;
   };
 
+  const getNextShortMoves = (): ShortMove[] => {
+    const result: ShortMove[] = [];
+    getNextMoveGames().forEach((game) => {
+      const history = game.history({ verbose: true });
+      if (history.length < 1) {
+        throw new Error('nextMoveGames must have at least one move in their history');
+      }
+      result.push(history[history.length - 1]);
+    });
+    return result;
+  };
+
   return {
     lineStats,
     resetValues,
     recordLineCompletion,
     getRelevantLines,
     getNextMoves,
+    getNextShortMoves,
     getNextMoveGames,
     numLines: () => lines.length,
     numLinesCompleted,

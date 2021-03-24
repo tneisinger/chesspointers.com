@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Chess, ChessInstance, ShortMove, Square } from 'chess.js';
+import { ShortMove, Square } from 'chess.js';
 import { PieceColor } from '../../shared/chessTypes';
 import { makeStyles } from '@material-ui/core';
 import Chessground from 'react-chessground';
@@ -48,7 +48,7 @@ interface Props {
   onMove: (startSquare: Square, endSquare: Square) => void;
   movable: Record<string, unknown>;
   arePiecesDraggable: boolean;
-  nextMoves: string[];
+  getNextShortMoves: () => ShortMove[];
   shouldShowNextMoves: boolean;
   inCheck: boolean;
   inCheckmate: boolean;
@@ -64,34 +64,10 @@ interface Props {
 const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles(props);
 
-  const makeNextMoveGames = (): ChessInstance[] => {
-    const games: ChessInstance[] = [];
-    props.nextMoves.forEach((move) => {
-      const game = new Chess();
-      [...props.playedMoves, move].forEach((m) => {
-        if (!game.move(m)) {
-          throw new Error(`invalid move: ${m}, moves: ${props.playedMoves}`);
-        }
-      });
-      games.push(game);
-    });
-    return games;
-  };
-
-  const getNextShortMoves = (): ShortMove[] => {
-    return makeNextMoveGames().map((game) => {
-      const history = game.history({ verbose: true });
-      if (history.length < 1) {
-        throw new Error('nextMoveGames must have at least one move in their history');
-      }
-      return history[history.length - 1];
-    });
-  };
-
   const makeChessboardArrows = (): ChessboardArrow[] => {
     if (!props.shouldShowNextMoves) return [];
     const result: ChessboardArrow[] = [];
-    const nextMoves = getNextShortMoves();
+    const nextMoves = props.getNextShortMoves();
     if (nextMoves.length > 0) {
       nextMoves.forEach((shortMove) => {
         const move = convertShortMoveToMove(props.playedMoves, shortMove);

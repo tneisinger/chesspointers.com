@@ -481,12 +481,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             onMove={handleMove}
             movable={calcMovable()}
             arePiecesDraggable={chessTreeToolkit.getNextMoves().length > 0}
-            nextMoves={chessTreeToolkit.getNextMoves()}
             shouldShowNextMoves={isShowingMoves}
             wrongMoveFlashIdx={wrongMoveFlashIdx}
             doesMoveLeadToDeadEnd={chessTreeToolkit.doesMoveLeadToDeadEnd}
             lastMoveSquares={lastMoveSquares}
             disabled={isBoardDisabled}
+            getNextShortMoves={chessTreeToolkit.getNextShortMoves}
             onMouseDown={prepareBeeper}
             updateDrawableIdx={updateDrawableIdx}
           />
