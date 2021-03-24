@@ -329,7 +329,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     window.clearTimeout(updateBoardTimeout.current);
     updateBoardTimeout.current = window.setTimeout(() => {
       updateBoard();
-    }, 250);
+    }, 300);
   };
 
   const moveBack = () => {
