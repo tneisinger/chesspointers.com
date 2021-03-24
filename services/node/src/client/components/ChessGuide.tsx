@@ -97,7 +97,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const doNextMoveTimeout = useRef<number | undefined>(undefined);
   const updateBoardTimeout = useRef<number | undefined>(undefined);
   const switchToPracticeModeTimeout = useRef<number | undefined>(undefined);
-  const resetPiecesTimeout = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     reset();
@@ -180,7 +179,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       doNextMoveTimeout,
       updateBoardTimeout,
       switchToPracticeModeTimeout,
-      resetPiecesTimeout,
     ];
     allTimeoutRefs.forEach((ref) => window.clearTimeout(ref.current));
   };
@@ -317,6 +315,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const reset = () => {
     clearTimeouts();
+    game.reset();
     setPlayedMoves([]);
     setMovesPosition(0);
     setIsShowingMoves(false);
@@ -325,17 +324,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setIsBoardDisabled(false);
     setDidPcPlayLastMove(true);
     setLastMoveSquares([]);
-    // Delay the reset of pieces so that the board animation will not be interrupted by
-    // anything we did above.
-    scheduleResetPieces();
-  };
-
-  const scheduleResetPieces = () => {
-    window.clearTimeout(resetPiecesTimeout.current);
-    resetPiecesTimeout.current = window.setTimeout(() => {
-      game.reset();
+    // Delay updateBoard() so that the board animation will not be interrupted by anything
+    // we did above.
+    window.clearTimeout(updateBoardTimeout.current);
+    updateBoardTimeout.current = window.setTimeout(() => {
       updateBoard();
-    }, 150);
+    }, 250);
   };
 
   const moveBack = () => {
