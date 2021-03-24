@@ -99,26 +99,22 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const switchToPracticeModeTimeout = useRef<number | undefined>(undefined);
   const resetPiecesTimeout = useRef<number | undefined>(undefined);
 
-  const clearTimeouts = () => {
-    const allTimeoutRefs = [
-      checkMoveTimeout,
-      addToPlayedMovesTimeout,
-      showMovesTimeout,
-      hideMovesTimeout,
-      doNextMoveTimeout,
-      updateBoardTimeout,
-      switchToPracticeModeTimeout,
-      resetPiecesTimeout,
-    ];
-    allTimeoutRefs.forEach((ref) => window.clearTimeout(ref.current));
-  };
+  useEffect(() => {
+    reset();
+  }, []);
 
   // Clear all the timeouts on unmount
   useEffect(() => {
     return clearTimeouts;
   }, []);
 
-  // Update localStorage whenever the allowDeadEndModal value changes.
+  // If chessTree or userPlaysAs changes, reset everything
+  useEffect(() => {
+    reset();
+    chessTreeToolkit.resetValues();
+  }, [chessTree, userPlaysAs]);
+
+  // When allowDeadEndModal changes, update the value in localStorage.
   useEffect(() => {
     localStorage.setItem(LCL_STOR_KEY_ALLOW_DEAD_END_MODAL, String(allowDeadEndModal));
   }, [allowDeadEndModal]);
@@ -151,22 +147,50 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   }, [movesPosition]);
 
+  // Whenever `playedMoves` changes
+  useEffect(() => {
+    if (chessTreeToolkit.atLineEnd()) {
+      chessTreeToolkit.recordLineCompletion();
+      setIsLineCompleteModalOpen(true);
+    }
+    if (!isUsersTurn() && chessTreeToolkit.getNextMoves().length < 2) {
+      doComputerMove();
+      setDidPcPlayLastMove(true);
+    } else {
+      setDidPcPlayLastMove(false);
+    }
+  }, [playedMoves]);
+
+  const toggleGuideMode = () => {
+    mode === 'learn' ? setMode('practice') : setMode('learn');
+  };
+
+  // Whenever the mode changes, reset the board
+  useEffect(() => {
+    reset();
+    triggerBoardDrawableUpdate();
+  }, [mode]);
+
+  const clearTimeouts = () => {
+    const allTimeoutRefs = [
+      checkMoveTimeout,
+      addToPlayedMovesTimeout,
+      showMovesTimeout,
+      hideMovesTimeout,
+      doNextMoveTimeout,
+      updateBoardTimeout,
+      switchToPracticeModeTimeout,
+      resetPiecesTimeout,
+    ];
+    allTimeoutRefs.forEach((ref) => window.clearTimeout(ref.current));
+  };
+
   const isUsersTurn = (): boolean => {
     return game.turn() === userPlaysAs.charAt(0);
   };
 
   // Use this function to set the `fen` value, which will update the board position.
   const updateBoard = () => setFen(game.fen());
-
-  useEffect(() => {
-    reset();
-    chessTreeToolkit.resetValues();
-  }, []);
-
-  useEffect(() => {
-    reset();
-    chessTreeToolkit.resetValues();
-  }, [chessTree, userPlaysAs]);
 
   const handleMove = (from: Square, to: Square) => {
     // If the user tries to play a move while the board is not positioned at the last of
@@ -237,7 +261,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const rectifyIncorrectMove = () => {
     BEEPER.beep(2);
     triggerWrongMoveBoardFlash();
-    undoMove();
+    // Delay undoMove so that we don't interrupt the animation.
+    updateBoardTimeout.current = window.setTimeout(() => undoMove(), 250);
   };
 
   const undoMove = () => {
@@ -377,30 +402,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       doNextMove(move);
     }, COMPUTER_THINK_TIME);
   };
-
-  // Whenever `playedMoves` changes
-  useEffect(() => {
-    if (chessTreeToolkit.atLineEnd()) {
-      chessTreeToolkit.recordLineCompletion();
-      setIsLineCompleteModalOpen(true);
-    }
-    if (!isUsersTurn() && chessTreeToolkit.getNextMoves().length < 2) {
-      doComputerMove();
-      setDidPcPlayLastMove(true);
-    } else {
-      setDidPcPlayLastMove(false);
-    }
-  }, [playedMoves]);
-
-  const toggleGuideMode = () => {
-    mode === 'learn' ? setMode('practice') : setMode('learn');
-  };
-
-  // Whenever the mode changes, reset the board
-  useEffect(() => {
-    reset();
-    triggerBoardDrawableUpdate();
-  }, [mode]);
 
   const triggerWrongMoveBoardFlash = () => {
     setWrongMoveFlashIdx((idx) => idx + 1);
