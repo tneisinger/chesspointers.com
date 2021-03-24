@@ -25,7 +25,7 @@ const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = BOARD_ANIMATION_DURATION + 50;
 const SHOW_NEXT_MOVES_DELAY = BOARD_ANIMATION_DURATION + 800;
 const SHOW_DEBUG_BTN = false;
-const BEEPER_FREQUENCY = 73;
+const BEEPER = new Beeper({ frequency: 73 });
 const BOARD_BORDER_WIDTH = '13px';
 const SWITCH_TO_PRACTICE_MODE_DELAY = 300;
 const LCL_STOR_KEY_ALLOW_DEAD_END_MODAL = 'allowDeadEndModal';
@@ -62,7 +62,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 }) => {
   const classes = useStyles({});
 
-  const [beeper, setBeeper] = useState<Beeper | undefined>(undefined);
   const [isLineCompleteModalOpen, setIsLineCompleteModalOpen] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
   const [isDeadEndModalOpen, setIsDeadEndModalOpen] = useState(false);
@@ -236,11 +235,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const rectifyIncorrectMove = () => {
-    if (beeper == undefined) {
-      defineBeeper().beep(2);
-    } else {
-      beeper.beep(2);
-    }
+    BEEPER.beep(2);
     triggerWrongMoveBoardFlash();
     undoMove();
   };
@@ -279,18 +274,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       showDests: mode === 'practice',
       color: getMovableColor(),
     };
-  };
-
-  const defineBeeper = (): Beeper => {
-    const newBeeper = new Beeper({ frequency: BEEPER_FREQUENCY });
-    setBeeper(newBeeper);
-    return newBeeper;
-  };
-
-  const prepareBeeper = (): void => {
-    if (beeper == undefined) {
-      defineBeeper();
-    }
   };
 
   const turnColor = () => {
@@ -484,7 +467,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             lastMoveSquares={lastMoveSquares}
             disabled={isBoardDisabled}
             getNextShortMoves={chessTreeToolkit.getNextShortMoves}
-            onMouseDown={prepareBeeper}
             updateDrawableIdx={updateDrawableIdx}
           />
         </div>

@@ -20,10 +20,6 @@ class Beeper {
     this.audioContext = new window.AudioContext();
   }
 
-  resume(): Promise<void> {
-    return this.audioContext.resume();
-  }
-
   play(): void {
     const osc = this.audioContext.createOscillator();
     const gain = this.audioContext.createGain();
