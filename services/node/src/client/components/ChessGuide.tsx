@@ -160,10 +160,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   }, [playedMoves]);
 
-  const toggleGuideMode = () => {
-    mode === 'learn' ? setMode('practice') : setMode('learn');
-  };
-
   // Whenever the mode changes, reset the board
   useEffect(() => {
     reset();
@@ -181,6 +177,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       switchToPracticeModeTimeout,
     ];
     allTimeoutRefs.forEach((ref) => window.clearTimeout(ref.current));
+  };
+
+  const toggleGuideMode = () => {
+    mode === 'learn' ? setMode('practice') : setMode('learn');
   };
 
   const isUsersTurn = (): boolean => {
@@ -516,7 +516,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         }}
         handleSwitchToPracticeModeBtnClick={() => {
           setIsLineCompleteModalOpen(false);
-
           // Delay the switch to practice mode until after the modal has finished closing,
           // otherwise the content inside the modal will change just before it closes.
           switchToPracticeModeTimeout.current = window.setTimeout(
