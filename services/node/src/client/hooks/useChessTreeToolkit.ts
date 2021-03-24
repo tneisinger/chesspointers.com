@@ -15,7 +15,7 @@ export type LineStats = {
   teachingPriority: number;
 };
 
-type LineStatsToolkit = {
+type ChessTreeToolkit = {
   lineStats: LineStats[];
   resetValues: () => void;
   recordLineCompletion: () => void;
@@ -27,11 +27,11 @@ type LineStatsToolkit = {
   doesMoveLeadToDeadEnd: (move: string) => boolean;
 };
 
-export function useLineStats(
+export function useChessTreeToolkit(
   chessTree: ChessTree,
   playedMoves: string[],
   mode: GuideMode,
-): LineStatsToolkit {
+): ChessTreeToolkit {
   const lines = getTreeLines(chessTree, 'verbose');
 
   // Initialize 'lineStats' for all lines, setting their 'timesCompleted' values

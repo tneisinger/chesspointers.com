@@ -8,7 +8,7 @@ import CheckmateOverlay from './CheckmateOverlay';
 import DisablerOverlay from './DisablerOverlay';
 import { convertShortMoveToMove } from '../../shared/utils';
 
-export const BOARD_ANIMATION_DURATION = 300;
+export const BOARD_ANIMATION_DURATION = 200;
 
 enum BrushColor {
   GREEN = 'green',
