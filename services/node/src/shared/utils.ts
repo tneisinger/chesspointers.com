@@ -67,9 +67,7 @@ export function areChessLinesEquivalent(line1: string[], line2: string[]): boole
 export function areChessMovesEquivalent(move1: string, move2: string): boolean {
   if (move1 === move2) return true;
   if (move1 === '' || move2 === '') return false;
-  const move1Stripped = stripCheckSymbol(move1);
-  const move2Stripped = stripCheckSymbol(move2);
-  return move1Stripped === move2Stripped;
+  return stripCheckSymbol(move1) === stripCheckSymbol(move2);
 }
 
 function stripCheckSymbol(move: string): string {
