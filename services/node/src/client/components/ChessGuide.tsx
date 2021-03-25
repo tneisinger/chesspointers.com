@@ -181,8 +181,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         scheduleShowMoves({ delay: 1000 });
       }
     } else {
-      // If it is not the users turn and there is only one move option, the computer
-      // will play the next move automatically. Wait for the board animation to complete
+      // If it is not the users turn and there is only one move option, the computer will
+      // play the next move automatically. Don't shorten the delay of `scheduleShowMoves`
+      // because we want to wait for the animation of the computer's move to complete
       // before showing the next move arrows.
       if (playedMoves.length < 1) {
         // If the computer plays the first move in the chess tree, wait a little longer
