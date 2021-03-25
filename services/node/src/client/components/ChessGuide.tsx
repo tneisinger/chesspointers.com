@@ -22,8 +22,8 @@ import { LessonType } from '../../shared/entity/lesson';
 import { useChessTreeToolkit } from '../hooks/useChessTreeToolkit';
 
 const COMPUTER_THINK_TIME = 250;
-const CHECK_MOVE_DELAY = BOARD_ANIMATION_DURATION + 50;
-const SHOW_NEXT_MOVES_DELAY = BOARD_ANIMATION_DURATION + 800;
+const CHECK_MOVE_DELAY = BOARD_ANIMATION_DURATION + 25;
+const SHOW_NEXT_MOVES_DELAY = BOARD_ANIMATION_DURATION + 350;
 const SHOW_DEBUG_BTN = false;
 const BEEPER = new Beeper({ frequency: 73 });
 const BOARD_BORDER_WIDTH = '13px';
@@ -78,7 +78,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
   const [movesPosition, setMovesPosition] = useState<number>(0);
   const [isBoardDisabled, setIsBoardDisabled] = useState<boolean>(false);
-  const [didPcPlayLastMove, setDidPcPlayLastMove] = useState<boolean>(true);
   const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
 
   // Increment this value to trigger a rebuild of the ChessGuideBoard drawable prop.
@@ -123,26 +122,21 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setIsShowingMoves(false);
     triggerBoardDrawableUpdate();
     updateLastMoveSquares();
-    // Reset the board to the specified position
-    game.reset();
-    for (let i = 0; i < movesPosition; i++) {
-      game.move(playedMoves[i]);
-    }
-    updateBoardTimeout.current = window.setTimeout(() => updateBoard(), 350);
 
-    if (movesPosition < playedMoves.length) {
-      // If the new `movesPosition` is not at the end of the `playedMoves` array,
-      // hide all move arrows.
-      if (isShowingMoves) scheduleHideMoves({ delay: 200 });
-    } else {
-      // If the computer played the last move, we need to delay showing moves to wait for
-      // the board animation to complete. If the user played the move, we don't need to
-      // wait as long.
-      if (didPcPlayLastMove) {
-        scheduleShowMoves();
-      } else {
-        scheduleShowMoves({ delay: 100 });
+    // If necessary, reset the board to the specified position
+    if (game.history().length !== movesPosition) {
+      game.reset();
+      for (let i = 0; i < movesPosition; i++) {
+        game.move(playedMoves[i]);
       }
+      updateBoardTimeout.current = window.setTimeout(() => {
+        updateBoard();
+      }, 200);
+    }
+
+    // Only show next move arrows if the user is not viewing an old move
+    if (movesPosition >= playedMoves.length) {
+      scheduleShowMoves();
     }
   }, [movesPosition]);
 
@@ -154,9 +148,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
     if (!isUsersTurn() && chessTreeToolkit.getNextMoves().length < 2) {
       doComputerMove();
-      setDidPcPlayLastMove(true);
-    } else {
-      setDidPcPlayLastMove(false);
     }
   }, [playedMoves]);
 
@@ -219,8 +210,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       updateBoard();
       let nextAction: () => void;
       if (wasLastMoveCorrect()) {
-        setIsShowingMoves(false);
-        if (mode === 'learn') setIsBoardDisabled(true);
         nextAction = handleCorrectMove;
       } else {
         nextAction = rectifyIncorrectMove;
@@ -318,16 +307,15 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setMovesPosition(0);
     setIsShowingMoves(false);
     if (mode === 'learn') setIsBoardDisabled(true);
-    scheduleShowMoves();
+    scheduleShowMoves({ delay: 200 });
     setIsBoardDisabled(false);
-    setDidPcPlayLastMove(true);
     setLastMoveSquares([]);
     // Delay updateBoard() so that the board animation will not be interrupted by anything
     // we did above.
     window.clearTimeout(updateBoardTimeout.current);
     updateBoardTimeout.current = window.setTimeout(() => {
       updateBoard();
-    }, 300);
+    }, 350);
   };
 
   const moveBack = () => {
@@ -364,13 +352,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         triggerBoardDrawableUpdate();
       }, delay);
     }
-  };
-
-  const scheduleHideMoves = (options = { delay: SHOW_NEXT_MOVES_DELAY }) => {
-    hideMovesTimeout.current = window.setTimeout(() => {
-      setIsShowingMoves(false);
-      triggerBoardDrawableUpdate();
-    }, options.delay);
   };
 
   const doComputerMove = () => {
