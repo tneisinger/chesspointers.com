@@ -96,6 +96,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const doNextMoveTimeout = useRef<number | undefined>(undefined);
   const updateBoardTimeout = useRef<number | undefined>(undefined);
   const switchToPracticeModeTimeout = useRef<number | undefined>(undefined);
+  const delayFirstMoveTimeout = useRef<number | undefined>(undefined);
 
   // This will be `true` when the user is viewing any move other than the most recently
   // played move.
@@ -183,8 +184,17 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       // If it is not the users turn and there is only one move option, the computer
       // will play the next move automatically. Wait for the board animation to complete
       // before showing the next move arrows.
-      scheduleShowMoves();
-      doComputerMove();
+      if (playedMoves.length < 1) {
+        // If the computer plays the first move in the chess tree, wait a little longer
+        // before playing the first move.
+        delayFirstMoveTimeout.current = window.setTimeout(() => {
+          scheduleShowMoves();
+          doComputerMove();
+        }, 600);
+      } else {
+        scheduleShowMoves();
+        doComputerMove();
+      }
     }
   }, [playedMoves]);
 
@@ -203,6 +213,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       doNextMoveTimeout,
       updateBoardTimeout,
       switchToPracticeModeTimeout,
+      delayFirstMoveTimeout,
     ];
     allTimeoutRefs.forEach((ref) => window.clearTimeout(ref.current));
   };
