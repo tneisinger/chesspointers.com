@@ -97,6 +97,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const updateBoardTimeout = useRef<number | undefined>(undefined);
   const switchToPracticeModeTimeout = useRef<number | undefined>(undefined);
 
+  // This will be `true` when the user is viewing any move other than the most recently
+  // played move.
+  const isViewingOldMove = useRef<boolean>(false);
+
   useEffect(() => {
     reset();
   }, []);
@@ -119,8 +123,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   // Whenever `movesPosition` changes...
   useEffect(() => {
-    setIsShowingMoves(false);
-    triggerBoardDrawableUpdate();
+    // Update which squares are highlighted, showing the last moves
     updateLastMoveSquares();
 
     // If necessary, reset the board to the specified position
@@ -134,19 +137,53 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       }, 200);
     }
 
-    // Only show next move arrows if the user is not viewing an old move
-    if (movesPosition >= playedMoves.length) {
-      scheduleShowMoves();
+    if (movesPosition < playedMoves.length) {
+      // If the user is looking at old moves, hide move arrows.
+      isViewingOldMove.current = true;
+      setIsShowingMoves(false);
+      triggerBoardDrawableUpdate();
+    } else {
+      // Use `isViewingOldMove` so that we only run `scheduleShowMoves()` when the user is
+      // transitioning from viewing old moves to returning to the most recently played
+      // move.
+      if (isViewingOldMove.current) {
+        // If the user is no longer viewing old moves, show move arrows again
+        scheduleShowMoves();
+      }
+      isViewingOldMove.current = false;
     }
   }, [movesPosition]);
 
   // Whenever `playedMoves` changes
   useEffect(() => {
+    // Hide move arrows
+    setIsShowingMoves(false);
+    triggerBoardDrawableUpdate();
+
+    // If the user has completed a line, mark the line completed
     if (chessTreeToolkit.atLineEnd()) {
       chessTreeToolkit.recordLineCompletion();
       setIsLineCompleteModalOpen(true);
+      return;
     }
-    if (!isUsersTurn() && chessTreeToolkit.getNextMoves().length < 2) {
+
+    // If it is the users turn or if there are are multiple move options to choose from,
+    // then the user will select the next move.
+    if (isUsersTurn() || chessTreeToolkit.getNextMoves().length > 1) {
+      if (playedMoves.length > 0) {
+        // If the user is going to select the next move, we don't need to wait for an
+        // animation to complete, so we can show the next move arrows sooner.
+        scheduleShowMoves({ delay: 100 });
+      } else {
+        // But if playedMoves is now empty, the board was likely reset and we should wait
+        // a bit longer to allow the board animation to complete
+        scheduleShowMoves({ delay: 1000 });
+      }
+    } else {
+      // If it is not the users turn and there is only one move option, the computer
+      // will play the next move automatically. Wait for the board animation to complete
+      // before showing the next move arrows.
+      scheduleShowMoves();
       doComputerMove();
     }
   }, [playedMoves]);
@@ -227,9 +264,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     if (shouldShowDeadEndModal()) {
       setIsDeadEndModalOpen(true);
       return;
-    } else {
-      addMoveToPlayedMoves();
     }
+    addMoveToPlayedMoves();
   };
 
   const addMoveToPlayedMoves = (move?: string): void => {
@@ -293,10 +329,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const doNextMove = (move: string) => {
     if (game.move(move)) {
       updateBoard();
-      addToPlayedMovesTimeout.current = window.setTimeout(
-        () => addMoveToPlayedMoves(move),
-        200,
-      );
+      addToPlayedMovesTimeout.current = window.setTimeout(() => {
+        addMoveToPlayedMoves(move);
+      }, 200);
     }
   };
 
@@ -307,7 +342,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setMovesPosition(0);
     setIsShowingMoves(false);
     if (mode === 'learn') setIsBoardDisabled(true);
-    scheduleShowMoves({ delay: 200 });
     setIsBoardDisabled(false);
     setLastMoveSquares([]);
     // Delay updateBoard() so that the board animation will not be interrupted by anything
@@ -315,7 +349,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     window.clearTimeout(updateBoardTimeout.current);
     updateBoardTimeout.current = window.setTimeout(() => {
       updateBoard();
-    }, 350);
+    }, 400);
   };
 
   const moveBack = () => {
