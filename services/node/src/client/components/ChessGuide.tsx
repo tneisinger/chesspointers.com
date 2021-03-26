@@ -51,6 +51,13 @@ interface Props {
   renderExtraControlsForTesting?: boolean;
 }
 
+interface PlayedMoves {
+  moves: string[];
+  pos: number;
+}
+
+const initialPlayedMovesVal: PlayedMoves = { moves: [], pos: 0 };
+
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
   lessonType,
@@ -75,10 +82,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [pendingMove, setPendingMove] = useState<ShortMove | undefined>(undefined);
   const [wrongMoveFlashIdx, setWrongMoveFlashIdx] = useState<number>(0);
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
-  const [playedMoves, setPlayedMoves] = useState<string[]>([]);
-  const [movesPosition, setMovesPosition] = useState<number>(0);
   const [isBoardDisabled, setIsBoardDisabled] = useState<boolean>(false);
   const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
+  const [playedMoves, setPlayedMoves] = useState<PlayedMoves>(initialPlayedMovesVal);
 
   // Increment this value to trigger a rebuild of the ChessGuideBoard drawable prop.
   // The drawable prop is what puts the move arrows on the screen. We only want to
@@ -86,7 +92,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // get interrupted.
   const [updateDrawableIdx, setUpdateDrawableIdx] = useState<number>(0);
 
-  const chessTreeToolkit = useChessTreeToolkit(chessTree, playedMoves, mode);
+  const chessTreeToolkit = useChessTreeToolkit(chessTree, playedMoves.moves, mode);
 
   // timeout refs
   const checkMoveTimeout = useRef<number | undefined>(undefined);
@@ -102,6 +108,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // played move.
   const isViewingOldMove = useRef<boolean>(false);
 
+  const firstModeUpdate = useRef<boolean>(true);
+  const firstChessTreeUpdate = useRef<boolean>(true);
+
   useEffect(() => {
     reset();
   }, []);
@@ -113,8 +122,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   // If chessTree or userPlaysAs changes, reset everything
   useEffect(() => {
-    reset();
-    chessTreeToolkit.resetValues();
+    if (firstChessTreeUpdate.current) {
+      firstChessTreeUpdate.current = false;
+    } else {
+      reset();
+      chessTreeToolkit.resetValues();
+    }
   }, [chessTree, userPlaysAs]);
 
   // When allowDeadEndModal changes, update the value in localStorage.
@@ -122,27 +135,32 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     localStorage.setItem(LCL_STOR_KEY_ALLOW_DEAD_END_MODAL, String(allowDeadEndModal));
   }, [allowDeadEndModal]);
 
-  // Whenever `movesPosition` changes...
+  // Whenever `playedMoves` changes...
   useEffect(() => {
     // Update which squares are highlighted, showing the last moves
     updateLastMoveSquares();
 
+    // Hide move arrows
+    setIsShowingMoves(false);
+    triggerBoardDrawableUpdate();
+
     // If necessary, reset the board to the specified position
-    if (game.history().length !== movesPosition) {
+    if (game.history().length !== playedMoves.pos) {
       game.reset();
-      for (let i = 0; i < movesPosition; i++) {
-        game.move(playedMoves[i]);
+      for (let i = 0; i < playedMoves.pos; i++) {
+        game.move(playedMoves.moves[i]);
       }
       updateBoardTimeout.current = window.setTimeout(() => {
         updateBoard();
       }, 200);
     }
 
-    if (movesPosition < playedMoves.length) {
+    if (playedMoves.pos < playedMoves.moves.length) {
       // If the user is looking at old moves, hide move arrows.
       isViewingOldMove.current = true;
-      setIsShowingMoves(false);
-      triggerBoardDrawableUpdate();
+      // setIsShowingMoves(false);
+      // triggerBoardDrawableUpdate();
+      // TODO: Make this part work
     } else {
       // Use `isViewingOldMove` so that we only run `scheduleShowMoves()` when the user is
       // transitioning from viewing old moves to returning to the most recently played
@@ -153,13 +171,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       }
       isViewingOldMove.current = false;
     }
-  }, [movesPosition]);
-
-  // Whenever `playedMoves` changes
-  useEffect(() => {
-    // Hide move arrows
-    setIsShowingMoves(false);
-    triggerBoardDrawableUpdate();
 
     // If the user has completed a line, mark the line completed
     if (chessTreeToolkit.atLineEnd()) {
@@ -171,7 +182,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     // If it is the users turn or if there are are multiple move options to choose from,
     // then the user will select the next move.
     if (isUsersTurn() || chessTreeToolkit.getNextMoves().length > 1) {
-      if (playedMoves.length > 0) {
+      if (playedMoves.moves.length > 0) {
         // If the user is going to select the next move, we don't need to wait for an
         // animation to complete, so we can show the next move arrows sooner.
         scheduleShowMoves({ delay: 100 });
@@ -185,7 +196,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       // play the next move automatically. Don't shorten the delay of `scheduleShowMoves`
       // because we want to wait for the animation of the computer's move to complete
       // before showing the next move arrows.
-      if (playedMoves.length < 1) {
+      if (playedMoves.moves.length < 1) {
         // If the computer plays the first move in the chess tree, wait a little longer
         // before playing the first move.
         delayFirstMoveTimeout.current = window.setTimeout(() => {
@@ -201,8 +212,21 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   // Whenever the mode changes, reset the board
   useEffect(() => {
-    reset();
-    triggerBoardDrawableUpdate();
+    if (firstModeUpdate.current) {
+      firstModeUpdate.current = false;
+    } else {
+      reset();
+      triggerBoardDrawableUpdate();
+
+      // Normally, scheduleShowMoves() gets ran in a useEffect callback after playedMoves
+      // has changed. But if mode is changed while playedMoves is empty, that useEffect
+      // callback will not run because reset() will not change the value of playedMoves.
+      // Because of that, we have to run scheduleShowMoves() here when playedMoves is
+      // empty.
+      if (playedMoves.moves.length === 0 && playedMoves.pos === 0) {
+        scheduleShowMoves();
+      }
+    }
   }, [mode]);
 
   const clearTimeouts = () => {
@@ -234,8 +258,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     // If the user tries to play a move while the board is not positioned at the last of
     // the `playedMoves`, do not play the user's move. Instead, move the board back to the
     // last `playedMoves` position.
-    if (movesPosition < playedMoves.length) {
-      setMovesPosition(playedMoves.length);
+    if (playedMoves.pos < playedMoves.moves.length) {
+      setPlayedMoves(({ moves }) => ({ moves, pos: moves.length }));
       return;
     }
 
@@ -281,12 +305,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const addMoveToPlayedMoves = (move?: string): void => {
-    if (move == undefined) {
-      move = getLastMove();
-    }
-    const newPlayedMoves = [...playedMoves, move];
-    setPlayedMoves(newPlayedMoves);
-    setMovesPosition(newPlayedMoves.length);
+    const newMove: string = move != undefined ? move : getLastMove();
+    setPlayedMoves(({ moves }) => ({
+      moves: [...moves, newMove],
+      pos: moves.length + 1,
+    }));
   };
 
   const wasLastMoveCorrect = () => {
@@ -312,7 +335,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const getMovableColor = (): PieceColor | 'both' => {
     // If the user is looking at past moves, allow them to move all pieces.
-    if (movesPosition < playedMoves.length) {
+    if (playedMoves.pos < playedMoves.moves.length) {
       return 'both';
     }
     return game.turn() === 'w' ? 'white' : 'black';
@@ -329,7 +352,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         );
     });
     return {
-      free: movesPosition < playedMoves.length,
+      free: playedMoves.pos < playedMoves.moves.length,
       dests,
       showDests: mode === 'practice',
       color: getMovableColor(),
@@ -348,10 +371,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const reset = () => {
-    clearTimeouts();
     game.reset();
-    setPlayedMoves([]);
-    setMovesPosition(0);
+    setPlayedMoves(initialPlayedMovesVal);
     setIsShowingMoves(false);
     if (mode === 'learn') setIsBoardDisabled(true);
     setIsBoardDisabled(false);
@@ -365,19 +386,25 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const moveBack = () => {
-    setMovesPosition((idx) => (idx > 0 ? idx - 1 : idx));
+    setPlayedMoves(({ moves, pos }) => {
+      if (pos > 0) return { moves, pos: pos - 1 };
+      return { moves, pos: 0 };
+    });
   };
 
   const moveForward = () => {
-    setMovesPosition((idx) => (idx < playedMoves.length ? idx + 1 : idx));
+    setPlayedMoves(({ moves, pos }) => {
+      if (pos < moves.length) return { moves, pos: pos + 1 };
+      return { moves, pos: moves.length };
+    });
   };
 
   const jumpToEndOfPlayedMoves = () => {
-    setMovesPosition(playedMoves.length);
+    setPlayedMoves(({ moves }) => ({ moves, pos: moves.length }));
   };
 
   const jumpToStartOfPlayedMoves = () => {
-    setMovesPosition(0);
+    setPlayedMoves(({ moves }) => ({ moves, pos: 0 }));
   };
 
   const thereAreMultipleMoveOptions = (): boolean => {
@@ -427,16 +454,18 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const getSelectedMoveIdx = (): number | null => {
-    if (movesPosition === 0) return null;
-    return movesPosition - 1;
+    if (playedMoves.pos === 0) return null;
+    return playedMoves.pos - 1;
   };
 
   const childrenWithProps = React.Children.map(props.children, (child) => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, {
-        playedMoves,
+        playedMoves: playedMoves.moves,
         selectedMoveIdx: getSelectedMoveIdx(),
-        changeSelectedMoveIdx: (idx: number) => setMovesPosition(idx + 1),
+        changeSelectedMoveIdx: (idx: number) => {
+          setPlayedMoves(({ moves }) => ({ moves, pos: idx + 1 }));
+        },
       });
     }
     return child;
@@ -452,11 +481,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // Set the `lastMoveSquares` that should be highlighted as the last played move
   const updateLastMoveSquares = (): void => {
     const moveIdx = getSelectedMoveIdx();
-    if (playedMoves.length < 1 || moveIdx == null) {
+    if (playedMoves.moves.length < 1 || moveIdx == null) {
       setLastMoveSquares([]);
       return;
     }
-    const { from, to } = convertMovesToShortMoves(playedMoves)[moveIdx];
+    const { from, to } = convertMovesToShortMoves(playedMoves.moves)[moveIdx];
     setLastMoveSquares([from, to]);
   };
 
@@ -497,8 +526,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           score={getScoreFromFen(game.fen())}
         />
         <ChessGuideControls
-          areBackBtnsEnabled={movesPosition > 0}
-          areForwardBtnsEnabled={playedMoves.length > movesPosition}
+          areBackBtnsEnabled={playedMoves.pos > 0}
+          areForwardBtnsEnabled={playedMoves.moves.length > playedMoves.pos}
           onJumpBackBtnClick={jumpToStartOfPlayedMoves}
           onJumpForwardBtnClick={jumpToEndOfPlayedMoves}
           onStepBackBtnClick={moveBack}
