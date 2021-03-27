@@ -8,6 +8,7 @@ import {
   randomElem,
   getScoreFromFen,
   convertMovesToShortMoves,
+  arraysEqual,
 } from '../../shared/utils';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
@@ -92,7 +93,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // get interrupted.
   const [updateDrawableIdx, setUpdateDrawableIdx] = useState<number>(0);
 
-  const chessTreeToolkit = useChessTreeToolkit(chessTree, playedMoves.moves, mode);
+  const movesOnBoard = () => playedMoves.moves.slice(0, playedMoves.pos);
+
+  const chessTreeToolkit = useChessTreeToolkit(chessTree, movesOnBoard, mode);
 
   // timeout refs
   const checkMoveTimeout = useRef<number | undefined>(undefined);
@@ -104,9 +107,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const switchToPracticeModeTimeout = useRef<number | undefined>(undefined);
   const delayFirstMoveTimeout = useRef<number | undefined>(undefined);
 
-  // This will be `true` when the user is viewing any move other than the most recently
-  // played move.
-  const isViewingOldMove = useRef<boolean>(false);
+  const previousPlayedMoves = useRef<PlayedMoves | null>(null);
 
   const firstModeUpdate = useRef<boolean>(true);
   const firstChessTreeUpdate = useRef<boolean>(true);
@@ -135,6 +136,25 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     localStorage.setItem(LCL_STOR_KEY_ALLOW_DEAD_END_MODAL, String(allowDeadEndModal));
   }, [allowDeadEndModal]);
 
+  // Whenever the mode changes, reset the board
+  useEffect(() => {
+    if (firstModeUpdate.current) {
+      firstModeUpdate.current = false;
+    } else {
+      reset();
+      triggerBoardDrawableUpdate();
+
+      // Normally, scheduleShowMoves() gets ran in a useEffect callback after playedMoves
+      // has changed. But if mode is changed while playedMoves is empty, that useEffect
+      // callback will not run because reset() will not change the value of playedMoves.
+      // Because of that, we have to run scheduleShowMoves() here when playedMoves is
+      // empty.
+      if (playedMoves.moves.length === 0 && playedMoves.pos === 0) {
+        scheduleShowMoves();
+      }
+    }
+  }, [mode]);
+
   // Whenever `playedMoves` changes...
   useEffect(() => {
     // Update which squares are highlighted, showing the last moves
@@ -155,23 +175,24 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       }, 200);
     }
 
-    if (playedMoves.pos < playedMoves.moves.length) {
-      // If the user is looking at old moves, hide move arrows.
-      isViewingOldMove.current = true;
-      // setIsShowingMoves(false);
-      // triggerBoardDrawableUpdate();
-      // TODO: Make this part work
+    if (userIsViewingAnOldMove()) {
+      handleViewPastMove();
     } else {
-      // Use `isViewingOldMove` so that we only run `scheduleShowMoves()` when the user is
-      // transitioning from viewing old moves to returning to the most recently played
-      // move.
-      if (isViewingOldMove.current) {
-        // If the user is no longer viewing old moves, show move arrows again
-        scheduleShowMoves();
-      }
-      isViewingOldMove.current = false;
+      handleNewMoveWasPlayed();
     }
+    previousPlayedMoves.current = playedMoves;
+  }, [playedMoves]);
 
+  const userIsViewingAnOldMove = (): boolean => {
+    if (previousPlayedMoves.current == null) return false;
+    return arraysEqual(playedMoves.moves, previousPlayedMoves.current.moves);
+  };
+
+  const handleViewPastMove = () => {
+    scheduleShowMoves();
+  };
+
+  const handleNewMoveWasPlayed = () => {
     // If the user has completed a line, mark the line completed
     if (chessTreeToolkit.atLineEnd()) {
       chessTreeToolkit.recordLineCompletion();
@@ -208,26 +229,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         doComputerMove();
       }
     }
-  }, [playedMoves]);
-
-  // Whenever the mode changes, reset the board
-  useEffect(() => {
-    if (firstModeUpdate.current) {
-      firstModeUpdate.current = false;
-    } else {
-      reset();
-      triggerBoardDrawableUpdate();
-
-      // Normally, scheduleShowMoves() gets ran in a useEffect callback after playedMoves
-      // has changed. But if mode is changed while playedMoves is empty, that useEffect
-      // callback will not run because reset() will not change the value of playedMoves.
-      // Because of that, we have to run scheduleShowMoves() here when playedMoves is
-      // empty.
-      if (playedMoves.moves.length === 0 && playedMoves.pos === 0) {
-        scheduleShowMoves();
-      }
-    }
-  }, [mode]);
+  };
 
   const clearTimeouts = () => {
     const allTimeoutRefs = [

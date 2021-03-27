@@ -34,7 +34,7 @@ type ChessTreeToolkit = {
 
 export function useChessTreeToolkit(
   chessTree: ChessTree,
-  playedMoves: string[],
+  movesOnBoard: () => string[],
   mode: GuideMode,
 ): ChessTreeToolkit {
   const lines = getTreeLines(chessTree, 'verbose');
@@ -70,7 +70,7 @@ export function useChessTreeToolkit(
   const recordLineCompletion = () => {
     const [matchingLines, nonMatchingLines] = partition(
       lineStats,
-      (p) => areChessLinesEquivalent(p.line, playedMoves) && p.mode === mode,
+      (li) => areChessLinesEquivalent(li.line, movesOnBoard()) && li.mode === mode,
     );
     if (matchingLines.length !== 1) {
       throw new Error(`Unexpected number of matchingLines: ${matchingLines.length}`);
@@ -84,11 +84,11 @@ export function useChessTreeToolkit(
   };
 
   const getRelevantLines = (specifiedLine?: string[]): LineStats[] => {
-    const line = specifiedLine == undefined ? playedMoves : specifiedLine;
-    return lineStats.filter((p) => {
+    const line = specifiedLine == undefined ? movesOnBoard() : specifiedLine;
+    return lineStats.filter((li) => {
       return (
-        p.mode === mode &&
-        line.every((move, idx) => areChessMovesEquivalent(move, p.line[idx]))
+        li.mode === mode &&
+        line.every((move, idx) => areChessMovesEquivalent(move, li.line[idx]))
       );
     });
   };
@@ -104,12 +104,12 @@ export function useChessTreeToolkit(
   };
 
   const atLineEnd = (): boolean =>
-    lines.some((lineObj) => areChessLinesEquivalent(lineObj.line, playedMoves));
+    lines.some((lineObj) => areChessLinesEquivalent(lineObj.line, movesOnBoard()));
 
   const getNextMoves = (): string[] => {
     const result: string[] = [];
     getRelevantLines().forEach((lineStats) => {
-      const nextMove = lineStats.line[playedMoves.length];
+      const nextMove = lineStats.line[movesOnBoard().length];
       if (nextMove != undefined && !result.includes(nextMove)) {
         result.push(nextMove);
       }
@@ -120,17 +120,17 @@ export function useChessTreeToolkit(
   const getBestNextMoves = (): string[] => {
     // Get the lines that are reachable from the current position forward.
     const relevantLines = getRelevantLines();
-    const lowestTimesCompleted = Math.min(...relevantLines.map((p) => p.timesCompleted));
+    const lowTimesCompleted = Math.min(...relevantLines.map((li) => li.timesCompleted));
     const leastCompletedLines = relevantLines.filter(
-      (p) => p.timesCompleted === lowestTimesCompleted,
+      (li) => li.timesCompleted === lowTimesCompleted,
     );
     const highestTeachingPriority = Math.max(
-      ...leastCompletedLines.map((p) => p.teachingPriority),
+      ...leastCompletedLines.map((li) => li.teachingPriority),
     );
     const bestLines = leastCompletedLines.filter(
-      (p) => p.teachingPriority === highestTeachingPriority,
+      (li) => li.teachingPriority === highestTeachingPriority,
     );
-    return bestLines.map((p) => p.line[playedMoves.length]);
+    return bestLines.map((li) => li.line[movesOnBoard().length]);
   };
 
   // Return true if the given move only leads to completed lines.
@@ -139,11 +139,11 @@ export function useChessTreeToolkit(
     if (typeof moveOrShortMove === 'string') {
       move = moveOrShortMove;
     } else {
-      move = convertShortMoveToMove(playedMoves, moveOrShortMove);
+      move = convertShortMoveToMove(movesOnBoard(), moveOrShortMove);
     }
-    const linesWithMove = getRelevantLines([...playedMoves, move]);
+    const linesWithMove = getRelevantLines([...movesOnBoard(), move]);
     const lowestTimesCompletedWithMove = Math.min(
-      ...linesWithMove.map((p) => p.timesCompleted),
+      ...linesWithMove.map((li) => li.timesCompleted),
     );
     return lowestTimesCompletedWithMove > 0;
   };
@@ -152,9 +152,9 @@ export function useChessTreeToolkit(
     const games: ChessInstance[] = [];
     getNextMoves().forEach((move) => {
       const game = new Chess();
-      [...playedMoves, move].forEach((m) => {
+      [...movesOnBoard(), move].forEach((m) => {
         if (!game.move(m)) {
-          throw new Error(`invalid move: ${m}, moves: ${playedMoves}`);
+          throw new Error(`invalid move: ${m}, moves: ${movesOnBoard()}`);
         }
       });
       games.push(game);
