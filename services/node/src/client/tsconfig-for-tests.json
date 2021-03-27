@@ -7,6 +7,7 @@
     "lib": ["es6", "dom"],
     "jsx": "react",
     "types": ["node", "jest"],
-    "noEmit": true
+    "noEmit": true,
+    "experimentalDecorators": true
   }
 }
