@@ -266,7 +266,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
 
     const moves = game.moves({ verbose: true });
-    for (let i = 0, len = moves.length; i < len; i++) {
+    for (let i = 0; i < moves.length; i++) {
       // If the move involves a pawn promotion, save the move in `pendingMove` and
       // open the `PawnPromoteModal`.
       if (moves[i].flags.indexOf('p') !== -1 && moves[i].from === from) {
