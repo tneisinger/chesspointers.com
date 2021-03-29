@@ -336,10 +336,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const getMovableColor = (): PieceColor | 'both' => {
-    // If the user is looking at past moves, allow them to move all pieces.
-    if (playedMoves.pos < playedMoves.moves.length) {
-      return 'both';
-    }
     return game.turn() === 'w' ? 'white' : 'black';
   };
 
@@ -354,7 +350,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         );
     });
     return {
-      free: playedMoves.pos < playedMoves.moves.length,
+      free: false,
       dests,
       showDests: mode === 'practice',
       color: getMovableColor(),
