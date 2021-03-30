@@ -51,7 +51,7 @@ interface Props {
   wrongMoveFlashIdx: number;
   updateDrawableIdx: number;
   doesMoveLeadToDeadEnd: (move: string | ShortMove) => boolean;
-  lastMoveSquares: string[];
+  highlightedSquares: string[];
   onMouseDown?: () => void;
   orientation?: PieceColor;
   disabled?: boolean;
@@ -119,7 +119,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
       <Chessground
         key={String(drawableProp.visible) /* rerender when `drawable.visible` changes */}
         width={props.size}
-        lastMove={props.lastMoveSquares}
+        lastMove={props.highlightedSquares}
         height={props.size}
         turnColor={props.turnColor}
         fen={props.boardPosition}

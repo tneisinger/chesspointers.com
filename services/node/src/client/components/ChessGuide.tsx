@@ -83,7 +83,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [wrongMoveFlashIdx, setWrongMoveFlashIdx] = useState<number>(0);
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
   const [isBoardDisabled, setIsBoardDisabled] = useState<boolean>(false);
-  const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
+  const [highlightedSquares, setHighlightedSquares] = useState<string[]>([]);
   const [playedMoves, setPlayedMoves] = useState<PlayedMoves>({
     past: [],
     future: [],
@@ -156,7 +156,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // Whenever `playedMoves` changes...
   useEffect(() => {
     // Update which squares are highlighted, showing the last moves
-    updateLastMoveSquares();
+    highlightLastMoveSquares();
 
     // Hide move arrows
     setIsShowingMoves(false);
@@ -364,7 +364,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setIsShowingMoves(false);
     if (mode === 'learn') setIsBoardDisabled(true);
     setIsBoardDisabled(false);
-    setLastMoveSquares([]);
+    setHighlightedSquares([]);
     // Delay updateBoard() so that the board animation will not be interrupted by anything
     // we did above.
     scheduleUpdateBoard({ delay: 400 });
@@ -514,19 +514,27 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     attemptMove(from, to, promotionPiece);
   };
 
-  // Set the `lastMoveSquares` that should be highlighted as the last played move
-  const updateLastMoveSquares = (): void => {
+  // Highlight the squares that were involved in the last move
+  const highlightLastMoveSquares = (): void => {
     if (playedMoves.past.length < 1) {
-      setLastMoveSquares([]);
+      setHighlightedSquares([]);
       return;
     }
     const { past } = playedMoves;
     const { from, to } = convertMovesToShortMoves(past)[past.length - 1];
-    setLastMoveSquares([from, to]);
+    setHighlightedSquares([from, to]);
   };
 
   const triggerBoardDrawableUpdate = () => {
     setUpdateDrawableIdx((idx) => idx + 1);
+  };
+
+  const handleHintRequest = () => {
+    const squaresToHighlight: string[] = [];
+    chessTreeToolkit
+      .getNextShortMoves()
+      .forEach(({ from }) => squaresToHighlight.push(from));
+    setHighlightedSquares(squaresToHighlight);
   };
 
   const debug = () => {
@@ -549,7 +557,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             shouldShowNextMoves={isShowingMoves}
             wrongMoveFlashIdx={wrongMoveFlashIdx}
             doesMoveLeadToDeadEnd={chessTreeToolkit.doesMoveLeadToDeadEnd}
-            lastMoveSquares={lastMoveSquares}
+            highlightedSquares={highlightedSquares}
             disabled={isBoardDisabled}
             getNextShortMoves={chessTreeToolkit.getNextShortMoves}
             updateDrawableIdx={updateDrawableIdx}
@@ -571,6 +579,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           onResetBtnClick={reset}
           onModeSwitchBtnClick={toggleGuideMode}
           currentMode={mode}
+          onHintRequest={handleHintRequest}
         />
       </Grid>
       <Grid item>

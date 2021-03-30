@@ -22,6 +22,7 @@ interface Props {
   onResetBtnClick: () => void;
   onModeSwitchBtnClick: () => void;
   currentMode: GuideMode;
+  onHintRequest: () => void;
 }
 
 const ChessGuideControls: React.FC<Props> = ({
@@ -34,6 +35,7 @@ const ChessGuideControls: React.FC<Props> = ({
   onResetBtnClick,
   onModeSwitchBtnClick,
   currentMode,
+  onHintRequest,
 }) => {
   const classes = useStyles({});
 
@@ -67,6 +69,13 @@ const ChessGuideControls: React.FC<Props> = ({
               {currentMode === 'learn' ? 'practice' : 'learn'}
             </Button>
           </Grid>
+          {currentMode === 'practice' && (
+            <Grid item>
+              <Button variant='contained' color='primary' onClick={onHintRequest}>
+                Hint
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Grid>
