@@ -54,7 +54,7 @@ const OpeningPageContent: React.FC<OpeningsSlice> = ({ openings }) => {
   if (windowWidth > windowHeight) {
     boardSizePixels = calcChessBoardSize(70, 'vh');
   } else {
-    boardSizePixels = calcChessBoardSize(95, 'vw');
+    boardSizePixels = calcChessBoardSize(91, 'vw');
   }
 
   // Find the opening with a name that matches the openingName param

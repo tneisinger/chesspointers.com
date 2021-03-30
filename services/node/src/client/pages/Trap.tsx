@@ -54,7 +54,7 @@ const TrapPageContent: React.FC<TrapsSlice> = ({ traps }) => {
   if (windowWidth > windowHeight) {
     boardSizePixels = calcChessBoardSize(70, 'vh');
   } else {
-    boardSizePixels = calcChessBoardSize(95, 'vw');
+    boardSizePixels = calcChessBoardSize(91, 'vw');
   }
 
   // Find the trap with a name that matches the trapName param

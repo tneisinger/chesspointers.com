@@ -28,21 +28,21 @@ const CHECK_MOVE_DELAY = BOARD_ANIMATION_DURATION + 25;
 const SHOW_NEXT_MOVES_DELAY = BOARD_ANIMATION_DURATION + 350;
 const SHOW_DEBUG_BTN = false;
 const BEEPER = new Beeper({ frequency: 73 });
-const BOARD_BORDER_WIDTH = '13px';
+const BOARD_BORDER_WIDTH = 13;
 const SWITCH_TO_PRACTICE_MODE_DELAY = 300;
 const LCL_STOR_KEY_ALLOW_DEAD_END_MODAL = 'allowDeadEndModal';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   boardBorderDiv: {
-    display: 'inline-block',
-    padding: BOARD_BORDER_WIDTH,
-    backgroundColor: theme.palette.background.default,
+    padding: BOARD_BORDER_WIDTH + 'px',
+    width: (p: { boardSizePixels: number }) => p.boardSizePixels + 2 * BOARD_BORDER_WIDTH,
+    margin: '0 auto',
     borderRadius: '5px',
   },
   childrenContainer: {
     paddingTop: BOARD_BORDER_WIDTH,
   },
-}));
+});
 
 interface Props {
   chessTree: ChessTree;
@@ -67,7 +67,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   renderExtraControlsForTesting = false,
   ...props
 }) => {
-  const classes = useStyles({});
+  const classes = useStyles({ boardSizePixels });
 
   const [isLineCompleteModalOpen, setIsLineCompleteModalOpen] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
