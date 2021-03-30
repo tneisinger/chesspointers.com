@@ -181,7 +181,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const handleViewPastMove = () => {
-    scheduleShowMoves({ delay: 450 });
+    scheduleShowMoves({ delay: 300 });
   };
 
   const handleNewMoveWasPlayed = () => {

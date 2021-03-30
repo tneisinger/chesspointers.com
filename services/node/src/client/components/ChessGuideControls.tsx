@@ -38,7 +38,13 @@ const ChessGuideControls: React.FC<Props> = ({
   const classes = useStyles({});
 
   return (
-    <Grid className={classes.root} container direction='row' justify='space-evenly'>
+    <Grid
+      className={classes.root}
+      container
+      direction='row'
+      justify='space-evenly'
+      spacing={2}
+    >
       <Grid item>
         <ChessNavBtns
           areBackBtnsEnabled={areBackBtnsEnabled}
@@ -58,7 +64,7 @@ const ChessGuideControls: React.FC<Props> = ({
           </Grid>
           <Grid item>
             <Button variant='contained' color='primary' onClick={onModeSwitchBtnClick}>
-              Switch to {currentMode === 'learn' ? 'practice' : 'learn'} mode
+              {currentMode === 'learn' ? 'practice' : 'learn'}
             </Button>
           </Grid>
         </Grid>
