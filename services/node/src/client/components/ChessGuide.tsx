@@ -53,11 +53,9 @@ interface Props {
 }
 
 interface PlayedMoves {
-  moves: string[];
-  pos: number;
+  past: string[];
+  future: string[];
 }
-
-const initialPlayedMovesVal: PlayedMoves = { moves: [], pos: 0 };
 
 const ChessGuide: React.FunctionComponent<Props> = ({
   chessTree,
@@ -85,7 +83,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [isShowingMoves, setIsShowingMoves] = useState<boolean>(false);
   const [isBoardDisabled, setIsBoardDisabled] = useState<boolean>(false);
   const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
-  const [playedMoves, setPlayedMoves] = useState<PlayedMoves>(initialPlayedMovesVal);
+  const [playedMoves, setPlayedMoves] = useState<PlayedMoves>({
+    past: [],
+    future: [],
+  });
 
   // Increment this value to trigger a rebuild of the ChessGuideBoard drawable prop.
   // The drawable prop is what puts the move arrows on the screen. We only want to
@@ -93,7 +94,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   // get interrupted.
   const [updateDrawableIdx, setUpdateDrawableIdx] = useState<number>(0);
 
-  const movesOnBoard = () => playedMoves.moves.slice(0, playedMoves.pos);
+  const movesOnBoard = () => playedMoves.past;
 
   const chessTreeToolkit = useChessTreeToolkit(chessTree, movesOnBoard, mode);
 
@@ -111,10 +112,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const firstModeUpdate = useRef<boolean>(true);
   const firstChessTreeUpdate = useRef<boolean>(true);
-
-  useEffect(() => {
-    reset();
-  }, []);
 
   // Clear all the timeouts on unmount
   useEffect(() => {
@@ -145,11 +142,11 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       triggerBoardDrawableUpdate();
 
       // Normally, scheduleShowMoves() gets ran in a useEffect callback after playedMoves
-      // has changed. But if mode is changed while playedMoves is empty, that useEffect
-      // callback will not run because reset() will not change the value of playedMoves.
-      // Because of that, we have to run scheduleShowMoves() here when playedMoves is
-      // empty.
-      if (playedMoves.moves.length === 0 && playedMoves.pos === 0) {
+      // has changed. But if the mode is changed while playedMoves is empty, that
+      // useEffect callback will not run because reset() will not change the value of
+      // playedMoves. Because of that, we have to run scheduleShowMoves() here when
+      // playedMoves is empty.
+      if (playedMoves.past.length === 0 && playedMoves.future.length === 0) {
         scheduleShowMoves();
       }
     }
@@ -164,17 +161,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     setIsShowingMoves(false);
     triggerBoardDrawableUpdate();
 
-    // If necessary, reset the board to the specified position
-    if (game.history().length !== playedMoves.pos) {
-      game.reset();
-      for (let i = 0; i < playedMoves.pos; i++) {
-        game.move(playedMoves.moves[i]);
-      }
-      updateBoardTimeout.current = window.setTimeout(() => {
-        updateBoard();
-      }, 200);
-    }
-
     if (userIsViewingAnOldMove()) {
       handleViewPastMove();
     } else {
@@ -185,11 +171,16 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const userIsViewingAnOldMove = (): boolean => {
     if (previousPlayedMoves.current == null) return false;
-    return arraysEqual(playedMoves.moves, previousPlayedMoves.current.moves);
+    const oldPlayedMoves = [
+      ...previousPlayedMoves.current.past,
+      ...previousPlayedMoves.current.future,
+    ];
+    const currentPlayedMoves = [...playedMoves.past, ...playedMoves.future];
+    return arraysEqual(oldPlayedMoves, currentPlayedMoves);
   };
 
   const handleViewPastMove = () => {
-    scheduleShowMoves();
+    scheduleShowMoves({ delay: 450 });
   };
 
   const handleNewMoveWasPlayed = () => {
@@ -200,16 +191,20 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       return;
     }
 
-    // If it is the users turn or if there are are multiple move options to choose from,
+    // If it is the users turn or if there are multiple move options to choose from,
     // then the user will select the next move.
     if (isUsersTurn() || chessTreeToolkit.getNextMoves().length > 1) {
-      if (playedMoves.moves.length > 0) {
+      // We want to delay showing the move arrows by the right amount. If the board is
+      // being reset, we want to wait a little longer to allow the board animation to
+      // complete. Otherwise, we don't need to wait very long because there will be no
+      // animation to wait for.
+      if (playedMoves.past.length > 0) {
         // If the user is going to select the next move, we don't need to wait for an
         // animation to complete, so we can show the next move arrows sooner.
         scheduleShowMoves({ delay: 100 });
       } else {
-        // But if playedMoves is now empty, the board was likely reset and we should wait
-        // a bit longer to allow the board animation to complete
+        // If pastMoves is currently empty, the board was likely reset and we should
+        // wait a bit longer to allow the board animation to complete
         scheduleShowMoves({ delay: 1000 });
       }
     } else {
@@ -217,7 +212,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       // play the next move automatically. Don't shorten the delay of `scheduleShowMoves`
       // because we want to wait for the animation of the computer's move to complete
       // before showing the next move arrows.
-      if (playedMoves.moves.length < 1) {
+      if (playedMoves.past.length < 1) {
         // If the computer plays the first move in the chess tree, wait a little longer
         // before playing the first move.
         delayFirstMoveTimeout.current = window.setTimeout(() => {
@@ -257,14 +252,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const updateBoard = () => setFen(game.fen());
 
   const handleMove = (from: Square, to: Square) => {
-    // If the user tries to play a move while the board is not positioned at the last of
-    // the `playedMoves`, do not play the user's move. Instead, move the board back to the
-    // last `playedMoves` position.
-    if (playedMoves.pos < playedMoves.moves.length) {
-      setPlayedMoves(({ moves }) => ({ moves, pos: moves.length }));
-      return;
-    }
-
     const moves = game.moves({ verbose: true });
     for (let i = 0; i < moves.length; i++) {
       // If the move involves a pawn promotion, save the move in `pendingMove` and
@@ -308,10 +295,10 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const addMoveToPlayedMoves = (move?: string): void => {
     const newMove: string = move != undefined ? move : getLastMove();
-    setPlayedMoves(({ moves }) => ({
-      moves: [...moves, newMove],
-      pos: moves.length + 1,
-    }));
+    setPlayedMoves(({ past, future }) => {
+      const newFuture = future.length < 1 || future[0] !== newMove ? [] : future.slice(1);
+      return { past: [...past, newMove], future: newFuture };
+    });
   };
 
   const wasLastMoveCorrect = () => {
@@ -370,39 +357,58 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   const reset = () => {
     game.reset();
-    setPlayedMoves(initialPlayedMovesVal);
+    setPlayedMoves({ past: [], future: [] });
     setIsShowingMoves(false);
     if (mode === 'learn') setIsBoardDisabled(true);
     setIsBoardDisabled(false);
     setLastMoveSquares([]);
     // Delay updateBoard() so that the board animation will not be interrupted by anything
     // we did above.
-    window.clearTimeout(updateBoardTimeout.current);
-    updateBoardTimeout.current = window.setTimeout(() => {
-      updateBoard();
-    }, 400);
+    scheduleUpdateBoard({ delay: 400 });
   };
 
   const moveBack = () => {
-    setPlayedMoves(({ moves, pos }) => {
-      if (pos > 0) return { moves, pos: pos - 1 };
-      return { moves, pos: 0 };
+    if (playedMoves.past.length < 1) return;
+    game.undo();
+    scheduleUpdateBoard();
+    setPlayedMoves(({ past, future }) => {
+      const move = past[past.length - 1];
+      return {
+        past: past.slice(0, past.length - 1),
+        future: [move, ...future],
+      };
     });
   };
 
   const moveForward = () => {
-    setPlayedMoves(({ moves, pos }) => {
-      if (pos < moves.length) return { moves, pos: pos + 1 };
-      return { moves, pos: moves.length };
-    });
+    if (playedMoves.future.length < 1) return;
+    const move = playedMoves.future[0];
+    game.move(move);
+    scheduleUpdateBoard();
+    setPlayedMoves(({ past, future }) => ({
+      past: [...past, move],
+      future: future.slice(1),
+    }));
   };
 
   const jumpToEndOfPlayedMoves = () => {
-    setPlayedMoves(({ moves }) => ({ moves, pos: moves.length }));
+    playedMoves.future.forEach((move) => {
+      game.move(move);
+    });
+    scheduleUpdateBoard();
+    setPlayedMoves(({ past, future }) => ({
+      past: [...past, ...future],
+      future: [],
+    }));
   };
 
   const jumpToStartOfPlayedMoves = () => {
-    setPlayedMoves(({ moves }) => ({ moves, pos: 0 }));
+    game.reset();
+    scheduleUpdateBoard();
+    setPlayedMoves(({ past, future }) => ({
+      past: [],
+      future: [...past, ...future],
+    }));
   };
 
   const thereAreMultipleMoveOptions = (): boolean => {
@@ -423,6 +429,14 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         triggerBoardDrawableUpdate();
       }, delay);
     }
+  };
+
+  const scheduleUpdateBoard = (options: { delay?: number } = {}) => {
+    window.clearTimeout(updateBoardTimeout.current);
+    const delay = options.delay == undefined ? 10 : options.delay;
+    updateBoardTimeout.current = window.setTimeout(() => {
+      updateBoard();
+    }, delay);
   };
 
   const doComputerMove = () => {
@@ -452,18 +466,39 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const getSelectedMoveIdx = (): number | null => {
-    if (playedMoves.pos === 0) return null;
-    return playedMoves.pos - 1;
+    if (playedMoves.past.length < 1) return null;
+    return playedMoves.past.length - 1;
+  };
+
+  const changeSelectedMoveIdx = (idx: number): void => {
+    // First, update the chess.js `game` object to the new move position
+    const diffFromGame = idx + 1 - game.history().length;
+    if (diffFromGame > 0) {
+      for (let i = 0; i < diffFromGame; i++) {
+        game.move(playedMoves.future[i]);
+      }
+    } else if (diffFromGame < 0) {
+      for (let i = 0; i < Math.abs(diffFromGame); i++) {
+        game.undo();
+      }
+    }
+    scheduleUpdateBoard();
+    // Now set the new values of playedMoves
+    setPlayedMoves(({ past, future }) => {
+      const allMoves = [...past, ...future];
+      return {
+        past: allMoves.slice(0, idx + 1),
+        future: allMoves.slice(idx + 1),
+      };
+    });
   };
 
   const childrenWithProps = React.Children.map(props.children, (child) => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, {
-        playedMoves: playedMoves.moves,
+        playedMoves: [...playedMoves.past, ...playedMoves.future],
         selectedMoveIdx: getSelectedMoveIdx(),
-        changeSelectedMoveIdx: (idx: number) => {
-          setPlayedMoves(({ moves }) => ({ moves, pos: idx + 1 }));
-        },
+        changeSelectedMoveIdx,
       });
     }
     return child;
@@ -478,12 +513,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
 
   // Set the `lastMoveSquares` that should be highlighted as the last played move
   const updateLastMoveSquares = (): void => {
-    const moveIdx = getSelectedMoveIdx();
-    if (playedMoves.moves.length < 1 || moveIdx == null) {
+    if (playedMoves.past.length < 1) {
       setLastMoveSquares([]);
       return;
     }
-    const { from, to } = convertMovesToShortMoves(playedMoves.moves)[moveIdx];
+    const { past } = playedMoves;
+    const { from, to } = convertMovesToShortMoves(past)[past.length - 1];
     setLastMoveSquares([from, to]);
   };
 
@@ -524,8 +559,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           score={getScoreFromFen(game.fen())}
         />
         <ChessGuideControls
-          areBackBtnsEnabled={playedMoves.pos > 0}
-          areForwardBtnsEnabled={playedMoves.moves.length > playedMoves.pos}
+          areBackBtnsEnabled={playedMoves.past.length > 0}
+          areForwardBtnsEnabled={playedMoves.future.length > 0}
           onJumpBackBtnClick={jumpToStartOfPlayedMoves}
           onJumpForwardBtnClick={jumpToEndOfPlayedMoves}
           onStepBackBtnClick={moveBack}
