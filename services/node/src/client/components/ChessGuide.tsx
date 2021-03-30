@@ -9,6 +9,7 @@ import {
   getScoreFromFen,
   convertMovesToShortMoves,
   arraysEqual,
+  areChessMovesEquivalent,
 } from '../../shared/utils';
 import ChessMoveSelector from './ChessMoveSelector';
 import Beeper from '../beeper';
@@ -302,7 +303,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const wasLastMoveCorrect = () => {
-    return chessTreeToolkit.getNextMoves().includes(getLastMove());
+    return chessTreeToolkit
+      .getNextMoves()
+      .some((move) => areChessMovesEquivalent(move, getLastMove()));
   };
 
   const rectifyIncorrectMove = () => {
