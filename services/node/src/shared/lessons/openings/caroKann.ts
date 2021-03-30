@@ -72,26 +72,12 @@ const mv3_w_exd5 = makeChessTree(
   [mv4_w_Nf3_a, mv4_w_c4],
 );
 
-const mv5_b_exf6 = makeChessTree(
-  // prettier-ignore
-  [          'exf6',
-  ],
-  [],
-);
-
-const mv5_b_gxf6 = makeChessTree(
-  // prettier-ignore
-  [          'gxf6',
-  ],
-  [],
-);
-
 const mv4_b_Nf6 = makeChessTree(
   // prettier-ignore
   [          'Nf6',
-    'Nxf6+',
+    'Nxf6+', 'exf6',
   ],
-  [mv5_b_exf6, mv5_b_gxf6],
+  [],
 );
 
 const mv4_b_Bf5 = makeChessTree(
