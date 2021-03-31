@@ -7,7 +7,8 @@ const mv4_w_c4 = makeChessTree(
     'Nf3', 'e6',
     'Nc3', 'Be7',
     'Be2', 'O-O',
-    'O-O',
+    'O-O', 'b6',
+    'Bf4', 'Bb7',
   ],
   [],
 );
@@ -76,6 +77,8 @@ const mv4_b_Nf6 = makeChessTree(
   // prettier-ignore
   [          'Nf6',
     'Nxf6+', 'exf6',
+    'Nf3',   'Bd6',
+    'Bc4',   'O-O',
   ],
   [],
 );
