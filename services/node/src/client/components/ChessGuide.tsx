@@ -281,10 +281,15 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
   };
 
-  const shouldShowDeadEndModal = (): boolean =>
-    allowDeadEndModal &&
-    chessTreeToolkit.getNextMoves().length > 1 &&
-    chessTreeToolkit.doesMoveLeadToDeadEnd(getLastMove());
+  const shouldShowDeadEndModal = (): boolean => {
+    if (!allowDeadEndModal) return false;
+    const nextMoves = chessTreeToolkit.getNextMoves();
+    return (
+      nextMoves.length > 1 &&
+      chessTreeToolkit.doesMoveLeadToDeadEnd(getLastMove()) &&
+      nextMoves.some((move) => !chessTreeToolkit.doesMoveLeadToDeadEnd(move))
+    );
+  };
 
   const handleCorrectMove = () => {
     if (shouldShowDeadEndModal()) {
