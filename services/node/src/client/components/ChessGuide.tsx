@@ -561,6 +561,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
             disabled={isBoardDisabled}
             getNextShortMoves={chessTreeToolkit.getNextShortMoves}
             updateDrawableIdx={updateDrawableIdx}
+            guideMode={mode}
+            isUsersTurn={isUsersTurn}
           />
         </div>
         <ChessGuideInfo

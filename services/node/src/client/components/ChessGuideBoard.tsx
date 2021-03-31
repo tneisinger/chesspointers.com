@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ShortMove, Square } from 'chess.js';
 import { PieceColor } from '../../shared/chessTypes';
 import { makeStyles } from '@material-ui/core';
+import { GuideMode } from '../utils/types';
 import Chessground from 'react-chessground';
 import ColorFlashOverlay from './ColorFlashOverlay';
 import CheckmateOverlay from './CheckmateOverlay';
@@ -52,6 +53,8 @@ interface Props {
   updateDrawableIdx: number;
   doesMoveLeadToDeadEnd: (move: string | ShortMove) => boolean;
   highlightedSquares: string[];
+  guideMode: GuideMode;
+  isUsersTurn: () => boolean;
   onMouseDown?: () => void;
   orientation?: PieceColor;
   disabled?: boolean;
@@ -66,6 +69,17 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
     const nextShortMoves = props.getNextShortMoves();
     if (nextShortMoves.length > 0) {
       nextShortMoves.forEach((shortMove) => {
+        // In practice mode, don't show the user arrows for their own moves if they
+        // haven't completed that line yet. Once that line has been completed, show
+        // the arrow next time so the user knows that they've already played that move.
+        if (
+          props.guideMode === 'practice' &&
+          props.isUsersTurn() &&
+          !props.doesMoveLeadToDeadEnd(shortMove)
+        ) {
+          // don't include the move arrow
+          return;
+        }
         result.push({
           orig: shortMove.from,
           dest: shortMove.to,
