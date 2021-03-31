@@ -26,7 +26,7 @@ const WithReduxSlice = <Slice extends SliceState>(props: Props<Slice>): ReactEle
     return <p>An error occurred: {slice.error}</p>;
   }
 
-  if (slice.requestStatus !== 'LOADED') {
+  if (slice.requestStatus === 'LOADING') {
     return <Spinner />;
   }
 

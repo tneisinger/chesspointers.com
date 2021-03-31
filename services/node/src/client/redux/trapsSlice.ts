@@ -8,6 +8,11 @@ export interface TrapsSlice extends SliceState {
   traps: Lesson[];
 }
 
+interface SuccessPayload {
+  traps: Lesson[];
+  usingLocalStorage?: boolean;
+}
+
 const initialState: TrapsSlice = {
   traps: [],
   error: null,
@@ -21,13 +26,16 @@ export const trapsSlice = createSlice({
     getTrapsStart(state) {
       state.requestStatus = 'LOADING';
     },
-    getTrapsSuccess(state, action: PayloadAction<Lesson[]>) {
-      state.traps = action.payload;
+    getTrapsSuccess(state, action: PayloadAction<SuccessPayload>) {
+      state.traps = action.payload.traps;
       state.error = null;
-      state.requestStatus = 'LOADED';
+      if (action.payload.usingLocalStorage) {
+        state.requestStatus = 'USING_LOCALSTORAGE';
+      } else {
+        state.requestStatus = 'LOADED';
+      }
     },
     getTrapsFailed(state, action: PayloadAction<string>) {
-      state.traps = [];
       state.error = action.payload;
       state.requestStatus = 'ERROR';
     },
@@ -39,9 +47,17 @@ const { getTrapsStart, getTrapsSuccess, getTrapsFailed } = trapsSlice.actions;
 export function getTrapsThunk(): AppThunk {
   return async (dispatch) => {
     dispatch(getTrapsStart());
+    const localStorageTraps = localStorage.getItem('traps');
+    if (localStorageTraps != null) {
+      const traps = JSON.parse(localStorageTraps);
+      dispatch(getTrapsSuccess({ traps, usingLocalStorage: true }));
+    }
     try {
-      const traps = await fetchTraps();
-      dispatch(getTrapsSuccess(traps));
+      const traps: Lesson[] = await fetchTraps();
+      localStorage.setItem('traps', JSON.stringify(traps));
+      if (localStorageTraps !== JSON.stringify(traps)) {
+        dispatch(getTrapsSuccess({ traps }));
+      }
     } catch (err) {
       dispatch(getTrapsFailed(err.toString()));
     }
