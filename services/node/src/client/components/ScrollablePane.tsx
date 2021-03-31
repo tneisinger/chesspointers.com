@@ -12,8 +12,8 @@ const SCROLL_TO_BOTTOM_DELAY = 5000;
 interface Props {
   height: number;
   title: string;
+  triggerScrollToBottomIdx?: number;
   subheadingComponent?: React.ReactNode;
-  autoScrollDownWhenContentAdded?: boolean;
 }
 
 interface StyleProps extends Props {
@@ -94,11 +94,11 @@ const ScrollablePane: React.FC<Props> = (props) => {
   // Get a reference to the div at the bottom of the scrollable content
   const scrollToBottomDiv = useRef<HTMLDivElement | null>(null);
 
-  // Every time this component rerenders, make sure that we scroll to the bottom
+  // Every time the `triggerScrollToBottomIdx` prop changes, scroll to bottom
   useEffect(() => {
-    if (props.autoScrollDownWhenContentAdded) scrollToBottom();
+    scrollToBottom();
     return () => window.clearTimeout(scrollToBottomTimeout.current);
-  });
+  }, [props.triggerScrollToBottomIdx]);
 
   return (
     <div className={classes.root}>
