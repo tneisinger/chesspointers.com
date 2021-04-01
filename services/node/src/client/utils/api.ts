@@ -1,23 +1,22 @@
 import axios from 'axios';
-import { Trap } from '../../shared/entity/trap';
-import { Opening } from '../../shared/entity/opening';
+import { Lesson } from '../../shared/entity/lesson';
 
-export async function fetchTraps(): Promise<Trap[]> {
+export async function fetchTraps(): Promise<Lesson[]> {
   const result = await axios.get(`/api/traps`);
-  return result.data as Trap[];
+  return result.data as Lesson[];
 }
 
-export async function fetchTrap(trapId: string): Promise<Trap> {
+export async function fetchTrap(trapId: string): Promise<Lesson> {
   const result = await axios.get(`/api/traps/${trapId}`);
-  return result.data as Trap;
+  return result.data as Lesson;
 }
 
-export async function fetchOpenings(): Promise<Opening[]> {
+export async function fetchOpenings(): Promise<Lesson[]> {
   const result = await axios.get(`/api/openings`);
-  return result.data as Opening[];
+  return result.data as Lesson[];
 }
 
-export async function fetchOpening(openingId: string): Promise<Opening> {
+export async function fetchOpening(openingId: string): Promise<Lesson> {
   const result = await axios.get(`/api/openings/${openingId}`);
-  return result.data as Opening;
+  return result.data as Lesson;
 }
