@@ -5,7 +5,7 @@ import caroKann from './caroKann';
 import scandinavian from './scandinavian';
 import kingsIndian from './kingsIndian';
 import sicilianDragon from './sicilianDragon';
-import alapin from './alapin';
+import sicilianAlapin from './sicilianAlapin';
 
 const allOpenings: { [shortName: string]: Lesson } = {
   vienna: vienna,
@@ -14,7 +14,7 @@ const allOpenings: { [shortName: string]: Lesson } = {
   scandinavian: scandinavian,
   kingsIndian: kingsIndian,
   sicilianDragon: sicilianDragon,
-  alapin: alapin,
+  sicilianAlapin: sicilianAlapin,
 };
 
 export default allOpenings;

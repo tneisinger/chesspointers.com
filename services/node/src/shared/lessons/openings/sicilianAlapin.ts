@@ -173,7 +173,7 @@ const chessTree = makeChessTree(
 const lesson = new Lesson();
 lesson.lessonType = LessonType.OPENING;
 lesson.fullName = 'Sicilian: Alapin Variation';
-lesson.shortName = 'alapin';
+lesson.shortName = 'Sicilian Alapin';
 lesson.playedByWhite = true;
 lesson.chessTree = chessTree;
 
