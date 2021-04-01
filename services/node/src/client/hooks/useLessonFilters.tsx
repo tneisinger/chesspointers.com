@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import ColorSwitchWithCheckbox from '../components/ColorSwitchWithCheckbox';
@@ -7,6 +7,10 @@ import ChessOpeningsDropDown from '../components/ChessOpeningsDropDown';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
 import { Lesson } from '../../shared/entity/lesson';
 import { filterLessonsWithOpenings } from '../../shared/chessTree';
+
+const INIT_VAL_SELECTED_COLOR = 'white';
+const INIT_VAL_IS_COLOR_FILTER_ENABLED = false;
+const INIT_VAL_SELECTED_OPENING = '';
 
 // This is paramater that should be passed to the `useLessonFilters` hook
 type Args = {
@@ -33,9 +37,17 @@ export default function useLessonFilters({
   onFiltersChange,
   includeCheckboxInColorSwitch = true,
 }: Args): FiltersToolkit {
-  const [selectedColor, setSelectedColor] = useState<PieceColor>('white');
-  const [isColorFilterEnabled, setIsColorFilterEnabled] = useState(false);
-  const [selectedOpening, setSelectedOpening] = useState<ChessOpening | ''>('');
+  const [selectedColor, setSelectedColor] = useState<PieceColor>(INIT_VAL_SELECTED_COLOR);
+  const [isColorFilterEnabled, setIsColorFilterEnabled] = useState(
+    INIT_VAL_IS_COLOR_FILTER_ENABLED,
+  );
+  const [selectedOpening, setSelectedOpening] = useState<ChessOpening | ''>(
+    INIT_VAL_SELECTED_OPENING,
+  );
+
+  const hasSelectedColorChanged = useRef<boolean>();
+  const hasIsColorFilterEnabledChanged = useRef<boolean>();
+  const hasSelectedOpeningChanged = useRef<boolean>();
 
   const filterLessons = (): Lesson[] => {
     let filteredLessons = unfilteredLessons;
@@ -104,10 +116,42 @@ export default function useLessonFilters({
     />
   );
 
+  useEffect(() => {
+    if (isColorFilterEnabled !== INIT_VAL_IS_COLOR_FILTER_ENABLED) {
+      hasIsColorFilterEnabledChanged.current = true;
+    }
+  }, [isColorFilterEnabled]);
+
+  useEffect(() => {
+    if (selectedColor !== INIT_VAL_SELECTED_COLOR) {
+      hasSelectedColorChanged.current = true;
+    }
+  }, [selectedColor]);
+
+  useEffect(() => {
+    if (selectedOpening !== INIT_VAL_SELECTED_OPENING) {
+      hasSelectedOpeningChanged.current = true;
+    }
+  }, [selectedOpening]);
+
   // Whenever any filter option changes...
   useEffect(() => {
-    onFiltersChange(filterLessons());
+    // We don't want to trigger a filter change immediately after page load,
+    // so make sure that at least one of them has changed from its initial value.
+    if (
+      hasIsColorFilterEnabledChanged.current ||
+      hasSelectedOpeningChanged.current ||
+      hasSelectedOpeningChanged.current
+    ) {
+      onFiltersChange(filterLessons());
+    }
   }, [isColorFilterEnabled, selectedColor, selectedOpening]);
+
+  // Whenever the unfilteredLessons change, we need to rerun the filter to make sure
+  // that any new lessons show up in the filtered list of lessons.
+  useEffect(() => {
+    filterLessons();
+  }, [unfilteredLessons]);
 
   return {
     selectedColor: isColorFilterEnabled ? selectedColor : null,
