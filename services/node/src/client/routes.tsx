@@ -42,7 +42,7 @@ export const routes: RouteInfo[] = [
   },
   {
     component: OpeningPage,
-    path: '/openings/:openingName',
+    path: '/openings/:lessonName',
     isPathExact: true,
     isPrivate: false,
     isInSideMenu: false,
@@ -57,7 +57,7 @@ export const routes: RouteInfo[] = [
   },
   {
     component: TrapPage,
-    path: '/traps/:trapName',
+    path: '/traps/:lessonName',
     isPathExact: true,
     isPrivate: false,
     isInSideMenu: false,

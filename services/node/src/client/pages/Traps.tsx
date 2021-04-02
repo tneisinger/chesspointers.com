@@ -1,111 +1,14 @@
-import React, { useState } from 'react';
-import { Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/core';
-import { Lesson } from '../../shared/entity/lesson';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import DisplayLessons from '../components/DisplayLessons';
-import NoMatchesModal from '../components/NoMatchesModal';
-import useDimensions from 'react-use-dimensions';
+import React from 'react';
+import Lessons from './Lessons';
 import { getTrapsThunk } from '../redux/trapsSlice';
 import { RootState } from '../redux/store';
-import useLessonFilters from '../hooks/useLessonFilters';
-import WithReduxSlice from '../components/WithReduxSlice';
-import { TrapsSlice } from '../redux/trapsSlice';
-import FiltersBarOrModalUI, {
-  shouldDisplayFiltersBar,
-} from '../components/FiltersBarOrModalUI';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  titleText: {
-    [theme.breakpoints.up('sm')]: {
-      fontSize: '3rem',
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '1.75rem',
-    },
-  },
-  trapsRoot: {
-    maxWidth: 'inherit',
-    width: 'inherit',
-    height: (p: { filterBarHeight: number }) => {
-      if (shouldDisplayFiltersBar()) {
-        return `calc(100% - ${p.filterBarHeight}px)`;
-      } else {
-        return '100%';
-      }
-    },
-  },
-}));
-
-const TrapsPageContent: React.FC<TrapsSlice> = (props) => {
-  const [filtersBarRef, filtersBarDimensions] = useDimensions();
-
-  const [filteredTraps, setFilteredTraps] = useState<Lesson[]>([]);
-  const [isNoMatchesModalOpen, setIsNoMatchesModalOpen] = useState<boolean>(false);
-  const [isFiltersModalOpen, setIsFiltersModalOpen] = useState<boolean>(false);
-
-  const classes = useStyles({ filterBarHeight: filtersBarDimensions.height });
-
-  const [rootDivRef, rootDivDimensions] = useDimensions();
-
-  const onFiltersChange = (currentFilteredTraps: Lesson[]) => {
-    if (currentFilteredTraps.length < 1) {
-      setIsNoMatchesModalOpen(true);
-    }
-  };
-
-  const filtersToolkit = useLessonFilters({
-    unfilteredLessons: props.traps,
-    changeFilteredLessons: setFilteredTraps,
-    onFiltersChange,
-  });
-
-  return (
-    <>
-      <Grid
-        container
-        direction='column'
-        justify='space-evenly'
-        className={classes.trapsRoot}
-        ref={rootDivRef}
-      >
-        <Grid item>
-          <Typography variant='h3' align='center' className={classes.titleText}>
-            Traps
-          </Typography>
-        </Grid>
-        <Grid item>
-          <DisplayLessons
-            parentWidth={rootDivDimensions.width}
-            allowAnimation={!isFiltersModalOpen}
-            lessons={filteredTraps}
-          />
-        </Grid>
-        <Grid item>
-          <FiltersBarOrModalUI
-            filtersToolkit={filtersToolkit}
-            filtersBarRef={filtersBarRef}
-            isModalOpen={isFiltersModalOpen}
-            setIsModalOpen={setIsFiltersModalOpen}
-          />
-        </Grid>
-      </Grid>
-      <NoMatchesModal
-        isModalOpenOrOpening={isNoMatchesModalOpen}
-        clearFilters={filtersToolkit.clearFilters}
-        closeModal={() => setIsNoMatchesModalOpen(false)}
-      />
-    </>
-  );
-};
 
 const TrapsPage: React.FC = () => {
   return (
-    <WithReduxSlice
-      WrappedComponent={TrapsPageContent}
+    <Lessons
       reduxThunk={getTrapsThunk}
       reduxSelector={(state: RootState) => state.trapsSlice}
+      pageTitle='Traps'
     />
   );
 };

@@ -2,19 +2,14 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Lesson } from '../../shared/entity/lesson';
 import { fetchOpenings } from '../utils/api';
 import AppThunk from './appThunk';
-import { SliceState } from './types';
+import { EntitiesSlice, Entities } from './types';
 
-export interface OpeningsSlice extends SliceState {
-  openings: Lesson[];
-}
-
-interface SuccessPayload {
-  openings: Lesson[];
+interface SuccessPayload extends Entities<Lesson> {
   usingLocalStorage?: boolean;
 }
 
-const initialState: OpeningsSlice = {
-  openings: [],
+const initialState: EntitiesSlice<Lesson> = {
+  entities: [],
   error: null,
   requestStatus: 'NO_REQUEST_YET',
 };
@@ -27,7 +22,7 @@ export const openingsSlice = createSlice({
       state.requestStatus = 'LOADING';
     },
     getOpeningsSuccess(state, action: PayloadAction<SuccessPayload>) {
-      state.openings = action.payload.openings;
+      state.entities = action.payload.entities;
       state.error = null;
       if (action.payload.usingLocalStorage) {
         state.requestStatus = 'USING_LOCALSTORAGE';
@@ -50,13 +45,13 @@ export function getOpeningsThunk(): AppThunk {
     const localStorageOpenings = localStorage.getItem('openings');
     if (localStorageOpenings != null) {
       const openings = JSON.parse(localStorageOpenings);
-      dispatch(getOpeningsSuccess({ openings, usingLocalStorage: true }));
+      dispatch(getOpeningsSuccess({ entities: openings, usingLocalStorage: true }));
     }
     try {
       const openings: Lesson[] = await fetchOpenings();
       localStorage.setItem('openings', JSON.stringify(openings));
       if (localStorageOpenings !== JSON.stringify(openings)) {
-        dispatch(getOpeningsSuccess({ openings }));
+        dispatch(getOpeningsSuccess({ entities: openings }));
       }
     } catch (err) {
       dispatch(getOpeningsFailed(err.toString()));

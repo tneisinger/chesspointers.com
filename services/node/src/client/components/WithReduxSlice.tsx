@@ -5,13 +5,14 @@ import { SliceState } from '../redux/types';
 import AppThunk from '../redux/appThunk';
 import Spinner from './Spinner';
 
-interface Props<Slice extends SliceState> {
-  WrappedComponent: React.FC<Slice>;
+interface Props<S extends SliceState, P> {
+  WrappedComponent: React.FC<P & S>;
   reduxThunk: () => AppThunk;
-  reduxSelector: (state: RootState) => Slice;
+  reduxSelector: (state: RootState) => S;
+  componentExtraProps?: P;
 }
 
-const WithReduxSlice = <Slice extends SliceState>(props: Props<Slice>): ReactElement => {
+const WithReduxSlice = <S extends SliceState, P>(props: Props<S, P>): ReactElement => {
   const dispatch = useDispatch();
 
   const slice = useSelector(props.reduxSelector);
@@ -30,7 +31,7 @@ const WithReduxSlice = <Slice extends SliceState>(props: Props<Slice>): ReactEle
     return <Spinner />;
   }
 
-  return <props.WrappedComponent {...slice} />;
+  return <props.WrappedComponent {...slice} {...props.componentExtraProps} />;
 };
 
 export default WithReduxSlice;
