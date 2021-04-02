@@ -173,7 +173,7 @@ const chessTree = makeChessTree(
 
 const attribution = new Attribution();
 attribution.text = 'Based on a YouTube video by GothamChess';
-attribution.url = 'https://www.youtube.com/watch?v=VxV8l3x7hOg&t=920s';
+attribution.url = 'https://www.youtube.com/watch?v=VxV8l3x7hOg';
 
 const lesson = new Lesson();
 lesson.lessonType = LessonType.OPENING;
