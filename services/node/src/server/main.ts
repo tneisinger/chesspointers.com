@@ -20,7 +20,9 @@ createConnection()
   .then(async (connection) => {
     // Get all the chess lessons that are saved in the db
     const lessonsRepository: Repository<Lesson> = connection.getRepository(Lesson);
-    const lessons: Lesson[] = await lessonsRepository.find();
+    const lessons: Lesson[] = await lessonsRepository.find({
+      relations: ['attribution'],
+    });
 
     // Insert any lessons that are not yet in the db
     const namesOfLessonsInDB = lessons.map((lesson) => lesson.shortName);

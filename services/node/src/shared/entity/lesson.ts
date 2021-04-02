@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  OneToOne,
+  JoinColumn,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
+import { Attribution } from './attribution';
 import { ChessTree } from '../chessTypes';
 
 export enum LessonType {
@@ -50,6 +58,12 @@ export class Lesson {
     nullable: false,
   })
   chessTree: ChessTree;
+
+  @OneToOne(() => Attribution, {
+    cascade: true,
+  })
+  @JoinColumn({ name: 'attribution_id' })
+  attribution: Attribution;
 
   @CreateDateColumn({
     name: 'added_on',

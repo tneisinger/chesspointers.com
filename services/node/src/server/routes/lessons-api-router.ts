@@ -27,6 +27,7 @@ export function makeLessonsApiRouter(lessonRepository: Repository<Lesson>): Rout
       order: {
         shortName: 'ASC',
       },
+      relations: ['attribution'],
     });
     res.json(openings);
   });
@@ -36,13 +37,16 @@ export function makeLessonsApiRouter(lessonRepository: Repository<Lesson>): Rout
       order: {
         shortName: 'ASC',
       },
+      relations: ['attribution'],
     });
     res.json(lessons);
   });
 
   router.get('/api/lessons/lessonId', async (req, res) => {
     const lessonId = parseInt(req.params.lessonId);
-    const lesson: Lesson = await lessonRepository.findOne(lessonId);
+    const lesson: Lesson = await lessonRepository.findOne(lessonId, {
+      relations: ['attribution'],
+    });
     res.json(lesson);
   });
 

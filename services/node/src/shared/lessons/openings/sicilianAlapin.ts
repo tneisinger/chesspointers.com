@@ -1,4 +1,5 @@
 import { Lesson, LessonType } from '../../entity/lesson';
+import { Attribution } from '../../entity/attribution';
 import { makeChessTree } from '../../chessTree';
 
 const mv7_b_Bg4 = makeChessTree(
@@ -170,11 +171,16 @@ const chessTree = makeChessTree(
   [mv2_b_Nf6, mv2_b_d5, mv2_b_Nc6, mv2_b_d6],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by GothamChess';
+attribution.url = 'https://www.youtube.com/watch?v=VxV8l3x7hOg&t=920s';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.OPENING;
 lesson.fullName = 'Sicilian: Alapin Variation';
 lesson.shortName = 'Sicilian Alapin';
 lesson.playedByWhite = true;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;
