@@ -6,7 +6,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ToolTip from '@material-ui/core/Tooltip';
 import ColorSwitch from './ColorSwitch';
-import ChessOpeningsDropDown from './ChessOpeningsDropDown';
+import DropDown from './DropDown';
 import { PieceColor, ChessOpening } from '../../shared/chessTypes';
 
 const useStyles = makeStyles({
@@ -68,10 +68,11 @@ const SelectTrapsPaneControls: React.FC<Props> = (props) => {
       <Grid item>
         <Box display='flex' justifyContent='center'>
           <Box>
-            <ChessOpeningsDropDown
-              selectedOpening={props.selectedOpening}
+            <DropDown
+              selectedValue={props.selectedOpening}
+              enum={ChessOpening}
+              labelText={'Opening'}
               onChange={props.changeSelectedOpening}
-              size='small'
             />
           </Box>
         </Box>

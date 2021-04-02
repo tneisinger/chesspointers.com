@@ -12,7 +12,7 @@ interface Props {
 }
 
 const LessonFiltersModal: React.FC<Props> = (props) => {
-  const { ColorSwitch, OpeningsDropDown } = props.filtersToolkit;
+  const { ColorSwitch, OpeningMovesDropDown } = props.filtersToolkit;
 
   return (
     <Modal isModalOpenOrOpening={props.isModalOpen} handleClose={props.handleClose}>
@@ -26,7 +26,7 @@ const LessonFiltersModal: React.FC<Props> = (props) => {
           <ColorSwitch />
         </Grid>
         <Grid item>
-          <OpeningsDropDown />
+          <OpeningMovesDropDown />
         </Grid>
         <Grid item>
           <Grid container spacing={3}>

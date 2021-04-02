@@ -1,6 +1,6 @@
 import { Chess, ShortMove } from 'chess.js';
 import { Lesson } from './entity/lesson';
-import { ChessOpening, FenParts } from './chessTypes';
+import { ChessOpening, OpeningMoves, FenParts } from './chessTypes';
 
 export function assertUnreachable(x: never): never {
   throw new Error(`assertUnreachable was reached with value: ${x}`);
@@ -21,6 +21,13 @@ export function partition<T>(array: T[], isValid: (t: T) => boolean): [T[], T[]]
     },
     [[], []],
   );
+}
+
+export function encodeWhiteSpaces(str: string): string {
+  return str
+    .split('')
+    .map((c) => (c === ' ' ? '\u00a0' : c))
+    .join('');
 }
 
 export function randomElem<T>(array: T[]): T | undefined {
@@ -143,6 +150,25 @@ export function getFen(opening: ChessOpening): string {
       return 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2';
     default:
       return assertUnreachable(opening);
+  }
+}
+
+export function getFenStr(openingMoves: OpeningMoves): string {
+  switch (openingMoves) {
+    case OpeningMoves.e4:
+      return 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1';
+    case OpeningMoves.e4_e5:
+      return 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2';
+    case OpeningMoves.e4_c5:
+      return 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2';
+    case OpeningMoves.d4:
+      return 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1';
+    case OpeningMoves.d4_Nf6:
+      return 'rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 1 2';
+    case OpeningMoves.d4_d5:
+      return 'rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq d6 0 2';
+    default:
+      return assertUnreachable(openingMoves);
   }
 }
 

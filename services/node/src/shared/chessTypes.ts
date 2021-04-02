@@ -56,6 +56,15 @@ export enum ChessOpening {
   SicilianDefense = 'Sicilian Defense',
 }
 
+export enum OpeningMoves {
+  e4 = 'e4',
+  e4_e5 = 'e4    e5',
+  e4_c5 = 'e4    c5',
+  d4 = 'd4',
+  d4_Nf6 = 'd4    Nf6',
+  d4_d5 = 'd4    d5',
+}
+
 export type FenParts = {
   piecePlacement: string;
   activeColor: PieceColor;

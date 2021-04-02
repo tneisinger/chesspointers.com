@@ -2,6 +2,7 @@ import { Chess } from 'chess.js';
 import {
   ChessTree,
   ChessOpening,
+  OpeningMoves,
   ChessTreeMove,
   ChessTreeLine,
   HasTeachingPriority,
@@ -12,6 +13,7 @@ import {
   areChessLinesEquivalent,
   arraysEqual,
   getFen,
+  getFenStr,
   idxOfFirstPairThat,
   numHalfMovesPlayed,
 } from './utils';
@@ -311,6 +313,14 @@ export function filterLessonsWithOpenings(
   return lessons.filter((lesson) =>
     fens.some((fen) => doesTreeReachFen(fen, lesson.chessTree)),
   );
+}
+
+export function filterLessonsWithOpeningMoves(
+  openingMoves: OpeningMoves,
+  lessons: Lesson[],
+): Lesson[] {
+  const fen = getFenStr(openingMoves);
+  return lessons.filter((lesson) => doesTreeReachFen(fen, lesson.chessTree));
 }
 
 export function isLineInTree(line: string[], tree: ChessTree): boolean {

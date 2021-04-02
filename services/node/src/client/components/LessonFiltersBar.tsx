@@ -40,7 +40,7 @@ export interface Props {
 const LessonFiltersBar: React.FC<Props> = ({ filtersToolkit, filtersBarRef }) => {
   const classes = useStyles({});
 
-  const { ColorSwitch, OpeningsDropDown, ClearFiltersIconBtn } = filtersToolkit;
+  const { ColorSwitch, OpeningMovesDropDown, ClearFiltersIconBtn } = filtersToolkit;
 
   return (
     <AppBar ref={filtersBarRef} className={classes.filtersBar} color='default'>
@@ -55,7 +55,7 @@ const LessonFiltersBar: React.FC<Props> = ({ filtersToolkit, filtersBarRef }) =>
             <ColorSwitch />
           </Grid>
           <Grid item>
-            <OpeningsDropDown />
+            <OpeningMovesDropDown />
           </Grid>
           <Grid item className={classes.verticallyCentered}>
             <ClearFiltersIconBtn />
