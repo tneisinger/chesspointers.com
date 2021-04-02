@@ -17,7 +17,7 @@ import AppThunk from '../redux/appThunk';
 import { Lesson } from '../../shared/entity/lesson';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  openingName: {
+  lessonName: {
     textAlign: 'center',
     paddingTop: 0,
     paddingBottom: '1rem',
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1.6rem',
     },
   },
-  openingRoot: {
+  lessonRoot: {
     height: '100%',
     width: 'inherit',
     maxWidth: 'inherit',
@@ -42,10 +42,10 @@ interface Props<Slice extends EntitiesSlice<Lesson>> {
 }
 
 const LessonPage = <S extends EntitiesSlice<Lesson>>(props: Props<S>): ReactElement => {
-  return <WithReduxSlice WrappedComponent={OpeningPageContent as any} {...props} />;
+  return <WithReduxSlice WrappedComponent={LessonPageContent as any} {...props} />;
 };
 
-const OpeningPageContent: React.FC<EntitiesSlice<Lesson>> = ({ entities }) => {
+const LessonPageContent: React.FC<EntitiesSlice<Lesson>> = ({ entities }) => {
   const classes = useStyles({});
   const { windowWidth, windowHeight } = useWindowSize();
   const { lessonName } = useParams<{ lessonName: string }>();
@@ -58,34 +58,34 @@ const OpeningPageContent: React.FC<EntitiesSlice<Lesson>> = ({ entities }) => {
   }
 
   // Find the lesson with a name that matches the lessonName param
-  const opening = entities.find((t) => toDashedLowercase(t.shortName) === lessonName);
+  const lesson = entities.find((t) => toDashedLowercase(t.shortName) === lessonName);
 
-  // If `opening` is undefined, that means that the openingName param didn't match the
-  // name of any of the openings in the db. In that case, treat it as not found.
-  if (opening === undefined) {
+  // If `lesson` is undefined, that means that the lessonName param didn't match the
+  // name of any of the lessons in the db. In that case, treat it as not found.
+  if (lesson === undefined) {
     return <NotFoundPage />;
   }
 
   return (
     <Grid
       container
-      className={classes.openingRoot}
+      className={classes.lessonRoot}
       direction='column'
       alignItems='center'
       justify='center'
     >
       <Grid item>
-        <Typography className={classes.openingName} variant='h4' component='h2'>
-          {opening.fullName}
+        <Typography className={classes.lessonName} variant='h4' component='h2'>
+          {lesson.fullName}
         </Typography>
       </Grid>
       <Grid item>
         <Grid container direction='row' spacing={2}>
           <Grid item>
             <ChessGuide
-              chessTree={opening.chessTree}
-              lessonType={opening.lessonType}
-              userPlaysAs={opening.playedByWhite ? 'white' : 'black'}
+              chessTree={lesson.chessTree}
+              lessonType={lesson.lessonType}
+              userPlaysAs={lesson.playedByWhite ? 'white' : 'black'}
               boardSizePixels={boardSizePixels}
             >
               {windowWidth > 1280 && (

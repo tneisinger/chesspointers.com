@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1.75rem',
     },
   },
-  trapsRoot: {
+  lessonsRoot: {
     maxWidth: 'inherit',
     width: 'inherit',
     height: (p: { filterBarHeight: number }) => {
@@ -86,7 +86,7 @@ const LessonsPageContent: React.FC<PageContentProps> = (props) => {
         container
         direction='column'
         justify='space-evenly'
-        className={classes.trapsRoot}
+        className={classes.lessonsRoot}
         ref={rootDivRef}
       >
         <Grid item>
