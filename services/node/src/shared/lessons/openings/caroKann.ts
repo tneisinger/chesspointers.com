@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const mv4_w_c4 = makeChessTree(
   // prettier-ignore
@@ -166,11 +167,16 @@ const chessTree = makeChessTree(
   [mv2_w_d4, mv2_w_Nc3],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by GothamChess';
+attribution.url = 'https://www.youtube.com/watch?v=rmbU97iftC8';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.OPENING;
 lesson.fullName = 'The Caro-Kann Defense';
 lesson.shortName = 'Caro-Kann';
 lesson.playedByWhite = false;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

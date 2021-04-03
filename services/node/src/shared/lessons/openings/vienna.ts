@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const Nc3 = { move: 'Nc3', isPreviewPosition: true };
 
@@ -191,11 +192,16 @@ const chessTree = makeChessTree(
   [mv2_b_Nf6, mv2_b_Nc6],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by GothamChess';
+attribution.url = 'https://www.youtube.com/watch?v=JVxENCPcCjU';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.OPENING;
 lesson.fullName = 'The Vienna Game';
 lesson.shortName = 'Vienna';
 lesson.playedByWhite = true;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

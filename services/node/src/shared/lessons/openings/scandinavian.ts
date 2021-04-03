@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const mv8_w_Nd5 = makeChessTree(
   // prettier-ignore
@@ -158,11 +159,17 @@ const chessTree = makeChessTree(
   [mv3_w_Nc3, mv3_w_Nf3],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on vidoes by Hanging Pawns and GothamChess';
+attribution.url =
+  'https://www.youtube.com/watch?v=Wpd8jcVKcJw&list=TLGG2sqnnzMuoAswMzA0MjAyMQ';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.OPENING;
 lesson.fullName = 'The Scandinavian Defense';
 lesson.shortName = 'Scandinavian';
 lesson.playedByWhite = false;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

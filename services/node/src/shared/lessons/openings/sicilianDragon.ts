@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 // Classical variation
 const mv6_w_Be2 = makeChessTree(
@@ -44,11 +45,17 @@ const chessTree = makeChessTree(
   [mv6_w_Be2, mv6_w_Be3, mv6_w_f4],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by thechesswebsite';
+attribution.url = 'https://www.youtube.com/watch?v=esbm4nL5G-A';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.OPENING;
 lesson.fullName = 'Sicilian: Dragon Variation';
 lesson.shortName = 'Sicilian Dragon';
 lesson.playedByWhite = false;
 lesson.chessTree = chessTree;
+
+lesson.attribution = attribution;
 
 export default lesson;

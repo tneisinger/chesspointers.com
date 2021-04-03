@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 // https://www.youtube.com/watch?v=BPpSz2rbG3A
 
@@ -96,11 +97,16 @@ const chessTree = makeChessTree(
   [mv4_b_Nf6],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by The Chess Giant';
+attribution.url = 'https://www.youtube.com/watch?v=BPpSz2rbG3A';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.OPENING;
 lesson.fullName = 'Giuoco Piano';
 lesson.shortName = 'Giuoco Piano';
 lesson.playedByWhite = true;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

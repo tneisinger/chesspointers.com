@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const mv7_w_OO = makeChessTree(
   // prettier-ignore
@@ -61,11 +62,16 @@ const chessTree = makeChessTree(
   [mv5_w_Nf3, mv5_w_Be2, mv5_w_f3],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by thechesswebsite';
+attribution.url = 'https://www.youtube.com/watch?v=ZtGLHip7yk4';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.OPENING;
 lesson.fullName = "King's Indian Defense";
 lesson.shortName = 'Kings Indian';
 lesson.playedByWhite = false;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;
