@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   lessonName: {
     textAlign: 'center',
     paddingTop: 0,
-    paddingBottom: '1rem',
+    paddingBottom: '0.75rem',
     marginBottom: '0',
     [theme.breakpoints.up('sm')]: {
       fontSize: '2.5rem',
@@ -33,6 +33,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     width: 'inherit',
     maxWidth: 'inherit',
+  },
+  attribution: {
+    fontSize: 'small',
+    textDecoration: 'underline',
   },
 }));
 
@@ -79,6 +83,15 @@ const LessonPageContent: React.FC<EntitiesSlice<Lesson>> = ({ entities }) => {
           {lesson.fullName}
         </Typography>
       </Grid>
+      {lesson.attribution != null && (
+        <Grid item>
+          <Typography className={classes.attribution}>
+            <a rel='noopener noreferrer' target='_blank' href={lesson.attribution.url}>
+              {lesson.attribution.text}
+            </a>
+          </Typography>
+        </Grid>
+      )}
       <Grid item>
         <Grid container direction='row' spacing={2}>
           <Grid item>
