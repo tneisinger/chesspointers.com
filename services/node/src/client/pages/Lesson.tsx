@@ -35,8 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 'inherit',
   },
   attribution: {
-    fontSize: 'small',
+    fontSize: '0.8rem',
     textDecoration: 'underline',
+    marginBottom: '10px',
   },
 }));
 
