@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const Bg4_checkmate = {
   move: 'Bg4#',
@@ -71,11 +72,16 @@ const chessTree = makeChessTree(
   [branch_Bxd8, branch_Be3, branch_Qe2, branch_dxe4],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by Eric Rosen';
+attribution.url = 'https://youtu.be/nH_fiqlLp2U';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
-lesson.fullName = 'Stafford Trap #1';
+lesson.fullName = 'Stafford Gambit: Part 1';
 lesson.shortName = 'Stafford 1';
 lesson.playedByWhite = false;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

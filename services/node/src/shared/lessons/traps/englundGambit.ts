@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const Qc1_checkmate = {
   move: 'Qc1#',
@@ -53,11 +54,17 @@ const chessTree = makeChessTree(
   [branch_Qd2, branch_Bxb4],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by thechesswebsite';
+attribution.url = 'https://youtu.be/tYOnym3ZINU?t=463';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
 lesson.fullName = 'The Englund Gambit Trap';
 lesson.shortName = 'Englund Gambit';
 lesson.playedByWhite = false;
 lesson.chessTree = chessTree;
+
+lesson.attribution = attribution;
 
 export default lesson;

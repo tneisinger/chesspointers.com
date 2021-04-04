@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const Nxc7_checkmate = {
   move: 'Nxc7#',
@@ -88,11 +89,16 @@ const chessTree = makeChessTree(
   [branch_Qb4, branch_Qg4],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by thechesswebsite';
+attribution.url = 'https://youtu.be/6Vhu9qDkkws';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
 lesson.fullName = 'The Halosar Trap';
 lesson.shortName = 'Halosar';
 lesson.playedByWhite = true;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

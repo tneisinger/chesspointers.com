@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const branch_g3 = makeChessTree(
   // prettier-ignore
@@ -160,11 +161,16 @@ const chessTree = makeChessTree(
   [branch_Nxf7, branch_Bxf7_check],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by GothamChess';
+attribution.url = 'https://youtu.be/v1jkj-HPLdw';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
 lesson.fullName = 'The Traxler Counter Attack';
 lesson.shortName = 'Traxler';
 lesson.playedByWhite = false;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const Qxd1 = {
   move: 'Qxd1',
@@ -43,11 +44,16 @@ const chessTree = makeChessTree(
   [branch_Ke2, branch_Kxf2],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by thechesswebsite';
+attribution.url = 'https://youtu.be/tYOnym3ZINU?t=327';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
 lesson.fullName = 'The Lasker Trap';
 lesson.shortName = 'Lasker';
 lesson.playedByWhite = false;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

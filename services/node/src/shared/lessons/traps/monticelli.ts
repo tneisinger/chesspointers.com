@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const Qxh7_checkmate = {
   move: 'Qxh7#',
@@ -59,11 +60,16 @@ const chessTree = makeChessTree(
   [branch_Ne4, branch_Nxe2, branch_Qxg5],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by Gambit Bandit';
+attribution.url = 'https://youtu.be/wC6hiib0TGE';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
 lesson.fullName = 'The Monticelli Trap';
 lesson.shortName = 'Monticelli';
 lesson.playedByWhite = true;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const Qd5_check = {
   move: 'Qd5+',
@@ -89,11 +90,16 @@ const chessTree = makeChessTree(
   [branch_Ne8, branch_Nxb3],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by thechesswebsite';
+attribution.url = 'https://www.youtube.com/watch?v=-iIw8XZ92Wg';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
 lesson.fullName = 'The Bobby Fischer Trap';
 lesson.shortName = 'Bobby Fischer';
 lesson.playedByWhite = true;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

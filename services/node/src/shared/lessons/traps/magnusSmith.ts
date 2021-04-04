@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const Qxd8 = {
   move: 'Qxd8',
@@ -84,11 +85,16 @@ const chessTree = makeChessTree(
   [branch_dxe5, branch_Ng4, branch_Nh5],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by thechesswebsite';
+attribution.url = 'https://youtu.be/4OWCUVUuN3k';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
 lesson.fullName = 'The Magnus Smith Trap';
 lesson.shortName = 'Magnus Smith';
 lesson.playedByWhite = true;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

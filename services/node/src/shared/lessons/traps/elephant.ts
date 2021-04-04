@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const Nbd7 = { move: 'Nbd7', isPreviewPosition: true };
 
@@ -18,11 +19,17 @@ const chessTree = makeChessTree(
   [],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by thechesswebsite';
+attribution.url = 'https://youtu.be/tYOnym3ZINU?t=248';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
 lesson.fullName = 'The Elephant Trap';
 lesson.shortName = 'Elephant';
 lesson.playedByWhite = false;
 lesson.chessTree = chessTree;
+
+lesson.attribution = attribution;
 
 export default lesson;

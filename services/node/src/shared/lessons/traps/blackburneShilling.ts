@@ -1,6 +1,7 @@
 import { ChessTree } from '../../chessTypes';
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const Nf3_checkmate = {
   move: 'Nf3#',
@@ -73,11 +74,16 @@ const chessTree = makeChessTree(
   [branch_g3, branch_Nxf7, branch_Bxf7, branch_Ng4],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by thechesswebsite';
+attribution.url = 'https://youtu.be/tYOnym3ZINU?t=109';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
 lesson.fullName = 'The Blackburne-Shilling Trap';
 lesson.shortName = 'Blackburne-Shilling';
 lesson.playedByWhite = false;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;

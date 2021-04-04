@@ -1,5 +1,6 @@
 import { Lesson, LessonType } from '../../entity/lesson';
 import { makeChessTree } from '../../chessTree';
+import { Attribution } from '../../entity/attribution';
 
 const branch_Nd4 = makeChessTree(
   // prettier-ignore
@@ -116,11 +117,16 @@ const chessTree = makeChessTree(
   [branch_d5, branch_Bc5],
 );
 
+const attribution = new Attribution();
+attribution.text = 'Based on a YouTube video by GothamChess';
+attribution.url = 'https://youtu.be/hLFSufXxtuI';
+
 const lesson = new Lesson();
 lesson.lessonType = LessonType.TRAP;
 lesson.fullName = 'The Fried Liver Attack';
 lesson.shortName = 'Fried Liver';
 lesson.playedByWhite = true;
 lesson.chessTree = chessTree;
+lesson.attribution = attribution;
 
 export default lesson;
