@@ -15,6 +15,7 @@ export function makeLessonsApiRouter(lessonRepository: Repository<Lesson>): Rout
       order: {
         shortName: 'ASC',
       },
+      relations: ['attribution'],
     });
     res.json(traps);
   });
