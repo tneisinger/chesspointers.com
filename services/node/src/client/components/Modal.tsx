@@ -6,6 +6,11 @@ import Fade from '@material-ui/core/Fade';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
+interface StyleProps {
+  maxWidth: string;
+  minWidth: string;
+}
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: 'flex',
@@ -17,11 +22,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
     border: '2px solid #909090',
     boxShadow: theme.shadows[5],
-    padding: '24px 32px',
+    padding: '24px 16px',
     paddingTop: 0,
     borderRadius: 10,
     outline: 'none',
-    maxWidth: (p: { maxWidth: string }) => (p.maxWidth ? p.maxWidth : 'none'),
+    maxWidth: (p: StyleProps) => (p.maxWidth ? p.maxWidth : 'none'),
+    minWidth: (p: StyleProps) => (p.minWidth ? p.minWidth : 'none'),
   },
   modalCloseBtn: {
     position: 'absolute',
@@ -41,6 +47,7 @@ export interface Props {
   delayOpenFor?: number;
   includeCloseBtn?: boolean;
   maxWidth?: string;
+  minWidth?: string;
 }
 
 const MyModal: React.FunctionComponent<Props> = ({
@@ -49,9 +56,10 @@ const MyModal: React.FunctionComponent<Props> = ({
   delayOpenFor,
   children,
   maxWidth = 'none',
+  minWidth = '260px',
   includeCloseBtn = true,
 }) => {
-  const classes = useStyles({ maxWidth });
+  const classes = useStyles({ maxWidth, minWidth });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
