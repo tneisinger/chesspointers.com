@@ -243,14 +243,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }
 
     // If in practice mode, use the user's settings
-    if (mode === 'practice') {
-      if (settings.prac_opMovesPlayedBy === OpMovesPlayedBy.user) return true;
-      if (
-        settings.prac_opMovesPlayedBy === OpMovesPlayedBy.userIfMultipleChoices &&
-        numMoves > 1
-      ) {
-        return true;
-      }
+    if (
+      mode === 'practice' &&
+      settings.prac_opMovesPlayedBy === OpMovesPlayedBy.userIfMultipleChoices &&
+      numMoves > 1
+    ) {
+      return true;
     }
     return false;
   };
