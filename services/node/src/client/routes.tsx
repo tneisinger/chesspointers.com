@@ -5,7 +5,8 @@ import TrapsPage from './pages/Traps';
 import OpeningsPage from './pages/Openings';
 import OpeningPage from './pages/Opening';
 import TrapPage from './pages/Trap';
-import MergeTrapsPage from './pages/MergeTraps';
+// Disable the MergeTraps page for now
+// import MergeTrapsPage from './pages/MergeTraps';
 import NotFoundPage from './pages/NotFound';
 import PrivatePage from './pages/Private';
 import PrivateRoute from './components/PrivateRoute';
@@ -62,6 +63,7 @@ export const routes: RouteInfo[] = [
     isPrivate: false,
     isInSideMenu: false,
   },
+  /* Disable the MergeTraps page for now
   {
     pageName: 'Merge Traps',
     component: MergeTrapsPage,
@@ -70,6 +72,7 @@ export const routes: RouteInfo[] = [
     isPrivate: false,
     isInSideMenu: true,
   },
+ */
   {
     pageName: 'Private Page',
     component: PrivatePage,
