@@ -9,6 +9,7 @@ import TrapPage from './pages/Trap';
 // import MergeTrapsPage from './pages/MergeTraps';
 import NotFoundPage from './pages/NotFound';
 import PrivatePage from './pages/Private';
+import AboutPage from './pages/About';
 import PrivateRoute from './components/PrivateRoute';
 
 interface RouteInfo {
@@ -73,6 +74,14 @@ export const routes: RouteInfo[] = [
     isInSideMenu: true,
   },
  */
+  {
+    pageName: 'About',
+    component: AboutPage,
+    path: '/about',
+    isPathExact: true,
+    isPrivate: false,
+    isInSideMenu: true,
+  },
   {
     pageName: 'Private Page',
     component: PrivatePage,
