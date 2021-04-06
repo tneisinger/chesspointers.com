@@ -221,3 +221,12 @@ export function convertMovesToShortMoves(moves: string[]): ShortMove[] {
 export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export function isValueOf<T>(obj: T, val: any): val is T[keyof T] {
+  for (const k in obj) {
+    if (obj[k] === val) {
+      return true;
+    }
+  }
+  return false;
+}

@@ -16,12 +16,13 @@ import Beeper from '../beeper';
 import ChessGuideBoard, { BOARD_ANIMATION_DURATION } from './ChessGuideBoard';
 import ChessGuideInfo from './ChessGuideInfo';
 import ChessGuideControls from './ChessGuideControls';
-import { GuideMode } from '../utils/types';
+import { GuideMode, OpMovesPlayedBy } from '../utils/types';
 import LineCompleteModal from './LineCompleteModal';
 import PawnPromoteModal from './PawnPromoteModal';
 import DeadEndModal from './DeadEndModal';
 import { LessonType } from '../../shared/entity/lesson';
 import { useChessTreeToolkit } from '../hooks/useChessTreeToolkit';
+import { useChessGuideSettings } from '../hooks/useChessGuideSettings';
 
 const COMPUTER_THINK_TIME = 250;
 const CHECK_MOVE_DELAY = BOARD_ANIMATION_DURATION + 25;
@@ -98,6 +99,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const movesOnBoard = () => playedMoves.past;
 
   const chessTreeToolkit = useChessTreeToolkit(chessTree, movesOnBoard, mode);
+  const { settings, SettingsModal, SettingsBtn } = useChessGuideSettings();
 
   // timeout refs
   const checkMoveTimeout = useRef<number | undefined>(undefined);
@@ -192,9 +194,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       return;
     }
 
-    // If it is the users turn or if there are multiple move options to choose from,
-    // then the user will select the next move.
-    if (isUsersTurn() || chessTreeToolkit.getNextMoves().length > 1) {
+    // If the user should play the next move...
+    // (NOTE: sometimes the user plays the opponent's move)
+    if (shouldUserPlayNextMove()) {
       // We want to delay showing the move arrows by the right amount. If the board is
       // being reset, we want to wait a little longer to allow the board animation to
       // complete. Otherwise, we don't need to wait very long because there will be no
@@ -209,10 +211,9 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         scheduleShowMoves({ delay: 1000 });
       }
     } else {
-      // If it is not the users turn and there is only one move option, the computer will
-      // play the next move automatically. Don't shorten the delay of `scheduleShowMoves`
-      // because we want to wait for the animation of the computer's move to complete
-      // before showing the next move arrows.
+      // The computer will play the next move automatically. Don't shorten the delay of
+      // `scheduleShowMoves` because we want to wait for the animation of the computer's
+      // move to complete before showing the next move arrows.
       if (playedMoves.past.length < 1) {
         // If the computer plays the first move in the chess tree, wait a little longer
         // before playing the first move.
@@ -225,6 +226,33 @@ const ChessGuide: React.FunctionComponent<Props> = ({
         doComputerMove();
       }
     }
+  };
+
+  const shouldUserPlayNextMove = (): boolean => {
+    // If it is the user's turn, the user should play the move
+    if (isUsersTurn()) return true;
+
+    const numMoves = chessTreeToolkit.getNextMoves().length;
+
+    // In learn mode, let the user play the opponent move when there are multiple move
+    // options available. This allows the user to decide which line they want to learn.
+    // If there is only one move that the opponent could play, play the move
+    // automatically.
+    if (mode === 'learn') {
+      return numMoves > 1;
+    }
+
+    // If in practice mode, use the user's settings
+    if (mode === 'practice') {
+      if (settings.prac_opMovesPlayedBy === OpMovesPlayedBy.user) return true;
+      if (
+        settings.prac_opMovesPlayedBy === OpMovesPlayedBy.userIfMultipleChoices &&
+        numMoves > 1
+      ) {
+        return true;
+      }
+    }
+    return false;
   };
 
   const clearTimeouts = () => {
@@ -419,12 +447,16 @@ const ChessGuide: React.FunctionComponent<Props> = ({
     }));
   };
 
-  const thereAreMultipleMoveOptions = (): boolean => {
-    return chessTreeToolkit.getNextMoves().length > 1;
-  };
-
   const shouldShowMoves = (): boolean => {
-    return mode === 'learn' || thereAreMultipleMoveOptions();
+    if (mode === 'learn') return true;
+    const numMoves = chessTreeToolkit.getNextMoves().length;
+    if (userIsViewingAnOldMove()) {
+      return numMoves > 1;
+    }
+    return (
+      settings.prac_opMovesPlayedBy === OpMovesPlayedBy.userIfMultipleChoices &&
+      numMoves > 1
+    );
   };
 
   const scheduleShowMoves = (options: { delay?: number } = {}) => {
@@ -587,6 +619,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           onModeSwitchBtnClick={toggleGuideMode}
           currentMode={mode}
           onHintRequest={handleHintRequest}
+          SettingsBtn={SettingsBtn}
         />
       </Grid>
       <Grid item>
@@ -654,6 +687,8 @@ const ChessGuide: React.FunctionComponent<Props> = ({
           }
         }}
       />
+
+      <SettingsModal />
 
       {renderExtraControlsForTesting && (
         <ChessMoveSelector

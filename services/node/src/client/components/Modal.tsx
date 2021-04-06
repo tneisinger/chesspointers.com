@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {
+export interface Props {
   isModalOpenOrOpening: boolean;
   handleClose: () => void;
   delayOpenFor?: number;

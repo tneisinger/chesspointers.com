@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import React from 'react';
 import ChessNavBtns from './ChessNavBtns';
 import { GuideMode } from '../utils/types';
@@ -23,6 +24,7 @@ interface Props {
   onModeSwitchBtnClick: () => void;
   currentMode: GuideMode;
   onHintRequest: () => void;
+  SettingsBtn?: React.FC;
 }
 
 const ChessGuideControls: React.FC<Props> = ({
@@ -36,6 +38,7 @@ const ChessGuideControls: React.FC<Props> = ({
   onModeSwitchBtnClick,
   currentMode,
   onHintRequest,
+  SettingsBtn,
 }) => {
   const classes = useStyles({});
 
@@ -74,6 +77,13 @@ const ChessGuideControls: React.FC<Props> = ({
               <Button variant='contained' color='primary' onClick={onHintRequest}>
                 Hint
               </Button>
+            </Grid>
+          )}
+          {SettingsBtn != undefined && (
+            <Grid item>
+              <Box mt={0.5}>
+                <SettingsBtn />
+              </Box>
             </Grid>
           )}
         </Grid>
