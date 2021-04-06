@@ -30,6 +30,9 @@
     "@typescript-eslint/no-empty-function": 0,
     "@typescript-eslint/no-use-before-define": 0,
     "@typescript-eslint/no-inferrable-types": 0,
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "allowArgumentsExplicitlyTypesAsAny": true
+    },
     "react/prop-types": 0,
     "react/display-name": 0,
     "@typescript-eslint/naming-convention": [
