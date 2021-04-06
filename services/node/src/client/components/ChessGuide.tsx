@@ -450,13 +450,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const shouldShowMoves = (): boolean => {
     if (mode === 'learn') return true;
     const numMoves = chessTreeToolkit.getNextMoves().length;
-    if (userIsViewingAnOldMove()) {
-      return numMoves > 1;
-    }
-    return (
-      settings.prac_opMovesPlayedBy === OpMovesPlayedBy.userIfMultipleChoices &&
-      numMoves > 1
-    );
+    return numMoves > 1;
   };
 
   const scheduleShowMoves = (options: { delay?: number } = {}) => {
