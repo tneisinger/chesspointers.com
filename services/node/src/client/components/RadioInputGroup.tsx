@@ -8,6 +8,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 const useStyles = makeStyles({
   formLabelRoot: {
+    marginBottom: '0.75rem',
     color: 'white',
     '&$formLabelFocused': { color: 'white' },
   },

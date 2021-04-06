@@ -62,7 +62,7 @@ export function useChessGuideSettings(): SettingsToolkit {
         handleClose={() => setIsModalOpen(false)}
         settings={settings}
         changeSettings={setSettings}
-        maxWidth='98vw'
+        maxWidth='90vw'
       />
     );
   };
