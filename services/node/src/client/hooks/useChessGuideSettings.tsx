@@ -46,7 +46,6 @@ export function useChessGuideSettings(): SettingsToolkit {
 
   const [settings, setSettings] = useState<ChessGuideSettings>(() => {
     const localStorageSettings = getSettingsFromLocalStorage();
-    console.log('localStorageSettings:', localStorageSettings);
     if (localStorageSettings == null) return defaultSettings;
     return localStorageSettings;
   });

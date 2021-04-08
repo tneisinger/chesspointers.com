@@ -24,6 +24,26 @@ const theme = createMuiTheme({
   palette: {
     type: 'dark',
   },
+  typography: {
+    h1: {
+      fontWeight: 200,
+    },
+    h2: {
+      fontWeight: 100,
+    },
+    h3: {
+      fontWeight: 100,
+    },
+    h4: {
+      fontWeight: 100,
+    },
+    h5: {
+      fontWeight: 100,
+    },
+    h6: {
+      fontWeight: 100,
+    },
+  },
   sideMenuWidth: 220,
   mainMaxWidth: 1200,
   overrides: {
@@ -98,9 +118,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'none',
     },
   },
-  siteTitleText: {
+  siteTitleSpan: {
     margin: '0 auto',
+  },
+  siteTitleText: {
     color: 'white',
+    fontWeight: 500,
     [theme.breakpoints.up('lg')]: {
       fontSize: '1.2rem',
     },
@@ -144,11 +167,21 @@ function AppContent() {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant='h6' noWrap className={classes.siteTitleText}>
-                <span onClick={() => setIsMobileDrawerOpen(false)}>
-                  <Link to={'/'}>ChessPointers.com</Link>
-                </span>
-              </Typography>
+              <span
+                className={classes.siteTitleSpan}
+                onClick={() => setIsMobileDrawerOpen(false)}
+              >
+                <Typography
+                  className={classes.siteTitleText}
+                  variant='h6'
+                  component='h1'
+                  noWrap
+                >
+                  <Link to={'/'}>
+                    ChessPointers.com
+                  </Link>
+                </Typography>
+              </span>
             </Toolbar>
           </AppBar>
           <SideMenu

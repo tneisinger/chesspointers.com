@@ -5,10 +5,13 @@ import { SliceState } from '../redux/types';
 import AppThunk from '../redux/appThunk';
 import Spinner from './Spinner';
 
-interface Props<S extends SliceState, P> {
-  WrappedComponent: React.FC<P & S>;
+export interface ReduxProps<S extends SliceState> {
   reduxThunk: () => AppThunk;
   reduxSelector: (state: RootState) => S;
+}
+
+interface Props<S extends SliceState, P> extends ReduxProps<S> {
+  WrappedComponent: React.FC<P & S>;
   componentExtraProps?: P;
 }
 

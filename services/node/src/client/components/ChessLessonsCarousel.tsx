@@ -5,14 +5,23 @@ import { Lesson } from '../../shared/entity/lesson';
 import ChessLessonPreview from './ChessLessonPreview';
 import { viewportHeight, viewportWidth } from '../utils';
 
+// Increase the value of this variable to increase the horizontal distance between
+// the back and forward buttons of the carousel.
+const PREV_NEXT_BUTTON_SPREAD = 85;
+
+interface StyleProps {
+  filledCarouselHeight: number | undefined;
+  width?: number;
+}
+
 const useStyles = makeStyles({
   carousel: {
-    width: '100vw',
+    width: (p: StyleProps) => p.width ? p.width + 'px' : '100vw',
     maxWidth: '750px',
     margin: '0 auto',
     // Prevent the carouselWrapper div from collapsing when the carousel
     // doesn't have any items in it.
-    height: (p: { filledCarouselHeight: number | undefined }) => {
+    height: (p: StyleProps) => {
       if (p.filledCarouselHeight != undefined) {
         return p.filledCarouselHeight;
       } else {
@@ -32,6 +41,7 @@ interface Props extends React.HTMLProps<HTMLDivElement> {
   setAnimatedLesson: (shortName: string) => void;
   stepperValue: number;
   setStepperValue: (newValue: number) => void;
+  cardWidth?: number;
 }
 
 const ChessLessonCarousel: React.FC<Props> = (props) => {
@@ -39,7 +49,10 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
     undefined,
   );
 
-  const classes = useStyles({ filledCarouselHeight });
+  const classes = useStyles({
+    filledCarouselHeight,
+    width: props.cardWidth ? props.cardWidth + PREV_NEXT_BUTTON_SPREAD : undefined,
+  });
 
   // Get the height of the carouselWrapper when it is filled with at least one
   // item. We use the `filledCarouselHeight` to prevent the carouselWrapper div
@@ -93,7 +106,7 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
           <div key={lesson.shortName} className={classes.chessLessonContainer}>
             <ChessLessonPreview
               lesson={lesson}
-              cardWidth={calcCardWidth()}
+              cardWidth={props.cardWidth == null ? calcCardWidth() : props.cardWidth}
               stepper={
                 props.animatedLesson === lesson.shortName ? props.stepperValue : -1
               }

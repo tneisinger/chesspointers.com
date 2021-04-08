@@ -59,7 +59,6 @@ interface PageContentProps extends EntitiesSlice<Lesson> {
 }
 
 const LessonsPageContent: React.FC<PageContentProps> = (props) => {
-  const [rootDivRef, rootDivDimensions] = useDimensions();
   const [filtersBarRef, filtersBarDimensions] = useDimensions();
 
   const [filteredLessons, setFilteredLessons] = useState<Lesson[]>([]);
@@ -87,7 +86,6 @@ const LessonsPageContent: React.FC<PageContentProps> = (props) => {
         direction='column'
         justify='space-evenly'
         className={classes.lessonsRoot}
-        ref={rootDivRef}
       >
         <Grid item>
           <Typography variant='h3' align='center' className={classes.titleText}>
@@ -96,7 +94,6 @@ const LessonsPageContent: React.FC<PageContentProps> = (props) => {
         </Grid>
         <Grid item>
           <DisplayLessons
-            parentWidth={rootDivDimensions.width}
             allowAnimation={true}
             lessons={filteredLessons}
           />
