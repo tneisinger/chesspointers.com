@@ -1,11 +1,11 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Modal from './Modal';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { GuideMode } from '../utils/types';
-import LinkMui from './LinkMui';
 import { LessonType } from '../../shared/entity/lesson';
 import { capitalizeFirstLetter } from '../../shared/utils';
 
@@ -42,10 +42,19 @@ const LineCompleteModal: React.FC<Props> = ({
 }) => {
   const classes = useStyles({});
 
+  const history = useHistory();
+
   const LearnNewBtn = () => {
-    const link = LinkMui(`/${lessonType}s`);
+    const url = `/${lessonType}s`;
     return (
-      <Button variant='contained' color='primary' component={link}>
+      <Button
+        variant='contained'
+        color='primary'
+        onClick={() => {
+          handleClose();
+          history.push(url);
+        }}
+      >
         Learn a New {capitalizeFirstLetter(lessonType)}
       </Button>
     );
