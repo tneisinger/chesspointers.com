@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { CssBaseline, makeStyles } from '@material-ui/core';
 import {
   Theme,
@@ -16,6 +17,7 @@ import { BrowserRouter, Switch } from 'react-router-dom'; // Pages
 import { SideMenu } from './components/SideMenu';
 import { makeRoutes } from './routes';
 import 'react-chessground/dist/styles/chessground.css';
+import './page-transitions.css';
 
 const SCROLLBAR_BACKGROUND_COLOR = 'rgba(100, 100, 100, 1)';
 const SCROLLBAR_FOREGROUND_COLOR = 'rgba(150, 150, 150, 1)';
@@ -103,6 +105,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100vw',
     maxWidth: theme.mainMaxWidth,
     margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  transitionGroup: {
+    flexGrow: 1,
+    width: '100vw',
+    maxWidth: theme.mainMaxWidth,
   },
   appBar: {
     zIndex: 1400,
@@ -145,6 +154,8 @@ function AppContent() {
   });
 
   const classes = useStyles({ windowInnerHeight });
+
+  const location = useLocation();
 
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = React.useState(false);
 
@@ -192,7 +203,15 @@ function AppContent() {
           />
           <div className={classes.toolbarAboveMain} />
           <main className={classes.main}>
-            <Switch>{makeRoutes()}</Switch>
+            <TransitionGroup className={classes.transitionGroup}>
+              <CSSTransition
+                key={location.key}
+                classNames='fade'
+                timeout={400}
+              >
+                <Switch location={location}>{makeRoutes()}</Switch>
+              </CSSTransition>
+            </TransitionGroup>
           </main>
         </div>
       </StylesProvider>
