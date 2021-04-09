@@ -14,12 +14,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     justifyContent: 'space-around',
   },
-  introTextDiv: {
-
-  },
-  homepageGridContainer: {
-    height: 'inherit',
-  },
   heading: {
     marginBottom: '30px',
     [theme.breakpoints.up('lg')]: {
@@ -38,9 +32,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1.25rem',
     margin: '0 auto',
   },
-  lessonGroupLink: {
-    fontWeight: 400,
-  },
   infoParagraph: {
     fontSize: '1.25rem',
     marginBottom: '8px',
@@ -48,14 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paragraph: {
     marginBottom: '1rem',
-  },
-  buttonStyles: {
-    display: 'inline-block',
-    padding: '10px',
-    borderRadius: '4px',
-    fontWeight: 'normal',
-    backgroundColor: theme.palette.primary.main,
-    boxShadow: theme.shadows[4],
   }
 }));
 
@@ -66,7 +49,7 @@ const HomePage: React.FunctionComponent = () => {
 
   return (
     <Grid className={classes.homepageRoot} item xs={12}>
-      <div className={classes.introTextDiv}>
+      <div>
         <Typography
           className={classes.heading}
           variant='h4'
