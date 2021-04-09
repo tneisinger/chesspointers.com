@@ -1,36 +1,50 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
-import { useTheme, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import WithReduxSlice, { ReduxProps } from '../components/WithReduxSlice';
-import { EntitiesSlice } from '../redux/types';
-import { Lesson } from '../../shared/entity/lesson';
-import { getOpeningsThunk } from '../redux/openingsSlice';
-import { getTrapsThunk } from '../redux/trapsSlice';
-import DisplayLessons from '../components/DisplayLessons';
-import { viewportWidth } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   homepageRoot: {
     height: '100%',
-    padding: '30px 0 10px 0',
+    padding: '30px 20px 10px 20px',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+  },
+  introTextDiv: {
+
   },
   homepageGridContainer: {
     height: 'inherit',
   },
   heading: {
+    marginBottom: '30px',
     [theme.breakpoints.up('lg')]: {
       fontSize: '3.5rem',
     },
   },
+  bigButtonDiv: {
+    width: '70vw',
+    maxWidth: '375px',
+    margin: '0 auto',
+  },
+  bigButton: {
+    display: 'block',
+    textAlign: 'center',
+    padding: '20px',
+    fontSize: '1.25rem',
+    margin: '0 auto',
+  },
   lessonGroupLink: {
     fontWeight: 400,
+  },
+  infoParagraph: {
+    fontSize: '1.25rem',
+    marginBottom: '8px',
+    textAlign: 'center',
   },
   paragraph: {
     marginBottom: '1rem',
@@ -48,78 +62,50 @@ const useStyles = makeStyles((theme: Theme) => ({
 const HomePage: React.FunctionComponent = () => {
   const classes = useStyles({});
 
-  const muiTheme = useTheme();
-
-  const vw = viewportWidth();
-
-  const layoutBreakpoint = muiTheme.breakpoints.values.lg;
+  const history = useHistory();
 
   return (
     <Grid className={classes.homepageRoot} item xs={12}>
-      <Typography
-        className={classes.heading}
-        variant='h4'
-        component='h2'
-        align='center'
-      >
-        Welcome!
-      </Typography>
-      {vw >= layoutBreakpoint &&
-        <Grid container justify='space-evenly' spacing={0}>
-          <Grid item>
-            <LessonsGroup
-              title='Chess Openings'
-              link='/openings'
-              reduxThunk={getOpeningsThunk}
-              reduxSelector={(state) => state.openingsSlice}
-            />
-          </Grid>
-          <Grid item>
-            <LessonsGroup
-              title='Chess Traps'
-              link='/traps'
-              reduxThunk={getTrapsThunk}
-              reduxSelector={(state) => state.trapsSlice}
-              stepperDelay={350}
-            />
-          </Grid>
-        </Grid>
-      }
-      {vw < layoutBreakpoint &&
-        <Grid
-          container
-          style={{ height: '100%' }}
-          direction='column'
-          alignItems='center'
-          justify='center'
-          spacing={10}
+      <div className={classes.introTextDiv}>
+        <Typography
+          className={classes.heading}
+          variant='h4'
+          component='h2'
+          align='center'
         >
-          <Grid item>
-            <Button
-              size='large'
-              variant='contained'
-              color='primary'
-              component='h3'
-            >
-              <Link to='/openings'>
-                Chess Openings
-              </Link>
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              size='large'
-              variant='contained'
-              color='primary'
-              component='h3'
-            >
-              <Link to='/traps'>
-                Chess Traps
-              </Link>
-            </Button>
-          </Grid>
-        </Grid>
-      }
+          Welcome!
+        </Typography>
+        <Typography className={classes.infoParagraph}>
+          Want to improve at chess?
+        </Typography>
+        <Typography className={classes.infoParagraph}>
+          Select a category to get started:
+        </Typography>
+      </div>
+      <div className={classes.bigButtonDiv}>
+        <Button
+          className={classes.bigButton}
+          onClick={() => history.push('/openings')}
+          size='large'
+          variant='contained'
+          color='primary'
+          component='h3'
+        >
+            Chess Openings
+        </Button>
+      </div>
+      <div className={classes.bigButtonDiv}>
+        <Button
+          className={classes.bigButton}
+          onClick={() => history.push('/traps')}
+          size='large'
+          variant='contained'
+          color='primary'
+          component='h3'
+        >
+            Chess Traps
+        </Button>
+      </div>
       <div>
         <Typography className={classes.paragraph} align='center'>
           This site is a work-in-progress.
@@ -131,51 +117,5 @@ const HomePage: React.FunctionComponent = () => {
     </Grid>
   );
 };
-
-interface ExtraProps {
-  title: string;
-  link: string;
-  stepperDelay?: number;
-}
-
-type LessonsGroupProps = ReduxProps<EntitiesSlice<Lesson>> & ExtraProps;
-
-const LessonsGroup = (props: LessonsGroupProps) => {
-  return (
-    <WithReduxSlice
-      WrappedComponent={LessonsGroupContent as any}
-      componentExtraProps={props}
-      {...props}
-    />
-  );
-}
-
-type LessonsGroupContentProps = EntitiesSlice<Lesson> & ExtraProps;
-
-const LessonsGroupContent: React.FC<LessonsGroupContentProps> = (props) => {
-  const classes = useStyles();
-  return (
-    <Grid container direction='column' alignItems='center'>
-      <Grid item>
-        <Typography
-          className={classes.lessonGroupLink}
-          variant='h4'
-          component='h3'
-          align='center'
-        >
-          <Link to={props.link}>{props.title}</Link>
-        </Typography>
-      </Grid>
-      <Grid item>
-        <DisplayLessons
-          allowAnimation
-          lessons={props.entities}
-          width={425}
-          stepperDelay={props.stepperDelay}
-        />
-      </Grid>
-    </Grid>
-  );
-}
 
 export default HomePage;
