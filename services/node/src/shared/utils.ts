@@ -1,4 +1,4 @@
-import { Chess, ShortMove } from 'chess.js';
+import { Chess, ChessInstance, ShortMove } from 'chess.js';
 import { Lesson } from './entity/lesson';
 import { ChessOpening, OpeningMoves, FenParts } from './chessTypes';
 
@@ -229,4 +229,10 @@ export function isValueOf<T>(obj: T, val: any): val is T[keyof T] {
     }
   }
   return false;
+}
+
+export function playMoveOrErr(chess: ChessInstance, move: string | ShortMove): void {
+  if (!chess.move(move)) {
+    throw new Error(`Invalid move: ${move} (history: ${chess.history()})`);
+  }
 }

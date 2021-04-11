@@ -73,7 +73,7 @@ const HomePage: React.FunctionComponent = () => {
   const openingsSlice = useSelector((state: RootState) => state.openingsSlice);
   const trapsSlice = useSelector((state: RootState) => state.trapsSlice);
 
-  const { stepperValue } = useStepper();
+  const { stepperValue } = useStepper({ startValue: 0 });
 
   const makeApiRequest = (lessonType: LessonType) => {
   // Make a redux request for the lessons of that type
@@ -184,6 +184,7 @@ const ChessTreePreviewOrSpinner: React.FC<ChessTreePreviewOrSpinnerProps> = (pro
           orientation={props.lesson.playedByWhite ? 'white' : 'black'}
           stepper={props.stepper}
           boardSize={props.boardSize}
+          showArrows
         />
         <Typography
           className={classes.chessBoardTitle}

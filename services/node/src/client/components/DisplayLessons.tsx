@@ -14,11 +14,11 @@ interface Props extends React.HTMLProps<HTMLDivElement> {
 const DisplayLessons: React.FC<Props> = (props) => {
   const [animatedLesson, setAnimatedLesson] = useState<string | null>(null);
 
-  const { stepperValue, setStepperValue } = useStepper(
-    animatedLesson != null && props.allowAnimation,
-    props.msBetweenSteps,
-    props.stepperDelay,
-  );
+  const { stepperValue, setStepperValue } = useStepper({
+    allowSteps: animatedLesson != null && props.allowAnimation,
+    msBetweenSteps: props.msBetweenSteps,
+    delay: props.stepperDelay,
+  });
 
   useEffect(() => {
     if (!props.allowAnimation) {

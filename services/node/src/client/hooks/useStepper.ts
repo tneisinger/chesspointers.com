@@ -8,12 +8,26 @@ export interface StepperToolkit {
   setStepperValue: Dispatch<SetStateAction<number>>;
 };
 
-export function useStepper(
-  allowSteps = true,
-  msBetweenSteps = DEFAULT_MS_BETWEEN_STEPS,
-  delay?: number
-): StepperToolkit {
-  const [stepperValue, setStepperValue] = useState<number>(-1);
+interface RequiredOptions {
+  startValue: number;
+  allowSteps: boolean;
+  msBetweenSteps: number;
+  delay: number | undefined;
+}
+
+export type Options = Partial<RequiredOptions>;
+
+const DEFAULT_OPTIONS: RequiredOptions = {
+  startValue: -1,
+  allowSteps: true,
+  msBetweenSteps: DEFAULT_MS_BETWEEN_STEPS,
+  delay: undefined,
+};
+
+export function useStepper(specifiedOptions?: Options): StepperToolkit {
+  const options: RequiredOptions = { ...DEFAULT_OPTIONS, ...specifiedOptions };
+
+  const [stepperValue, setStepperValue] = useState<number>(options.startValue);
 
   const incrementStepper = () => setStepperValue((val) => val + 1);
 
@@ -25,16 +39,16 @@ export function useStepper(
   }, []);
 
   const runStepper = () => {
-    if (delay != undefined) {
-      stepperDelayTimeout.current = window.setTimeout(incrementStepper, delay);
+    if (options.delay != undefined) {
+      stepperDelayTimeout.current = window.setTimeout(incrementStepper, options.delay);
     } else {
       incrementStepper();
     }
   }
 
   useInterval(() => {
-    if (allowSteps) runStepper();
-  }, msBetweenSteps);
+    if (options.allowSteps) runStepper();
+  }, options.msBetweenSteps || DEFAULT_MS_BETWEEN_STEPS);
 
   return {
     stepperValue,

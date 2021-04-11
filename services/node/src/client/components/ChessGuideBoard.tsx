@@ -7,15 +7,9 @@ import Chessground from 'react-chessground';
 import ColorFlashOverlay from './ColorFlashOverlay';
 import CheckmateOverlay from './CheckmateOverlay';
 import DisablerOverlay from './DisablerOverlay';
+import { DrawableProp, ChessboardArrow, BrushColor } from '../utils/types';
 
 export const BOARD_ANIMATION_DURATION = 200;
-
-enum BrushColor {
-  GREEN = 'green',
-  RED = 'red',
-  BLUE = 'blue',
-  YELLOW = 'yellow',
-}
 
 const useStyles = makeStyles({
   chessGuideBoardWrapper: {
@@ -24,20 +18,6 @@ const useStyles = makeStyles({
     height: (props: Props) => props.size,
   },
 });
-
-interface DrawableProp {
-  enabled: boolean;
-  visible: boolean;
-  eraseOnClick: boolean;
-  defaultSnapToValidMove: boolean;
-  autoShapes: ChessboardArrow[];
-}
-
-interface ChessboardArrow {
-  orig: string;
-  dest: string;
-  brush: BrushColor;
-}
 
 interface Props {
   size: string;
@@ -92,7 +72,7 @@ const ChessGuideBoard: React.FunctionComponent<Props> = (props) => {
     return result;
   };
 
-  const makeDrawableProp = () => {
+  const makeDrawableProp = (): DrawableProp => {
     return {
       enabled: true,
       visible: props.shouldShowNextMoves,
