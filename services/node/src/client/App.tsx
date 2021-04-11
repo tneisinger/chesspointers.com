@@ -205,6 +205,7 @@ function AppContent() {
           <main className={classes.main}>
             <TransitionGroup className={classes.transitionGroup}>
               <CSSTransition
+                unmountOnExit
                 key={location.key}
                 classNames='fade'
                 timeout={400}
