@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
 import { Lesson } from '../../shared/entity/lesson';
 import ChessLessonPreview from './ChessLessonPreview';
-import { viewportHeight, viewportWidth } from '../utils';
+import { getViewportHeight, getViewportWidth } from '../utils';
 
 // Increase the value of this variable to increase the horizontal distance between
 // the back and forward buttons of the carousel.
@@ -69,8 +69,8 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
   }, [filledCarouselHeight, props.lessons]);
 
   const calcCardWidth = (): number => {
-    const vpWidth = viewportWidth();
-    const vpHeight = viewportHeight();
+    const vpWidth = getViewportWidth();
+    const vpHeight = getViewportHeight();
     if (vpHeight < vpWidth) {
       return vpHeight * 0.661;
     } else {

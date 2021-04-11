@@ -1,17 +1,17 @@
-export function viewportHeight(): number {
+export function getViewportHeight(): number {
   return Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 }
 
-export function viewportWidth(): number {
+export function getViewportWidth(): number {
   return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 }
 
-export function vmin(): number {
-  return Math.min(viewportHeight(), viewportWidth());
+export function getViewportMin(): number {
+  return Math.min(getViewportHeight(), getViewportWidth());
 }
 
-export function vmax(): number {
-  return Math.max(viewportWidth(), viewportHeight());
+export function getViewportMax(): number {
+  return Math.max(getViewportWidth(), getViewportHeight());
 }
 
 export type BoardSizeUnits = 'vh' | 'vw' | 'vmin' | 'vmax' | 'px';
@@ -20,16 +20,16 @@ export function calcChessBoardSize(value: number, units: BoardSizeUnits): number
   let pixels = 0;
   switch (units) {
     case 'vh':
-      pixels = (viewportHeight() * value) / 100;
+      pixels = (getViewportHeight() * value) / 100;
       break;
     case 'vw':
-      pixels = (viewportWidth() * value) / 100;
+      pixels = (getViewportWidth() * value) / 100;
       break;
     case 'vmin':
-      pixels = (vmin() * value) / 100;
+      pixels = (getViewportMin() * value) / 100;
       break;
     case 'vmax':
-      pixels = (vmax() * value) / 100;
+      pixels = (getViewportMax() * value) / 100;
       break;
     case 'px':
       pixels = value;

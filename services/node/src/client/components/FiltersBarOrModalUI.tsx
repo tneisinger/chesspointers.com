@@ -1,5 +1,5 @@
 import React from 'react';
-import { viewportWidth } from '../utils';
+import { getViewportWidth } from '../utils';
 import LessonFiltersModalUI, {
   Props as ModalUIProps,
 } from '../components/LessonFiltersModalUI';
@@ -10,7 +10,7 @@ import LessonFiltersBar, {
 const BREAKPOINT = 800;
 
 export function shouldDisplayFiltersBar(): boolean {
-  return viewportWidth() > BREAKPOINT;
+  return getViewportWidth() > BREAKPOINT;
 }
 
 type Props = FiltersBarProps & ModalUIProps;

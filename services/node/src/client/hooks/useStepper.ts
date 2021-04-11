@@ -1,13 +1,18 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import useInterval from 'react-useinterval';
 
 const DEFAULT_MS_BETWEEN_STEPS = 700;
 
+export interface StepperToolkit {
+  stepperValue: number;
+  setStepperValue: Dispatch<SetStateAction<number>>;
+};
+
 export function useStepper(
-  msBetweenSteps = DEFAULT_MS_BETWEEN_STEPS,
   allowSteps = true,
+  msBetweenSteps = DEFAULT_MS_BETWEEN_STEPS,
   delay?: number
-): number {
+): StepperToolkit {
   const [stepperValue, setStepperValue] = useState<number>(-1);
 
   const incrementStepper = () => setStepperValue((val) => val + 1);
@@ -31,5 +36,8 @@ export function useStepper(
     if (allowSteps) runStepper();
   }, msBetweenSteps);
 
-  return stepperValue;
+  return {
+    stepperValue,
+    setStepperValue,
+  };
 }

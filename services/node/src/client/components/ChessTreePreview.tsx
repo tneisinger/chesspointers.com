@@ -6,7 +6,7 @@ import { Chess, ChessInstance } from 'chess.js';
 import { calcChessBoardSize, BoardSizeUnits } from '../utils';
 import { basicCompare } from '../../shared/utils';
 
-interface Props {
+export interface Props {
   chessTree: ChessTree;
   orientation: PieceColor;
   stepper: number;
@@ -56,22 +56,37 @@ const ChessTreePreview: React.FC<Props> = ({
     return shortestLineObj.line.slice(0, endIdx);
   };
 
+  const getLines = (): ChessTreeLine[] => (
+    getTreeLines(chessTree, 'verbose').sort((p1, p2) =>
+      basicCompare(p1.teachingPriority, p2.teachingPriority, { descending: true })
+    )
+  );
+
   const [chess] = useState<ChessInstance>(new Chess());
   const [boardPosition, setBoardPosition] = useState<string>(chess.fen());
   const [currentLineIdx, setCurrentLineIdx] = useState<number>(0);
   const [playedMoves, setPlayedMoves] = useState<string[]>([]);
-  const [previewPosLine] = useState<string[]>(getPreviewPosLine());
-  const [lines] = useState<ChessTreeLine[]>(
-    getTreeLines(chessTree, 'verbose').sort((p1, p2) =>
-      basicCompare(p1.teachingPriority, p2.teachingPriority, { descending: true }),
-    ),
-  );
+  const [previewPosLine, setPreviewPosLine] = useState<string[]>(getPreviewPosLine());
+  const [lines, setLines] = useState<ChessTreeLine[]>(getLines());
+
+  const reset = (): void => {
+    chess.reset();
+    setBoardPosition(chess.fen());
+    setCurrentLineIdx(0);
+    setPlayedMoves([]);
+    setPreviewPosLine(getPreviewPosLine());
+    setLines(getLines());
+  }
 
   useEffect(() => {
     if (usePreviewPosition) {
       setBoardToPreviewPosition();
     }
   }, []);
+
+  useEffect(() => {
+    reset();
+  }, [chessTree]);
 
   const setBoardToPreviewPosition = () => {
     chess.reset();

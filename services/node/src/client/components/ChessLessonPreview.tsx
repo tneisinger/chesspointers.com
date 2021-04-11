@@ -7,7 +7,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ChessTreePreview from './ChessTreePreview';
 import { Lesson } from '../../shared/entity/lesson';
-import { toDashedLowercase } from '../../shared/utils';
+import { getLessonUrlPath } from '../../shared/lessons';
 import { calcChessBoardSize } from '../utils';
 
 const CARD_MARGIN = 16;
@@ -31,7 +31,7 @@ const useStyles = makeStyles({
   },
 });
 
-interface Props {
+export interface Props {
   lesson: Lesson;
   cardWidth: number;
   stepper: number;
@@ -44,17 +44,10 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
   const rawBoardSize = props.cardWidth - CARD_MARGIN * 2 - CARD_CONTENT_PADDING * 2;
   const boardSize = calcChessBoardSize(rawBoardSize, 'px');
 
-  // Build the link path for the provided lesson. For example, if the lesson is the
-  // elephant trap, return '/traps/elephant'. If the lesson is the Vienna opening, return
-  // '/openings/vienna'.
-  const lessonLinkAddress = `/${props.lesson.lessonType}s/${toDashedLowercase(
-    props.lesson.shortName,
-  )}`;
-
   return (
     <Card className={classes.card}>
       <CardContent className={classes.cardContent}>
-        <NavLink to={lessonLinkAddress}>
+        <NavLink to={getLessonUrlPath(props.lesson)}>
           <Grid container direction='column'>
             <Grid item>
               <Typography className={classes.titleText} component='h4' align='center'>

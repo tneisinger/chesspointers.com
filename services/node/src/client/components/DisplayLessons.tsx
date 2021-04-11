@@ -1,53 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Lesson } from '../../shared/entity/lesson';
-import useInterval from 'react-useinterval';
 import ChessLessonCarousel from './ChessLessonsCarousel';
-
-// ms between steps
-const DEFAULT_STEPPER_SPEED = 700;
+import { useStepper } from '../hooks/useStepper';
 
 interface Props extends React.HTMLProps<HTMLDivElement> {
   allowAnimation: boolean;
   lessons: Lesson[];
   width?: number;
   stepperDelay?: number;
-  stepperSpeed?: number;
+  msBetweenSteps?: number;
 }
 
 const DisplayLessons: React.FC<Props> = (props) => {
   const [animatedLesson, setAnimatedLesson] = useState<string | null>(null);
 
-  const [stepperValue, setStepperValue] = useState<number>(-1);
-
-  const stepperDelayTimeout = useRef<number | undefined>(undefined);
-
-  // Clear all the timeouts on unmount
-  useEffect(() => {
-    return clearTimeouts;
-  }, []);
-
-  const clearTimeouts = () => {
-    const allTimeoutRefs = [
-      stepperDelayTimeout,
-    ];
-    allTimeoutRefs.forEach((ref) => window.clearTimeout(ref.current));
-  };
-
-  const runStepper = () => {
-    if (animatedLesson != null && props.allowAnimation) {
-      if (props.stepperDelay) {
-        stepperDelayTimeout.current =
-          window.setTimeout(incrementStepper, props.stepperDelay);
-      } else {
-        incrementStepper();
-      }
-    }
-  }
-
-  const incrementStepper = () => setStepperValue((val) => val + 1);
-
-  const stepperSpeed = props.stepperSpeed ? props.stepperSpeed : DEFAULT_STEPPER_SPEED;
-  useInterval(runStepper, stepperSpeed);
+  const { stepperValue, setStepperValue } = useStepper(
+    animatedLesson != null && props.allowAnimation,
+    props.msBetweenSteps,
+    props.stepperDelay,
+  );
 
   useEffect(() => {
     if (!props.allowAnimation) {
