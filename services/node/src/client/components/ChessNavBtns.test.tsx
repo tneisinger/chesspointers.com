@@ -1,21 +1,40 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import Enzyme, { shallow, mount, ShallowWrapper, ReactWrapper } from 'enzyme';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import ChessNavBtns from './ChessNavBtns';
+import { assertUnreachable } from '../../shared/utils';
+
+Enzyme.configure({ adapter: new Adapter() });
+
+type Wrapper = ShallowWrapper<any, any> | ReactWrapper<any, any, any>;
 
 // Constants used to select buttons based on their "aria-label" values
-const btnLabelToStart = 'jump to start';
-const btnLabelToEnd = 'jump to end';
-const btnLabelStepForward = 'step forward';
-const btnLabelStepBack = 'step back';
+enum BtnLabel {
+  JumpToStart = 'jump to start',
+  JumpToEnd = 'jump to end',
+  StepForward = 'step forward',
+  StepBack = 'step back',
+};
 
 // Creates the string used to select a button using its aria-label
-const withLabel = (ariaLabel: string): string => `[aria-label="${ariaLabel}"]`;
+const withLabel = (btnLabel: BtnLabel): string => `[aria-label="${btnLabel}"]`;
 
-describe('ChessNavBtns with backBtns enabled and forwardBtns disabled', () => {
+const getBtn = (btnLabel: BtnLabel, wrapper: Wrapper) => (
+  wrapper.find(withLabel(btnLabel)).first()
+);
+
+const isBtnEnabled = (btnLabel: BtnLabel, wrapper: Wrapper) => (
+  !getBtn(btnLabel, wrapper).prop('disabled')
+);
+
+function testBtnsEnabled(options: {
+  areBackBtnsEnabled: boolean,
+  areForwardBtnsEnabled: boolean,
+}): void {
   const wrapper = shallow(
     <ChessNavBtns
-      areBackBtnsEnabled={true}
-      areForwardBtnsEnabled={false}
+      areBackBtnsEnabled={options.areBackBtnsEnabled}
+      areForwardBtnsEnabled={options.areForwardBtnsEnabled}
       jumpToStart={() => {}}
       jumpToEnd={() => {}}
       stepForward={() => {}}
@@ -23,63 +42,45 @@ describe('ChessNavBtns with backBtns enabled and forwardBtns disabled', () => {
     />,
   );
 
-  it('should have a disabled jumpToStart button', () => {
-    expect(wrapper.find(withLabel(btnLabelToStart)).prop('disabled')).toBe(true);
+  const mkDescription = (shouldBeEnabled: boolean, btnLabel: BtnLabel): string => {
+    let result = '';
+    result += shouldBeEnabled ? 'should ' : 'should not ';
+    result += `have an enabled ${btnLabel} button`;
+    return result;
+  };
+
+  const testBtnEnabled = (btnLabel: BtnLabel): void => {
+    let shouldBeEnabled: boolean;
+    if (btnLabel === BtnLabel.JumpToStart || btnLabel === BtnLabel.StepBack) {
+      shouldBeEnabled = options.areBackBtnsEnabled;
+    } else {
+      shouldBeEnabled = options.areForwardBtnsEnabled;
+    }
+
+    it(mkDescription(shouldBeEnabled, btnLabel), () => {
+      expect(isBtnEnabled(btnLabel, wrapper)).toBe(shouldBeEnabled);
+    });
+  };
+
+  Object.values(BtnLabel).forEach((btnLabel) => {
+    testBtnEnabled(btnLabel);
   });
+}
 
-  it('should have a disabled back button', () => {
-    expect(wrapper.find(withLabel(btnLabelStepBack)).prop('disabled')).toBe(true);
-  });
-
-  it('should have an enabled forward button', () => {
-    expect(wrapper.find(withLabel(btnLabelStepForward)).prop('disabled')).toBe(false);
-  });
-
-  it('should have an enabled jumpToEnd button', () => {
-    expect(wrapper.find(withLabel(btnLabelToEnd)).prop('disabled')).toBe(false);
-  });
-});
-
-describe('ChessNavBtns with backBtns disabled and forwardBtns enabled', () => {
-  const wrapper = shallow(
-    <ChessNavBtns
-      areBackBtnsEnabled={false}
-      areForwardBtnsEnabled={true}
-      jumpToStart={() => {}}
-      jumpToEnd={() => {}}
-      stepForward={() => {}}
-      stepBack={() => {}}
-    />,
-  );
-
-  it('should have an enabled jumpToStart button', () => {
-    expect(wrapper.find(withLabel(btnLabelToStart)).prop('disabled')).toBe(false);
-  });
-
-  it('should have an enabled back button', () => {
-    expect(wrapper.find(withLabel(btnLabelStepBack)).prop('disabled')).toBe(false);
-  });
-
-  it('should have a disabled forward button', () => {
-    expect(wrapper.find(withLabel(btnLabelStepForward)).prop('disabled')).toBe(true);
-  });
-
-  it('should have a disabled jumpToEnd button', () => {
-    expect(wrapper.find(withLabel(btnLabelToEnd)).prop('disabled')).toBe(true);
-  });
-});
-
-describe('ChessNavBtns with backBtns and forwardBtns disabled', () => {
+function testCallbacks(options: {
+  areBackBtnsEnabled: boolean,
+  areForwardBtnsEnabled: boolean,
+}): void {
   // mock all the callback functions
   const mockJumpToStartFn = jest.fn(() => {});
   const mockJumpToEndFn = jest.fn(() => {});
   const mockStepForwardFn = jest.fn(() => {});
   const mockStepBackFn = jest.fn(() => {});
 
-  const wrapper = shallow(
+  const wrapper = mount(
     <ChessNavBtns
-      areBackBtnsEnabled={false}
-      areForwardBtnsEnabled={false}
+      areBackBtnsEnabled={options.areBackBtnsEnabled}
+      areForwardBtnsEnabled={options.areForwardBtnsEnabled}
       jumpToStart={mockJumpToStartFn}
       stepBack={mockStepBackFn}
       stepForward={mockStepForwardFn}
@@ -87,49 +88,70 @@ describe('ChessNavBtns with backBtns and forwardBtns disabled', () => {
     />,
   );
 
-  // Get each of the buttons
-  const btnJumpToStart = wrapper.find(withLabel(btnLabelToStart)).first();
-  const btnStepBack = wrapper.find(withLabel(btnLabelStepBack)).first();
-  const btnStepForward = wrapper.find(withLabel(btnLabelStepForward)).first();
-  const btnJumpToEnd = wrapper.find(withLabel(btnLabelToEnd)).first();
+  const mkDescription = (shouldRunCallback: boolean, btnLabel: BtnLabel): string => {
+    let result = '';
+    result += shouldRunCallback ? 'should ' : 'should not ';
+    result += `run ${btnLabel} callback when ${btnLabel} button clicked`;
+    return result;
+  };
 
-  it('should have an enabled jumpToStart button', () => {
-    expect(btnJumpToStart.prop('disabled')).toBe(false);
-  });
+  const testClickBtn = (btnLabel: BtnLabel) => {
+    const btn = getBtn(btnLabel, wrapper)
+    let callbackFn: () => void;
+    let shouldRunCallback: boolean;
+    switch (btnLabel) {
+      case BtnLabel.JumpToStart:
+        shouldRunCallback = options.areBackBtnsEnabled;
+        callbackFn = mockJumpToStartFn;
+        break;
+      case BtnLabel.StepBack:
+        shouldRunCallback = options.areBackBtnsEnabled;
+        callbackFn = mockStepBackFn;
+        break;
+      case BtnLabel.StepForward:
+        shouldRunCallback = options.areForwardBtnsEnabled;
+        callbackFn = mockStepForwardFn;
+        break;
+      case BtnLabel.JumpToEnd:
+        shouldRunCallback = options.areForwardBtnsEnabled;
+        callbackFn = mockJumpToEndFn;
+        break;
+      default:
+        assertUnreachable(btnLabel);
+    }
 
-  it('should have an enabled back button', () => {
-    expect(btnStepBack.prop('disabled')).toBe(false);
-  });
+    it(mkDescription(shouldRunCallback, btnLabel), () => {
+      expect(callbackFn).toHaveBeenCalledTimes(0);
+      btn.simulate('click');
+      expect(callbackFn).toHaveBeenCalledTimes(shouldRunCallback ? 1 : 0);
+    });
+  }
 
-  it('should have an enabled forward button', () => {
-    expect(btnStepForward.prop('disabled')).toBe(false);
+  Object.values(BtnLabel).forEach((btnLabel) => {
+    testClickBtn(btnLabel);
   });
+};
 
-  it('should have an enabled jumpToEnd button', () => {
-    expect(btnJumpToEnd.prop('disabled')).toBe(false);
-  });
+describe('ChessNavBtns with all buttons disabled', () => {
+  const options = { areBackBtnsEnabled: false, areForwardBtnsEnabled: false };
+  testBtnsEnabled(options);
+  testCallbacks(options);
+});
 
-  it('should run jumpToStart callback when btnJumpToStart clicked', () => {
-    expect(mockJumpToStartFn).toHaveBeenCalledTimes(0);
-    btnJumpToStart.simulate('click');
-    expect(mockJumpToStartFn).toHaveBeenCalledTimes(1);
-  });
+describe('ChessNavBtns with backBtns enabled and forwardBtns disabled', () => {
+  const options = { areBackBtnsEnabled: true, areForwardBtnsEnabled: false };
+  testBtnsEnabled(options);
+  testCallbacks(options);
+});
 
-  it('should run stepBack callback when btnStepBack clicked', () => {
-    expect(mockStepBackFn).toHaveBeenCalledTimes(0);
-    btnStepBack.simulate('click');
-    expect(mockStepBackFn).toHaveBeenCalledTimes(1);
-  });
+describe('ChessNavBtns with backBtns disabled and forwardBtns enabled', () => {
+  const options = { areBackBtnsEnabled: false, areForwardBtnsEnabled: true };
+  testBtnsEnabled(options);
+  testCallbacks(options);
+});
 
-  it('should run stepForward callback when btnStepForward clicked', () => {
-    expect(mockStepForwardFn).toHaveBeenCalledTimes(0);
-    btnStepForward.simulate('click');
-    expect(mockStepForwardFn).toHaveBeenCalledTimes(1);
-  });
-
-  it('should run jumpToEnd callback when btnJumpToEnd clicked', () => {
-    expect(mockJumpToEndFn).toHaveBeenCalledTimes(0);
-    btnJumpToEnd.simulate('click');
-    expect(mockJumpToEndFn).toHaveBeenCalledTimes(1);
-  });
+describe('ChessNavBtns with all buttons enabled', () => {
+  const options = { areBackBtnsEnabled: true, areForwardBtnsEnabled: true };
+  testBtnsEnabled(options);
+  testCallbacks(options);
 });
