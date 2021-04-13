@@ -40,7 +40,11 @@
     "roots": [
       "<rootDir>/src"
     ],
+    "moduleNameMapper": {
+      "^.+\\.(css|svg|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
+    },
     "transform": {
+      ".+\\.(css|svg|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
@@ -138,6 +142,7 @@
     "file-loader": "^6.2.0",
     "http-proxy-middleware": "^1.0.5",
     "jest": "^26.4.2",
+    "jest-transform-stub": "^2.0.0",
     "postcss-loader": "^4.0.2",
     "prettier": "^2.1.2",
     "react": "^17.0.1",
