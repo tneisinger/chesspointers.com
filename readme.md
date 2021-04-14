@@ -1,10 +1,8 @@
 [//]: # "The README.md file is auto-generated using the mmarkdown npm package"
 [//]: # "This is done as part of the `npm run build` script"
 [//]: # "To make changes to README.md, edit readme.md and/or readme.js"
-[//]: # "https://www.npmjs.com/package/mmarkdown"
+[//]: # "Learn more at https://www.npmjs.com/package/mmarkdown"
 # ChessPointers.com
-
-## Installation
 
 ## Acknowledgements
 

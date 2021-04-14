@@ -28,6 +28,10 @@
     "url": "https://github.com/mui-org/material-ui"
   },
   {
+    "title": "react-material-ui-carousel",
+    "url": "https://github.com/Learus/react-material-ui-carousel"
+  },
+  {
     "title": "redux-toolkit",
     "url": "https://github.com/reduxjs/redux-toolkit"
   },
@@ -42,5 +46,9 @@
   {
     "title": "express",
     "url": "https://github.com/expressjs/express"
+  },
+  {
+    "title": "mmarkdown",
+    "url": "https://github.com/albinotonnina/mmarkdown"
   }
 ]
