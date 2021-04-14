@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import youtubeAcknowledgements from '../../shared/youtubeAcknowledgements.json';
 
 const useStyles = makeStyles(() => ({
   heading: {
@@ -35,7 +36,7 @@ const AcknowledgementsPage: React.FunctionComponent = () => {
           Chess expertise sourced from these excellent YouTube channels:
         </Typography>
         <div className={classes.youtubeLinksDiv}>
-          {youtubeResources.map(({ title, url }) => (
+          {youtubeAcknowledgements.map(({ title, url }) => (
             <Typography
               key={title}
               className={classes.acknowledgementLink}
@@ -64,39 +65,3 @@ const AcknowledgementsPage: React.FunctionComponent = () => {
 };
 
 export default AcknowledgementsPage;
-
-interface AcknowledgedResource {
-  title: string;
-  url: string;
-}
-
-const youtubeResources: AcknowledgedResource[] = [
-  {
-    title: 'thechesswebsite',
-    url: 'https://www.youtube.com/channel/UCHz5JQAUSkjxrosDIWCtEdw',
-  },
-  {
-    title: 'GothamChess',
-    url: 'https://www.youtube.com/channel/UCQHX6ViZmPsWiYSFAyS0a3Q',
-  },
-  {
-    title: 'ChessCoach Andras',
-    url: 'https://www.youtube.com/channel/UCcYZTGsTO5TbCaA1O0wcBzw',
-  },
-  {
-    title: 'Hanging Pawns',
-    url: 'https://www.youtube.com/channel/UCkJdvwRC-oGPhRHW_XPNokg',
-  },
-  {
-    title: 'Remote Chess Academy',
-    url: 'https://www.youtube.com/channel/UCsKZ2yOsgfNxln8xH5WkGvg',
-  },
-  {
-    title: 'Eric Rosen',
-    url: 'https://www.youtube.com/channel/UCXy10-NEFGxQ3b4NVrzHw1Q',
-  },
-  {
-    title: 'The Chess Giant',
-    url: 'https://www.youtube.com/channel/UC9kP6NUvOS4_E7az0nfl7TQ',
-  },
-];

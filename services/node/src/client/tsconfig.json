@@ -17,7 +17,7 @@
     "composite": true,
     "strict": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx"],
   "references": [{ "path": "../shared" }]
 }
