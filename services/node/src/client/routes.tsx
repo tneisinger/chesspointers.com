@@ -5,11 +5,10 @@ import TrapsPage from './pages/Traps';
 import OpeningsPage from './pages/Openings';
 import OpeningPage from './pages/Opening';
 import TrapPage from './pages/Trap';
-// Disable the MergeTraps page for now
-// import MergeTrapsPage from './pages/MergeTraps';
 import NotFoundPage from './pages/NotFound';
 import PrivatePage from './pages/Private';
 import AboutPage from './pages/About';
+import AcknowledgementsPage from './pages/Acknowledgements';
 import PrivateRoute from './components/PrivateRoute';
 
 interface RouteInfo {
@@ -64,20 +63,18 @@ export const routes: RouteInfo[] = [
     isPrivate: false,
     isInSideMenu: false,
   },
-  /* Disable the MergeTraps page for now
-  {
-    pageName: 'Merge Traps',
-    component: MergeTrapsPage,
-    path: '/merge-traps',
-    isPathExact: true,
-    isPrivate: false,
-    isInSideMenu: true,
-  },
- */
   {
     pageName: 'About',
     component: AboutPage,
     path: '/about',
+    isPathExact: true,
+    isPrivate: false,
+    isInSideMenu: true,
+  },
+  {
+    pageName: 'Acknowledgements',
+    component: AcknowledgementsPage,
+    path: '/acknowledgements',
     isPathExact: true,
     isPrivate: false,
     isInSideMenu: true,
