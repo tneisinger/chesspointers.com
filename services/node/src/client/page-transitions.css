@@ -1,6 +1,7 @@
 .fade-exit {
   opacity: 0;
   position: absolute;
+  display: none;
 }
 
 .fade-enter {

@@ -51,10 +51,6 @@ const theme = createMuiTheme({
   overrides: {
     MuiCssBaseline: {
       '@global': {
-        'html, body': {
-          height: '100%',
-          overflow: 'hidden',
-        },
         '@media (hover: none)': {
           'a:hover': {
             textDecoration: 'none !important',
