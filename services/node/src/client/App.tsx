@@ -18,6 +18,7 @@ import { SideMenu } from './components/SideMenu';
 import { makeRoutes } from './routes';
 import 'react-chessground/dist/styles/chessground.css';
 import './page-transitions.css';
+import metadata from '../shared/metadata.json';
 
 const SCROLLBAR_BACKGROUND_COLOR = 'rgba(100, 100, 100, 1)';
 const SCROLLBAR_FOREGROUND_COLOR = 'rgba(150, 150, 150, 1)';
@@ -187,7 +188,7 @@ function AppContent() {
                   noWrap
                 >
                   <Link className={classes.siteTitleLink} to={'/'}>
-                    ChessPointers.com
+                    {metadata.siteTitle}
                   </Link>
                 </Typography>
               </span>
