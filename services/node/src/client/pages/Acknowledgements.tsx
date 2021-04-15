@@ -2,8 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import youtubeAcknowledgements from '../../shared/youtubeAcknowledgements.json';
-import softwareAcknowledgements from '../../shared/softwareAcknowledgements.json';
+import metadata from '../../shared/metadata.json';
 
 const useStyles = makeStyles(() => ({
   acknowledgementsRoot: {
@@ -42,7 +41,7 @@ const AcknowledgementsPage: React.FunctionComponent = () => {
         <Typography align='center'>
           All chess expertise was sourced from the following YouTube channels:
         </Typography>
-        {youtubeAcknowledgements.map(({ title, url }) => (
+        {metadata.acknowledgements.chess.map(({ title, url }) => (
           <Typography
             key={title}
             className={classes.link}
@@ -61,7 +60,7 @@ const AcknowledgementsPage: React.FunctionComponent = () => {
         <Typography align='center'>
           Special thanks to the following software repositories:
         </Typography>
-        {softwareAcknowledgements.map(({ title, url }) => (
+        {metadata.acknowledgements.software.map(({ title, url }) => (
           <Typography
             key={title}
             className={classes.link}

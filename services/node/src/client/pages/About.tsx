@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import metadata from '../../shared/metadata.json';
 
 const useStyles = makeStyles(() => ({
   aboutRoot: {
@@ -32,9 +34,12 @@ const AboutPage: React.FunctionComponent = () => {
           About
         </Typography>
         <Typography className={classes.bodyText}>
-          ChessPointers.com is a passion project made by someone who loves building web
-          apps and studying chess. If you'd like to get in touch, kindly send an email to
-          <a href='mailto: chesspointers@gmail.com'> chesspointers@gmail.com</a>.
+          <Link to='/'>ChessPointers.com</Link> is a passion project made by someone who
+          loves building web apps and studying chess. If you would like to get in touch,
+          kindly send an email to
+          <a
+            href={`mailto: ${metadata.adminEmail}`}> {metadata.adminEmail}
+          </a>.
         </Typography>
       </Box>
     </Grid>

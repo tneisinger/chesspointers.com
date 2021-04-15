@@ -1,0 +1,61 @@
+{
+  "adminEmail": "chesspointers@gmail.com",
+  "acknowledgements": {
+    "software": [
+      {
+        "title": "fullstack-typescript",
+        "url": "https://github.com/gilamran/fullstack-typescript"
+      },
+      {
+        "title": "chessground",
+        "url": "https://github.com/ornicar/chessground"
+      },
+      {
+        "title": "react-chessground",
+        "url": "https://github.com/ruilisi/react-chessground"
+      },
+      {
+        "title": "chess.js",
+        "url": "https://github.com/jhlywa/chess.js"
+      },
+      {
+        "title": "react-material-ui-carousel",
+        "url": "https://github.com/Learus/react-material-ui-carousel"
+      },
+      {
+        "title": "mmarkdown",
+        "url": "https://github.com/albinotonnina/mmarkdown"
+      }
+    ],
+    "chess": [
+      {
+        "title": "thechesswebsite",
+        "url": "https://www.youtube.com/channel/UCHz5JQAUSkjxrosDIWCtEdw"
+      },
+      {
+        "title": "GothamChess",
+        "url": "https://www.youtube.com/channel/UCQHX6ViZmPsWiYSFAyS0a3Q"
+      },
+      {
+        "title": "ChessCoach Andras",
+        "url": "https://www.youtube.com/channel/UCcYZTGsTO5TbCaA1O0wcBzw"
+      },
+      {
+        "title": "Hanging Pawns",
+        "url": "https://www.youtube.com/channel/UCkJdvwRC-oGPhRHW_XPNokg"
+      },
+      {
+        "title": "Remote Chess Academy",
+        "url": "https://www.youtube.com/channel/UCsKZ2yOsgfNxln8xH5WkGvg"
+      },
+      {
+        "title": "Eric Rosen",
+        "url": "https://www.youtube.com/channel/UCXy10-NEFGxQ3b4NVrzHw1Q"
+      },
+      {
+        "title": "The Chess Giant",
+        "url": "https://www.youtube.com/channel/UC9kP6NUvOS4_E7az0nfl7TQ"
+      }
+    ]
+  }
+}

@@ -1,7 +1,4 @@
-const youtubeChannels =
-  require('./services/node/src/shared/youtubeAcknowledgements.json');
-const softwarePackages =
-  require('./services/node/src/shared/softwareAcknowledgements.json');
+const metadata = require('./services/node/src/shared/metadata.json');
 
 function makeLink({ title, url }) {
   return `[${title}](${url})`
@@ -12,11 +9,11 @@ function makeLinks(resources) {
 }
 
 function makeYoutubeLinks() {
-  return makeLinks(youtubeChannels);
+  return makeLinks(metadata.acknowledgements.chess);
 }
 
 function makeSoftwareLinks() {
-  return makeLinks(softwarePackages);
+  return makeLinks(metadata.acknowledgements.software);
 }
 
 module.exports = { makeYoutubeLinks, makeSoftwareLinks };
