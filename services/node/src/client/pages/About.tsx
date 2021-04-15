@@ -36,9 +36,8 @@ const AboutPage: React.FunctionComponent = () => {
         <Typography className={classes.bodyText}>
           <Link to='/'>ChessPointers.com</Link> is a passion project made by someone who
           loves building web apps and studying chess. If you would like to get in touch,
-          kindly send an email to
-          <a
-            href={`mailto: ${metadata.adminEmail}`}> {metadata.adminEmail}
+          kindly send an email to <a
+            href={`mailto: ${metadata.adminEmail}`}>{metadata.adminEmail}
           </a>.
         </Typography>
       </Box>
