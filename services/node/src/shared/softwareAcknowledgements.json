@@ -16,36 +16,8 @@
     "url": "https://github.com/jhlywa/chess.js"
   },
   {
-    "title": "TypeScript",
-    "url": "https://github.com/microsoft/TypeScript"
-  },
-  {
-    "title": "react",
-    "url": "https://github.com/facebook/react"
-  },
-  {
-    "title": "material-ui",
-    "url": "https://github.com/mui-org/material-ui"
-  },
-  {
     "title": "react-material-ui-carousel",
     "url": "https://github.com/Learus/react-material-ui-carousel"
-  },
-  {
-    "title": "redux-toolkit",
-    "url": "https://github.com/reduxjs/redux-toolkit"
-  },
-  {
-    "title": "typeorm",
-    "url": "https://github.com/typeorm/typeorm"
-  },
-  {
-    "title": "webpack",
-    "url": "https://github.com/webpack/webpack"
-  },
-  {
-    "title": "express",
-    "url": "https://github.com/expressjs/express"
   },
   {
     "title": "mmarkdown",
