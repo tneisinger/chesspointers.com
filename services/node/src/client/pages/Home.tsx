@@ -16,6 +16,7 @@ import ChessTreePreview from '../components/ChessTreePreview';
 import Spinner from '../components/Spinner';
 import { useStepper } from '../hooks/useStepper';
 import { getViewportWidth } from '../utils';
+import metadata from '../../shared/metadata.json';
 
 const BOARD_SIZE_VW = 0.80;  // percentage of viewport width
 const MAX_BOARD_SIZE = 500; // pixels
@@ -158,7 +159,7 @@ const HomePage: React.FunctionComponent = () => {
           This site is a work-in-progress.
         </Typography>
         <Typography className={classes.paragraph} align='center'>
-          If you find a bug, please send an email to admin@chesspointers.com
+          If you find a bug, please send an email to {metadata.adminEmail}
         </Typography>
       </div>
     </Grid>
