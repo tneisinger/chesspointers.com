@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -47,7 +47,7 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
   return (
     <Card className={classes.card}>
       <CardContent className={classes.cardContent}>
-        <NavLink to={getLessonUrlPath(props.lesson)}>
+        <Link to={getLessonUrlPath(props.lesson)}>
           <Grid container direction='column'>
             <Grid item>
               <Typography className={classes.titleText} component='h4' align='center'>
@@ -68,7 +68,7 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
               />
             </Grid>
           </Grid>
-        </NavLink>
+        </Link>
       </CardContent>
     </Card>
   );

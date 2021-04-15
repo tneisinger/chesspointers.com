@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory, NavLink } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import { Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -178,7 +178,7 @@ const ChessTreePreviewOrSpinner: React.FC<ChessTreePreviewOrSpinnerProps> = (pro
     return <Spinner />;
   } else {
     return (
-      <NavLink className={classes.chessBoardLink} to={getLessonUrlPath(props.lesson)}>
+      <Link className={classes.chessBoardLink} to={getLessonUrlPath(props.lesson)}>
         <ChessTreePreview
           chessTree={props.lesson.chessTree}
           orientation={props.lesson.playedByWhite ? 'white' : 'black'}
@@ -193,7 +193,7 @@ const ChessTreePreviewOrSpinner: React.FC<ChessTreePreviewOrSpinnerProps> = (pro
         >
           {props.lesson.fullName}
         </Typography>
-      </NavLink>
+      </Link>
     );
   }
 };
