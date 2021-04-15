@@ -29,6 +29,9 @@ const useStyles = makeStyles({
     fontSize: (p: Props) => p.cardWidth * FONT_SIZE_SCALAR + 'rem',
     marginBottom: '12px',
   },
+  lessonLink: {
+    textDecoration: 'none',
+  },
 });
 
 export interface Props {
@@ -47,7 +50,7 @@ const ChessLessonPreview: React.FC<Props> = (props) => {
   return (
     <Card className={classes.card}>
       <CardContent className={classes.cardContent}>
-        <Link to={getLessonUrlPath(props.lesson)}>
+        <Link to={getLessonUrlPath(props.lesson)} className={classes.lessonLink}>
           <Grid container direction='column'>
             <Grid item>
               <Typography className={classes.titleText} component='h4' align='center'>

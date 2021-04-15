@@ -72,7 +72,6 @@ const theme = createMuiTheme({
         },
         a: {
           color: 'white',
-          textDecoration: 'none',
           '&:visited': {
             color: '#d6d8de',
           },
@@ -133,6 +132,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1.2rem',
     },
   },
+  siteTitleLink: {
+    textDecoration: 'none',
+  },
   toolbarAboveMain: {
     ...theme.mixins.toolbar,
     [theme.breakpoints.up('lg')]: {
@@ -184,7 +186,7 @@ function AppContent() {
                   component='h1'
                   noWrap
                 >
-                  <Link to={'/'}>
+                  <Link className={classes.siteTitleLink} to={'/'}>
                     ChessPointers.com
                   </Link>
                 </Typography>

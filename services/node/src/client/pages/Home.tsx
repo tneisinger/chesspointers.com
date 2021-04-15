@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '20px',
   },
   chessBoardLink: {
+    textDecoration: 'none',
     '&:hover': {
       textDecoration: 'none',
     }
