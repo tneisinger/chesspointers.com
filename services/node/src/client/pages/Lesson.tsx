@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     width: 'inherit',
     maxWidth: 'inherit',
+    overflow: 'hidden',
   },
   attribution: {
     fontSize: '0.8rem',
