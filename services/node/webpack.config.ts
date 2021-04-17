@@ -1,6 +1,7 @@
 import path from 'path';
 import { Configuration, DefinePlugin } from 'webpack';
 import ManifestPlugin from 'webpack-manifest-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 import { SERVER_PORT, IS_DEV, WEBPACK_PORT } from './src/server/config';
 
@@ -11,6 +12,7 @@ const plugins = [
   new DefinePlugin({
     'process.env': JSON.stringify(dotenv.parsed),
   }),
+  new BundleAnalyzerPlugin()
 ];
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');

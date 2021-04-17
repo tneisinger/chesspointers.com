@@ -6,17 +6,14 @@ import OpeningsPage from './pages/Openings';
 import OpeningPage from './pages/Opening';
 import TrapPage from './pages/Trap';
 import NotFoundPage from './pages/NotFound';
-import PrivatePage from './pages/Private';
 import AboutPage from './pages/About';
 import AcknowledgementsPage from './pages/Acknowledgements';
-import PrivateRoute from './components/PrivateRoute';
 
 interface RouteInfo {
   pageName?: string;
   component: FunctionComponent;
   path?: string;
   isPathExact: boolean;
-  isPrivate: boolean;
   isInSideMenu: boolean;
 }
 
@@ -30,7 +27,6 @@ export const routes: RouteInfo[] = [
     component: HomePage,
     path: '/',
     isPathExact: true,
-    isPrivate: false,
     isInSideMenu: false,
   },
   {
@@ -38,14 +34,12 @@ export const routes: RouteInfo[] = [
     component: OpeningsPage,
     path: '/openings',
     isPathExact: true,
-    isPrivate: false,
     isInSideMenu: true,
   },
   {
     component: OpeningPage,
     path: '/openings/:lessonName',
     isPathExact: true,
-    isPrivate: false,
     isInSideMenu: false,
   },
   {
@@ -53,14 +47,12 @@ export const routes: RouteInfo[] = [
     component: TrapsPage,
     path: '/traps',
     isPathExact: true,
-    isPrivate: false,
     isInSideMenu: true,
   },
   {
     component: TrapPage,
     path: '/traps/:lessonName',
     isPathExact: true,
-    isPrivate: false,
     isInSideMenu: false,
   },
   {
@@ -68,7 +60,6 @@ export const routes: RouteInfo[] = [
     component: AboutPage,
     path: '/about',
     isPathExact: true,
-    isPrivate: false,
     isInSideMenu: true,
   },
   {
@@ -76,21 +67,11 @@ export const routes: RouteInfo[] = [
     component: AcknowledgementsPage,
     path: '/acknowledgements',
     isPathExact: true,
-    isPrivate: false,
     isInSideMenu: true,
-  },
-  {
-    pageName: 'Private Page',
-    component: PrivatePage,
-    path: '/private-page',
-    isPathExact: false,
-    isPrivate: true,
-    isInSideMenu: false,
   },
   {
     component: NotFoundPage,
     isPathExact: false,
-    isPrivate: false,
     isInSideMenu: false,
   },
 ];
@@ -101,10 +82,9 @@ export function routesWithPaths(): RouteInfoWithPath[] {
 
 export function makeRoutes(): JSX.Element[] {
   return routes.map((route, idx) => {
-    const RouteComponent = route.isPrivate ? PrivateRoute : Route;
     if (route.path) {
       return (
-        <RouteComponent
+        <Route
           key={route.path + idx}
           exact={route.isPathExact}
           path={route.path}
@@ -113,6 +93,6 @@ export function makeRoutes(): JSX.Element[] {
       );
     }
 
-    return <RouteComponent key={'pathlessRoute' + idx} component={route.component} />;
+    return <Route key={'pathlessRoute' + idx} component={route.component} />;
   });
 }
