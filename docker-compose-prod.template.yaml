@@ -6,7 +6,7 @@ services:
     build:
       dockerfile: $(basename $NODE_PROD_DOCKERFILE)
     environment:
-      TYPEORM_SYNCHRONIZE: 'false'
+      TYPEORM_SYNCHRONIZE: 'true'
       TYPEORM_LOGGING: 'false'
       NODE_ENV: production
       PORT: 80
