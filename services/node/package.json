@@ -12,14 +12,14 @@
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "start": "node index.js",
     "start:prod": "cross-env NODE_ENV=production node index.js",
+    "update-readme": "mmarkdown",
     "type-check-client": "tsc -p ./src/client/tsconfig.json",
     "build-client": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack -p",
     "build-server": "tsc -b src/server",
-    "build-readme": "mmarkdown",
     "dev-client": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack-dev-server -w",
     "dev-server": "tsc-watch --noClear -b ./src/server/tsconfig.json --onSuccess \"node --enable-source-maps index.js\"",
     "dev": "concurrently --prefix \"[{name}]\" --names \"SERVER,CLIENT\" -c \"bgBlue.bold,bgGreen.bold\" \"npm run dev-server\" \"npm run dev-client\"",
-    "build": "concurrently --prefix \"[{name}]\" --names \"SERVER,CLIENT\" -c \"bgBlue.bold,bgGreen.bold\" \"npm run build-server\" \"npm run build-client\" \"npm run build-readme\""
+    "build": "concurrently --prefix \"[{name}]\" --names \"SERVER,CLIENT\" -c \"bgBlue.bold,bgGreen.bold\" \"npm run build-server\" \"npm run build-client\""
   },
   "mmarkdown": {
     "src": "../../readme.md",

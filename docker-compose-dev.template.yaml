@@ -1,0 +1,20 @@
+services:
+  ${DATABASE_HOST}:
+    ports:
+      - "35432:5432"
+  node:
+    build:
+      dockerfile: $(basename $NODE_DEV_DOCKERFILE)
+    environment:
+      TYPEORM_SYNCHRONIZE: 'true'
+      TYPEORM_LOGGING: 'true'
+      NODE_ENV: development
+      PORT: 3000
+    ports:
+      - "3000:3000"
+      - "8085:8085"
+    volumes:
+      - type: "bind"
+        source: ./services/node
+        target: $NODE_PROJECT_DIR
+    command: npm run dev

@@ -1,0 +1,35 @@
+version: "3"
+services:
+  ${DATABASE_HOST}:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: $DATABASE_USERNAME
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
+      POSTGRES_DB: $DATABASE_NAME
+    volumes:
+      - type: "volume"
+        source: db-data
+        target: /var/lib/postgresql/data
+
+  node:
+    build:
+      context: $NODE_DIR
+    depends_on:
+      - $DATABASE_HOST
+    user: "root"
+    environment:
+      TYPEORM_CONNECTION: $DATABASE_CONNECTION
+      TYPEORM_HOST: $DATABASE_HOST
+      TYPEORM_USERNAME: $DATABASE_USERNAME
+      TYPEORM_PASSWORD: $DATABASE_PASSWORD
+      TYPEORM_DATABASE: $DATABASE_NAME
+      TYPEORM_PORT: $DATABASE_PORT
+      TYPEORM_ENTITIES: dist/shared/entity/*.js
+    volumes:
+      - type: "volume"
+        source: node-modules
+        target: /app/node_modules
+
+volumes:
+  node-modules:
+  db-data:

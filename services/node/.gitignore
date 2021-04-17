@@ -3,5 +3,5 @@ dist
 .idea
 .vscode
 node_modules
-.Dockerfile
+.Dockerfile*
 assets/favicon.png

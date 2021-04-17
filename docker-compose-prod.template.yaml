@@ -1,0 +1,15 @@
+services:
+  ${DATABASE_HOST}:
+    expose:
+      - "5432"
+  node:
+    build:
+      dockerfile: $(basename $NODE_PROD_DOCKERFILE)
+    environment:
+      TYPEORM_SYNCHRONIZE: 'false'
+      TYPEORM_LOGGING: 'false'
+      NODE_ENV: production
+      PORT: 80
+    ports:
+      - "80:80"
+    command: npm run start:prod

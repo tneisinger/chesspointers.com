@@ -22,14 +22,20 @@ EOF
 " > $2
 }
 
-# Create the docker-compose file
-makeFileFromTemplate $DOCKER_COMPOSE_TEMPLATE $DOCKER_COMPOSE_FILE
+# Create the docker-compose-base file
+makeFileFromTemplate $DOCKER_COMPOSE_BASE_TEMPLATE $DOCKER_COMPOSE_BASE_FILE
 
-# Create the Dockerfile for the node service
-makeFileFromTemplate $NODE_DOCKERFILE_TEMPLATE $NODE_DOCKERFILE
+# Create the docker-compose-dev file
+makeFileFromTemplate $DOCKER_COMPOSE_DEV_TEMPLATE $DOCKER_COMPOSE_DEV_FILE
+
+# Create the docker-compose-prod file
+makeFileFromTemplate $DOCKER_COMPOSE_PROD_TEMPLATE $DOCKER_COMPOSE_PROD_FILE
+
+# Create the dev Dockerfile for the node service
+makeFileFromTemplate $NODE_DEV_DOCKERFILE_TEMPLATE $NODE_DEV_DOCKERFILE
+
+# Create the prod Dockerfile for the node service
+makeFileFromTemplate $NODE_PROD_DOCKERFILE_TEMPLATE $NODE_PROD_DOCKERFILE
 
 # Create the .env file for the client part of the node service
 makeFileFromTemplate $CLIENT_DOTENV_TEMPLATE $CLIENT_DOTENV_FILE
-
-# run docker-compose using the DOCKER_COMPOSE_FILE from config.sh
-docker-compose -f $DOCKER_COMPOSE_FILE $@
