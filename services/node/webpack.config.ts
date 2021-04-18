@@ -1,7 +1,7 @@
 import path from 'path';
 import { Configuration, DefinePlugin } from 'webpack';
 import ManifestPlugin from 'webpack-manifest-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import CompressionPlugin from 'compression-webpack-plugin';
 
 import { SERVER_PORT, IS_DEV, WEBPACK_PORT } from './src/server/config';
 
@@ -12,7 +12,13 @@ const plugins = [
   new DefinePlugin({
     'process.env': JSON.stringify(dotenv.parsed),
   }),
-  new BundleAnalyzerPlugin()
+  new CompressionPlugin({
+    algorithm: "gzip",
+    test: /\.js$|\.css$|\.html$/,
+    threshold: 10240,
+    minRatio: 0.8,
+    deleteOriginalAssets: !IS_DEV
+  }),
 ];
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');

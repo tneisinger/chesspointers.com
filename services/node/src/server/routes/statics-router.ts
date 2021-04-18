@@ -1,5 +1,5 @@
 import path from 'path';
-import express from 'express';
+import expressStaticGzip from 'express-static-gzip';
 import { Router } from 'express';
 import { IS_DEV, WEBPACK_PORT } from '../config';
 
@@ -22,7 +22,7 @@ export function staticsRouter(): Router {
     const staticsPath = path.join(process.cwd(), 'dist', 'statics');
 
     // All the assets are in "statics" folder (Done by Webpack during the build phase)
-    router.use('/statics', express.static(staticsPath));
+    router.use('/statics', expressStaticGzip(staticsPath, { index: false }));
   }
   return router;
 }
