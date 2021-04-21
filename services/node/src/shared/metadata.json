@@ -24,6 +24,10 @@
         "url": "https://github.com/Learus/react-material-ui-carousel"
       },
       {
+        "title": "express-static-gzip",
+        "url": "https://github.com/tkoenig89/express-static-gzip"
+      },
+      {
         "title": "mmarkdown",
         "url": "https://github.com/albinotonnina/mmarkdown"
       }
