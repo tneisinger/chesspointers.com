@@ -16,6 +16,7 @@ const useStyles = makeStyles(() => ({
   },
   bodyText: {
     fontSize: '1.1rem',
+    marginBottom: '1.25rem',
   }
 }));
 
@@ -39,6 +40,14 @@ const AboutPage: React.FunctionComponent = () => {
           touch, kindly send an email to <a
             href={`mailto: ${metadata.adminEmail}`}>{metadata.adminEmail}
           </a>.
+        </Typography>
+        <Typography className={classes.bodyText}>
+          This is an open source project. You can view the source code <a
+              rel='noopener noreferrer'
+              target='_blank'
+              href='https://github.com/tneisinger/chesspointers.com'>
+              here
+            </a>.
         </Typography>
       </Box>
     </Grid>
