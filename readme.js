@@ -5,7 +5,7 @@ function makeLink({ title, url }) {
 }
 
 function makeLinks(resources) {
-  return resources.map((resource) => makeLink(resource)).join(' || ');
+  return resources.map((resource) => `- ${makeLink(resource)}`).join('\n');
 }
 
 function makeChessExpertiseLinks() {
