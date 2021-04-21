@@ -60,6 +60,50 @@
       {
         "title": "mmarkdown",
         "url": "https://github.com/albinotonnina/mmarkdown"
+      },
+      {
+        "title": "Apronus.com/chess",
+        "url": "https://www.apronus.com/chess"
+      },
+      {
+        "title": "React",
+        "url": "https://github.com/facebook/react"
+      },
+      {
+        "title": "TypeScript",
+        "url": "https://github.com/microsoft/TypeScript"
+      },
+      {
+        "title": "redux-toolkit",
+        "url": "https://github.com/reduxjs/redux-toolkit"
+      },
+      {
+        "title": "express",
+        "url": "https://github.com/expressjs/express"
+      },
+      {
+        "title": "react-transition-group",
+        "url": "https://github.com/reactjs/react-transition-group"
+      },
+      {
+        "title": "typeorm",
+        "url": "https://github.com/typeorm/typeorm"
+      },
+      {
+        "title": "webpack",
+        "url": "https://github.com/webpack/webpack"
+      },
+      {
+        "title": "axios",
+        "url": "https://github.com/axios/axios"
+      },
+      {
+        "title": "jest",
+        "url": "https://github.com/facebook/jest"
+      },
+      {
+        "title": "enzyme",
+        "url": "https://github.com/enzymejs/enzyme"
       }
     ]
   }
