@@ -34,10 +34,6 @@
     ],
     "software": [
       {
-        "title": "fullstack-typescript",
-        "url": "https://github.com/gilamran/fullstack-typescript"
-      },
-      {
         "title": "chessground",
         "url": "https://github.com/ornicar/chessground"
       },
@@ -50,6 +46,14 @@
         "url": "https://github.com/jhlywa/chess.js"
       },
       {
+        "title": "Apronus.com/chess",
+        "url": "https://www.apronus.com/chess"
+      },
+      {
+        "title": "fullstack-typescript",
+        "url": "https://github.com/gilamran/fullstack-typescript"
+      },
+      {
         "title": "react-material-ui-carousel",
         "url": "https://github.com/Learus/react-material-ui-carousel"
       },
@@ -60,10 +64,6 @@
       {
         "title": "mmarkdown",
         "url": "https://github.com/albinotonnina/mmarkdown"
-      },
-      {
-        "title": "Apronus.com/chess",
-        "url": "https://www.apronus.com/chess"
       },
       {
         "title": "React",

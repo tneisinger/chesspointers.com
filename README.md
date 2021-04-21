@@ -27,14 +27,14 @@ All chess expertise is sourced from these excellent YouTube channels:
 
 Special thanks to these awesome resources:
 
-- [fullstack-typescript](https://github.com/gilamran/fullstack-typescript)
 - [chessground](https://github.com/ornicar/chessground)
 - [react-chessground](https://github.com/ruilisi/react-chessground)
 - [chess.js](https://github.com/jhlywa/chess.js)
+- [Apronus.com/chess](https://www.apronus.com/chess)
+- [fullstack-typescript](https://github.com/gilamran/fullstack-typescript)
 - [react-material-ui-carousel](https://github.com/Learus/react-material-ui-carousel)
 - [express-static-gzip](https://github.com/tkoenig89/express-static-gzip)
 - [mmarkdown](https://github.com/albinotonnina/mmarkdown)
-- [Apronus.com/chess](https://www.apronus.com/chess)
 - [React](https://github.com/facebook/react)
 - [TypeScript](https://github.com/microsoft/TypeScript)
 - [redux-toolkit](https://github.com/reduxjs/redux-toolkit)
