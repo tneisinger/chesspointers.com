@@ -122,7 +122,7 @@ attribution.text = 'Based on a YouTube video by GothamChess';
 attribution.url = 'https://youtu.be/hLFSufXxtuI';
 
 const lesson = new Lesson();
-lesson.lessonType = LessonType.TRAP;
+lesson.lessonType = LessonType.OPENING;
 lesson.fullName = 'The Fried Liver Attack';
 lesson.shortName = 'Fried Liver';
 lesson.playedByWhite = true;

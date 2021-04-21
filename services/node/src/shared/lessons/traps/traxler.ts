@@ -166,7 +166,7 @@ attribution.text = 'Based on a YouTube video by GothamChess';
 attribution.url = 'https://youtu.be/v1jkj-HPLdw';
 
 const lesson = new Lesson();
-lesson.lessonType = LessonType.TRAP;
+lesson.lessonType = LessonType.OPENING;
 lesson.fullName = 'The Traxler Counter Attack';
 lesson.shortName = 'Traxler';
 lesson.playedByWhite = false;
