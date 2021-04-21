@@ -16,7 +16,7 @@ All chess expertise is sourced from these excellent YouTube channels:
 
 ### Software
 
-Special thanks to these awesome software projects:
+Special thanks to these awesome resources:
 
-[fullstack-typescript](https://github.com/gilamran/fullstack-typescript) || [chessground](https://github.com/ornicar/chessground) || [react-chessground](https://github.com/ruilisi/react-chessground) || [chess.js](https://github.com/jhlywa/chess.js) || [react-material-ui-carousel](https://github.com/Learus/react-material-ui-carousel) || [mmarkdown](https://github.com/albinotonnina/mmarkdown)
+[fullstack-typescript](https://github.com/gilamran/fullstack-typescript) || [chessground](https://github.com/ornicar/chessground) || [react-chessground](https://github.com/ruilisi/react-chessground) || [chess.js](https://github.com/jhlywa/chess.js) || [react-material-ui-carousel](https://github.com/Learus/react-material-ui-carousel) || [express-static-gzip](https://github.com/tkoenig89/express-static-gzip) || [mmarkdown](https://github.com/albinotonnina/mmarkdown)
 

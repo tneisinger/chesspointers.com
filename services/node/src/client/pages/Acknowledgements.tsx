@@ -41,7 +41,7 @@ const AcknowledgementsPage: React.FunctionComponent = () => {
         <Typography align='center'>
           All chess expertise was sourced from the following YouTube channels:
         </Typography>
-        {metadata.acknowledgements.chess.map(({ title, url }) => (
+        {metadata.acknowledgements.chessExpertise.map(({ title, url }) => (
           <Typography
             key={title}
             className={classes.link}
@@ -58,7 +58,7 @@ const AcknowledgementsPage: React.FunctionComponent = () => {
       </div>
       <div className={classes.sectionDiv}>
         <Typography align='center'>
-          Special thanks to the following software repositories:
+          Special thanks to the following resources:
         </Typography>
         {metadata.acknowledgements.software.map(({ title, url }) => (
           <Typography

@@ -13,12 +13,12 @@ This project is made possible thanks to many other great works.
 All chess expertise is sourced from these excellent YouTube channels:
 
 ```mmd
-return scripts.makeYoutubeLinks();
+return scripts.makeChessExpertiseLinks();
 ```
 
 ### Software
 
-Special thanks to these awesome software projects:
+Special thanks to these awesome resources:
 
 ```mmd
 return scripts.makeSoftwareLinks();

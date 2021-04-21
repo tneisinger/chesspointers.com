@@ -8,12 +8,12 @@ function makeLinks(resources) {
   return resources.map((resource) => makeLink(resource)).join(' || ');
 }
 
-function makeYoutubeLinks() {
-  return makeLinks(metadata.acknowledgements.chess);
+function makeChessExpertiseLinks() {
+  return makeLinks(metadata.acknowledgements.chessExpertise);
 }
 
 function makeSoftwareLinks() {
   return makeLinks(metadata.acknowledgements.software);
 }
 
-module.exports = { makeYoutubeLinks, makeSoftwareLinks };
+module.exports = { makeChessExpertiseLinks, makeSoftwareLinks };
