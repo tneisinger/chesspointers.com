@@ -8,6 +8,7 @@ export enum OpMovesPlayedBy {
 
 export interface ChessGuideSettings {
   prac_opMovesPlayedBy: OpMovesPlayedBy;
+  allowDeadEndModal: boolean;
 }
 
 // The drawable property of a chessground chess board

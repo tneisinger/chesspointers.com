@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -21,7 +21,7 @@ interface Props {
   isOpenOrOpening: boolean;
   handleOptionSelect: (keepMove: boolean) => void;
   showAgain: boolean;
-  setShowAgain: Dispatch<SetStateAction<boolean>>;
+  changeShowAgainValue: (newValue: boolean) => void;
   delayOpenFor?: number;
   maxWidth?: string;
 }
@@ -72,7 +72,7 @@ const DeadEndModal: React.FC<Props> = (props) => {
                 <Checkbox
                   color='primary'
                   checked={!props.showAgain}
-                  onChange={() => props.setShowAgain(!props.showAgain)}
+                  onChange={() => props.changeShowAgainValue(!props.showAgain)}
                 />
               }
               label="Don't show this message again"

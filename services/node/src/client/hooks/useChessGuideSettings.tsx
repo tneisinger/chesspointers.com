@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import SettingsModalComponent from '../components/SettingsModal';
 import { ChessGuideSettings } from '../utils/types';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -10,12 +10,14 @@ const LCL_STOR_SETTINGS_KEY = 'settings';
 
 type SettingsToolkit = {
   settings: ChessGuideSettings;
+  setSettings: Dispatch<SetStateAction<ChessGuideSettings>>;
   SettingsModal: React.FC;
   SettingsBtn: React.FC;
 };
 
 const defaultSettings: ChessGuideSettings = {
   prac_opMovesPlayedBy: OpMovesPlayedBy.userIfMultipleChoices,
+  allowDeadEndModal: true,
 };
 
 const getSettingsFromLocalStorage = (): ChessGuideSettings | null => {
@@ -38,6 +40,8 @@ const areSettingsValid = (s: any): s is ChessGuideSettings => {
   if (!isValueOf(OpMovesPlayedBy, s.prac_opMovesPlayedBy)) {
     return false;
   }
+  if (s.allowDeadEndModal == undefined) return false;
+  if (typeof s.allowDeadEndModal !== 'boolean') return false;
   return true;
 };
 
@@ -76,6 +80,7 @@ export function useChessGuideSettings(): SettingsToolkit {
 
   return {
     settings,
+    setSettings,
     SettingsModal,
     SettingsBtn,
   };

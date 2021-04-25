@@ -31,7 +31,6 @@ const SHOW_DEBUG_BTN = false;
 const BEEPER = new Beeper({ frequency: 73 });
 const BOARD_BORDER_WIDTH = 13;
 const SWITCH_TO_PRACTICE_MODE_DELAY = 300;
-const LCL_STOR_KEY_ALLOW_DEAD_END_MODAL = 'allowDeadEndModal';
 
 const useStyles = makeStyles({
   boardBorderDiv: {
@@ -73,10 +72,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const [isLineCompleteModalOpen, setIsLineCompleteModalOpen] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
   const [isDeadEndModalOpen, setIsDeadEndModalOpen] = useState(false);
-  const [allowDeadEndModal, setAllowDeadEndModal] = useState<boolean>(() => {
-    const localStorageVal = localStorage.getItem(LCL_STOR_KEY_ALLOW_DEAD_END_MODAL);
-    return localStorageVal ? JSON.parse(localStorageVal) : true;
-  });
   const [mode, setMode] = useState<GuideMode>(guideMode);
   const [game] = useState<ChessInstance>(new Chess());
   const [fen, setFen] = useState(game.fen());
@@ -99,7 +94,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   const movesOnBoard = () => playedMoves.past;
 
   const chessTreeToolkit = useChessTreeToolkit(chessTree, movesOnBoard, mode);
-  const { settings, SettingsModal, SettingsBtn } = useChessGuideSettings();
+  const { settings, setSettings, SettingsModal, SettingsBtn } = useChessGuideSettings();
 
   // timeout refs
   const checkMoveTimeout = useRef<number | undefined>(undefined);
@@ -130,11 +125,6 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       chessTreeToolkit.resetValues();
     }
   }, [chessTree, userPlaysAs]);
-
-  // When allowDeadEndModal changes, update the value in localStorage.
-  useEffect(() => {
-    localStorage.setItem(LCL_STOR_KEY_ALLOW_DEAD_END_MODAL, String(allowDeadEndModal));
-  }, [allowDeadEndModal]);
 
   // Whenever the mode changes, reset the board
   useEffect(() => {
@@ -308,7 +298,7 @@ const ChessGuide: React.FunctionComponent<Props> = ({
   };
 
   const shouldShowDeadEndModal = (): boolean => {
-    if (!allowDeadEndModal) return false;
+    if (!settings.allowDeadEndModal) return false;
     const nextMoves = chessTreeToolkit.getNextMoves();
     return (
       nextMoves.length > 1 &&
@@ -667,8 +657,12 @@ const ChessGuide: React.FunctionComponent<Props> = ({
       <DeadEndModal
         isOpenOrOpening={isDeadEndModalOpen}
         maxWidth='375px'
-        showAgain={allowDeadEndModal}
-        setShowAgain={setAllowDeadEndModal}
+        showAgain={settings.allowDeadEndModal}
+        changeShowAgainValue={(newValue: boolean) => (
+          setSettings((currentSettings) =>
+            ({ ...currentSettings, allowDeadEndModal: newValue })
+          )
+        )}
         handleOptionSelect={(keepMove) => {
           setIsDeadEndModalOpen(false);
           if (keepMove) {
