@@ -160,7 +160,9 @@ const HomePage: React.FunctionComponent = () => {
           This site is a work-in-progress.
         </Typography>
         <Typography className={classes.paragraph} align='center'>
-          If you find a bug, please send an email to {metadata.adminEmail}
+          If you find a bug, please send an email to <a
+            href={`mailto: ${metadata.adminEmail}`}>{metadata.adminEmail}
+          </a>
         </Typography>
       </div>
     </Grid>
