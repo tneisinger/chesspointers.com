@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Modal, { Props as ModalProps } from './Modal';
@@ -9,9 +11,6 @@ import { ChessGuideSettings, OpMovesPlayedBy } from '../utils/types';
 import { isValueOf } from '../../shared/utils';
 
 const useStyles = makeStyles({
-  heading: {
-    marginBottom: '10px',
-  },
   modalContent: {
     marginTop: '1rem',
   },
@@ -19,7 +18,10 @@ const useStyles = makeStyles({
     display: 'inline-block',
   },
   settingsOptions: {
-    margin: '20px 0',
+    margin: '1.5rem 0',
+    '&> *:not(:last-child)': {
+      marginBottom: '1.5rem',
+    },
   },
   settingsOption: {
     padding: '10px',
@@ -51,12 +53,27 @@ const SettingsModal: React.FC<Props> = ({
   return (
     <Modal handleClose={handleModalClose} {...modalProps}>
       <div className={classes.modalContent}>
-        <Typography className={classes.heading} variant='h4'>
+        <Typography variant='h4'>
           Settings
         </Typography>
         <Grid container direction='column' spacing={2}>
           <Grid item>
             <div className={classes.settingsOptions}>
+              <div className={classes.settingsOption}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color='primary'
+                      checked={newSettings.allowDeadEndModal}
+                      onChange={() => setNewSettings({
+                        ...newSettings,
+                        allowDeadEndModal: !newSettings.allowDeadEndModal,
+                      })}
+                    />
+                  }
+                  label="Show dead end warnings"
+                />
+              </div>
               <div className={classes.settingsOption}>
                 <RadioInputGroup
                   label='In practice mode, opponent moves are played by...'
