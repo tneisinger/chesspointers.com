@@ -11,6 +11,9 @@ const useStyles = makeStyles(() => ({
     marginTop: '1rem',
     marginBottom: '-0.5rem',
   },
+  textButton: {
+    marginTop: '4px',
+  }
 }));
 
 interface Props {
@@ -48,7 +51,7 @@ const ChessGuideControls: React.FC<Props> = ({
       container
       direction='row'
       justify='space-evenly'
-      spacing={2}
+      spacing={0}
     >
       <Grid item>
         <ChessNavBtns
@@ -63,18 +66,36 @@ const ChessGuideControls: React.FC<Props> = ({
       <Grid item>
         <Grid container spacing={3}>
           <Grid item>
-            <Button variant='contained' color='primary' onClick={onResetBtnClick}>
+            <Button
+              className={classes.textButton}
+              variant='contained'
+              color='primary'
+              size='small'
+              onClick={onResetBtnClick}
+            >
               Reset
             </Button>
           </Grid>
           <Grid item>
-            <Button variant='contained' color='primary' onClick={onModeSwitchBtnClick}>
+            <Button
+              className={classes.textButton}
+              variant='contained'
+              color='primary'
+              size='small'
+              onClick={onModeSwitchBtnClick}
+            >
               {currentMode === 'learn' ? 'practice' : 'learn'}
             </Button>
           </Grid>
           {currentMode === 'practice' && (
             <Grid item>
-              <Button variant='contained' color='primary' onClick={onHintRequest}>
+              <Button
+                className={classes.textButton}
+                variant='contained'
+                color='primary'
+                size='small'
+                onClick={onHintRequest}
+              >
                 Hint
               </Button>
             </Grid>
