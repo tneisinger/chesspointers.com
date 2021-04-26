@@ -24,7 +24,7 @@ const BOARD_SIZE_VH = 0.55;  // percentage of viewport height
 const useStyles = makeStyles((theme: Theme) => ({
   homepageRoot: {
     height: '100%',
-    padding: '30px 20px 10px 20px',
+    padding: '20px 20px 10px 20px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around',
@@ -61,9 +61,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: '8px',
     textAlign: 'center',
   },
-  paragraph: {
-    marginBottom: '1rem',
-  }
 }));
 
 const HomePage: React.FunctionComponent = () => {
@@ -156,10 +153,10 @@ const HomePage: React.FunctionComponent = () => {
         />
       </div>
       <div>
-        <Typography className={classes.paragraph} align='center'>
+        <Typography align='center'>
           This site is a work-in-progress.
         </Typography>
-        <Typography className={classes.paragraph} align='center'>
+        <Typography align='center'>
           If you find a bug, please send an email to <a
             href={`mailto: ${metadata.adminEmail}`}>{metadata.adminEmail}
           </a>
