@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: '0.75rem',
     marginBottom: '0',
     [theme.breakpoints.up('sm')]: {
-      fontSize: '2.5rem',
+      fontSize: '2.25rem',
     },
     [theme.breakpoints.down('sm')]: {
       fontSize: '1.6rem',
@@ -58,7 +58,7 @@ const LessonPageContent: React.FC<EntitiesSlice<Lesson>> = ({ entities }) => {
 
   let boardSizePixels: number;
   if (windowWidth > windowHeight) {
-    boardSizePixels = calcChessBoardSize(70, 'vh');
+    boardSizePixels = calcChessBoardSize(67, 'vh');
   } else {
     boardSizePixels = calcChessBoardSize(91, 'vw');
   }
