@@ -96,9 +96,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     height: (p: { windowInnerHeight: number }) => p.windowInnerHeight,
   },
-  main: {
+  mainWrapper: {
     flexGrow: 1,
     width: '100vw',
+    margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    [theme.breakpoints.between('md', 'lg')]: {
+      width: `calc(100vw - ${theme.sideMenuWidth}px)`,
+      margin: 0,
+      marginLeft: 'auto',
+    },
+  },
+  main: {
+    flexGrow: 1,
+    width: 'inherit',
     maxWidth: theme.mainMaxWidth,
     margin: '0 auto',
     display: 'flex',
@@ -106,7 +119,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   transitionGroup: {
     flexGrow: 1,
-    width: '100vw',
+    width: 'inherit',
     maxWidth: theme.mainMaxWidth,
   },
   appBar: {
@@ -201,18 +214,20 @@ function AppContent() {
             closeDrawer={() => setIsMobileDrawerOpen(false)}
           />
           <div className={classes.toolbarAboveMain} />
-          <main className={classes.main}>
-            <TransitionGroup className={classes.transitionGroup}>
-              <CSSTransition
-                unmountOnExit
-                key={location.key}
-                classNames='fade'
-                timeout={400}
-              >
-                <Switch location={location}>{makeRoutes()}</Switch>
-              </CSSTransition>
-            </TransitionGroup>
-          </main>
+          <div className={classes.mainWrapper}>
+            <main className={classes.main}>
+              <TransitionGroup className={classes.transitionGroup}>
+                <CSSTransition
+                  unmountOnExit
+                  key={location.key}
+                  classNames='fade'
+                  timeout={400}
+                >
+                  <Switch location={location}>{makeRoutes()}</Switch>
+                </CSSTransition>
+              </TransitionGroup>
+            </main>
+          </div>
         </div>
       </StylesProvider>
     </>
