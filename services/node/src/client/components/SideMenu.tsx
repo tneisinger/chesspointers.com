@@ -16,16 +16,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
   },
   drawer: {
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       width: theme.sideMenuWidth,
       flexShrink: 0,
     },
   },
   drawerPaper: {
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       width: theme.sideMenuWidth,
     },
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
       minWidth: 160,
     },
   },
@@ -57,7 +57,7 @@ export const SideMenu: React.FC<Props> = (props) => {
 
   return (
     <nav className={classes.drawer}>
-      <Hidden lgUp implementation='css'>
+      <Hidden mdUp>
         <Drawer
           container={container}
           variant='temporary'
@@ -75,7 +75,13 @@ export const SideMenu: React.FC<Props> = (props) => {
           <SideMenuList {...props} />
         </Drawer>
       </Hidden>
-      <Hidden mdDown implementation='css'>
+      {/* There is a bug in MUIv4 where all 'xxDown' options are off by one, meaning
+          'smDown' is actually equivalent to 'mdDown'. That is why above we have
+          <Hidden mdUp> and below we have <Hidden smDown> rather than <Hidden mdDown>.
+          Learn more here:
+              https://github.com/mui-org/material-ui/issues/13448
+      */}
+      <Hidden smDown>
         <Drawer
           variant='permanent'
           classes={{

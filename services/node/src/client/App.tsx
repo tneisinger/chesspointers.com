@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   appBar: {
     zIndex: 1400,
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       width: theme.sideMenuWidth,
       left: 0,
     },
@@ -119,7 +119,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuButton: {
     position: 'absolute',
     left: '16px',
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none',
     },
   },
@@ -129,7 +129,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   siteTitleText: {
     color: 'white',
     fontWeight: 500,
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       fontSize: '1.2rem',
     },
   },
@@ -138,7 +138,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   toolbarAboveMain: {
     ...theme.mixins.toolbar,
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       height: 0,
       minHeight: 0,
     },
