@@ -18,8 +18,11 @@ import FiltersBarOrModalUI, {
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleText: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       fontSize: '3rem',
+    },
+    [theme.breakpoints.between('sm', 'md')]: {
+      fontSize: '2.25rem',
     },
     [theme.breakpoints.down('sm')]: {
       fontSize: '1.75rem',
