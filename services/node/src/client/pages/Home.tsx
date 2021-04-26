@@ -15,11 +15,11 @@ import { assertUnreachable, randomElem } from '../../shared/utils';
 import ChessTreePreview from '../components/ChessTreePreview';
 import Spinner from '../components/Spinner';
 import { useStepper } from '../hooks/useStepper';
-import { getViewportWidth } from '../utils';
+import { getViewportWidth, getViewportHeight } from '../utils';
 import metadata from '../../shared/metadata.json';
 
-const BOARD_SIZE_VW = 0.80;  // percentage of viewport width
-const MAX_BOARD_SIZE = 500; // pixels
+const BOARD_SIZE_VW = 0.8;  // percentage of viewport width
+const BOARD_SIZE_VH = 0.55;  // percentage of viewport height
 
 const useStyles = makeStyles((theme: Theme) => ({
   homepageRoot: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   heading: {
     [theme.breakpoints.up('lg')]: {
-      fontSize: '3.5rem',
+      fontSize: '3rem',
     },
   },
   chessBoardDiv: {
@@ -110,12 +110,12 @@ const HomePage: React.FunctionComponent = () => {
     }
   }, [openingsSlice, trapsSlice, randomLessonType]);
 
-  const viewportWidth = getViewportWidth();
-  const boardSize = viewportWidth * BOARD_SIZE_VW;
-  const finalBoardSize = boardSize > MAX_BOARD_SIZE ? MAX_BOARD_SIZE : boardSize;
+  const vpWidth = getViewportWidth();
+  const boardSize =
+    Math.min(vpWidth * BOARD_SIZE_VW, getViewportHeight() * BOARD_SIZE_VH);
 
   const getButtonSize = (): 'small' | 'medium' | 'large' => (
-    viewportWidth > 500 ? 'large' : 'small'
+    vpWidth > 500 ? 'large' : 'small'
   );
 
   return (
@@ -152,7 +152,7 @@ const HomePage: React.FunctionComponent = () => {
         <ChessTreePreviewOrSpinner
           lesson={randomLesson}
           stepper={stepperValue}
-          boardSize={finalBoardSize}
+          boardSize={boardSize}
         />
       </div>
       <div>
