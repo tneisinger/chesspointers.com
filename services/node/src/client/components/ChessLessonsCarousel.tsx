@@ -7,16 +7,16 @@ import { getViewportHeight, getViewportWidth } from '../utils';
 
 // Increase the value of this variable to increase the horizontal distance between
 // the back and forward buttons of the carousel.
-const PREV_NEXT_BUTTON_SPREAD = 85;
+const PREV_NEXT_BUTTON_SPREAD = 95;
 
 interface StyleProps {
   filledCarouselHeight: number | undefined;
-  width?: number;
+  carouselWidth: number;
 }
 
 const useStyles = makeStyles({
   carousel: {
-    width: (p: StyleProps) => p.width ? p.width + 'px' : '100vw',
+    width: (p: StyleProps) => p.carouselWidth + 'px',
     maxWidth: '750px',
     margin: '0 auto',
     // Prevent the carouselWrapper div from collapsing when the carousel
@@ -49,9 +49,27 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
     undefined,
   );
 
+  const vpWidth = getViewportWidth();
+  const vpHeight = getViewportHeight();
+
+  const calcCardWidth = (): number => {
+    if (vpHeight < vpWidth) {
+      return vpHeight * 0.661;
+    } else {
+      return vpWidth * 0.911;
+    }
+  };
+
+  let carouselWidth = props.cardWidth
+    ? props.cardWidth + PREV_NEXT_BUTTON_SPREAD
+    : calcCardWidth() + PREV_NEXT_BUTTON_SPREAD;
+  if (carouselWidth > vpWidth) {
+    carouselWidth = vpWidth;
+  }
+
   const classes = useStyles({
     filledCarouselHeight,
-    width: props.cardWidth ? props.cardWidth + PREV_NEXT_BUTTON_SPREAD : undefined,
+    carouselWidth,
   });
 
   // Get the height of the carouselWrapper when it is filled with at least one
@@ -67,16 +85,6 @@ const ChessLessonCarousel: React.FC<Props> = (props) => {
       setFilledCarouselHeight(node.getBoundingClientRect().height);
     }
   }, [filledCarouselHeight, props.lessons]);
-
-  const calcCardWidth = (): number => {
-    const vpWidth = getViewportWidth();
-    const vpHeight = getViewportHeight();
-    if (vpHeight < vpWidth) {
-      return vpHeight * 0.661;
-    } else {
-      return vpWidth * 0.911;
-    }
-  };
 
   const handleCarouselChange = (idx: number) => {
     if (props.lessons.length > 0) {
