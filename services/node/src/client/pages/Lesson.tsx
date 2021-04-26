@@ -103,7 +103,7 @@ const LessonPageContent: React.FC<EntitiesSlice<Lesson>> = ({ entities }) => {
               userPlaysAs={lesson.playedByWhite ? 'white' : 'black'}
               boardSizePixels={boardSizePixels}
             >
-              {windowWidth > 1280 && (
+              {windowWidth > 960 && (
                 <MovesPane
                   height={boardSizePixels}
                   playedMoves={[]}
