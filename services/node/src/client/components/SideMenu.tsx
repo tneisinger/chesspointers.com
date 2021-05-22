@@ -76,10 +76,10 @@ export const SideMenu: React.FC<Props> = (props) => {
         </Drawer>
       </Hidden>
       {/* There is a bug in MUIv4 where all 'xxDown' options are off by one, meaning
-          'smDown' is actually equivalent to 'mdDown'. That is why above we have
-          <Hidden mdUp> and below we have <Hidden smDown> rather than <Hidden mdDown>.
-          Learn more here:
-              https://github.com/mui-org/material-ui/issues/13448
+          'smDown' is actually equivalent to what you would expect 'mdDown' to be. That is
+          why above we have <Hidden mdUp> and below we have <Hidden smDown> rather than
+          <Hidden mdDown>.
+          Learn more here: https://github.com/mui-org/material-ui/issues/13448
       */}
       <Hidden smDown>
         <Drawer
