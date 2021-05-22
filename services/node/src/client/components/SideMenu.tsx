@@ -1,20 +1,11 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import { routesWithPaths } from '../routes';
-import LinkMui from './LinkMui';
+import SideMenuList from './SideMenuList';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  listItemText: {
-    textAlign: 'center',
-    color: 'white',
-  },
   drawer: {
     [theme.breakpoints.up('md')]: {
       width: theme.sideMenuWidth,
@@ -31,15 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   toolbar: {
     ...theme.mixins.toolbar,
-  },
-  currentLocationLink: {
-    backgroundColor: theme.palette.action.selected,
-    '&:hover': {
-      backgroundColor: theme.palette.action.selected,
-    },
-  },
-  linksList: {
-    paddingTop: 0,
   },
 }));
 
@@ -94,32 +76,5 @@ export const SideMenu: React.FC<Props> = (props) => {
         </Drawer>
       </Hidden>
     </nav>
-  );
-};
-
-const SideMenuList: React.FC<Props> = ({ closeDrawer }) => {
-  const classes = useStyles();
-  const location = useLocation();
-
-  return (
-    <List className={classes.linksList}>
-      {routesWithPaths().map((route, idx) => {
-        if (route.isInSideMenu) {
-          return (
-            <ListItem
-              key={route.path + idx}
-              className={
-                location.pathname === route.path ? classes.currentLocationLink : ''
-              }
-              button
-              alignItems='center'
-              component={LinkMui(route.path, closeDrawer)}
-            >
-              <ListItemText className={classes.listItemText} primary={route.pageName} />
-            </ListItem>
-          );
-        }
-      })}
-    </List>
   );
 };
