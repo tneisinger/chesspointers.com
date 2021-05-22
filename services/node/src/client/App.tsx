@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { CssBaseline, makeStyles } from '@material-ui/core';
@@ -16,6 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import { BrowserRouter, Switch } from 'react-router-dom'; // Pages
 import { SideMenu } from './components/SideMenu';
 import { makeRoutes } from './routes';
+import { useWindowSize } from './hooks/useWindowSize';
 import 'react-chessground/dist/styles/chessground.css';
 import './page-transitions.css';
 import metadata from '../shared/metadata.json';
@@ -94,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   appRoot: {
     display: 'flex',
     flexDirection: 'column',
-    height: (p: { windowInnerHeight: number }) => p.windowInnerHeight,
+    height: (p: { windowHeight: number }) => p.windowHeight,
   },
   mainWrapper: {
     flexGrow: 1,
@@ -159,13 +160,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function AppContent() {
-  const [windowInnerHeight, setWindowInnerHeight] = useState<number>(window.innerHeight);
+  const { windowHeight } = useWindowSize();
 
-  window.addEventListener('resize', () => {
-    setWindowInnerHeight(window.innerHeight);
-  });
-
-  const classes = useStyles({ windowInnerHeight });
+  const classes = useStyles({ windowHeight });
 
   const location = useLocation();
 
