@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   heading: {
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       fontSize: '3rem',
     },
   },
