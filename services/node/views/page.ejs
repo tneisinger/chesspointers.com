@@ -7,7 +7,12 @@
       <%= metadata.siteTitle %>
     </title>
     <link rel="icon" href="/assets/favicon.ico"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    >
     <style>
       :root {
         --spinnerSize: 80px;
