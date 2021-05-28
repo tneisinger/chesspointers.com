@@ -13,7 +13,14 @@ const useStyles = makeStyles(() => ({
   },
   textButton: {
     marginTop: '4px',
-  }
+  },
+
+  // Using xs=3 sets margin to -12px. That was causing a layout problem on
+  // small screen devices such as the iPhone 6. Setting the horizontal margin
+  // to zero seems to have fixed the problem.
+  btnsContainer: {
+    margin: '-12px 0',
+  },
 }));
 
 interface Props {
@@ -64,7 +71,7 @@ const ChessGuideControls: React.FC<Props> = ({
         />
       </Grid>
       <Grid item>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} className={classes.btnsContainer}>
           <Grid item>
             <Button
               className={classes.textButton}
