@@ -2,7 +2,6 @@ import path from 'path';
 import expressStaticGzip from 'express-static-gzip';
 import { Router } from 'express';
 import { IS_DEV, WEBPACK_PORT } from '../config';
-
 export function staticsRouter(): Router {
   const router = Router();
 
@@ -22,7 +21,16 @@ export function staticsRouter(): Router {
     const staticsPath = path.join(process.cwd(), 'dist', 'statics');
 
     // All the assets are in "statics" folder (Done by Webpack during the build phase)
-    router.use('/statics', expressStaticGzip(staticsPath, { index: false }));
+    router.use('/statics', expressStaticGzip(staticsPath, {
+      index: false,
+      serveStatic: {
+        setHeaders: (res, path) => {
+          if (path.split('.').pop() === 'gz') {
+            res.setHeader('Content-Encoding', 'gzip');
+          }
+        },
+      }
+    }));
   }
   return router;
 }
