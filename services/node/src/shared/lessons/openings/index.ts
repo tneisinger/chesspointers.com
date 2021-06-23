@@ -6,6 +6,7 @@ import scandinavian from './scandinavian';
 import kingsIndian from './kingsIndian';
 import sicilianDragon from './sicilianDragon';
 import sicilianAlapin from './sicilianAlapin';
+import nimzoIndian from './nimzoIndian';
 
 const allOpenings: { [shortName: string]: Lesson } = {
   vienna: vienna,
@@ -15,6 +16,7 @@ const allOpenings: { [shortName: string]: Lesson } = {
   kingsIndian: kingsIndian,
   sicilianDragon: sicilianDragon,
   sicilianAlapin: sicilianAlapin,
+  nimzoIndian: nimzoIndian,
 };
 
 export default allOpenings;
