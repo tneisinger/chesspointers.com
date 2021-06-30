@@ -8,6 +8,7 @@ import sicilianDragon from './sicilianDragon';
 import sicilianAlapin from './sicilianAlapin';
 import nimzoIndian from './nimzoIndian';
 import queensGambit from './queensGambit';
+import qgdRagozin from './qgdRagozin';
 
 const allOpenings: { [shortName: string]: Lesson } = {
   vienna: vienna,
@@ -19,6 +20,7 @@ const allOpenings: { [shortName: string]: Lesson } = {
   sicilianAlapin: sicilianAlapin,
   nimzoIndian: nimzoIndian,
   queensGambit: queensGambit,
+  qgdRagozin: qgdRagozin,
 };
 
 export default allOpenings;
