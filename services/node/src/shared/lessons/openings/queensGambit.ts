@@ -160,8 +160,8 @@ attribution.url = 'https://www.youtube.com/watch?v=mtsabsZ4wG4';
 
 const lesson = new Lesson();
 lesson.lessonType = LessonType.OPENING;
-lesson.fullName = "Queen's Gambit";
-lesson.shortName = "Queen's Gambit";
+lesson.fullName = "The Queen's Gambit";
+lesson.shortName = "Queens Gambit";
 lesson.playedByWhite = true;
 lesson.chessTree = chessTree;
 lesson.attribution = attribution;
