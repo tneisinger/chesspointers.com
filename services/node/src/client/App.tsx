@@ -81,6 +81,9 @@ const theme = createMuiTheme({
             textDecoration: 'underline',
           },
         },
+        body: {
+          caretColor: 'transparent',
+        },
         'header a': {
           '&:visited': {
             color: 'white',
