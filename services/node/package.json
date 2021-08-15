@@ -90,6 +90,7 @@
     "find-up": "^4.1.0",
     "pg": "^8.6.0",
     "pgn-parser": "^2.1.1",
+    "query-string": "^7.0.1",
     "react-chessground": "^1.5.0",
     "react-material-ui-carousel": "^2.1.2",
     "react-redux": "^7.2.2",

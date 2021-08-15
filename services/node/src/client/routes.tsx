@@ -5,6 +5,9 @@ import TrapsPage from './pages/Traps';
 import OpeningsPage from './pages/Openings';
 import OpeningPage from './pages/Opening';
 import TrapPage from './pages/Trap';
+import MyLessonsPage from './pages/MyLessons';
+import AddLessonPage from './pages/AddLesson';
+import UserLessonPage from './pages/UserLesson';
 import NotFoundPage from './pages/NotFound';
 import AboutPage from './pages/About';
 import AcknowledgementsPage from './pages/Acknowledgements';
@@ -52,6 +55,26 @@ export const routes: RouteInfo[] = [
   {
     component: TrapPage,
     path: '/traps/:lessonName',
+    isPathExact: true,
+    isInSideMenu: false,
+  },
+  {
+    pageName: 'My Lessons',
+    component: MyLessonsPage,
+    path: '/my-lessons',
+    isPathExact: true,
+    isInSideMenu: true,
+  },
+  {
+    pageName: 'Add Lesson',
+    component: AddLessonPage,
+    path: '/add-lesson',
+    isPathExact: true,
+    isInSideMenu: false,
+  },
+  {
+    component: UserLessonPage,
+    path: '/my-lessons/:lessonName',
     isPathExact: true,
     isInSideMenu: false,
   },
