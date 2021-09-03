@@ -29,9 +29,11 @@ export function useUserLessons(): Toolkit {
 
   const deleteUserLesson = (lessonName: string) => {
     const lessons = getLocalStorageLessons();
-    delete lessons[lessonName];
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(lessons));
-    setUserLessons(lessons);
+    if (confirm(`Really delete lesson "${lessonName}"?`)) {
+      delete lessons[lessonName];
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(lessons));
+      setUserLessons(lessons);
+    }
   }
 
   const addUserLesson = (lessonName: string, color: Color, pgnString: string) => {
