@@ -41,3 +41,7 @@ export function calcChessBoardSize(value: number, units: BoardSizeUnits): number
   const roundedPixels = Math.floor(pixels / roundValue) * roundValue;
   return roundedPixels;
 }
+
+export function alphabetize(strings: string[]): string[] {
+  return strings.sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+}

@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { useUserLessons } from '../hooks/useUserLessons';
+import { alphabetize }from '../utils';
 
 const useStyles = makeStyles(() => ({
   myLessonsRoot: {
@@ -37,6 +38,8 @@ const MyLessonsPage: React.FC = () => {
 
   const { userLessons, deleteUserLesson } = useUserLessons();
 
+  const alphabetizedLessons = alphabetize(Object.keys(userLessons));
+
   return (
     <div className={classes.myLessonsRoot}>
       <Typography
@@ -49,7 +52,7 @@ const MyLessonsPage: React.FC = () => {
       </Typography>
       <table className={classes.table}>
         <tbody>
-          {Object.keys(userLessons).sort().map((lessonName) =>
+          {alphabetizedLessons.map((lessonName) =>
             <tr key={lessonName}>
               <td><Link to={`/my-lessons/${lessonName}`}>{lessonName}</Link></td>
               <td>
