@@ -49,7 +49,7 @@ const MyLessonsPage: React.FC = () => {
       </Typography>
       <table className={classes.table}>
         <tbody>
-          {Object.keys(userLessons).map((lessonName) =>
+          {Object.keys(userLessons).sort().map((lessonName) =>
             <tr key={lessonName}>
               <td><Link to={`/my-lessons/${lessonName}`}>{lessonName}</Link></td>
               <td>
