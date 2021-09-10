@@ -74,7 +74,7 @@ const AddLessonForm: React.FC<Props> = ({ lessonName }) => {
     try {
       makeChessTreeFromPGNString(pgnString);
       if (lessonName != undefined && lessonName != lessonTitle) {
-        deleteUserLesson(lessonName);
+        deleteUserLesson(lessonName, { confirm: false });
       }
       addUserLesson(lessonTitle, color, pgnString);
       history.push('/my-lessons');
